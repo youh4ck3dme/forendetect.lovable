@@ -1,5 +1,11 @@
 import { useActiveCase } from "@/hooks/useActiveCase";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { getSourceDownloadUrl } from "@/lib/source-download.functions";
+import { LogOut } from "lucide-react";
+
 import {
   ChevronRight,
   Crosshair,
@@ -55,6 +61,26 @@ const links = [
 function More() {
   const { activeCase, analysis } = useActiveCase();
   const { state, countExport, reset } = useCaseStore();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const fetchSourceUrl = useServerFn(getSourceDownloadUrl);
+
+  async function handleSourceDownload() {
+    try {
+      const { url } = await fetchSourceUrl({ data: undefined });
+      window.location.href = url;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Stiahnutie zlyhalo.");
+    }
+  }
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    void navigate({ to: "/auth", replace: true });
+  }
+
 
   return (
     <PhoneFrame>
