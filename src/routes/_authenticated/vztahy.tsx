@@ -43,11 +43,27 @@ function Relations() {
   const byId = new Map(analysis.entities.map((e) => [e.entity.id, e]));
   const { state } = useCaseStore();
   const [target, setTarget] = useState<DetectorTarget | null>(null);
-  const [selectedId, setSelectedId] = useState(analysis.entities[0]!.entity.id);
+  const [selectedId, setSelectedId] = useState<string>(analysis.entities[0]?.entity.id ?? "");
   const [view, setView] = useState<"graph" | "list">("graph");
-  const focus = byId.get(selectedId) ?? analysis.entities[0]!;
+  const focus = byId.get(selectedId) ?? analysis.entities[0];
   const visible = analysis.entities.filter((e) => passesFilter(state.riskFilter, e.level));
   const visibleIds = new Set(visible.map((e) => e.entity.id));
+
+  if (!focus) {
+    return (
+      <PhoneFrame>
+        <AppHeader title="Vzťahy" />
+        <Screen>
+          <EmptyState
+            title="Zatiaľ žiadne subjekty"
+            detail="Pridajte subjekty v sekcii Prípady a vzťahová mapa sa vytvorí automaticky."
+          />
+        </Screen>
+        <BottomNav />
+      </PhoneFrame>
+    );
+  }
+
 
   return (
     <PhoneFrame>

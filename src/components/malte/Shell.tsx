@@ -194,7 +194,10 @@ export function AppHeader({
 }
 
 export function BottomNav() {
-  return (
+  const { analysis } = useActiveCase();
+  const criticalCount = analysis.alerts.filter((a) => a.severity === "critical").length;
+
+
     <nav className="sticky bottom-0 z-10 mt-auto border-t border-border surface-glass px-2 pt-2 pb-5 lg:hidden">
       <ul className="flex items-stretch justify-between">
         {navItems.map(({ to, label, icon: Icon }) => (
