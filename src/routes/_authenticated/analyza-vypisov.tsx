@@ -1,4 +1,5 @@
 import { useActiveCase } from "@/hooks/useActiveCase";
+import { EmptyState } from "@/components/malte/EmptyState";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
@@ -76,6 +77,24 @@ function StatementAnalysis() {
   const flagged = [...transactions]
     .filter((t) => passesFilter(state.riskFilter, t.level))
     .sort((a, b) => b.score - a.score);
+
+  if (sorted.length === 0) {
+    return (
+      <PhoneFrame>
+        <AppHeader title="Analýza transakcií" back />
+        <Screen>
+          <Card>
+            <EmptyState
+              icon={Banknote}
+              title="Zatiaľ žiadne transakcie"
+              detail="Pridajte transakcie v sekcii Prípady a analýza sa vypočíta automaticky."
+            />
+          </Card>
+        </Screen>
+        <BottomNav />
+      </PhoneFrame>
+    );
+  }
 
   return (
     <PhoneFrame>
