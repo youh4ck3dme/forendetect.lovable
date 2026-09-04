@@ -255,6 +255,10 @@ function More() {
         >
           Vymazať uložený stav
         </Button>
+
+        <Button variant="ghost" className="w-full" onClick={handleSignOut}>
+          <LogOut className="mr-1 h-4 w-4" aria-hidden /> Odhlásiť sa
+        </Button>
       </Screen>
 
       <BottomNav />
