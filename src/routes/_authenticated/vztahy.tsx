@@ -1,3 +1,4 @@
+import { EmptyState } from "@/components/malte/EmptyState";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
