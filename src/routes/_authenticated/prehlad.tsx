@@ -52,7 +52,6 @@ export const Route = createFileRoute("/_authenticated/prehlad")({
   component: Index,
 });
 
-
 function Index() {
   const { activeCase, analysis } = useActiveCase();
   const { totals, caseScore, caseLevel, alerts, topFlags, chains } = analysis;

@@ -10,7 +10,8 @@ export const Route = createFileRoute("/_authenticated/vitajte")({
       { title: "Vitajte v Malte" },
       {
         name: "description",
-        content: "Krátky sprievodca: ako v Malte založiť prípad, spustiť detektory a čítať výsledky.",
+        content:
+          "Krátky sprievodca: ako v Malte založiť prípad, spustiť detektory a čítať výsledky.",
       },
       { property: "og:title", content: "Vitajte v Malte" },
       { property: "og:description", content: "Tri kroky k prvému forenznému prípadu." },

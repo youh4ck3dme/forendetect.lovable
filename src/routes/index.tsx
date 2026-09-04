@@ -84,8 +84,8 @@ function Landing() {
             Analýza. Dôkazy. Rozhodnutia.
           </h1>
           <p className="text-muted-foreground">
-            Malte spája finančné toky, subjekty a zbrane do jedného prípadu a upozorní na to, čo
-            si zaslúži pozornosť vyšetrovateľa.
+            Malte spája finančné toky, subjekty a zbrane do jedného prípadu a upozorní na to, čo si
+            zaslúži pozornosť vyšetrovateľa.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild size="lg">
@@ -94,9 +94,7 @@ function Landing() {
               </Link>
             </Button>
           </div>
-          {checking ? (
-            <p className="text-caption">Overujeme prihlásenie…</p>
-          ) : null}
+          {checking ? <p className="text-caption">Overujeme prihlásenie…</p> : null}
         </section>
 
         <section className="grid gap-4 sm:grid-cols-3">

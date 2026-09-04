@@ -5,11 +5,21 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type OAuthResult = { redirect_url?: string; redirect_to?: string; client?: { name?: string } | null };
+type OAuthResult = {
+  redirect_url?: string;
+  redirect_to?: string;
+  client?: { name?: string } | null;
+};
 type OAuthApi = {
-  getAuthorizationDetails: (id: string) => Promise<{ data: OAuthResult | null; error: { message: string } | null }>;
-  approveAuthorization: (id: string) => Promise<{ data: OAuthResult | null; error: { message: string } | null }>;
-  denyAuthorization: (id: string) => Promise<{ data: OAuthResult | null; error: { message: string } | null }>;
+  getAuthorizationDetails: (
+    id: string,
+  ) => Promise<{ data: OAuthResult | null; error: { message: string } | null }>;
+  approveAuthorization: (
+    id: string,
+  ) => Promise<{ data: OAuthResult | null; error: { message: string } | null }>;
+  denyAuthorization: (
+    id: string,
+  ) => Promise<{ data: OAuthResult | null; error: { message: string } | null }>;
 };
 const oauth = () => (supabase.auth as unknown as { oauth: OAuthApi }).oauth;
 
@@ -93,7 +103,9 @@ function Consent() {
 
   async function signInGoogle() {
     setError(null);
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.href });
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.href,
+    });
     if (result.error) {
       setError(String(result.error));
       return;
@@ -118,7 +130,9 @@ function Consent() {
       {session === false && (
         <div className="space-y-3 rounded-xl border p-5">
           <h1 className="text-lg font-semibold">Prihlás sa do Malte</h1>
-          <p className="text-sm text-muted-foreground">Pre pripojenie AI klienta sa najprv prihlás.</p>
+          <p className="text-sm text-muted-foreground">
+            Pre pripojenie AI klienta sa najprv prihlás.
+          </p>
           <Input placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Input
             type="password"
@@ -134,7 +148,12 @@ function Consent() {
               Registrovať
             </Button>
           </div>
-          <Button variant="outline" className="w-full" disabled={busy} onClick={() => void signInGoogle()}>
+          <Button
+            variant="outline"
+            className="w-full"
+            disabled={busy}
+            onClick={() => void signInGoogle()}
+          >
             Pokračovať cez Google
           </Button>
         </div>
@@ -146,8 +165,8 @@ function Consent() {
             Pripojiť {details?.client?.name ?? "klienta"} k Malte
           </h1>
           <p className="text-sm text-muted-foreground">
-            Klient bude môcť volať nástroje tejto aplikácie vo tvojom mene. Prístupové pravidlá aplikácie
-            zostávajú v platnosti.
+            Klient bude môcť volať nástroje tejto aplikácie vo tvojom mene. Prístupové pravidlá
+            aplikácie zostávajú v platnosti.
           </p>
           <div className="flex gap-2">
             <Button disabled={busy} onClick={() => void decide(true)}>

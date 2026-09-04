@@ -5,7 +5,8 @@ import { caseAnalysis, text } from "../analysis";
 export default defineTool({
   name: "analyze_transaction",
   title: "Analyze transaction",
-  description: "Run the transaction monitoring rules for one transaction id and return its flags and risk score.",
+  description:
+    "Run the transaction monitoring rules for one transaction id and return its flags and risk score.",
   inputSchema: { transactionId: z.string().trim().min(1) },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ transactionId }, ctx) => {

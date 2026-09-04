@@ -39,7 +39,6 @@ export const Route = createFileRoute("/_authenticated/osoby")({
   component: People,
 });
 
-
 type KindFilter = "all" | "person" | "company" | "shell";
 
 function People() {

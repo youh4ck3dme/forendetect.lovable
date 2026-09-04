@@ -26,12 +26,7 @@ import { DetectorSheet, type DetectorTarget } from "@/components/malte/DetectorS
 import { useCaseStore, passesFilter } from "@/hooks/useCaseStore";
 import { exportCaseReport } from "@/lib/report";
 import { toast } from "sonner";
-import {
-  formatDate,
-  formatEur,
-  severityLabel,
-  type Severity,
-} from "@/forensic";
+import { formatDate, formatEur, severityLabel, type Severity } from "@/forensic";
 
 export const Route = createFileRoute("/_authenticated/analyza-vypisov")({
   head: () => ({
@@ -51,7 +46,6 @@ export const Route = createFileRoute("/_authenticated/analyza-vypisov")({
   }),
   component: StatementAnalysis,
 });
-
 
 const flagIcon = { critical: AlertTriangle, high: AlertTriangle, medium: Layers, low: Banknote };
 const flagTone = {

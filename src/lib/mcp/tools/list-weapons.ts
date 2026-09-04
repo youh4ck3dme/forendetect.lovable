@@ -5,9 +5,13 @@ import { caseAnalysis, text } from "../analysis";
 export default defineTool({
   name: "list_weapons",
   title: "List weapons",
-  description: "Weapon register of the case with EUROPOL serial matches, licence validity and holder.",
+  description:
+    "Weapon register of the case with EUROPOL serial matches, licence validity and holder.",
   inputSchema: {
-    europolOnly: z.boolean().default(false).describe("Return only weapons matching the mock EUROPOL database."),
+    europolOnly: z
+      .boolean()
+      .default(false)
+      .describe("Return only weapons matching the mock EUROPOL database."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ europolOnly }, ctx) => {

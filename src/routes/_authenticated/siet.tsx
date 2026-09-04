@@ -41,10 +41,10 @@ export const Route = createFileRoute("/_authenticated/siet")({
   component: NetworkScreen,
 });
 
-
 function NetworkScreen() {
   const { activeCase, analysis } = useActiveCase();
-  const nameOf = (id: string) => analysis.entities.find((e) => e.entity.id === id)?.entity.name ?? id;
+  const nameOf = (id: string) =>
+    analysis.entities.find((e) => e.entity.id === id)?.entity.name ?? id;
   const [target, setTarget] = useState<DetectorTarget | null>(null);
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
   const [pathId, setPathId] = useState<string | null>(analysis.moneyPaths[0]?.id ?? null);

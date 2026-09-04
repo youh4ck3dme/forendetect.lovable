@@ -85,7 +85,8 @@ export const LEGAL_SOURCES: Record<LawCode, LawSource> = {
       {
         ref: "§ 95",
         title: "Zaistenie peňažných prostriedkov",
-        summary: "Blokácia prostriedkov na účte, ak zistené skutočnosti nasvedčujú ich pôvodu z TČ.",
+        summary:
+          "Blokácia prostriedkov na účte, ak zistené skutočnosti nasvedčujú ich pôvodu z TČ.",
         kind: "procedural",
       },
       {

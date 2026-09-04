@@ -111,7 +111,10 @@ function Cases() {
 
   return (
     <PhoneFrame>
-      <AppHeader title="Prípady" actions={<FolderPlus className="h-5 w-5 opacity-90" aria-hidden />} />
+      <AppHeader
+        title="Prípady"
+        actions={<FolderPlus className="h-5 w-5 opacity-90" aria-hidden />}
+      />
       <Screen>
         <Card className="space-y-3">
           <h1 className="text-base font-semibold tracking-tight">Nový prípad</h1>

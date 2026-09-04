@@ -38,7 +38,6 @@ export const Route = createFileRoute("/_authenticated/vztahy")({
   component: Relations,
 });
 
-
 function Relations() {
   const { activeCase, analysis } = useActiveCase();
   const byId = new Map(analysis.entities.map((e) => [e.entity.id, e]));
@@ -64,7 +63,6 @@ function Relations() {
       </PhoneFrame>
     );
   }
-
 
   return (
     <PhoneFrame>

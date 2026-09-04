@@ -1,4 +1,12 @@
-import type { CaseEvent, Entity, ForensicCase, Relation, Severity, Transaction, Weapon } from "@/forensic";
+import type {
+  CaseEvent,
+  Entity,
+  ForensicCase,
+  Relation,
+  Severity,
+  Transaction,
+  Weapon,
+} from "@/forensic";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type Row = any;

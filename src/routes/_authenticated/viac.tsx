@@ -49,7 +49,6 @@ export const Route = createFileRoute("/_authenticated/viac")({
   component: More,
 });
 
-
 const links = [
   { title: "Dôkazy a dokumenty", detail: "Evidencia spisového materiálu", icon: FileText },
   { title: "Audit log", detail: "Kompletná história úkonov", icon: History },
@@ -80,7 +79,6 @@ function More() {
     await supabase.auth.signOut();
     void navigate({ to: "/auth", replace: true });
   }
-
 
   return (
     <PhoneFrame>
@@ -141,9 +139,6 @@ function More() {
             <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" aria-hidden />
           </Card>
         </button>
-
-
-
 
         <SectionTitle>Priebeh analýzy</SectionTitle>
 
