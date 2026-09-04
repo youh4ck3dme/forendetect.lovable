@@ -79,8 +79,8 @@ function McpInfo() {
 
         <Card>
           <p className="text-caption">
-            Server je chránený OAuth prihlásením a sprístupňuje výhradne dáta vášho účtu. Nič sa cez neho nedá
-            meniť. Podrobná dokumentácia je v repozitári v súbore docs/mcp-api.md.
+            Server je chránený OAuth prihlásením a sprístupňuje výhradne dáta vášho účtu. Nič sa cez
+            neho nedá meniť. Podrobná dokumentácia je v repozitári v súbore docs/mcp-api.md.
           </p>
         </Card>
       </Screen>

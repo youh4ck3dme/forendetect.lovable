@@ -1,11 +1,5 @@
 import type { CaseAnalysis, EntityAnalysis, Severity } from "../types";
-import {
-  LEGAL_SOURCES,
-  type LawCode,
-  type LawSource,
-  type Provision,
-  findProvision,
-} from "./laws";
+import { LEGAL_SOURCES, type LawCode, type LawSource, type Provision, findProvision } from "./laws";
 import { PERSON_TYPES, type PersonTypeId, personType } from "./personTypes";
 
 export type LegalAssessment = {
@@ -60,23 +54,70 @@ const SEVERITY_RANK: Record<Severity, number> = { low: 1, medium: 2, high: 3, cr
 
 const RULES: Rule[] = [
   // 300/2005 — hmotné právo
-  { law: "300/2005", ref: "§ 233", triggers: ["LAYERING", "PASSTHROUGH", "SHELL_CONTROL", "ROUND_AMOUNT", "CASH_INTENSIVE"] },
-  { law: "300/2005", ref: "§ 294", triggers: ["EUROPOL_HOLDER", "LICENSE_ISSUE", "WEAPON_EUROPOL", "SERIAL_BATCH", "VOLUME_SURGE"] },
+  {
+    law: "300/2005",
+    ref: "§ 233",
+    triggers: ["LAYERING", "PASSTHROUGH", "SHELL_CONTROL", "ROUND_AMOUNT", "CASH_INTENSIVE"],
+  },
+  {
+    law: "300/2005",
+    ref: "§ 294",
+    triggers: ["EUROPOL_HOLDER", "LICENSE_ISSUE", "WEAPON_EUROPOL", "SERIAL_BATCH", "VOLUME_SURGE"],
+  },
   { law: "300/2005", ref: "§ 296", triggers: ["SHELL_CONTROL", "CHAIN", "THIRD_PARTY_PAYER"] },
-  { law: "300/2005", ref: "§ 277a", triggers: ["NO_INVENTORY", "ADDRESS_MISMATCH", "NO_CONTACT", "NO_CONTACT_PERSON"] },
+  {
+    law: "300/2005",
+    ref: "§ 277a",
+    triggers: ["NO_INVENTORY", "ADDRESS_MISMATCH", "NO_CONTACT", "NO_CONTACT_PERSON"],
+  },
   { law: "300/2005", ref: "§ 261", triggers: ["CROSS_BORDER", "TRANSIT_ANOMALY"] },
   // 301/2005 — procesné úkony
-  { law: "301/2005", ref: "§ 95", triggers: ["LAYERING", "PASSTHROUGH", "ROUND_AMOUNT", "CASH_INTENSIVE", "SHELL_CONTROL"] },
-  { law: "301/2005", ref: "§ 89", triggers: ["EUROPOL_HOLDER", "LICENSE_ISSUE", "WEAPON_EUROPOL", "SERIAL_BATCH"] },
-  { law: "301/2005", ref: "§ 116", triggers: ["THIRD_PARTY_FUNDING", "THIRD_PARTY_PAYER", "SAME_DAY", "RAPID_REPEAT"] },
-  { law: "301/2005", ref: "§ 3", triggers: ["CROSS_BORDER", "TRANSIT_ANOMALY", "WEAPON_EUROPOL", "EUROPOL_HOLDER"] },
+  {
+    law: "301/2005",
+    ref: "§ 95",
+    triggers: ["LAYERING", "PASSTHROUGH", "ROUND_AMOUNT", "CASH_INTENSIVE", "SHELL_CONTROL"],
+  },
+  {
+    law: "301/2005",
+    ref: "§ 89",
+    triggers: ["EUROPOL_HOLDER", "LICENSE_ISSUE", "WEAPON_EUROPOL", "SERIAL_BATCH"],
+  },
+  {
+    law: "301/2005",
+    ref: "§ 116",
+    triggers: ["THIRD_PARTY_FUNDING", "THIRD_PARTY_PAYER", "SAME_DAY", "RAPID_REPEAT"],
+  },
+  {
+    law: "301/2005",
+    ref: "§ 3",
+    triggers: ["CROSS_BORDER", "TRANSIT_ANOMALY", "WEAPON_EUROPOL", "EUROPOL_HOLDER"],
+  },
   // 460/1992 — ústavné limity zásahov
-  { law: "460/1992", ref: "čl. 20", triggers: ["LAYERING", "PASSTHROUGH", "SHELL_CONTROL", "CASH_INTENSIVE"] },
-  { law: "460/1992", ref: "čl. 22", triggers: ["THIRD_PARTY_FUNDING", "SAME_DAY", "RAPID_REPEAT", "CROSS_BORDER"] },
-  { law: "460/1992", ref: "čl. 17", triggers: ["EUROPOL_HOLDER", "SHELL_CONTROL"], minSeverity: "critical" },
+  {
+    law: "460/1992",
+    ref: "čl. 20",
+    triggers: ["LAYERING", "PASSTHROUGH", "SHELL_CONTROL", "CASH_INTENSIVE"],
+  },
+  {
+    law: "460/1992",
+    ref: "čl. 22",
+    triggers: ["THIRD_PARTY_FUNDING", "SAME_DAY", "RAPID_REPEAT", "CROSS_BORDER"],
+  },
+  {
+    law: "460/1992",
+    ref: "čl. 17",
+    triggers: ["EUROPOL_HOLDER", "SHELL_CONTROL"],
+    minSeverity: "critical",
+  },
 ];
 
-type Signal = { code: string; label: string; severity: Severity; score: number; entityIds: string[] };
+type Signal = {
+  code: string;
+  label: string;
+  severity: Severity;
+  score: number;
+  entityIds: string[];
+};
 
 function collectSignals(analysis: CaseAnalysis): Signal[] {
   const signals: Signal[] = [];

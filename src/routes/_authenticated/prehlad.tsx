@@ -1,3 +1,4 @@
+import { useActiveCase } from "@/hooks/useActiveCase";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
@@ -50,7 +51,6 @@ export const Route = createFileRoute("/_authenticated/prehlad")({
   }),
   component: Index,
 });
-
 
 function Index() {
   const { activeCase, analysis } = useActiveCase();

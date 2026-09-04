@@ -1,3 +1,4 @@
+import { useActiveCase } from "@/hooks/useActiveCase";
 import { createFileRoute } from "@tanstack/react-router";
 import { Scale, ShieldAlert } from "lucide-react";
 import {
@@ -32,10 +33,10 @@ export const Route = createFileRoute("/_authenticated/pravny-kontext")({
   component: LegalScreen,
 });
 
-const legal = buildLegalContext(analysis);
-
 function LegalScreen() {
   const { activeCase, analysis } = useActiveCase();
+  const legal = buildLegalContext(analysis);
+
   return (
     <PhoneFrame>
       <AppHeader

@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -19,15 +21,27 @@ import { Route as AuthenticatedMcpInfoRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedOsobyRouteImport } from './routes/_authenticated/osoby'
 import { Route as AuthenticatedPravnyKontextRouteImport } from './routes/_authenticated/pravny-kontext'
 import { Route as AuthenticatedPrehladRouteImport } from './routes/_authenticated/prehlad'
+import { Route as AuthenticatedPripadyRouteImport } from './routes/_authenticated/pripady'
 import { Route as AuthenticatedSietRouteImport } from './routes/_authenticated/siet'
 import { Route as AuthenticatedViacRouteImport } from './routes/_authenticated/viac'
+import { Route as AuthenticatedVitajteRouteImport } from './routes/_authenticated/vitajte'
 import { Route as AuthenticatedVztahyRouteImport } from './routes/_authenticated/vztahy'
 import { Route as AuthenticatedZbraneRouteImport } from './routes/_authenticated/zbrane'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -79,6 +93,11 @@ const AuthenticatedPrehladRoute = AuthenticatedPrehladRouteImport.update({
   path: '/prehlad',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPripadyRoute = AuthenticatedPripadyRouteImport.update({
+  id: '/pripady',
+  path: '/pripady',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSietRoute = AuthenticatedSietRouteImport.update({
   id: '/siet',
   path: '/siet',
@@ -87,6 +106,11 @@ const AuthenticatedSietRoute = AuthenticatedSietRouteImport.update({
 const AuthenticatedViacRoute = AuthenticatedViacRouteImport.update({
   id: '/viac',
   path: '/viac',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedVitajteRoute = AuthenticatedVitajteRouteImport.update({
+  id: '/vitajte',
+  path: '/vitajte',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedVztahyRoute = AuthenticatedVztahyRouteImport.update({
@@ -112,7 +136,8 @@ const Char91DotmcpChar93InvokeToolToolRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof AuthenticatedRouteRouteWithChildren
+  '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -122,15 +147,18 @@ export interface FileRoutesByFullPath {
   '/osoby': typeof AuthenticatedOsobyRoute
   '/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
   '/prehlad': typeof AuthenticatedPrehladRoute
+  '/pripady': typeof AuthenticatedPripadyRoute
   '/siet': typeof AuthenticatedSietRoute
   '/viac': typeof AuthenticatedViacRoute
+  '/vitajte': typeof AuthenticatedVitajteRoute
   '/vztahy': typeof AuthenticatedVztahyRoute
   '/zbrane': typeof AuthenticatedZbraneRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof AuthenticatedRouteRouteWithChildren
+  '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -140,8 +168,10 @@ export interface FileRoutesByTo {
   '/osoby': typeof AuthenticatedOsobyRoute
   '/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
   '/prehlad': typeof AuthenticatedPrehladRoute
+  '/pripady': typeof AuthenticatedPripadyRoute
   '/siet': typeof AuthenticatedSietRoute
   '/viac': typeof AuthenticatedViacRoute
+  '/vitajte': typeof AuthenticatedVitajteRoute
   '/vztahy': typeof AuthenticatedVztahyRoute
   '/zbrane': typeof AuthenticatedZbraneRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -149,7 +179,9 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -159,8 +191,10 @@ export interface FileRoutesById {
   '/_authenticated/osoby': typeof AuthenticatedOsobyRoute
   '/_authenticated/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
   '/_authenticated/prehlad': typeof AuthenticatedPrehladRoute
+  '/_authenticated/pripady': typeof AuthenticatedPripadyRoute
   '/_authenticated/siet': typeof AuthenticatedSietRoute
   '/_authenticated/viac': typeof AuthenticatedViacRoute
+  '/_authenticated/vitajte': typeof AuthenticatedVitajteRoute
   '/_authenticated/vztahy': typeof AuthenticatedVztahyRoute
   '/_authenticated/zbrane': typeof AuthenticatedZbraneRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -170,6 +204,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/mcp'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
@@ -179,8 +214,10 @@ export interface FileRouteTypes {
     | '/osoby'
     | '/pravny-kontext'
     | '/prehlad'
+    | '/pripady'
     | '/siet'
     | '/viac'
+    | '/vitajte'
     | '/vztahy'
     | '/zbrane'
     | '/.lovable/oauth/consent'
@@ -188,6 +225,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/mcp'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
@@ -197,15 +235,19 @@ export interface FileRouteTypes {
     | '/osoby'
     | '/pravny-kontext'
     | '/prehlad'
+    | '/pripady'
     | '/siet'
     | '/viac'
+    | '/vitajte'
     | '/vztahy'
     | '/zbrane'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   id:
     | '__root__'
+    | '/'
     | '/_authenticated'
+    | '/auth'
     | '/mcp'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
@@ -215,8 +257,10 @@ export interface FileRouteTypes {
     | '/_authenticated/osoby'
     | '/_authenticated/pravny-kontext'
     | '/_authenticated/prehlad'
+    | '/_authenticated/pripady'
     | '/_authenticated/siet'
     | '/_authenticated/viac'
+    | '/_authenticated/vitajte'
     | '/_authenticated/vztahy'
     | '/_authenticated/zbrane'
     | '/.lovable/oauth/consent'
@@ -224,7 +268,9 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   McpRoute: typeof McpRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -235,11 +281,25 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -305,6 +365,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPrehladRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pripady': {
+      id: '/_authenticated/pripady'
+      path: '/pripady'
+      fullPath: '/pripady'
+      preLoaderRoute: typeof AuthenticatedPripadyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/siet': {
       id: '/_authenticated/siet'
       path: '/siet'
@@ -317,6 +384,13 @@ declare module '@tanstack/react-router' {
       path: '/viac'
       fullPath: '/viac'
       preLoaderRoute: typeof AuthenticatedViacRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/vitajte': {
+      id: '/_authenticated/vitajte'
+      path: '/vitajte'
+      fullPath: '/vitajte'
+      preLoaderRoute: typeof AuthenticatedVitajteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/vztahy': {
@@ -356,8 +430,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOsobyRoute: typeof AuthenticatedOsobyRoute
   AuthenticatedPravnyKontextRoute: typeof AuthenticatedPravnyKontextRoute
   AuthenticatedPrehladRoute: typeof AuthenticatedPrehladRoute
+  AuthenticatedPripadyRoute: typeof AuthenticatedPripadyRoute
   AuthenticatedSietRoute: typeof AuthenticatedSietRoute
   AuthenticatedViacRoute: typeof AuthenticatedViacRoute
+  AuthenticatedVitajteRoute: typeof AuthenticatedVitajteRoute
   AuthenticatedVztahyRoute: typeof AuthenticatedVztahyRoute
   AuthenticatedZbraneRoute: typeof AuthenticatedZbraneRoute
 }
@@ -368,8 +444,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOsobyRoute: AuthenticatedOsobyRoute,
   AuthenticatedPravnyKontextRoute: AuthenticatedPravnyKontextRoute,
   AuthenticatedPrehladRoute: AuthenticatedPrehladRoute,
+  AuthenticatedPripadyRoute: AuthenticatedPripadyRoute,
   AuthenticatedSietRoute: AuthenticatedSietRoute,
   AuthenticatedViacRoute: AuthenticatedViacRoute,
+  AuthenticatedVitajteRoute: AuthenticatedVitajteRoute,
   AuthenticatedVztahyRoute: AuthenticatedVztahyRoute,
   AuthenticatedZbraneRoute: AuthenticatedZbraneRoute,
 }
@@ -378,7 +456,9 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   McpRoute: McpRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,

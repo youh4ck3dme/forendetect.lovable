@@ -1,3 +1,4 @@
+import { useActiveCase } from "@/hooks/useActiveCase";
 import { createFileRoute } from "@tanstack/react-router";
 import { Crosshair, ShieldAlert } from "lucide-react";
 import {
@@ -9,11 +10,7 @@ import {
   Screen,
   SectionTitle,
 } from "@/components/malte/Shell";
-import {
-  detectSerialBatches,
-  EUROPOL_STATUS_LABEL,
-  formatDate,
-} from "@/forensic";
+import { detectSerialBatches, EUROPOL_STATUS_LABEL, formatDate } from "@/forensic";
 
 export const Route = createFileRoute("/_authenticated/zbrane")({
   head: () => ({
@@ -33,7 +30,6 @@ export const Route = createFileRoute("/_authenticated/zbrane")({
   }),
   component: Weapons,
 });
-
 
 function Weapons() {
   const { activeCase, analysis } = useActiveCase();

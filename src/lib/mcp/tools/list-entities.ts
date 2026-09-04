@@ -5,10 +5,14 @@ import { caseAnalysis, text } from "../analysis";
 export default defineTool({
   name: "list_entities",
   title: "List entities",
-  description: "List all persons and companies in the case with their risk score, risk level and shell-company status.",
+  description:
+    "List all persons and companies in the case with their risk score, risk level and shell-company status.",
   inputSchema: {
     kind: z.enum(["person", "company"]).optional(),
-    shellOnly: z.boolean().default(false).describe("Return only entities detected as shell companies."),
+    shellOnly: z
+      .boolean()
+      .default(false)
+      .describe("Return only entities detected as shell companies."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ kind, shellOnly }, ctx) => {

@@ -1,5 +1,6 @@
 import {
   Crosshair,
+  FolderKanban,
   LayoutGrid,
   LineChart,
   MoreHorizontal,
@@ -14,7 +15,7 @@ import {
 export type NavItem = { to: string; label: string; icon: LucideIcon };
 
 export const navItems: NavItem[] = [
-  { to: "/", label: "Prehľad", icon: LayoutGrid },
+  { to: "/prehlad", label: "Prehľad", icon: LayoutGrid },
   { to: "/analyza-vypisov", label: "Analýza", icon: LineChart },
   { to: "/osoby", label: "Osoby", icon: Users },
   { to: "/vztahy", label: "Vzťahy", icon: Network },
@@ -22,6 +23,7 @@ export const navItems: NavItem[] = [
 ];
 
 export const secondaryItems: NavItem[] = [
+  { to: "/pripady", label: "Prípady", icon: FolderKanban },
   { to: "/siet", label: "Sieť tokov", icon: Share2 },
   { to: "/zbrane", label: "Zbrane", icon: Crosshair },
   { to: "/pravny-kontext", label: "Právny kontext", icon: Scale },

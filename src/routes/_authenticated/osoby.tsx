@@ -1,3 +1,4 @@
+import { useActiveCase } from "@/hooks/useActiveCase";
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Building2, Search, User } from "lucide-react";
@@ -37,7 +38,6 @@ export const Route = createFileRoute("/_authenticated/osoby")({
   }),
   component: People,
 });
-
 
 type KindFilter = "all" | "person" | "company" | "shell";
 

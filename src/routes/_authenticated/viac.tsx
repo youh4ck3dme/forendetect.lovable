@@ -1,4 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useActiveCase } from "@/hooks/useActiveCase";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { getSourceDownloadUrl } from "@/lib/source-download.functions";
+import { LogOut } from "lucide-react";
+
 import {
   ChevronRight,
   Crosshair,
@@ -42,7 +49,6 @@ export const Route = createFileRoute("/_authenticated/viac")({
   component: More,
 });
 
-
 const links = [
   { title: "Dôkazy a dokumenty", detail: "Evidencia spisového materiálu", icon: FileText },
   { title: "Audit log", detail: "Kompletná história úkonov", icon: History },
@@ -54,6 +60,25 @@ const links = [
 function More() {
   const { activeCase, analysis } = useActiveCase();
   const { state, countExport, reset } = useCaseStore();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const fetchSourceUrl = useServerFn(getSourceDownloadUrl);
+
+  async function handleSourceDownload() {
+    try {
+      const { url } = await fetchSourceUrl({ data: undefined });
+      window.location.href = url;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Stiahnutie zlyhalo.");
+    }
+  }
+
+  async function handleSignOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    void navigate({ to: "/auth", replace: true });
+  }
 
   return (
     <PhoneFrame>
@@ -100,7 +125,7 @@ function More() {
           </Card>
         </Link>
 
-        <a href="/malte-source.zip" download className="block">
+        <button type="button" onClick={handleSourceDownload} className="block w-full text-left">
           <Card className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Download className="h-4 w-4" aria-hidden />
@@ -108,14 +133,12 @@ function More() {
             <div className="min-w-0">
               <p className="text-sm font-semibold">Stiahnuť zdrojový kód (ZIP)</p>
               <p className="truncate text-[11px] text-muted-foreground">
-                Celý repozitár bez node_modules — náhrada za GitHub prepojenie
+                Dostupné len pre správcu — odkaz platí 5 minút
               </p>
             </div>
             <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" aria-hidden />
           </Card>
-        </a>
-
-
+        </button>
 
         <SectionTitle>Priebeh analýzy</SectionTitle>
 
@@ -226,6 +249,10 @@ function More() {
           }}
         >
           Vymazať uložený stav
+        </Button>
+
+        <Button variant="ghost" className="w-full" onClick={handleSignOut}>
+          <LogOut className="mr-1 h-4 w-4" aria-hidden /> Odhlásiť sa
         </Button>
       </Screen>
 
