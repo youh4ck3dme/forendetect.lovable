@@ -1,3 +1,4 @@
+import { useActiveCase } from "@/hooks/useActiveCase";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ChevronRight,

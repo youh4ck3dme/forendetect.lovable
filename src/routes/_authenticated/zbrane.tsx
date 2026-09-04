@@ -1,3 +1,4 @@
+import { useActiveCase } from "@/hooks/useActiveCase";
 import { createFileRoute } from "@tanstack/react-router";
 import { Crosshair, ShieldAlert } from "lucide-react";
 import {
