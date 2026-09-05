@@ -167,12 +167,10 @@ export function parseAmountValue(raw: string, decimal: DecimalSeparator): number
   const thousands = decimal === "," ? "." : ",";
   s = s.split(thousands).join("");
   if (decimal === ",") s = s.replace(",", ".");
-  if (!/^\d+(\.\d+)?$/.test(s)) return null;
+  // Najviac dve desatinné miesta — viac by znamenalo iný formát, nie zaokrúhlenie.
+  if (!/^\d+(\.\d{1,2})?$/.test(s)) return null;
   const value = Number(s);
   if (!Number.isFinite(value)) return null;
-  if (Math.round(value * 100) !== Math.round(value * 100 * 1) || !/^\d+(\.\d{0,2})?$/.test(s)) {
-    if (!/^\d+(\.\d{1,2})?$/.test(s)) return null;
-  }
   const signed = negative ? -value : value;
   return Math.round(signed * 100) / 100;
 }
