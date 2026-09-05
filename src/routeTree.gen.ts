@@ -17,6 +17,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAnalyzaVypisovRouteImport } from './routes/_authenticated/analyza-vypisov'
+import { Route as AuthenticatedAsistentRouteImport } from './routes/_authenticated/asistent'
 import { Route as AuthenticatedImportCsvRouteImport } from './routes/_authenticated/import-csv'
 import { Route as AuthenticatedMcpInfoRouteImport } from './routes/_authenticated/mcp-info'
 import { Route as AuthenticatedOsobyRouteImport } from './routes/_authenticated/osoby'
@@ -73,6 +74,11 @@ const AuthenticatedAnalyzaVypisovRoute =
     path: '/analyza-vypisov',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAsistentRoute = AuthenticatedAsistentRouteImport.update({
+  id: '/asistent',
+  path: '/asistent',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedImportCsvRoute = AuthenticatedImportCsvRouteImport.update({
   id: '/import-csv',
   path: '/import-csv',
@@ -149,6 +155,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/analyza-vypisov': typeof AuthenticatedAnalyzaVypisovRoute
+  '/asistent': typeof AuthenticatedAsistentRoute
   '/import-csv': typeof AuthenticatedImportCsvRoute
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/osoby': typeof AuthenticatedOsobyRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/analyza-vypisov': typeof AuthenticatedAnalyzaVypisovRoute
+  '/asistent': typeof AuthenticatedAsistentRoute
   '/import-csv': typeof AuthenticatedImportCsvRoute
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/osoby': typeof AuthenticatedOsobyRoute
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/analyza-vypisov': typeof AuthenticatedAnalyzaVypisovRoute
+  '/_authenticated/asistent': typeof AuthenticatedAsistentRoute
   '/_authenticated/import-csv': typeof AuthenticatedImportCsvRoute
   '/_authenticated/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/_authenticated/osoby': typeof AuthenticatedOsobyRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/analyza-vypisov'
+    | '/asistent'
     | '/import-csv'
     | '/mcp-info'
     | '/osoby'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/analyza-vypisov'
+    | '/asistent'
     | '/import-csv'
     | '/mcp-info'
     | '/osoby'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/analyza-vypisov'
+    | '/_authenticated/asistent'
     | '/_authenticated/import-csv'
     | '/_authenticated/mcp-info'
     | '/_authenticated/osoby'
@@ -347,6 +359,13 @@ declare module '@tanstack/react-router' {
       path: '/analyza-vypisov'
       fullPath: '/analyza-vypisov'
       preLoaderRoute: typeof AuthenticatedAnalyzaVypisovRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/asistent': {
+      id: '/_authenticated/asistent'
+      path: '/asistent'
+      fullPath: '/asistent'
+      preLoaderRoute: typeof AuthenticatedAsistentRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/import-csv': {
@@ -445,6 +464,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyzaVypisovRoute: typeof AuthenticatedAnalyzaVypisovRoute
+  AuthenticatedAsistentRoute: typeof AuthenticatedAsistentRoute
   AuthenticatedImportCsvRoute: typeof AuthenticatedImportCsvRoute
   AuthenticatedMcpInfoRoute: typeof AuthenticatedMcpInfoRoute
   AuthenticatedOsobyRoute: typeof AuthenticatedOsobyRoute
@@ -460,6 +480,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyzaVypisovRoute: AuthenticatedAnalyzaVypisovRoute,
+  AuthenticatedAsistentRoute: AuthenticatedAsistentRoute,
   AuthenticatedImportCsvRoute: AuthenticatedImportCsvRoute,
   AuthenticatedMcpInfoRoute: AuthenticatedMcpInfoRoute,
   AuthenticatedOsobyRoute: AuthenticatedOsobyRoute,
