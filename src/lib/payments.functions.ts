@@ -104,7 +104,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       } = await context.supabase.auth.getUser();
 
       const customerId = await resolveOrCreateCustomer(stripe, {
-        email: user?.email ?? undefined,
+        ...(user?.email ? { email: user.email } : {}),
         userId: context.userId,
       });
 
