@@ -17,6 +17,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       devOptions: { enabled: false },
       filename: "sw.js",
+      outDir: "dist/client",
       manifest: {
         id: "/",
         name: "Forendo — analýza finančných tokov",
