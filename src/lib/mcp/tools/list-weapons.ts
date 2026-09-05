@@ -6,12 +6,12 @@ export default defineTool({
   name: "list_weapons",
   title: "List weapons",
   description:
-    "Weapon register of the case with EUROPOL serial matches, licence validity and holder.",
+    "Weapon register of the case with watchlist serial matches, licence validity and holder.",
   inputSchema: {
     europolOnly: z
       .boolean()
       .default(false)
-      .describe("Return only weapons matching the mock EUROPOL database."),
+      .describe("Return only weapons matching the case watchlist of serial numbers."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ europolOnly }, ctx) => {
