@@ -130,7 +130,7 @@ export type AiRunResult = {
   payload?: AiPayload;
   usage?: { prompt: number | null; completion: number | null };
   /** Text alebo návrhy — vždy s pôvodnými identifikátormi záznamov. */
-  output?: unknown;
+  output?: Record<string, unknown>;
 };
 
 export const runAiTask = createServerFn({ method: "POST" })
