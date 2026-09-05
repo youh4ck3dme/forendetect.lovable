@@ -1,3 +1,5 @@
+import { TransactionList } from "@/components/malte/RecordLists";
+import { AddPanel, TransactionForm } from "@/components/malte/CaseForms";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { EmptyState } from "@/components/malte/EmptyState";
 import { useState } from "react";
@@ -57,7 +59,7 @@ const flagTone = {
 };
 
 function StatementAnalysis() {
-  const { activeCase, analysis } = useActiveCase();
+  const { activeCase, analysis, refresh, revisions } = useActiveCase();
   const { transactions, totals, crossBorder } = analysis;
   const { state, countExport } = useCaseStore();
   const [target, setTarget] = useState<DetectorTarget | null>(null);
@@ -83,6 +85,14 @@ function StatementAnalysis() {
       <PhoneFrame>
         <AppHeader title="Analýza transakcií" back />
         <Screen>
+          <AddPanel label="Pridať transakciu">
+            <TransactionForm
+              caseId={activeCase.id}
+              entities={activeCase.entities}
+              baseCurrency={activeCase.baseCurrency}
+              onSaved={refresh}
+            />
+          </AddPanel>
           <Card>
             <EmptyState
               icon={Banknote}
@@ -110,6 +120,23 @@ function StatementAnalysis() {
       />
 
       <Screen>
+        <AddPanel label="Pridať transakciu">
+          <TransactionForm
+            caseId={activeCase.id}
+            entities={activeCase.entities}
+            baseCurrency={activeCase.baseCurrency}
+            onSaved={refresh}
+          />
+        </AddPanel>
+        <TransactionList
+          caseId={activeCase.id}
+          entities={activeCase.entities}
+          transactions={sorted}
+          baseCurrency={activeCase.baseCurrency}
+          revisions={revisions}
+          onChanged={refresh}
+        />
+
         <Card>
           <div className="flex items-start justify-between gap-4">
             <div>

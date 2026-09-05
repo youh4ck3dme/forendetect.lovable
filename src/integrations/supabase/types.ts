@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      case_audit_log: {
+        Row: {
+          actor_id: string | null
+          case_id: string | null
+          changed_fields: string[]
+          created_at: string
+          id: string
+          operation: string
+          record_id: string | null
+          revision: number | null
+          table_name: string
+          user_id: string
+        }
+        Insert: {
+          actor_id?: string | null
+          case_id?: string | null
+          changed_fields?: string[]
+          created_at?: string
+          id?: string
+          operation: string
+          record_id?: string | null
+          revision?: number | null
+          table_name: string
+          user_id: string
+        }
+        Update: {
+          actor_id?: string | null
+          case_id?: string | null
+          changed_fields?: string[]
+          created_at?: string
+          id?: string
+          operation?: string
+          record_id?: string | null
+          revision?: number | null
+          table_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       case_entities: {
         Row: {
           address: string | null
@@ -30,6 +69,7 @@ export type Database = {
           physical_inventory: boolean | null
           registered_address: string | null
           responsive: boolean | null
+          revision: number
           role: string
           updated_at: string
           user_id: string
@@ -51,6 +91,7 @@ export type Database = {
           physical_inventory?: boolean | null
           registered_address?: string | null
           responsive?: boolean | null
+          revision?: number
           role?: string
           updated_at?: string
           user_id: string
@@ -72,6 +113,7 @@ export type Database = {
           physical_inventory?: boolean | null
           registered_address?: string | null
           responsive?: boolean | null
+          revision?: number
           role?: string
           updated_at?: string
           user_id?: string
@@ -95,6 +137,7 @@ export type Database = {
           date: string
           detail: string
           id: string
+          revision: number
           severity: string
           title: string
           updated_at: string
@@ -106,6 +149,7 @@ export type Database = {
           date: string
           detail?: string
           id?: string
+          revision?: number
           severity?: string
           title?: string
           updated_at?: string
@@ -117,6 +161,7 @@ export type Database = {
           date?: string
           detail?: string
           id?: string
+          revision?: number
           severity?: string
           title?: string
           updated_at?: string
@@ -139,6 +184,7 @@ export type Database = {
           from_id: string | null
           id: string
           label: string
+          revision: number
           to_id: string | null
           updated_at: string
           user_id: string
@@ -149,6 +195,7 @@ export type Database = {
           from_id?: string | null
           id?: string
           label?: string
+          revision?: number
           to_id?: string | null
           updated_at?: string
           user_id: string
@@ -159,6 +206,7 @@ export type Database = {
           from_id?: string | null
           id?: string
           label?: string
+          revision?: number
           to_id?: string | null
           updated_at?: string
           user_id?: string
@@ -192,6 +240,7 @@ export type Database = {
           amount: number
           case_id: string
           created_at: string
+          currency: string
           date: string
           description: string
           destination_country: string
@@ -200,6 +249,7 @@ export type Database = {
           method: string
           origin_country: string
           payer_id: string | null
+          revision: number
           to_id: string | null
           updated_at: string
           user_id: string
@@ -208,6 +258,7 @@ export type Database = {
           amount?: number
           case_id: string
           created_at?: string
+          currency?: string
           date: string
           description?: string
           destination_country?: string
@@ -216,6 +267,7 @@ export type Database = {
           method?: string
           origin_country?: string
           payer_id?: string | null
+          revision?: number
           to_id?: string | null
           updated_at?: string
           user_id: string
@@ -224,6 +276,7 @@ export type Database = {
           amount?: number
           case_id?: string
           created_at?: string
+          currency?: string
           date?: string
           description?: string
           destination_country?: string
@@ -232,6 +285,7 @@ export type Database = {
           method?: string
           origin_country?: string
           payer_id?: string | null
+          revision?: number
           to_id?: string | null
           updated_at?: string
           user_id?: string
@@ -277,6 +331,7 @@ export type Database = {
           id: string
           licence: string | null
           model: string
+          revision: number
           serial: string
           supplier_id: string | null
           updated_at: string
@@ -291,6 +346,7 @@ export type Database = {
           id?: string
           licence?: string | null
           model?: string
+          revision?: number
           serial?: string
           supplier_id?: string | null
           updated_at?: string
@@ -305,6 +361,7 @@ export type Database = {
           id?: string
           licence?: string | null
           model?: string
+          revision?: number
           serial?: string
           supplier_id?: string | null
           updated_at?: string
@@ -336,36 +393,42 @@ export type Database = {
       }
       cases: {
         Row: {
+          base_currency: string
           created_at: string
           europol_serials: string[]
           id: string
           name: string
           orsr_addresses: Json
           reference_date: string
+          revision: number
           subtitle: string
           updated_at: string
           user_id: string
           valid_licences: string[]
         }
         Insert: {
+          base_currency?: string
           created_at?: string
           europol_serials?: string[]
           id?: string
           name: string
           orsr_addresses?: Json
           reference_date?: string
+          revision?: number
           subtitle?: string
           updated_at?: string
           user_id: string
           valid_licences?: string[]
         }
         Update: {
+          base_currency?: string
           created_at?: string
           europol_serials?: string[]
           id?: string
           name?: string
           orsr_addresses?: Json
           reference_date?: string
+          revision?: number
           subtitle?: string
           updated_at?: string
           user_id?: string
@@ -429,6 +492,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      entity_belongs: {
+        Args: { _case: string; _entity: string; _user: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

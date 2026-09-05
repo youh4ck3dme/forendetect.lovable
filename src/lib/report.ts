@@ -1,4 +1,5 @@
 import { formatDate, formatEur, severityLabel, type CaseAnalysis, type Severity } from "@/forensic";
+import { RULE_CATALOG, SCORE_METHODOLOGY } from "@/forensic/core/rules";
 
 const severityColor: Record<Severity, string> = {
   critical: "#b3122b",
@@ -82,10 +83,25 @@ export function buildReportHtml(analysis: CaseAnalysis, filter: Severity[]): str
   <div class="grid">
     <div class="kpi"><span>Subjekty</span><strong>${analysis.totals.entities}</strong></div>
     <div class="kpi"><span>Transakcie</span><strong>${analysis.totals.transactions}</strong></div>
-    <div class="kpi"><span>Objem</span><strong>${formatEur(analysis.totals.volume)}</strong></div>
+    <div class="kpi"><span>Objem (${escapeHtml(analysis.case.baseCurrency)})</span><strong>${formatEur(analysis.totals.volume)}</strong></div>
+    <div class="kpi"><span>Meny</span><strong>${escapeHtml(analysis.totals.currencies.join(", ") || "—")}</strong></div>
     <div class="kpi"><span>Hotovosť</span><strong>${Math.round(analysis.totals.cashRatio * 100)} %</strong></div>
     <div class="kpi"><span>Zhody EUROPOL</span><strong>${analysis.totals.europolMatches}/${analysis.totals.weapons}</strong></div>
   </div>
+
+  <h2>Metodika a obmedzenia</h2>
+  <p class="muted">Verzia pravidiel: <strong>${escapeHtml(analysis.rulesVersion)}</strong>. ${escapeHtml(SCORE_METHODOLOGY.summary)}
+  Zistenia sú označené ako <em>fakt</em> (priamo pozorované v zadaných dátach) alebo <em>heuristika</em> (interpretácia podľa prahu).
+  Skóre nie je dôkazom trestnej činnosti a môže obsahovať falošne pozitívne výsledky. Sumy sa nekonvertujú medzi menami —
+  objem sa uvádza v základnej mene prípadu (${escapeHtml(analysis.case.baseCurrency)}).</p>
+  <table><thead><tr><th>Pravidlo</th><th>Trieda</th><th>Podmienka</th><th>Základ prahu</th></tr></thead><tbody>
+  ${Object.values(RULE_CATALOG)
+    .map(
+      (rule) =>
+        `<tr><td>${escapeHtml(rule.id)}</td><td>${escapeHtml(rule.kind)}</td><td>${escapeHtml(rule.condition)}</td><td class="muted">${escapeHtml(rule.basis)}</td></tr>`,
+    )
+    .join("")}
+  </tbody></table>
 
   <h2>Zistenia (${alerts.length}${filter.length ? ` — filter: ${filter.map((f) => severityLabel[f]).join(", ")}` : ""})</h2>
   <table><thead><tr><th>Zistenie</th><th>Zdroj</th><th>Závažnosť</th><th class="num">Skóre</th></tr></thead>

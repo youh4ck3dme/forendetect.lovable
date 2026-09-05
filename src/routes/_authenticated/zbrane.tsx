@@ -1,3 +1,4 @@
+import { AddPanel, WeaponForm } from "@/components/malte/CaseForms";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { createFileRoute } from "@tanstack/react-router";
 import { Crosshair, ShieldAlert } from "lucide-react";
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/_authenticated/zbrane")({
 });
 
 function Weapons() {
-  const { activeCase, analysis } = useActiveCase();
+  const { activeCase, analysis, refresh } = useActiveCase();
   const names = new Map(activeCase.entities.map((e) => [e.id, e.name]));
   const batches = detectSerialBatches(activeCase.weapons);
   const matches = analysis.weapons.filter((w) => w.europolMatch).length;
@@ -46,6 +47,9 @@ function Weapons() {
       />
 
       <Screen>
+        <AddPanel label="Pridať zbraň">
+          <WeaponForm caseId={activeCase.id} entities={activeCase.entities} onSaved={refresh} />
+        </AddPanel>
         <Card className="flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-risk-high/12 text-risk-high">
             <ShieldAlert className="h-5 w-5" aria-hidden />

@@ -13,7 +13,10 @@ import {
 import { EmptyState } from "@/components/malte/EmptyState";
 import { Button } from "@/components/ui/button";
 import { useActiveCase } from "@/hooks/useActiveCase";
-import { addEntity, createCase, deleteCase, deleteEntity } from "@/lib/case-data";
+import { createCase } from "@/lib/case-data";
+import { EntityForm } from "@/components/malte/CaseForms";
+import { EntityList } from "@/components/malte/RecordLists";
+import { DeleteRecordButton } from "@/components/malte/DeleteRecordButton";
 
 export const Route = createFileRoute("/_authenticated/pripady")({
   head: () => ({
@@ -36,12 +39,10 @@ const inputClass =
   "h-10 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none focus:ring-2 focus:ring-ring";
 
 function Cases() {
-  const { cases, activeCaseId, setActiveCaseId, activeCase, hasCase, refresh } = useActiveCase();
+  const { cases, activeCaseId, setActiveCaseId, activeCase, hasCase, refresh, revisions } =
+    useActiveCase();
   const [name, setName] = useState("");
   const [subtitle, setSubtitle] = useState("");
-  const [entityName, setEntityName] = useState("");
-  const [entityKind, setEntityKind] = useState<"person" | "company">("person");
-  const [entityRole, setEntityRole] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function handleCreateCase(event: React.FormEvent) {
@@ -57,53 +58,6 @@ function Cases() {
       toast.success("Prípad vytvorený.");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Prípad sa nepodarilo vytvoriť.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function handleDeleteCase(id: string) {
-    setBusy(true);
-    try {
-      await deleteCase(id);
-      if (activeCaseId === id) setActiveCaseId(null);
-      refresh();
-      toast.success("Prípad zmazaný.");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Mazanie zlyhalo.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function handleAddEntity(event: React.FormEvent) {
-    event.preventDefault();
-    if (!activeCaseId || !entityName.trim()) return;
-    setBusy(true);
-    try {
-      await addEntity(activeCaseId, {
-        name: entityName.trim(),
-        kind: entityKind,
-        role: entityRole.trim(),
-      });
-      setEntityName("");
-      setEntityRole("");
-      refresh();
-      toast.success("Subjekt pridaný.");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Pridanie zlyhalo.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  async function handleDeleteEntity(id: string) {
-    setBusy(true);
-    try {
-      await deleteEntity(id);
-      refresh();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Mazanie zlyhalo.");
     } finally {
       setBusy(false);
     }
@@ -161,15 +115,15 @@ function Cases() {
                 {activeCaseId === item.id ? (
                   <CheckCircle2 className="h-4 w-4 text-primary" aria-label="Aktívny prípad" />
                 ) : null}
-                <button
-                  type="button"
-                  aria-label={`Zmazať prípad ${item.name}`}
-                  disabled={busy}
-                  onClick={() => handleDeleteCase(item.id)}
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Trash2 className="h-4 w-4" aria-hidden />
-                </button>
+                <DeleteRecordButton
+                  type="case"
+                  id={item.id}
+                  label={item.name}
+                  onDeleted={() => {
+                    if (activeCaseId === item.id) setActiveCaseId(null);
+                    refresh();
+                  }}
+                />
               </Card>
             ))}
           </div>
@@ -178,44 +132,7 @@ function Cases() {
         {hasCase ? (
           <>
             <SectionTitle>Subjekty v prípade {activeCase.name}</SectionTitle>
-            <Card className="space-y-3">
-              <form className="space-y-2" onSubmit={handleAddEntity}>
-                <input
-                  aria-label="Meno alebo názov"
-                  placeholder="Meno osoby alebo názov firmy"
-                  className={inputClass}
-                  value={entityName}
-                  onChange={(e) => setEntityName(e.target.value)}
-                />
-                <input
-                  aria-label="Rola v prípade"
-                  placeholder="Rola v prípade (nepovinné)"
-                  className={inputClass}
-                  value={entityRole}
-                  onChange={(e) => setEntityRole(e.target.value)}
-                />
-                <div className="flex gap-2">
-                  {(["person", "company"] as const).map((kind) => (
-                    <button
-                      key={kind}
-                      type="button"
-                      aria-pressed={entityKind === kind}
-                      onClick={() => setEntityKind(kind)}
-                      className={
-                        entityKind === kind
-                          ? "h-9 flex-1 rounded-xl border border-transparent gradient-brand text-xs font-medium"
-                          : "h-9 flex-1 rounded-xl border border-border bg-card text-xs font-medium text-muted-foreground"
-                      }
-                    >
-                      {kind === "person" ? "Osoba" : "Firma"}
-                    </button>
-                  ))}
-                </div>
-                <Button type="submit" className="w-full" disabled={busy}>
-                  Pridať subjekt
-                </Button>
-              </form>
-            </Card>
+            <EntityForm caseId={activeCase.id} onSaved={refresh} />
 
             {activeCase.entities.length === 0 ? (
               <EmptyState
@@ -223,28 +140,12 @@ function Cases() {
                 detail="Pridajte prvý subjekt, aby sa spustili detektory."
               />
             ) : (
-              <div className="space-y-2">
-                {activeCase.entities.map((entity) => (
-                  <Card key={entity.id} className="flex items-center gap-3">
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold">{entity.name}</p>
-                      <p className="text-caption">
-                        {entity.kind === "company" ? "Firma" : "Osoba"}
-                        {entity.role ? ` • ${entity.role}` : ""}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      aria-label={`Zmazať subjekt ${entity.name}`}
-                      disabled={busy}
-                      onClick={() => handleDeleteEntity(entity.id)}
-                      className="text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      <Trash2 className="h-4 w-4" aria-hidden />
-                    </button>
-                  </Card>
-                ))}
-              </div>
+              <EntityList
+                caseId={activeCase.id}
+                entities={activeCase.entities}
+                revisions={revisions}
+                onChanged={refresh}
+              />
             )}
           </>
         ) : null}

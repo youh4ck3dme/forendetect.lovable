@@ -1,3 +1,5 @@
+import { RULES_VERSION } from "./core/rules";
+import { sumByCurrency, sumVolume } from "./core/money";
 import type {
   Alert,
   CaseAnalysis,
@@ -304,6 +306,7 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
     temporalPatterns,
     corridors,
     alerts,
+    rulesVersion: RULES_VERSION,
     caseScore,
     caseLevel: levelFromScore(caseScore),
     topFlags: dedupeFlags(allFlags).slice(0, 6),
@@ -311,7 +314,13 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
       entities: entities.length,
       companies,
       transactions: transactions.length,
-      volume: transactions.reduce((s, t) => s + t.amount, 0),
+      volume: sumVolume(
+        transactions
+          .filter((t) => (t.currency || "EUR") === (forensicCase.baseCurrency || "EUR"))
+          .map((t) => t.amount),
+      ),
+      volumeByCurrency: sumByCurrency(transactions),
+      currencies: [...new Set(transactions.map((t) => t.currency || "EUR"))].sort(),
       cashRatio: cashRatio(transactions),
       weapons: weapons.length,
       europolMatches: weaponAnalyses.filter((w) => w.europolMatch).length,
