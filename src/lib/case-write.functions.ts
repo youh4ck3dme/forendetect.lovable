@@ -448,3 +448,84 @@ export const deleteRecord = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
+
+/* ------------------------------ demo prípad -------------------------------- */
+
+/**
+ * Vytvorí výslovne označený syntetický ukážkový prípad.
+ * Neobsahuje osobné údaje a vytvára sa len na výslovné vyžiadanie používateľa —
+ * nikdy sa nepridáva automaticky do reálnych prípadov.
+ */
+export const createDemoCase = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const today = new Date();
+    const day = (offset: number) =>
+      new Date(today.getTime() - offset * 86400000).toISOString().slice(0, 10);
+
+    const { data: created, error: caseError } = await supabase
+      .from("cases")
+      .insert({
+        user_id: userId,
+        name: "UKÁŽKA — syntetické dáta",
+        subtitle: "Vzorový prípad bez osobných údajov",
+        is_demo: true,
+        base_currency: "EUR",
+        reference_date: day(0),
+      })
+      .select("id")
+      .single();
+    if (caseError || !created) fail(caseError, "Ukážkový prípad sa nepodarilo vytvoriť.");
+    const caseId = created.id;
+
+    const entities = [
+      { name: "Subjekt A s.r.o.", kind: "company", role: "odberateľ", country: "SK", x: 20, y: 30 },
+      { name: "Subjekt B s.r.o.", kind: "company", role: "sprostredkovateľ", country: "CZ", x: 55, y: 20 },
+      { name: "Subjekt C Ltd.", kind: "company", role: "príjemca", country: "CY", x: 80, y: 60 },
+      { name: "Osoba D (fiktívna)", kind: "person", role: "konateľ", country: "SK", x: 35, y: 70 },
+    ];
+    const { data: rows, error: entityError } = await supabase
+      .from("case_entities")
+      .insert(entities.map((e) => ({ ...e, case_id: caseId, user_id: userId })))
+      .select("id, name");
+    if (entityError || !rows) fail(entityError, "Ukážkové subjekty sa nepodarilo vytvoriť.");
+
+    const byName = (needle: string) => rows.find((r) => r.name.startsWith(needle))?.id ?? null;
+    const a = byName("Subjekt A");
+    const b = byName("Subjekt B");
+    const c = byName("Subjekt C");
+
+    const transactions = [
+      { date: day(30), amount: 48000, from_id: a, to_id: b, destination_country: "CZ", description: "Poradenské služby (ukážka)" },
+      { date: day(28), amount: 47500, from_id: b, to_id: c, destination_country: "CY", description: "Licenčný poplatok (ukážka)" },
+      { date: day(21), amount: 9900, from_id: a, to_id: b, destination_country: "CZ", description: "Marketing (ukážka)" },
+      { date: day(20), amount: 9900, from_id: a, to_id: b, destination_country: "CZ", description: "Marketing (ukážka)" },
+      { date: day(19), amount: 9900, from_id: a, to_id: b, destination_country: "CZ", description: "Marketing (ukážka)" },
+      { date: day(7), amount: 62000, from_id: b, to_id: c, destination_country: "CY", description: "Vyrovnanie (ukážka)" },
+    ];
+    const { error: txError } = await supabase.from("case_transactions").insert(
+      transactions.map((t) => ({
+        ...t,
+        case_id: caseId,
+        user_id: userId,
+        currency: "EUR",
+        method: "transfer",
+        origin_country: "SK",
+      })),
+    );
+    if (txError) fail(txError, "Ukážkové transakcie sa nepodarilo vytvoriť.");
+
+    await supabase.from("case_events").insert([
+      {
+        case_id: caseId,
+        user_id: userId,
+        date: day(30),
+        title: "Začiatok toku platieb",
+        detail: "Syntetická udalosť pre ukážku.",
+        severity: "low",
+      },
+    ]);
+
+    return { id: caseId };
+  });
