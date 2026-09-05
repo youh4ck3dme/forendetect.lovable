@@ -81,7 +81,7 @@ function Weapons() {
                   </div>
                   <span className="ml-auto">
                     <RiskChip level={europolMatch ? "critical" : invalidLicence ? "high" : "low"}>
-                      {europolMatch ? "EUROPOL" : invalidLicence ? "Bez licencie" : "Čisté"}
+                      {europolMatch ? "Sledovaná" : invalidLicence ? "Bez licencie" : "Čisté"}
                     </RiskChip>
                   </span>
                 </div>
