@@ -1,5 +1,14 @@
 import { formatDate, formatEur, severityLabel, type CaseAnalysis, type Severity } from "@/forensic";
 import { RULE_CATALOG, SCORE_METHODOLOGY } from "@/forensic/core/rules";
+import { APP_VERSION } from "@/lib/version";
+import { listCaseImports, type CaseImportMeta } from "@/lib/case-data";
+
+/** Doplnkový kontext reportu: pôvod dát a prípadný text od AI (vždy oddelený). */
+export type ReportContext = {
+  imports?: CaseImportMeta[];
+  ai?: { task: string; text: string; model: string; promptVersion: string } | null;
+  legalStatus?: string;
+};
 
 const severityColor: Record<Severity, string> = {
   critical: "#b3122b",
