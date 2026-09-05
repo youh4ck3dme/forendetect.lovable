@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getSourceDownloadUrl } from "@/lib/source-download.functions";
 import { LogOut } from "lucide-react";
+import { clearClientState } from "@/lib/pwa";
 
 import {
   ChevronRight,
