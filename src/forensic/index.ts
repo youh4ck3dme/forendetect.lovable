@@ -97,8 +97,8 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
     if (europolHeld.length > 0) {
       flags.push({
         code: "EUROPOL_HOLDER",
-        label: "Zbrane so zhodou v EUROPOL",
-        detail: `${europolHeld.length} kusov evidovaných v kriminálnom prostredí`,
+        label: "Zbrane na sledovanom zozname",
+        detail: `${europolHeld.length} kusov na sledovanom zozname prípadu`,
         weight: 30,
         severity: "critical",
       });

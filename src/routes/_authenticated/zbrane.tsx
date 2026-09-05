@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/zbrane")({
       {
         name: "description",
         content:
-          "Evidencia zbraní prípadu s kontrolou sériových čísel voči databáze EUROPOL a platnosti zbrojných licencií.",
+          "Evidencia zbraní prípadu s kontrolou sériových čísel voči sledovanému zoznamu prípadu a platnosti zbrojných licencií.",
       },
       { property: "og:title", content: "Register zbraní — Forendo" },
       {
@@ -56,7 +56,7 @@ function Weapons() {
           </span>
           <div>
             <p className="text-sm font-semibold">
-              {matches} z {analysis.weapons.length} zbraní so zhodou v EUROPOL
+              {matches} z {analysis.weapons.length} zbraní na sledovanom zozname
             </p>
             <p className="text-[11px] text-muted-foreground">
               Kontrola sériových čísel a platnosti licencií
@@ -81,7 +81,7 @@ function Weapons() {
                   </div>
                   <span className="ml-auto">
                     <RiskChip level={europolMatch ? "critical" : invalidLicence ? "high" : "low"}>
-                      {europolMatch ? "EUROPOL" : invalidLicence ? "Bez licencie" : "Čisté"}
+                      {europolMatch ? "Sledovaná" : invalidLicence ? "Bez licencie" : "Čisté"}
                     </RiskChip>
                   </span>
                 </div>

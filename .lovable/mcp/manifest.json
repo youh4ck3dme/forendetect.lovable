@@ -159,7 +159,7 @@
       {
         "name": "list_weapons",
         "title": "List weapons",
-        "description": "Weapon register of the case with EUROPOL serial matches, licence validity and holder.",
+        "description": "Weapon register of the case with watchlist serial matches, licence validity and holder.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -171,7 +171,7 @@
           "properties": {
             "europolOnly": {
               "default": false,
-              "description": "Return only weapons matching the mock EUROPOL database.",
+              "description": "Return only weapons matching the case watchlist of serial numbers.",
               "type": "boolean"
             }
           }

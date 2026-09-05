@@ -15,10 +15,10 @@ export function analyzeWeapon(weapon: Weapon, forensicCase: ForensicCase): Weapo
   if (europolMatch) {
     flags.push({
       code: "EUROPOL_MATCH",
-      label: "Zhoda v EUROPOL databáze",
+      label: "Zhoda v sledovanom zozname sériových čísel",
       detail: record
         ? `${weapon.serial} • ${record.caseRef} • ${record.seizedCountry} • ${record.context}`
-        : `Sériové číslo ${weapon.serial} evidované v kriminálnom prostredí`,
+        : `Sériové číslo ${weapon.serial} je na sledovanom zozname prípadu`,
       weight: 35,
       severity: "critical",
     });
@@ -27,7 +27,7 @@ export function analyzeWeapon(weapon: Weapon, forensicCase: ForensicCase): Weapo
   if (!record && fuzzy) {
     flags.push({
       code: "EUROPOL_FUZZY",
-      label: "Pravdepodobná zhoda v EUROPOL",
+      label: "Pravdepodobná zhoda v sledovanom zozname",
       detail: `${weapon.serial} sa líši od evidovaného ${fuzzy.serial} v jednom znaku (${fuzzy.caseRef})`,
       weight: 20,
       severity: "high",
