@@ -77,6 +77,8 @@ function More() {
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
+    // Vyčistí citlivý klientský stav, aby ďalší účet na zariadení nevidel cudzie dáta.
+    await clearClientState();
     void navigate({ to: "/auth", replace: true });
   }
 
