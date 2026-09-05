@@ -220,3 +220,21 @@ export function exportCaseReport(
   else frame.onload = print;
   return true;
 }
+
+/**
+ * Report vrátane metadát importov. Ak sa metadáta nepodarí načítať,
+ * report sa aj tak vygeneruje — bez pôvodu dát, s výslovnou poznámkou.
+ */
+export async function exportCaseReportWithSources(
+  analysis: CaseAnalysis,
+  filter: Severity[],
+  extra: Omit<ReportContext, "imports"> = {},
+): Promise<boolean> {
+  let imports: CaseImportMeta[] = [];
+  try {
+    imports = await listCaseImports(analysis.case.id);
+  } catch {
+    imports = [];
+  }
+  return exportCaseReport(analysis, filter, { ...extra, imports });
+}
