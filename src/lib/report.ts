@@ -137,6 +137,44 @@ export function buildReportHtml(
   <h2>Detegované reťazce</h2>
   <ul>${chains || "<li>Žiadne</li>"}</ul>
 
+  <h2>Pôvod dát</h2>
+  <p class="muted">Rozsah dát: <strong>${escapeHtml(range)}</strong> • ${analysis.totals.transactions} transakcií •
+  odtlačok dát (revízia): <strong>${escapeHtml(analysis.dataFingerprint ?? "—")}</strong> •
+  verzia aplikácie: ${escapeHtml(APP_VERSION)} • verzia pravidiel: ${escapeHtml(analysis.rulesVersion)}.</p>
+  ${
+    imports.length
+      ? `<table><thead><tr><th>Súbor</th><th>Riadky</th><th>Parser / mapovanie</th><th>SHA-256 originálu</th></tr></thead><tbody>${imports
+          .map(
+            (i) =>
+              `<tr><td>${escapeHtml(i.filename)}<br /><span class="muted">${escapeHtml(new Date(i.createdAt).toLocaleString("sk-SK"))}${i.partial ? " • čiastočný import" : ""}</span></td>
+              <td class="num">${i.validRows}/${i.totalRows}${i.errorRows ? ` (${i.errorRows} chybných)` : ""}</td>
+              <td class="muted">${escapeHtml(i.parserVersion)}<br />${escapeHtml(JSON.stringify(i.columnMapping))}</td>
+              <td class="muted" style="word-break:break-all">${escapeHtml(i.sha256)}${i.originalStored ? "" : "<br />originál neuložený"}</td></tr>`,
+          )
+          .join("")}</tbody></table>`
+      : '<p class="muted">Transakcie boli zadané ručne — žiadny importovaný súbor.</p>'
+  }
+  <p class="muted">Odkazy na zdrojové riadky pri zisteniach: ${
+    analysis.case.transactions.some((t) => t.sourceRow)
+      ? "uvedené v stĺpci Zdroj (číslo riadka v importovanom súbore)."
+      : "nie sú k dispozícii pri ručne zadaných záznamoch."
+  }</p>
+
+  <h2>Právne odkazy</h2>
+  <p class="muted">${escapeHtml(
+    context.legalStatus ??
+      "Právne ustanovenia sú uvedené vo verzionovanej podobe v module Právny kontext. Znenie predpisov nie je automaticky overované voči Slov-Lex — pred použitím overte účinnú verziu.",
+  )}</p>
+
+  ${
+    context.ai
+      ? `<h2>Text vygenerovaný AI (neoverený)</h2>
+      <p class="muted">Model ${escapeHtml(context.ai.model)}, šablóna ${escapeHtml(context.ai.promptVersion)}, úloha ${escapeHtml(context.ai.task)}.
+      Nasledujúci text vytvorila jazyková AI. Nie je to zistenie detektora ani fakt — slúži ako návrh na kontrolu človekom.</p>
+      <p>${escapeHtml(context.ai.text).replace(/\n/g, "<br />")}</p>`
+      : ""
+  }
+
   <h2>Časová os</h2>
   <table><thead><tr><th>Dátum</th><th>Udalosť</th></tr></thead><tbody>
   ${analysis.case.events
