@@ -1,4 +1,5 @@
 import { RULES_VERSION } from "./core/rules";
+import { dataFingerprint } from "./core/fingerprint";
 import { sumByCurrency, sumVolume } from "./core/money";
 import type {
   Alert,
@@ -30,6 +31,8 @@ export { HIGH_RISK_DESTINATIONS } from "./core/crossBorder";
 export { buildCorridors, detectTransitAnomalies, COUNTRY_LABEL } from "./core/crossBorder";
 export { traceMoneyPaths, detectLaunderingSignals } from "./core/laundering";
 export { detectTemporalPatterns } from "./core/temporal";
+export { dataFingerprint } from "./core/fingerprint";
+export { RULES_VERSION, RULE_CATALOG, SCORE_METHODOLOGY } from "./core/rules";
 export { detectSerialBatches } from "./core/weapons";
 export {
   EUROPOL_RECORDS,
@@ -307,6 +310,7 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
     corridors,
     alerts,
     rulesVersion: RULES_VERSION,
+    dataFingerprint: dataFingerprint(forensicCase),
     caseScore,
     caseLevel: levelFromScore(caseScore),
     topFlags: dedupeFlags(allFlags).slice(0, 6),

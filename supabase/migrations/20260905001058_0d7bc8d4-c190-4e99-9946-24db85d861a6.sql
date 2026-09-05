@@ -1,0 +1,14 @@
+revoke all on function public.entity_belongs(uuid, uuid, uuid) from public, anon;
+revoke all on function public.has_role(uuid, public.app_role) from public, anon;
+grant execute on function public.has_role(uuid, public.app_role) to authenticated, service_role;
+grant execute on function public.entity_belongs(uuid, uuid, uuid) to service_role;
+revoke all on function public.commit_import(uuid, jsonb) from public, anon;
+grant execute on function public.commit_import(uuid, jsonb) to authenticated;
+revoke all on function public.update_updated_at_column() from public, anon, authenticated;
+revoke all on function public.bump_revision() from public, anon, authenticated;
+revoke all on function public.write_audit_log() from public, anon, authenticated;
+revoke all on function public.assert_case_owner() from public, anon, authenticated;
+revoke all on function public.assert_tx_refs() from public, anon, authenticated;
+revoke all on function public.assert_relation_refs() from public, anon, authenticated;
+revoke all on function public.assert_weapon_refs() from public, anon, authenticated;
+revoke all on function public.handle_new_user() from public, anon, authenticated;

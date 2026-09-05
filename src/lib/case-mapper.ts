@@ -52,6 +52,8 @@ export function mapCaseRows(
       originCountry: t.origin_country ?? "SK",
       destinationCountry: t.destination_country ?? "SK",
       description: t.description ?? "",
+      importId: t.import_id ?? undefined,
+      sourceRow: typeof t.source_row === "number" ? t.source_row : undefined,
     }));
 
   const mappedWeapons: Weapon[] = (weapons ?? []).map((w) => ({

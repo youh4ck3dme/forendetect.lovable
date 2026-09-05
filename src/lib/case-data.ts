@@ -122,3 +122,46 @@ export const deleteWeapon = async (id: string) => {
 export const deleteEvent = async (id: string) => {
   await deleteRecord({ data: { type: "event", id } });
 };
+
+export type CaseImportMeta = {
+  id: string;
+  filename: string;
+  byteSize: number;
+  sha256: string;
+  parserVersion: string;
+  columnMapping: Record<string, unknown>;
+  totalRows: number;
+  validRows: number;
+  errorRows: number;
+  partial: boolean;
+  status: string;
+  originalStored: boolean;
+  createdAt: string;
+};
+
+/** Metadáta importov pre dohľadateľnosť zdrojov v reporte. */
+export async function listCaseImports(caseId: string): Promise<CaseImportMeta[]> {
+  const { data, error } = await supabase
+    .from("case_imports")
+    .select(
+      "id, filename, byte_size, sha256, parser_version, column_mapping, total_rows, valid_rows, error_rows, partial, status, original_stored, created_at",
+    )
+    .eq("case_id", caseId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    filename: row.filename,
+    byteSize: row.byte_size,
+    sha256: row.sha256,
+    parserVersion: row.parser_version,
+    columnMapping: (row.column_mapping ?? {}) as Record<string, unknown>,
+    totalRows: row.total_rows,
+    validRows: row.valid_rows,
+    errorRows: row.error_rows,
+    partial: row.partial,
+    status: row.status,
+    originalStored: row.original_stored,
+    createdAt: row.created_at,
+  }));
+}

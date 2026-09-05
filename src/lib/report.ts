@@ -1,5 +1,14 @@
 import { formatDate, formatEur, severityLabel, type CaseAnalysis, type Severity } from "@/forensic";
 import { RULE_CATALOG, SCORE_METHODOLOGY } from "@/forensic/core/rules";
+import { APP_VERSION } from "@/lib/version";
+import { listCaseImports, type CaseImportMeta } from "@/lib/case-data";
+
+/** Doplnkový kontext reportu: pôvod dát a prípadný text od AI (vždy oddelený). */
+export type ReportContext = {
+  imports?: CaseImportMeta[];
+  ai?: { task: string; text: string; model: string; promptVersion: string } | null;
+  legalStatus?: string;
+};
 
 const severityColor: Record<Severity, string> = {
   critical: "#b3122b",
@@ -14,15 +23,29 @@ function escapeHtml(value: string): string {
   );
 }
 
-export function buildReportHtml(analysis: CaseAnalysis, filter: Severity[]): string {
+export function buildReportHtml(
+  analysis: CaseAnalysis,
+  filter: Severity[],
+  context: ReportContext = {},
+): string {
   const alerts = analysis.alerts.filter((a) => filter.length === 0 || filter.includes(a.severity));
   const generated = new Date().toLocaleString("sk-SK");
+  const imports = context.imports ?? [];
+  const dates = analysis.case.transactions.map((t) => t.date).sort();
+  const range =
+    dates.length > 0 ? `${formatDate(dates[0] as string)} – ${formatDate(dates[dates.length - 1] as string)}` : "—";
+  const evidenceOf = (alertId: string) => {
+    const tx = analysis.case.transactions.filter((t) => alertId.includes(t.id));
+    return tx
+      .map((t) => (t.sourceRow ? `riadok ${t.sourceRow}` : `záznam ${t.id.slice(0, 8)}`))
+      .join(", ");
+  };
 
   const rows = alerts
     .map(
       (a) => `<tr>
         <td><strong>${escapeHtml(a.title)}</strong><br /><span class="muted">${escapeHtml(a.detail)}</span></td>
-        <td class="nowrap">${escapeHtml(a.source)}</td>
+        <td class="nowrap">${escapeHtml(a.source)}<br /><span class="muted">${escapeHtml(evidenceOf(a.id) || "—")}</span></td>
         <td class="nowrap" style="color:${severityColor[a.severity]}"><strong>${severityLabel[a.severity]}</strong></td>
         <td class="num">${a.score}</td>
       </tr>`,
@@ -114,6 +137,44 @@ export function buildReportHtml(analysis: CaseAnalysis, filter: Severity[]): str
   <h2>Detegované reťazce</h2>
   <ul>${chains || "<li>Žiadne</li>"}</ul>
 
+  <h2>Pôvod dát</h2>
+  <p class="muted">Rozsah dát: <strong>${escapeHtml(range)}</strong> • ${analysis.totals.transactions} transakcií •
+  odtlačok dát (revízia): <strong>${escapeHtml(analysis.dataFingerprint ?? "—")}</strong> •
+  verzia aplikácie: ${escapeHtml(APP_VERSION)} • verzia pravidiel: ${escapeHtml(analysis.rulesVersion)}.</p>
+  ${
+    imports.length
+      ? `<table><thead><tr><th>Súbor</th><th>Riadky</th><th>Parser / mapovanie</th><th>SHA-256 originálu</th></tr></thead><tbody>${imports
+          .map(
+            (i) =>
+              `<tr><td>${escapeHtml(i.filename)}<br /><span class="muted">${escapeHtml(new Date(i.createdAt).toLocaleString("sk-SK"))}${i.partial ? " • čiastočný import" : ""}</span></td>
+              <td class="num">${i.validRows}/${i.totalRows}${i.errorRows ? ` (${i.errorRows} chybných)` : ""}</td>
+              <td class="muted">${escapeHtml(i.parserVersion)}<br />${escapeHtml(JSON.stringify(i.columnMapping))}</td>
+              <td class="muted" style="word-break:break-all">${escapeHtml(i.sha256)}${i.originalStored ? "" : "<br />originál neuložený"}</td></tr>`,
+          )
+          .join("")}</tbody></table>`
+      : '<p class="muted">Transakcie boli zadané ručne — žiadny importovaný súbor.</p>'
+  }
+  <p class="muted">Odkazy na zdrojové riadky pri zisteniach: ${
+    analysis.case.transactions.some((t) => t.sourceRow)
+      ? "uvedené v stĺpci Zdroj (číslo riadka v importovanom súbore)."
+      : "nie sú k dispozícii pri ručne zadaných záznamoch."
+  }</p>
+
+  <h2>Právne odkazy</h2>
+  <p class="muted">${escapeHtml(
+    context.legalStatus ??
+      "Právne ustanovenia sú uvedené vo verzionovanej podobe v module Právny kontext. Znenie predpisov nie je automaticky overované voči Slov-Lex — pred použitím overte účinnú verziu.",
+  )}</p>
+
+  ${
+    context.ai
+      ? `<h2>Text vygenerovaný AI (neoverený)</h2>
+      <p class="muted">Model ${escapeHtml(context.ai.model)}, šablóna ${escapeHtml(context.ai.promptVersion)}, úloha ${escapeHtml(context.ai.task)}.
+      Nasledujúci text vytvorila jazyková AI. Nie je to zistenie detektora ani fakt — slúži ako návrh na kontrolu človekom.</p>
+      <p>${escapeHtml(context.ai.text).replace(/\n/g, "<br />")}</p>`
+      : ""
+  }
+
   <h2>Časová os</h2>
   <table><thead><tr><th>Dátum</th><th>Udalosť</th></tr></thead><tbody>
   ${analysis.case.events
@@ -129,9 +190,13 @@ export function buildReportHtml(analysis: CaseAnalysis, filter: Severity[]): str
 }
 
 /** Otvorí systémový dialóg tlače / uloženia do PDF nad vygenerovanou správou. */
-export function exportCaseReport(analysis: CaseAnalysis, filter: Severity[]): boolean {
+export function exportCaseReport(
+  analysis: CaseAnalysis,
+  filter: Severity[],
+  context: ReportContext = {},
+): boolean {
   if (typeof document === "undefined") return false;
-  const html = buildReportHtml(analysis, filter);
+  const html = buildReportHtml(analysis, filter, context);
   const frame = document.createElement("iframe");
   frame.setAttribute("aria-hidden", "true");
   frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
@@ -154,4 +219,22 @@ export function exportCaseReport(analysis: CaseAnalysis, filter: Severity[]): bo
   if (frame.contentWindow?.document.readyState === "complete") print();
   else frame.onload = print;
   return true;
+}
+
+/**
+ * Report vrátane metadát importov. Ak sa metadáta nepodarí načítať,
+ * report sa aj tak vygeneruje — bez pôvodu dát, s výslovnou poznámkou.
+ */
+export async function exportCaseReportWithSources(
+  analysis: CaseAnalysis,
+  filter: Severity[],
+  extra: Omit<ReportContext, "imports"> = {},
+): Promise<boolean> {
+  let imports: CaseImportMeta[] = [];
+  try {
+    imports = await listCaseImports(analysis.case.id);
+  } catch {
+    imports = [];
+  }
+  return exportCaseReport(analysis, filter, { ...extra, imports });
 }

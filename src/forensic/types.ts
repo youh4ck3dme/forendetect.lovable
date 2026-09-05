@@ -69,6 +69,10 @@ export type Transaction = {
   originCountry: string;
   destinationCountry: string;
   description: string;
+  /** Import, z ktorého transakcia vznikla (ak nebola zadaná ručne). */
+  importId?: string;
+  /** Číslo riadka v pôvodnom súbore — dohľadateľnosť zdroja. */
+  sourceRow?: number;
 };
 
 export type Weapon = {
@@ -234,6 +238,8 @@ export type CaseAnalysis = {
   topFlags: Flag[];
   /** Verzia sady pravidiel, ktorou bol výsledok vypočítaný. */
   rulesVersion: string;
+  /** Deterministický odtlačok analyzovaných dát (nezávislý od času a rozloženia grafu). */
+  dataFingerprint: string;
   totals: {
     entities: number;
     companies: number;
