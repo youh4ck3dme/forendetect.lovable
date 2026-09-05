@@ -80,17 +80,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Malte — forenzná analýza finančných tokov" },
+      { title: "Forendo — forenzná analýza finančných tokov" },
       {
         name: "description",
         content:
-          "Malte odhaľuje schránkové firmy, pranie peňazí a cezhraničné toky v prípadoch organizovaného zločinu.",
+          "Forendo odhaľuje schránkové firmy, pranie peňazí a cezhraničné toky v prípadoch organizovaného zločinu.",
       },
-      { name: "author", content: "Malte" },
+      { name: "author", content: "Forendo" },
       { name: "robots", content: "noindex, nofollow, noarchive" },
       { name: "googlebot", content: "noindex, nofollow" },
       { name: "theme-color", content: "#f5f5f7" },
-      { property: "og:title", content: "Malte — forenzná analýza finančných tokov" },
+      { property: "og:title", content: "Forendo — forenzná analýza finančných tokov" },
       {
         property: "og:description",
         content:

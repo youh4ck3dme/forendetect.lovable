@@ -37,13 +37,13 @@ import { alertTarget } from "@/lib/alert-target";
 export const Route = createFileRoute("/_authenticated/prehlad")({
   head: () => ({
     meta: [
-      { title: "Malte — Prehľad prípadu" },
+      { title: "Forendo — Prehľad prípadu" },
       {
         name: "description",
         content:
           "Forenzná analýza prípadu nelegálneho obchodu so zbraňami: rizikové skóre, schránkové firmy a detekcia anomálií.",
       },
-      { property: "og:title", content: "Malte — Prehľad prípadu" },
+      { property: "og:title", content: "Forendo — Prehľad prípadu" },
       {
         property: "og:description",
         content: "Analýza. Dôkazy. Rozhodnutia. Rizikový profil prípadu na jednej obrazovke.",
@@ -81,7 +81,7 @@ function Index() {
 
   return (
     <PhoneFrame>
-      <AppHeader title="Malte — prehľad prípadu" brand>
+      <AppHeader title="Forendo — prehľad prípadu" brand>
         <div className="px-5">
           <div className="rounded-2xl bg-foreground/10 p-4 backdrop-blur">
             <p className="text-[10px] tracking-wide uppercase opacity-80">Prebiehajúci prípad</p>

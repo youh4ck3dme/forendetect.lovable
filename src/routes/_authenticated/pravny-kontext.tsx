@@ -15,13 +15,13 @@ import { buildLegalContext, severityLabel } from "@/forensic";
 export const Route = createFileRoute("/_authenticated/pravny-kontext")({
   head: () => ({
     meta: [
-      { title: "Právny kontext — Malte" },
+      { title: "Právny kontext — Forendo" },
       {
         name: "description",
         content:
           "Posúdenie detekcií vášho prípadu podľa zákonov 300/2005, 301/2005 a 460/1992 vrátane procesného postavenia osôb.",
       },
-      { property: "og:title", content: "Právny kontext — Malte" },
+      { property: "og:title", content: "Právny kontext — Forendo" },
       {
         property: "og:description",
         content: "Ustanovenia naviazané na konkrétne forenzné detekcie s per-zákonovým gatingom.",

@@ -37,13 +37,13 @@ import { formatDate, severityLabel } from "@/forensic";
 export const Route = createFileRoute("/_authenticated/viac")({
   head: () => ({
     meta: [
-      { title: "Viac — Malte" },
+      { title: "Viac — Forendo" },
       {
         name: "description",
         content:
-          "Časová os prípadu, register zbraní, audit log a nastavenia bezpečnosti aplikácie Malte.",
+          "Časová os prípadu, register zbraní, audit log a nastavenia bezpečnosti aplikácie Forendo.",
       },
-      { property: "og:title", content: "Viac — Malte" },
+      { property: "og:title", content: "Viac — Forendo" },
       { property: "og:description", content: "Časová os prípadu, dokumenty, export a bezpečnosť." },
     ],
   }),
@@ -55,7 +55,7 @@ const links = [
   { title: "Audit log", detail: "Kompletná história úkonov", icon: History },
   { title: "Bezpečnosť", detail: "Šifrované úložisko, 2FA", icon: Lock },
   { title: "Export prípadu", detail: "PDF / CSV výstup", icon: Share2 },
-  { title: "O aplikácii", detail: "Malte • verzia 1.0.0", icon: Info },
+  { title: "O aplikácii", detail: "Forendo • verzia 1.0.0", icon: Info },
 ];
 
 function More() {

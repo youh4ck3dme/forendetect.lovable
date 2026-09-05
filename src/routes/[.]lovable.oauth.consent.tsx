@@ -129,7 +129,7 @@ function Consent() {
 
       {session === false && (
         <div className="space-y-3 rounded-xl border p-5">
-          <h1 className="text-lg font-semibold">Prihlás sa do Malte</h1>
+          <h1 className="text-lg font-semibold">Prihlás sa do Forendo</h1>
           <p className="text-sm text-muted-foreground">
             Pre pripojenie AI klienta sa najprv prihlás.
           </p>
@@ -162,7 +162,7 @@ function Consent() {
       {session === true && (
         <div className="space-y-3 rounded-xl border p-5">
           <h1 className="text-lg font-semibold">
-            Pripojiť {details?.client?.name ?? "klienta"} k Malte
+            Pripojiť {details?.client?.name ?? "klienta"} k Forendo
           </h1>
           <p className="text-sm text-muted-foreground">
             Klient bude môcť volať nástroje tejto aplikácie vo tvojom mene. Prístupové pravidlá

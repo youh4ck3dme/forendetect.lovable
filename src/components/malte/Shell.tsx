@@ -19,7 +19,7 @@ function DesktopSidebar() {
     <aside className="sticky top-0 hidden h-screen w-[288px] shrink-0 flex-col border-r border-border bg-card px-4 py-6 lg:flex">
       <div className="flex items-center gap-2 px-2">
         <img src={malteMark} alt="" width={30} height={30} className="h-7 w-7" aria-hidden />
-        <span className="text-lg font-extrabold tracking-tight">Malte</span>
+        <span className="text-lg font-extrabold tracking-tight">Forendo</span>
         <span className="ml-auto">
           <ThemeToggle />
         </span>
@@ -83,7 +83,7 @@ function DesktopSidebar() {
       </nav>
 
       <p className="px-3 pt-4 text-[10px] text-muted-foreground">
-        Malte v1.0 • vaše prípady sú súkromné
+        Forendo v1.0 • vaše prípady sú súkromné
       </p>
     </aside>
   );
@@ -162,7 +162,7 @@ export function AppHeader({
       <div className="flex items-center gap-3 px-5 pt-2 pb-3 lg:pt-4">
         {back ? <ChevronLeft className="h-5 w-5 opacity-90" role="img" aria-label="Späť" /> : null}
         {brand ? (
-          <img src={malteMark} alt="Malte" width={28} height={28} className="h-7 w-7 lg:hidden" />
+          <img src={malteMark} alt="Forendo" width={28} height={28} className="h-7 w-7 lg:hidden" />
         ) : null}
         <h1
           className={cn(

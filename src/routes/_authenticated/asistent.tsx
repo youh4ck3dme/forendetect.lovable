@@ -21,13 +21,13 @@ import { severityLabel } from "@/forensic";
 export const Route = createFileRoute("/_authenticated/asistent")({
   head: () => ({
     meta: [
-      { title: "AI asistent — Malte" },
+      { title: "AI asistent — Forendo" },
       {
         name: "description",
         content:
           "Vysvetlenie zistení, návrh zhrnutia prípadu a normalizácia popisov platieb. Návrhy prijíma používateľ.",
       },
-      { property: "og:title", content: "AI asistent — Malte" },
+      { property: "og:title", content: "AI asistent — Forendo" },
       {
         property: "og:description",
         content: "AI navrhuje text a úpravy popisov; sumy, dátumy ani skóre nemení.",

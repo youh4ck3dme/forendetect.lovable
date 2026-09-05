@@ -12,13 +12,13 @@ import {
 export const Route = createFileRoute("/_authenticated/mcp-info")({
   head: () => ({
     meta: [
-      { title: "Agentné API (MCP) — Malte" },
+      { title: "Agentné API (MCP) — Forendo" },
       {
         name: "description",
         content:
           "Sedem read-only MCP nástrojov, ktorými AI asistenti čítajú forenznú analýzu vášho prípadu.",
       },
-      { property: "og:title", content: "Agentné API (MCP) — Malte" },
+      { property: "og:title", content: "Agentné API (MCP) — Forendo" },
       {
         property: "og:description",
         content: "Pripojte AI klienta na /mcp a čítajte alerty, subjekty, transakcie a zbrane.",
@@ -50,7 +50,7 @@ function McpInfo() {
         <Card className="space-y-2">
           <p className="text-sm font-semibold">Pripojenie MCP klienta</p>
           <p className="text-caption">
-            Malte vystavuje read-only MCP server. V AI klientovi pridajte server s touto adresou:
+            Forendo vystavuje read-only MCP server. V AI klientovi pridajte server s touto adresou:
           </p>
           <pre className="overflow-x-auto rounded-xl bg-secondary p-3 font-mono text-[11px] text-secondary-foreground">
             {typeof window !== "undefined" ? `${window.location.origin}/mcp` : "/mcp"}

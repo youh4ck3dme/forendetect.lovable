@@ -73,7 +73,7 @@ export function buildReportHtml(
 
   return `<!doctype html>
 <html lang="sk"><head><meta charset="utf-8" />
-<title>Malte — ${escapeHtml(analysis.case.name)}</title>
+<title>Forendo — ${escapeHtml(analysis.case.name)}</title>
 <style>
   @page { size: A4; margin: 18mm 14mm; }
   * { box-sizing: border-box; }
@@ -185,7 +185,7 @@ export function buildReportHtml(
     .join("")}
   </tbody></table>
 
-  <footer>Vygenerované aplikáciou Malte • ${generated} • dokument slúži na interné analytické účely.</footer>
+  <footer>Vygenerované aplikáciou Forendo • ${generated} • dokument slúži na interné analytické účely.</footer>
 </body></html>`;
 }
 
