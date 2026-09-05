@@ -5,7 +5,9 @@ import {
   LineChart,
   MoreHorizontal,
   Network,
+  FileUp,
   Plug,
+  Bot,
   Scale,
   Share2,
   Users,
@@ -24,6 +26,8 @@ export const navItems: NavItem[] = [
 
 export const secondaryItems: NavItem[] = [
   { to: "/pripady", label: "Prípady", icon: FolderKanban },
+  { to: "/import-csv", label: "Import CSV", icon: FileUp },
+  { to: "/asistent", label: "AI asistent", icon: Bot },
   { to: "/siet", label: "Sieť tokov", icon: Share2 },
   { to: "/zbrane", label: "Zbrane", icon: Crosshair },
   { to: "/pravny-kontext", label: "Právny kontext", icon: Scale },
