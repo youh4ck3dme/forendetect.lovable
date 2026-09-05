@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CaseStoreProvider } from "@/hooks/useCaseStore";
 import { Toaster } from "@/components/ui/sonner";
+import { registerServiceWorker } from "@/lib/pwa";
 
 function NotFoundComponent() {
   return (
@@ -79,17 +80,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Malte — forenzná analýza finančných tokov" },
+      { title: "Forendo — forenzná analýza finančných tokov" },
       {
         name: "description",
         content:
-          "Malte odhaľuje schránkové firmy, pranie peňazí a cezhraničné toky v prípadoch organizovaného zločinu.",
+          "Forendo odhaľuje schránkové firmy, pranie peňazí a cezhraničné toky v prípadoch organizovaného zločinu.",
       },
-      { name: "author", content: "Malte" },
+      { name: "author", content: "Forendo" },
       { name: "robots", content: "noindex, nofollow, noarchive" },
       { name: "googlebot", content: "noindex, nofollow" },
       { name: "theme-color", content: "#f5f5f7" },
-      { property: "og:title", content: "Malte — forenzná analýza finančných tokov" },
+      { property: "og:title", content: "Forendo — forenzná analýza finančných tokov" },
       {
         property: "og:description",
         content:
@@ -112,6 +113,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
   shellComponent: RootShell,
@@ -136,6 +138,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    void registerServiceWorker();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

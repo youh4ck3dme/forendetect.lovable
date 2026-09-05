@@ -48,13 +48,13 @@ import { formatMoney } from "@/forensic/core/money";
 export const Route = createFileRoute("/_authenticated/import-csv")({
   head: () => ({
     meta: [
-      { title: "Import výpisu (CSV) — Malte" },
+      { title: "Import výpisu (CSV) — Forendo" },
       {
         name: "description",
         content:
           "Načítanie bankového výpisu z CSV: mapovanie stĺpcov, kontrola riadkov a potvrdenie pred zápisom.",
       },
-      { property: "og:title", content: "Import výpisu (CSV) — Malte" },
+      { property: "og:title", content: "Import výpisu (CSV) — Forendo" },
       {
         property: "og:description",
         content: "Krok za krokom: súbor, mapovanie, kontrola, potvrdenie.",

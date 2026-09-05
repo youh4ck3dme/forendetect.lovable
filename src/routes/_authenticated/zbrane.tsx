@@ -16,13 +16,13 @@ import { detectSerialBatches, EUROPOL_STATUS_LABEL, formatDate } from "@/forensi
 export const Route = createFileRoute("/_authenticated/zbrane")({
   head: () => ({
     meta: [
-      { title: "Register zbraní — Malte" },
+      { title: "Register zbraní — Forendo" },
       {
         name: "description",
         content:
           "Evidencia zbraní prípadu s kontrolou sériových čísel voči databáze EUROPOL a platnosti zbrojných licencií.",
       },
-      { property: "og:title", content: "Register zbraní — Malte" },
+      { property: "og:title", content: "Register zbraní — Forendo" },
       {
         property: "og:description",
         content: "Sériové čísla, držitelia a zhody v medzinárodnej databáze odcudzených zbraní.",

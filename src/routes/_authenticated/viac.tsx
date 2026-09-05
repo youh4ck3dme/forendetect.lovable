@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getSourceDownloadUrl } from "@/lib/source-download.functions";
 import { LogOut } from "lucide-react";
+import { clearClientState } from "@/lib/pwa";
 
 import {
   ChevronRight,
@@ -36,13 +37,13 @@ import { formatDate, severityLabel } from "@/forensic";
 export const Route = createFileRoute("/_authenticated/viac")({
   head: () => ({
     meta: [
-      { title: "Viac — Malte" },
+      { title: "Viac — Forendo" },
       {
         name: "description",
         content:
-          "Časová os prípadu, register zbraní, audit log a nastavenia bezpečnosti aplikácie Malte.",
+          "Časová os prípadu, register zbraní, audit log a nastavenia bezpečnosti aplikácie Forendo.",
       },
-      { property: "og:title", content: "Viac — Malte" },
+      { property: "og:title", content: "Viac — Forendo" },
       { property: "og:description", content: "Časová os prípadu, dokumenty, export a bezpečnosť." },
     ],
   }),
@@ -54,7 +55,7 @@ const links = [
   { title: "Audit log", detail: "Kompletná história úkonov", icon: History },
   { title: "Bezpečnosť", detail: "Šifrované úložisko, 2FA", icon: Lock },
   { title: "Export prípadu", detail: "PDF / CSV výstup", icon: Share2 },
-  { title: "O aplikácii", detail: "Malte • verzia 1.0.0", icon: Info },
+  { title: "O aplikácii", detail: "Forendo • verzia 1.0.0", icon: Info },
 ];
 
 function More() {
@@ -77,6 +78,8 @@ function More() {
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
+    // Vyčistí citlivý klientský stav, aby ďalší účet na zariadení nevidel cudzie dáta.
+    await clearClientState();
     void navigate({ to: "/auth", replace: true });
   }
 

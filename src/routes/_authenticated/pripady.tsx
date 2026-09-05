@@ -14,6 +14,9 @@ import { EmptyState } from "@/components/malte/EmptyState";
 import { Button } from "@/components/ui/button";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { createCase } from "@/lib/case-data";
+import { createDemoCase } from "@/lib/case-write.functions";
+import { useServerFn } from "@tanstack/react-start";
+import { BRAND } from "@/config/brand";
 import { EntityForm } from "@/components/malte/CaseForms";
 import { EntityList } from "@/components/malte/RecordLists";
 import { DeleteRecordButton } from "@/components/malte/DeleteRecordButton";
@@ -21,13 +24,13 @@ import { DeleteRecordButton } from "@/components/malte/DeleteRecordButton";
 export const Route = createFileRoute("/_authenticated/pripady")({
   head: () => ({
     meta: [
-      { title: "Prípady — Malte" },
+      { title: "Prípady — Forendo" },
       {
         name: "description",
         content: "Vytvárajte prípady, pridávajte osoby a firmy a prepínajte medzi vyšetrovaniami.",
       },
-      { property: "og:title", content: "Prípady — Malte" },
-      { property: "og:description", content: "Správa vašich forenzných prípadov v Malte." },
+      { property: "og:title", content: "Prípady — Forendo" },
+      { property: "og:description", content: "Správa vašich prípadov a analýz finančných tokov." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -44,6 +47,21 @@ function Cases() {
   const [name, setName] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [busy, setBusy] = useState(false);
+  const makeDemo = useServerFn(createDemoCase);
+
+  async function handleCreateDemo() {
+    setBusy(true);
+    try {
+      const { id } = await makeDemo({ data: undefined });
+      refresh();
+      setActiveCaseId(id);
+      toast.success("Ukážkový prípad so syntetickými dátami bol vytvorený.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Ukážku sa nepodarilo vytvoriť.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function handleCreateCase(event: React.FormEvent) {
     event.preventDefault();
@@ -91,6 +109,18 @@ function Cases() {
               Vytvoriť prípad
             </Button>
           </form>
+          <p className="text-[11px] text-muted-foreground">{BRAND.tagline}</p>
+        </Card>
+
+        <Card className="space-y-2">
+          <p className="text-sm font-semibold">Ukážkový prípad</p>
+          <p className="text-[11px] text-muted-foreground">
+            Syntetické dáta bez osobných údajov, výslovne označené ako ukážka. Do vašich reálnych
+            prípadov sa nikdy nepridávajú automaticky.
+          </p>
+          <Button variant="outline" size="sm" disabled={busy} onClick={handleCreateDemo}>
+            Vytvoriť ukážkový prípad
+          </Button>
         </Card>
 
         <SectionTitle>Vaše prípady</SectionTitle>
@@ -98,7 +128,7 @@ function Cases() {
           <EmptyState
             icon={FolderPlus}
             title="Zatiaľ žiadne prípady"
-            detail="Vytvorte prvý prípad a pridajte doň subjekty a transakcie."
+            detail="Vytvorte prvý prípad a pridajte doň subjekty a transakcie — alebo si najprv pozrite ukážkový prípad."
           />
         ) : (
           <div className="space-y-2">

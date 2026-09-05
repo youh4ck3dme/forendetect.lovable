@@ -22,15 +22,18 @@ import { Route as AuthenticatedImportCsvRouteImport } from './routes/_authentica
 import { Route as AuthenticatedMcpInfoRouteImport } from './routes/_authenticated/mcp-info'
 import { Route as AuthenticatedOsobyRouteImport } from './routes/_authenticated/osoby'
 import { Route as AuthenticatedPravnyKontextRouteImport } from './routes/_authenticated/pravny-kontext'
+import { Route as AuthenticatedPredplatneRouteImport } from './routes/_authenticated/predplatne'
 import { Route as AuthenticatedPrehladRouteImport } from './routes/_authenticated/prehlad'
 import { Route as AuthenticatedPripadyRouteImport } from './routes/_authenticated/pripady'
 import { Route as AuthenticatedSietRouteImport } from './routes/_authenticated/siet'
+import { Route as AuthenticatedSukromieRouteImport } from './routes/_authenticated/sukromie'
 import { Route as AuthenticatedViacRouteImport } from './routes/_authenticated/viac'
 import { Route as AuthenticatedVitajteRouteImport } from './routes/_authenticated/vitajte'
 import { Route as AuthenticatedVztahyRouteImport } from './routes/_authenticated/vztahy'
 import { Route as AuthenticatedZbraneRouteImport } from './routes/_authenticated/zbrane'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -100,6 +103,11 @@ const AuthenticatedPravnyKontextRoute =
     path: '/pravny-kontext',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPredplatneRoute = AuthenticatedPredplatneRouteImport.update({
+  id: '/predplatne',
+  path: '/predplatne',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPrehladRoute = AuthenticatedPrehladRouteImport.update({
   id: '/prehlad',
   path: '/prehlad',
@@ -113,6 +121,11 @@ const AuthenticatedPripadyRoute = AuthenticatedPripadyRouteImport.update({
 const AuthenticatedSietRoute = AuthenticatedSietRouteImport.update({
   id: '/siet',
   path: '/siet',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSukromieRoute = AuthenticatedSukromieRouteImport.update({
+  id: '/sukromie',
+  path: '/sukromie',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedViacRoute = AuthenticatedViacRouteImport.update({
@@ -146,6 +159,12 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPaymentsWebhookRoute =
+  ApiPublicPaymentsWebhookRouteImport.update({
+    id: '/api/public/payments/webhook',
+    path: '/api/public/payments/webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -160,15 +179,18 @@ export interface FileRoutesByFullPath {
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/osoby': typeof AuthenticatedOsobyRoute
   '/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
+  '/predplatne': typeof AuthenticatedPredplatneRoute
   '/prehlad': typeof AuthenticatedPrehladRoute
   '/pripady': typeof AuthenticatedPripadyRoute
   '/siet': typeof AuthenticatedSietRoute
+  '/sukromie': typeof AuthenticatedSukromieRoute
   '/viac': typeof AuthenticatedViacRoute
   '/vitajte': typeof AuthenticatedVitajteRoute
   '/vztahy': typeof AuthenticatedVztahyRoute
   '/zbrane': typeof AuthenticatedZbraneRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -183,15 +205,18 @@ export interface FileRoutesByTo {
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/osoby': typeof AuthenticatedOsobyRoute
   '/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
+  '/predplatne': typeof AuthenticatedPredplatneRoute
   '/prehlad': typeof AuthenticatedPrehladRoute
   '/pripady': typeof AuthenticatedPripadyRoute
   '/siet': typeof AuthenticatedSietRoute
+  '/sukromie': typeof AuthenticatedSukromieRoute
   '/viac': typeof AuthenticatedViacRoute
   '/vitajte': typeof AuthenticatedVitajteRoute
   '/vztahy': typeof AuthenticatedVztahyRoute
   '/zbrane': typeof AuthenticatedZbraneRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -208,15 +233,18 @@ export interface FileRoutesById {
   '/_authenticated/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/_authenticated/osoby': typeof AuthenticatedOsobyRoute
   '/_authenticated/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
+  '/_authenticated/predplatne': typeof AuthenticatedPredplatneRoute
   '/_authenticated/prehlad': typeof AuthenticatedPrehladRoute
   '/_authenticated/pripady': typeof AuthenticatedPripadyRoute
   '/_authenticated/siet': typeof AuthenticatedSietRoute
+  '/_authenticated/sukromie': typeof AuthenticatedSukromieRoute
   '/_authenticated/viac': typeof AuthenticatedViacRoute
   '/_authenticated/vitajte': typeof AuthenticatedVitajteRoute
   '/_authenticated/vztahy': typeof AuthenticatedVztahyRoute
   '/_authenticated/zbrane': typeof AuthenticatedZbraneRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -233,15 +261,18 @@ export interface FileRouteTypes {
     | '/mcp-info'
     | '/osoby'
     | '/pravny-kontext'
+    | '/predplatne'
     | '/prehlad'
     | '/pripady'
     | '/siet'
+    | '/sukromie'
     | '/viac'
     | '/vitajte'
     | '/vztahy'
     | '/zbrane'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -256,15 +287,18 @@ export interface FileRouteTypes {
     | '/mcp-info'
     | '/osoby'
     | '/pravny-kontext'
+    | '/predplatne'
     | '/prehlad'
     | '/pripady'
     | '/siet'
+    | '/sukromie'
     | '/viac'
     | '/vitajte'
     | '/vztahy'
     | '/zbrane'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/api/public/payments/webhook'
   id:
     | '__root__'
     | '/'
@@ -280,15 +314,18 @@ export interface FileRouteTypes {
     | '/_authenticated/mcp-info'
     | '/_authenticated/osoby'
     | '/_authenticated/pravny-kontext'
+    | '/_authenticated/predplatne'
     | '/_authenticated/prehlad'
     | '/_authenticated/pripady'
     | '/_authenticated/siet'
+    | '/_authenticated/sukromie'
     | '/_authenticated/viac'
     | '/_authenticated/vitajte'
     | '/_authenticated/vztahy'
     | '/_authenticated/zbrane'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -301,6 +338,7 @@ export interface RootRouteChildren {
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
+  ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -396,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPravnyKontextRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/predplatne': {
+      id: '/_authenticated/predplatne'
+      path: '/predplatne'
+      fullPath: '/predplatne'
+      preLoaderRoute: typeof AuthenticatedPredplatneRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/prehlad': {
       id: '/_authenticated/prehlad'
       path: '/prehlad'
@@ -415,6 +460,13 @@ declare module '@tanstack/react-router' {
       path: '/siet'
       fullPath: '/siet'
       preLoaderRoute: typeof AuthenticatedSietRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sukromie': {
+      id: '/_authenticated/sukromie'
+      path: '/sukromie'
+      fullPath: '/sukromie'
+      preLoaderRoute: typeof AuthenticatedSukromieRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/viac': {
@@ -459,6 +511,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/webhook': {
+      id: '/api/public/payments/webhook'
+      path: '/api/public/payments/webhook'
+      fullPath: '/api/public/payments/webhook'
+      preLoaderRoute: typeof ApiPublicPaymentsWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -469,9 +528,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMcpInfoRoute: typeof AuthenticatedMcpInfoRoute
   AuthenticatedOsobyRoute: typeof AuthenticatedOsobyRoute
   AuthenticatedPravnyKontextRoute: typeof AuthenticatedPravnyKontextRoute
+  AuthenticatedPredplatneRoute: typeof AuthenticatedPredplatneRoute
   AuthenticatedPrehladRoute: typeof AuthenticatedPrehladRoute
   AuthenticatedPripadyRoute: typeof AuthenticatedPripadyRoute
   AuthenticatedSietRoute: typeof AuthenticatedSietRoute
+  AuthenticatedSukromieRoute: typeof AuthenticatedSukromieRoute
   AuthenticatedViacRoute: typeof AuthenticatedViacRoute
   AuthenticatedVitajteRoute: typeof AuthenticatedVitajteRoute
   AuthenticatedVztahyRoute: typeof AuthenticatedVztahyRoute
@@ -485,9 +546,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMcpInfoRoute: AuthenticatedMcpInfoRoute,
   AuthenticatedOsobyRoute: AuthenticatedOsobyRoute,
   AuthenticatedPravnyKontextRoute: AuthenticatedPravnyKontextRoute,
+  AuthenticatedPredplatneRoute: AuthenticatedPredplatneRoute,
   AuthenticatedPrehladRoute: AuthenticatedPrehladRoute,
   AuthenticatedPripadyRoute: AuthenticatedPripadyRoute,
   AuthenticatedSietRoute: AuthenticatedSietRoute,
+  AuthenticatedSukromieRoute: AuthenticatedSukromieRoute,
   AuthenticatedViacRoute: AuthenticatedViacRoute,
   AuthenticatedVitajteRoute: AuthenticatedVitajteRoute,
   AuthenticatedVztahyRoute: AuthenticatedVztahyRoute,
@@ -508,6 +571,7 @@ const rootRouteChildren: RootRouteChildren = {
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
+  ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

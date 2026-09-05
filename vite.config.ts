@@ -6,9 +6,55 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/tanstack/vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  plugins: [mcpPlugin()],
+  plugins: [
+    mcpPlugin(),
+    VitePWA({
+      // Registrácia prebieha výhradne cez src/lib/pwa.ts (nikdy v náhľade a vývoji).
+      injectRegister: null,
+      registerType: "autoUpdate",
+      devOptions: { enabled: false },
+      filename: "sw.js",
+      outDir: "dist/client",
+      manifest: {
+        id: "/",
+        name: "Forendo — analýza finančných tokov",
+        short_name: "Forendo",
+        description:
+          "Premeňte transakcie na prehľad finančných tokov, vysvetliteľné nálezy a správu so zdrojmi.",
+        lang: "sk",
+        scope: "/",
+        start_url: "/prehlad",
+        display: "standalone",
+        background_color: "#f5f5f7",
+        theme_color: "#f5f5f7",
+        icons: [
+          { src: "/pwa-192.png", sizes: "192x192", type: "image/png" },
+          { src: "/pwa-512.png", sizes: "512x512", type: "image/png" },
+          { src: "/pwa-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+        ],
+      },
+      workbox: {
+        // Cachujú sa výhradne verejné statické súbory zostavenia.
+        globPatterns: ["**/*.{js,css,woff2}", "offline.html", "pwa-*.png", "favicon.png"],
+        globIgnores: ["**/node_modules/**", "**/_server/**"],
+        navigateFallback: null,
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: false,
+        runtimeCaching: [
+          {
+            // Prihlásené HTML, API, podpísané URL ani AI komunikácia sa necachujú.
+            urlPattern: ({ request }: { request: Request }) => request.mode === "navigate",
+            handler: "NetworkOnly",
+            options: { precacheFallback: { fallbackURL: "/offline.html" } },
+          },
+        ],
+      },
+    }),
+  ],
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

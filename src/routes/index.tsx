@@ -8,13 +8,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Malte — forenzná analýza finančných tokov" },
+      { title: "Forendo — forenzná analýza finančných tokov" },
       {
         name: "description",
         content:
-          "Malte pomáha vyšetrovateľom odhaliť schránkové firmy, pranie peňazí a cezhraničné toky v jednom prehľadnom prípade.",
+          "Forendo pomáha vyšetrovateľom odhaliť schránkové firmy, pranie peňazí a cezhraničné toky v jednom prehľadnom prípade.",
       },
-      { property: "og:title", content: "Malte — forenzná analýza finančných tokov" },
+      { property: "og:title", content: "Forendo — forenzná analýza finančných tokov" },
       {
         property: "og:description",
         content: "Analýza. Dôkazy. Rozhodnutia. Forenzná platforma pre finančnú kriminalitu.",
@@ -68,7 +68,7 @@ function Landing() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-5 py-14">
         <header className="flex items-center gap-2">
           <img src={malteMark} alt="" width={30} height={30} className="h-7 w-7" aria-hidden />
-          <span className="text-lg font-extrabold tracking-tight">Malte</span>
+          <span className="text-lg font-extrabold tracking-tight">Forendo</span>
           <div className="ml-auto">
             <Button asChild variant="ghost" size="sm">
               <Link to="/auth">Prihlásiť sa</Link>
@@ -84,7 +84,7 @@ function Landing() {
             Analýza. Dôkazy. Rozhodnutia.
           </h1>
           <p className="text-muted-foreground">
-            Malte spája finančné toky, subjekty a zbrane do jedného prípadu a upozorní na to, čo si
+            Forendo spája finančné toky, subjekty a zbrane do jedného prípadu a upozorní na to, čo si
             zaslúži pozornosť vyšetrovateľa.
           </p>
           <div className="flex flex-wrap gap-3">

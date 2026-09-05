@@ -23,13 +23,13 @@ const NetworkGraph = lazy(() =>
 export const Route = createFileRoute("/_authenticated/siet")({
   head: () => ({
     meta: [
-      { title: "Sieťová analýza — Malte" },
+      { title: "Sieťová analýza — Forendo" },
       {
         name: "description",
         content:
           "Interaktívny graf entít vášho prípadu s trasami peňazí, reťazcami obchodovania a cezhraničnými koridormi.",
       },
-      { property: "og:title", content: "Sieťová analýza — Malte" },
+      { property: "og:title", content: "Sieťová analýza — Forendo" },
       {
         property: "og:description",
         content: "Vizualizácia toku peňazí cez schránkové firmy a rizikové koridory EÚ.",

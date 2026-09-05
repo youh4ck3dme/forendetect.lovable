@@ -9,13 +9,13 @@ import { lovable } from "@/integrations/lovable";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Prihlásenie — Malte" },
+      { title: "Prihlásenie — Forendo" },
       {
         name: "description",
-        content: "Prihláste sa do Malte cez Google alebo e-mail a pracujte na vlastných prípadoch.",
+        content: "Prihláste sa do Forendo cez Google alebo e-mail a pracujte na vlastných prípadoch.",
       },
-      { property: "og:title", content: "Prihlásenie — Malte" },
-      { property: "og:description", content: "Prístup k vašim forenzným prípadom v Malte." },
+      { property: "og:title", content: "Prihlásenie — Forendo" },
+      { property: "og:description", content: "Prístup k vašim forenzným prípadom v Forendo." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -83,7 +83,7 @@ function AuthScreen() {
         <div className="flex flex-col items-center gap-2 text-center">
           <img src={malteMark} alt="" width={40} height={40} className="h-10 w-10" aria-hidden />
           <h1 className="text-2xl font-extrabold tracking-tight">
-            {mode === "signin" ? "Prihlásenie do Malte" : "Vytvorenie účtu"}
+            {mode === "signin" ? "Prihlásenie do Forendo" : "Vytvorenie účtu"}
           </h1>
           <p className="text-caption">Vaše prípady sú súkromné a viditeľné len pre vás.</p>
         </div>

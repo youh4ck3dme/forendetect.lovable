@@ -34,13 +34,13 @@ import { formatDate, formatEur, severityLabel, type Severity } from "@/forensic"
 export const Route = createFileRoute("/_authenticated/analyza-vypisov")({
   head: () => ({
     meta: [
-      { title: "Analýza transakcií — Malte" },
+      { title: "Analýza transakcií — Forendo" },
       {
         name: "description",
         content:
           "Detekcia zaokrúhlených súm, hotovostných platieb, platieb tretích strán a rizikových cezhraničných tokov.",
       },
-      { property: "og:title", content: "Analýza transakcií — Malte" },
+      { property: "og:title", content: "Analýza transakcií — Forendo" },
       {
         property: "og:description",
         content: "Automatické vyhodnotenie transakcií prípadu podľa forenzných pravidiel.",

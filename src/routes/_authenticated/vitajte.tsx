@@ -7,13 +7,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/vitajte")({
   head: () => ({
     meta: [
-      { title: "Vitajte v Malte" },
+      { title: "Vitajte v Forendo" },
       {
         name: "description",
         content:
-          "Krátky sprievodca: ako v Malte založiť prípad, spustiť detektory a čítať výsledky.",
+          "Krátky sprievodca: ako v Forendo založiť prípad, spustiť detektory a čítať výsledky.",
       },
-      { property: "og:title", content: "Vitajte v Malte" },
+      { property: "og:title", content: "Vitajte v Forendo" },
       { property: "og:description", content: "Tri kroky k prvému forenznému prípadu." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -33,7 +33,7 @@ const steps = [
     icon: Radar,
     title: "Spustite detektory",
     detail:
-      "Malte automaticky hľadá schránkové firmy, pranie peňazí, cezhraničné toky, podozrivé zbrane a časové vzorce.",
+      "Forendo automaticky hľadá schránkové firmy, pranie peňazí, cezhraničné toky, podozrivé zbrane a časové vzorce.",
   },
   {
     icon: Scale,

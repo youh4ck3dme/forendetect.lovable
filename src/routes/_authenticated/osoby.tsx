@@ -23,13 +23,13 @@ import { CheckCircle2 } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/osoby")({
   head: () => ({
     meta: [
-      { title: "Subjekty — Malte" },
+      { title: "Subjekty — Forendo" },
       {
         name: "description",
         content:
           "Osoby a firmy prípadu s vypočítaným rizikovým skóre, príznakmi schránkovej firmy a objemom transakcií.",
       },
-      { property: "og:title", content: "Subjekty — Malte" },
+      { property: "og:title", content: "Subjekty — Forendo" },
       {
         property: "og:description",
         content: "Rizikový rebríček subjektov prípadu vrátane detekcie schránkových firiem.",

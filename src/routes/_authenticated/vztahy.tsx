@@ -23,13 +23,13 @@ import { formatEur } from "@/forensic";
 export const Route = createFileRoute("/_authenticated/vztahy")({
   head: () => ({
     meta: [
-      { title: "Sieť vzťahov — Malte" },
+      { title: "Sieť vzťahov — Forendo" },
       {
         name: "description",
         content:
           "Sieť väzieb medzi osobami, schránkovými firmami a dodávateľmi vrátane detegovaných reťazcov obchodovania.",
       },
-      { property: "og:title", content: "Sieť vzťahov — Malte" },
+      { property: "og:title", content: "Sieť vzťahov — Forendo" },
       {
         property: "og:description",
         content: "Vizualizácia prepojení prípadu a reťazcov dodávateľ → schránka → odberateľ.",

@@ -17,7 +17,7 @@ export default defineMcp({
   title: "Pixel Polish",
   version: "0.1.0",
   instructions:
-    "Forensic analysis tools over the signed-in user's own case data (Malte). Start with `case_overview`, then use `list_alerts`, `list_entities`, `analyze_entity`, `analyze_transaction`, `list_weapons` and `network_analysis` and `legal_context` for detail. Data belongs to the authenticated token owner; tools are read-only and return empty results when the user has no case.",
+    "Forensic analysis tools over the signed-in user's own case data (Forendo). Start with `case_overview`, then use `list_alerts`, `list_entities`, `analyze_entity`, `analyze_transaction`, `list_weapons` and `network_analysis` and `legal_context` for detail. Data belongs to the authenticated token owner; tools are read-only and return empty results when the user has no case.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",
