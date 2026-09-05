@@ -1,0 +1,16 @@
+REVOKE EXECUTE ON FUNCTION public.reserve_ai_call(uuid, uuid, text, text, text, text, integer) FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.current_plan(uuid) FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.entity_belongs(uuid, uuid, uuid) FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.write_audit_log() FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.assert_case_owner() FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.assert_relation_refs() FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.assert_tx_refs() FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.assert_weapon_refs() FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.bump_revision() FROM anon, authenticated, public;
+REVOKE EXECUTE ON FUNCTION public.update_updated_at_column() FROM anon, authenticated, public;
+GRANT EXECUTE ON FUNCTION public.reserve_ai_call(uuid, uuid, text, text, text, text, integer) TO service_role;
+GRANT EXECUTE ON FUNCTION public.current_plan(uuid) TO service_role;
+GRANT EXECUTE ON FUNCTION public.entity_belongs(uuid, uuid, uuid) TO service_role;
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.commit_import(uuid, jsonb) TO authenticated, service_role;
