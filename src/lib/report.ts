@@ -190,9 +190,13 @@ export function buildReportHtml(
 }
 
 /** Otvorí systémový dialóg tlače / uloženia do PDF nad vygenerovanou správou. */
-export function exportCaseReport(analysis: CaseAnalysis, filter: Severity[]): boolean {
+export function exportCaseReport(
+  analysis: CaseAnalysis,
+  filter: Severity[],
+  context: ReportContext = {},
+): boolean {
   if (typeof document === "undefined") return false;
-  const html = buildReportHtml(analysis, filter);
+  const html = buildReportHtml(analysis, filter, context);
   const frame = document.createElement("iframe");
   frame.setAttribute("aria-hidden", "true");
   frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
