@@ -23,9 +23,23 @@ function escapeHtml(value: string): string {
   );
 }
 
-export function buildReportHtml(analysis: CaseAnalysis, filter: Severity[]): string {
+export function buildReportHtml(
+  analysis: CaseAnalysis,
+  filter: Severity[],
+  context: ReportContext = {},
+): string {
   const alerts = analysis.alerts.filter((a) => filter.length === 0 || filter.includes(a.severity));
   const generated = new Date().toLocaleString("sk-SK");
+  const imports = context.imports ?? [];
+  const dates = analysis.case.transactions.map((t) => t.date).sort();
+  const range =
+    dates.length > 0 ? `${formatDate(dates[0] as string)} – ${formatDate(dates[dates.length - 1] as string)}` : "—";
+  const evidenceOf = (alertId: string) => {
+    const tx = analysis.case.transactions.filter((t) => alertId.includes(t.id));
+    return tx
+      .map((t) => (t.sourceRow ? `riadok ${t.sourceRow}` : `záznam ${t.id.slice(0, 8)}`))
+      .join(", ");
+  };
 
   const rows = alerts
     .map(
