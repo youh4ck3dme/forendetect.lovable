@@ -234,6 +234,8 @@ export type CaseAnalysis = {
   topFlags: Flag[];
   /** Verzia sady pravidiel, ktorou bol výsledok vypočítaný. */
   rulesVersion: string;
+  /** Deterministický odtlačok analyzovaných dát (nezávislý od času a rozloženia grafu). */
+  dataFingerprint: string;
   totals: {
     entities: number;
     companies: number;
