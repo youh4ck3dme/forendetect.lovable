@@ -26,6 +26,7 @@ import { Route as AuthenticatedPredplatneRouteImport } from './routes/_authentic
 import { Route as AuthenticatedPrehladRouteImport } from './routes/_authenticated/prehlad'
 import { Route as AuthenticatedPripadyRouteImport } from './routes/_authenticated/pripady'
 import { Route as AuthenticatedSietRouteImport } from './routes/_authenticated/siet'
+import { Route as AuthenticatedSukromieRouteImport } from './routes/_authenticated/sukromie'
 import { Route as AuthenticatedViacRouteImport } from './routes/_authenticated/viac'
 import { Route as AuthenticatedVitajteRouteImport } from './routes/_authenticated/vitajte'
 import { Route as AuthenticatedVztahyRouteImport } from './routes/_authenticated/vztahy'
@@ -122,6 +123,11 @@ const AuthenticatedSietRoute = AuthenticatedSietRouteImport.update({
   path: '/siet',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSukromieRoute = AuthenticatedSukromieRouteImport.update({
+  id: '/sukromie',
+  path: '/sukromie',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedViacRoute = AuthenticatedViacRouteImport.update({
   id: '/viac',
   path: '/viac',
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/prehlad': typeof AuthenticatedPrehladRoute
   '/pripady': typeof AuthenticatedPripadyRoute
   '/siet': typeof AuthenticatedSietRoute
+  '/sukromie': typeof AuthenticatedSukromieRoute
   '/viac': typeof AuthenticatedViacRoute
   '/vitajte': typeof AuthenticatedVitajteRoute
   '/vztahy': typeof AuthenticatedVztahyRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/prehlad': typeof AuthenticatedPrehladRoute
   '/pripady': typeof AuthenticatedPripadyRoute
   '/siet': typeof AuthenticatedSietRoute
+  '/sukromie': typeof AuthenticatedSukromieRoute
   '/viac': typeof AuthenticatedViacRoute
   '/vitajte': typeof AuthenticatedVitajteRoute
   '/vztahy': typeof AuthenticatedVztahyRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/_authenticated/prehlad': typeof AuthenticatedPrehladRoute
   '/_authenticated/pripady': typeof AuthenticatedPripadyRoute
   '/_authenticated/siet': typeof AuthenticatedSietRoute
+  '/_authenticated/sukromie': typeof AuthenticatedSukromieRoute
   '/_authenticated/viac': typeof AuthenticatedViacRoute
   '/_authenticated/vitajte': typeof AuthenticatedVitajteRoute
   '/_authenticated/vztahy': typeof AuthenticatedVztahyRoute
@@ -256,6 +265,7 @@ export interface FileRouteTypes {
     | '/prehlad'
     | '/pripady'
     | '/siet'
+    | '/sukromie'
     | '/viac'
     | '/vitajte'
     | '/vztahy'
@@ -281,6 +291,7 @@ export interface FileRouteTypes {
     | '/prehlad'
     | '/pripady'
     | '/siet'
+    | '/sukromie'
     | '/viac'
     | '/vitajte'
     | '/vztahy'
@@ -307,6 +318,7 @@ export interface FileRouteTypes {
     | '/_authenticated/prehlad'
     | '/_authenticated/pripady'
     | '/_authenticated/siet'
+    | '/_authenticated/sukromie'
     | '/_authenticated/viac'
     | '/_authenticated/vitajte'
     | '/_authenticated/vztahy'
@@ -450,6 +462,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSietRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/sukromie': {
+      id: '/_authenticated/sukromie'
+      path: '/sukromie'
+      fullPath: '/sukromie'
+      preLoaderRoute: typeof AuthenticatedSukromieRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/viac': {
       id: '/_authenticated/viac'
       path: '/viac'
@@ -513,6 +532,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPrehladRoute: typeof AuthenticatedPrehladRoute
   AuthenticatedPripadyRoute: typeof AuthenticatedPripadyRoute
   AuthenticatedSietRoute: typeof AuthenticatedSietRoute
+  AuthenticatedSukromieRoute: typeof AuthenticatedSukromieRoute
   AuthenticatedViacRoute: typeof AuthenticatedViacRoute
   AuthenticatedVitajteRoute: typeof AuthenticatedVitajteRoute
   AuthenticatedVztahyRoute: typeof AuthenticatedVztahyRoute
@@ -530,6 +550,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPrehladRoute: AuthenticatedPrehladRoute,
   AuthenticatedPripadyRoute: AuthenticatedPripadyRoute,
   AuthenticatedSietRoute: AuthenticatedSietRoute,
+  AuthenticatedSukromieRoute: AuthenticatedSukromieRoute,
   AuthenticatedViacRoute: AuthenticatedViacRoute,
   AuthenticatedVitajteRoute: AuthenticatedVitajteRoute,
   AuthenticatedVztahyRoute: AuthenticatedVztahyRoute,

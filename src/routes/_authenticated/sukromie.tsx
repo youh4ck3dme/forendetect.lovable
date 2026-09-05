@@ -37,7 +37,7 @@ export const Route = createFileRoute("/_authenticated/sukromie")({
       },
     ],
   }),
-  component: PrivacyScreen;
+  component: PrivacyScreen,
 });
 
 function PrivacyScreen() {
