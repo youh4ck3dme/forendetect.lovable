@@ -14,6 +14,62 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage: {
+        Row: {
+          case_id: string | null
+          completion_tokens: number | null
+          created_at: string
+          error_code: string | null
+          finished_at: string | null
+          id: string
+          input_revision: string | null
+          model: string
+          prompt_tokens: number | null
+          prompt_version: string
+          status: string
+          task: string
+          user_id: string
+        }
+        Insert: {
+          case_id?: string | null
+          completion_tokens?: number | null
+          created_at?: string
+          error_code?: string | null
+          finished_at?: string | null
+          id?: string
+          input_revision?: string | null
+          model: string
+          prompt_tokens?: number | null
+          prompt_version: string
+          status?: string
+          task: string
+          user_id: string
+        }
+        Update: {
+          case_id?: string | null
+          completion_tokens?: number | null
+          created_at?: string
+          error_code?: string | null
+          finished_at?: string | null
+          id?: string
+          input_revision?: string | null
+          model?: string
+          prompt_tokens?: number | null
+          prompt_version?: string
+          status?: string
+          task?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       case_audit_log: {
         Row: {
           actor_id: string | null
@@ -177,6 +233,95 @@ export type Database = {
           },
         ]
       }
+      case_imports: {
+        Row: {
+          byte_size: number
+          case_id: string
+          column_mapping: Json
+          created_at: string
+          date_format: string
+          decimal_separator: string
+          delimiter: string
+          encoding: string
+          error_detail: string | null
+          error_rows: number
+          filename: string
+          id: string
+          imported_rows: number
+          original_stored: boolean
+          parser_version: string
+          partial: boolean
+          revision: number
+          sha256: string
+          status: string
+          storage_path: string | null
+          total_rows: number
+          updated_at: string
+          user_id: string
+          valid_rows: number
+        }
+        Insert: {
+          byte_size: number
+          case_id: string
+          column_mapping?: Json
+          created_at?: string
+          date_format: string
+          decimal_separator: string
+          delimiter: string
+          encoding?: string
+          error_detail?: string | null
+          error_rows?: number
+          filename: string
+          id?: string
+          imported_rows?: number
+          original_stored?: boolean
+          parser_version: string
+          partial?: boolean
+          revision?: number
+          sha256: string
+          status?: string
+          storage_path?: string | null
+          total_rows?: number
+          updated_at?: string
+          user_id: string
+          valid_rows?: number
+        }
+        Update: {
+          byte_size?: number
+          case_id?: string
+          column_mapping?: Json
+          created_at?: string
+          date_format?: string
+          decimal_separator?: string
+          delimiter?: string
+          encoding?: string
+          error_detail?: string | null
+          error_rows?: number
+          filename?: string
+          id?: string
+          imported_rows?: number
+          original_stored?: boolean
+          parser_version?: string
+          partial?: boolean
+          revision?: number
+          sha256?: string
+          status?: string
+          storage_path?: string | null
+          total_rows?: number
+          updated_at?: string
+          user_id?: string
+          valid_rows?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_imports_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       case_relations: {
         Row: {
           case_id: string
@@ -246,10 +391,12 @@ export type Database = {
           destination_country: string
           from_id: string | null
           id: string
+          import_id: string | null
           method: string
           origin_country: string
           payer_id: string | null
           revision: number
+          source_row: number | null
           to_id: string | null
           updated_at: string
           user_id: string
@@ -264,10 +411,12 @@ export type Database = {
           destination_country?: string
           from_id?: string | null
           id?: string
+          import_id?: string | null
           method?: string
           origin_country?: string
           payer_id?: string | null
           revision?: number
+          source_row?: number | null
           to_id?: string | null
           updated_at?: string
           user_id: string
@@ -282,10 +431,12 @@ export type Database = {
           destination_country?: string
           from_id?: string | null
           id?: string
+          import_id?: string | null
           method?: string
           origin_country?: string
           payer_id?: string | null
           revision?: number
+          source_row?: number | null
           to_id?: string | null
           updated_at?: string
           user_id?: string
@@ -303,6 +454,13 @@ export type Database = {
             columns: ["from_id"]
             isOneToOne: false
             referencedRelation: "case_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "case_transactions_import_id_fkey"
+            columns: ["import_id"]
+            isOneToOne: false
+            referencedRelation: "case_imports"
             referencedColumns: ["id"]
           },
           {
@@ -492,6 +650,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      commit_import: { Args: { _import: string; _rows: Json }; Returns: number }
       entity_belongs: {
         Args: { _case: string; _entity: string; _user: string }
         Returns: boolean
@@ -502,6 +661,18 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      reserve_ai_call: {
+        Args: {
+          _case: string
+          _daily_limit: number
+          _input_revision: string
+          _model: string
+          _prompt_version: string
+          _task: string
+          _user: string
+        }
+        Returns: string
       }
     }
     Enums: {
