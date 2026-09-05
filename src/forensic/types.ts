@@ -69,6 +69,10 @@ export type Transaction = {
   originCountry: string;
   destinationCountry: string;
   description: string;
+  /** Import, z ktorého transakcia vznikla (ak nebola zadaná ručne). */
+  importId?: string;
+  /** Číslo riadka v pôvodnom súbore — dohľadateľnosť zdroja. */
+  sourceRow?: number;
 };
 
 export type Weapon = {
