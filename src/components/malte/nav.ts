@@ -9,6 +9,8 @@ import {
   Plug,
   Bot,
   Scale,
+  CreditCard,
+  ShieldCheck,
   Share2,
   Users,
   type LucideIcon,
@@ -31,5 +33,7 @@ export const secondaryItems: NavItem[] = [
   { to: "/siet", label: "Sieť tokov", icon: Share2 },
   { to: "/zbrane", label: "Zbrane", icon: Crosshair },
   { to: "/pravny-kontext", label: "Právny kontext", icon: Scale },
+  { to: "/predplatne", label: "Predplatné", icon: CreditCard },
+  { to: "/sukromie", label: "Súkromie a podmienky", icon: ShieldCheck },
   { to: "/mcp-info", label: "Agentné API", icon: Plug },
 ];
