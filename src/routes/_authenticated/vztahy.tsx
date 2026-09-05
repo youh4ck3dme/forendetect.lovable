@@ -1,3 +1,4 @@
+import { AddPanel, RelationForm } from "@/components/malte/CaseForms";
 import { EmptyState } from "@/components/malte/EmptyState";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { useState } from "react";
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/_authenticated/vztahy")({
 });
 
 function Relations() {
-  const { activeCase, analysis } = useActiveCase();
+  const { activeCase, analysis, refresh } = useActiveCase();
   const byId = new Map(analysis.entities.map((e) => [e.entity.id, e]));
   const { state } = useCaseStore();
   const [target, setTarget] = useState<DetectorTarget | null>(null);
@@ -78,6 +79,9 @@ function Relations() {
 
       <Screen>
         <div className="flex gap-2">
+          <AddPanel label="Pridať vzťah">
+            <RelationForm caseId={activeCase.id} entities={activeCase.entities} onSaved={refresh} />
+          </AddPanel>
           {(["graph", "list"] as const).map((option) => (
             <button
               key={option}

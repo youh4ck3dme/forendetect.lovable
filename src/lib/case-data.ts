@@ -1,19 +1,31 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Entity, ForensicCase } from "@/forensic";
+import type { ForensicCase } from "@/forensic";
 import { mapCaseRows } from "@/lib/case-mapper";
+import {
+  deleteRecord,
+  getDeleteImpact,
+  saveCase,
+  saveEntity,
+  saveEvent,
+  saveRelation,
+  saveTransaction,
+  saveWeapon,
+} from "@/lib/case-write.functions";
 
 export type CaseSummary = {
   id: string;
   name: string;
   subtitle: string;
   referenceDate: string;
+  baseCurrency: string;
   createdAt: string;
 };
 
+/** Čítanie ide priamo cez klienta (RLS obmedzí dáta na prihláseného používateľa). */
 export async function listCases(): Promise<CaseSummary[]> {
   const { data, error } = await supabase
     .from("cases")
-    .select("id, name, subtitle, reference_date, created_at")
+    .select("id, name, subtitle, reference_date, base_currency, created_at")
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []).map((row) => ({
@@ -21,98 +33,9 @@ export async function listCases(): Promise<CaseSummary[]> {
     name: row.name,
     subtitle: row.subtitle ?? "",
     referenceDate: row.reference_date,
+    baseCurrency: row.base_currency ?? "EUR",
     createdAt: row.created_at,
   }));
-}
-
-export async function createCase(input: {
-  name: string;
-  subtitle?: string;
-  referenceDate?: string;
-}): Promise<string> {
-  const { data: userData } = await supabase.auth.getUser();
-  const userId = userData.user?.id;
-  if (!userId) throw new Error("Nie ste prihlásený.");
-  const { data, error } = await supabase
-    .from("cases")
-    .insert({
-      user_id: userId,
-      name: input.name,
-      subtitle: input.subtitle ?? "",
-      reference_date: input.referenceDate ?? new Date().toISOString().slice(0, 10),
-    })
-    .select("id")
-    .single();
-  if (error) throw error;
-  return data.id;
-}
-
-export async function deleteCase(id: string): Promise<void> {
-  const { error } = await supabase.from("cases").delete().eq("id", id);
-  if (error) throw error;
-}
-
-export async function addEntity(caseId: string, input: Partial<Entity> & { name: string }) {
-  const { data: userData } = await supabase.auth.getUser();
-  const userId = userData.user?.id;
-  if (!userId) throw new Error("Nie ste prihlásený.");
-  const { error } = await supabase.from("case_entities").insert({
-    case_id: caseId,
-    user_id: userId,
-    name: input.name,
-    kind: input.kind ?? "person",
-    role: input.role ?? "",
-    ico: input.ico ?? null,
-    address: input.address ?? null,
-    registered_address: input.registeredAddress ?? null,
-    licence: input.licence ?? null,
-    country: input.country ?? "SK",
-    note: input.note ?? null,
-    x: input.x ?? Math.round(20 + Math.random() * 60),
-    y: input.y ?? Math.round(20 + Math.random() * 60),
-  });
-  if (error) throw error;
-}
-
-export async function deleteEntity(id: string) {
-  const { error } = await supabase.from("case_entities").delete().eq("id", id);
-  if (error) throw error;
-}
-
-export async function addTransaction(
-  caseId: string,
-  input: {
-    date: string;
-    amount: number;
-    method: "cash" | "transfer";
-    fromId: string;
-    toId: string;
-    originCountry?: string;
-    destinationCountry?: string;
-    description?: string;
-  },
-) {
-  const { data: userData } = await supabase.auth.getUser();
-  const userId = userData.user?.id;
-  if (!userId) throw new Error("Nie ste prihlásený.");
-  const { error } = await supabase.from("case_transactions").insert({
-    case_id: caseId,
-    user_id: userId,
-    date: input.date,
-    amount: input.amount,
-    method: input.method,
-    from_id: input.fromId,
-    to_id: input.toId,
-    origin_country: input.originCountry ?? "SK",
-    destination_country: input.destinationCountry ?? "SK",
-    description: input.description ?? "",
-  });
-  if (error) throw error;
-}
-
-export async function deleteTransaction(id: string) {
-  const { error } = await supabase.from("case_transactions").delete().eq("id", id);
-  if (error) throw error;
 }
 
 /** Načíta celý prípad a poskladá ho do tvaru, ktorý očakáva forenzné jadro. */
@@ -138,3 +61,64 @@ export async function loadCase(caseId: string): Promise<ForensicCase> {
     events.data ?? [],
   );
 }
+
+/** Revízie záznamov pre ochranu pred prepísaním súbežnou úpravou. */
+export async function loadCaseRevisions(caseId: string): Promise<Record<string, number>> {
+  const tables = [
+    "cases",
+    "case_entities",
+    "case_transactions",
+    "case_weapons",
+    "case_relations",
+    "case_events",
+  ] as const;
+  const results = await Promise.all(
+    tables.map((table) =>
+      table === "cases"
+        ? supabase.from(table).select("id, revision").eq("id", caseId)
+        : supabase.from(table).select("id, revision").eq("case_id", caseId),
+    ),
+  );
+  const out: Record<string, number> = {};
+  for (const result of results) {
+    for (const row of result.data ?? []) {
+      out[(row as { id: string }).id] = (row as { revision?: number }).revision ?? 1;
+    }
+  }
+  return out;
+}
+
+/* Zápisy idú výhradne cez serverové funkcie so Zod validáciou. */
+export const createCase = async (input: {
+  name: string;
+  subtitle?: string;
+  referenceDate?: string;
+  baseCurrency?: string;
+}) => (await saveCase({ data: { ...input } })).id;
+
+export const updateCase = saveCase;
+export const upsertEntity = saveEntity;
+export const upsertTransaction = saveTransaction;
+export const upsertRelation = saveRelation;
+export const upsertWeapon = saveWeapon;
+export const upsertEvent = saveEvent;
+export const describeDeleteImpact = getDeleteImpact;
+
+export const deleteCase = async (id: string) => {
+  await deleteRecord({ data: { type: "case", id } });
+};
+export const deleteEntity = async (id: string) => {
+  await deleteRecord({ data: { type: "entity", id } });
+};
+export const deleteTransaction = async (id: string) => {
+  await deleteRecord({ data: { type: "transaction", id } });
+};
+export const deleteRelation = async (id: string) => {
+  await deleteRecord({ data: { type: "relation", id } });
+};
+export const deleteWeapon = async (id: string) => {
+  await deleteRecord({ data: { type: "weapon", id } });
+};
+export const deleteEvent = async (id: string) => {
+  await deleteRecord({ data: { type: "event", id } });
+};

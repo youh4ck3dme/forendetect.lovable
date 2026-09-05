@@ -1,11 +1,34 @@
 export type Severity = "critical" | "high" | "medium" | "low";
 
+/**
+ * Trieda zistenia:
+ * - `fakt` — priamo pozorovaná hodnota v zadaných dátach,
+ * - `heuristika` — interpretácia podľa prahu alebo vzoru,
+ * - `hypotéza` — návrh na overenie (rezervované pre budúcu AI vrstvu).
+ */
+export type FindingKind = "fakt" | "heuristika" | "hypotéza";
+
+export type EvidenceRef = {
+  type: "entity" | "transaction" | "weapon" | "relation" | "event";
+  id: string;
+};
+
 export type Flag = {
+  /** Stabilný identifikátor pravidla (nemení sa medzi verziami). */
   code: string;
   label: string;
   detail: string;
   weight: number;
   severity: Severity;
+  ruleId?: string;
+  ruleVersion?: string;
+  kind?: FindingKind;
+  /** Konkrétne zdrojové záznamy, ktoré pravidlo spustili. */
+  evidence?: EvidenceRef[];
+  /** Spúšťacia podmienka vrátane prahu. */
+  condition?: string;
+  /** Použité hodnoty, z ktorých podmienka vyšla. */
+  values?: Record<string, string | number>;
 };
 
 export type EntityKind = "person" | "company";
@@ -34,7 +57,10 @@ export type PaymentMethod = "cash" | "transfer";
 export type Transaction = {
   id: string;
   date: string;
+  /** Podpísaná suma v mene transakcie; kladná = tok fromId → toId. */
   amount: number;
+  /** ISO 4217 kód meny (napr. EUR). Rôzne meny sa nikdy nesčítavajú. */
+  currency: string;
   method: PaymentMethod;
   fromId: string;
   toId: string;
@@ -74,6 +100,8 @@ export type ForensicCase = {
   name: string;
   subtitle: string;
   referenceDate: string;
+  /** Základná mena prípadu — objemové ukazovatele sa počítajú v nej. */
+  baseCurrency: string;
   entities: Entity[];
   transactions: Transaction[];
   weapons: Weapon[];
@@ -204,11 +232,17 @@ export type CaseAnalysis = {
   caseScore: number;
   caseLevel: Severity;
   topFlags: Flag[];
+  /** Verzia sady pravidiel, ktorou bol výsledok vypočítaný. */
+  rulesVersion: string;
   totals: {
     entities: number;
     companies: number;
     transactions: number;
+    /** Objem v základnej mene prípadu (absolútne hodnoty). */
     volume: number;
+    /** Objem podľa jednotlivých mien — bez konverzie. */
+    volumeByCurrency: Record<string, number>;
+    currencies: string[];
     cashRatio: number;
     weapons: number;
     europolMatches: number;

@@ -1,3 +1,4 @@
+import { AddPanel, EventForm } from "@/components/malte/CaseForms";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -53,7 +54,7 @@ export const Route = createFileRoute("/_authenticated/prehlad")({
 });
 
 function Index() {
-  const { activeCase, analysis } = useActiveCase();
+  const { activeCase, analysis, refresh } = useActiveCase();
   const { totals, caseScore, caseLevel, alerts, topFlags, chains } = analysis;
   const { state, countExport } = useCaseStore();
   const [target, setTarget] = useState<DetectorTarget | null>(null);
@@ -104,6 +105,11 @@ function Index() {
       </AppHeader>
 
       <Screen>
+        {activeCase.id ? (
+          <AddPanel label="Pridať udalosť do časovej osi">
+            <EventForm caseId={activeCase.id} onSaved={refresh} />
+          </AddPanel>
+        ) : null}
         <div className="lg:hidden">
           <CommandPaletteTrigger />
         </div>

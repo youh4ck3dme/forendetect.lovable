@@ -24,11 +24,11 @@ export async function caseAnalysis(ctx?: Ctx): Promise<CaseAnalysis> {
 
   const caseId = row.id;
   const [entities, transactions, weapons, relations, events] = await Promise.all([
-    supabaseAdmin.from("case_entities").select("*").eq("case_id", caseId),
-    supabaseAdmin.from("case_transactions").select("*").eq("case_id", caseId),
-    supabaseAdmin.from("case_weapons").select("*").eq("case_id", caseId),
-    supabaseAdmin.from("case_relations").select("*").eq("case_id", caseId),
-    supabaseAdmin.from("case_events").select("*").eq("case_id", caseId),
+    supabaseAdmin.from("case_entities").select("*").eq("case_id", caseId).eq("user_id", userId),
+    supabaseAdmin.from("case_transactions").select("*").eq("case_id", caseId).eq("user_id", userId),
+    supabaseAdmin.from("case_weapons").select("*").eq("case_id", caseId).eq("user_id", userId),
+    supabaseAdmin.from("case_relations").select("*").eq("case_id", caseId).eq("user_id", userId),
+    supabaseAdmin.from("case_events").select("*").eq("case_id", caseId).eq("user_id", userId),
   ]);
 
   return analyzeCase(

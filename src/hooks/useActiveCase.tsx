@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { analyzeCase, EMPTY_CASE, type CaseAnalysis, type ForensicCase } from "@/forensic";
-import { listCases, loadCase, type CaseSummary } from "@/lib/case-data";
+import { listCases, loadCase, loadCaseRevisions, type CaseSummary } from "@/lib/case-data";
 
 type Ctx = {
   cases: CaseSummary[];
@@ -9,6 +9,8 @@ type Ctx = {
   setActiveCaseId: (id: string | null) => void;
   activeCase: ForensicCase;
   analysis: CaseAnalysis;
+  /** Revízie záznamov pre ochranu pred prepísaním súbežnou úpravou. */
+  revisions: Record<string, number>;
   hasCase: boolean;
   loading: boolean;
   refresh: () => void;
@@ -54,6 +56,12 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
     enabled: Boolean(activeCaseId),
   });
 
+  const revisionsQuery = useQuery({
+    queryKey: ["case-revisions", activeCaseId],
+    queryFn: () => loadCaseRevisions(activeCaseId as string),
+    enabled: Boolean(activeCaseId),
+  });
+
   const activeCase = caseQuery.data ?? EMPTY_CASE;
   const analysis = useMemo(() => analyzeCase(activeCase), [activeCase]);
 
@@ -63,11 +71,13 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
     setActiveCaseId,
     activeCase,
     analysis,
+    revisions: revisionsQuery.data ?? {},
     hasCase: Boolean(caseQuery.data),
     loading: casesQuery.isLoading || caseQuery.isLoading,
     refresh: () => {
       void queryClient.invalidateQueries({ queryKey: ["cases"] });
       void queryClient.invalidateQueries({ queryKey: ["case"] });
+      void queryClient.invalidateQueries({ queryKey: ["case-revisions"] });
     },
   };
 
