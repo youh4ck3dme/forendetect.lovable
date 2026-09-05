@@ -70,6 +70,36 @@ export type Database = {
           },
         ]
       }
+      billing_events: {
+        Row: {
+          event_created_at: string | null
+          event_id: string
+          processed_at: string
+          provider: string
+          result: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          event_created_at?: string | null
+          event_id: string
+          processed_at?: string
+          provider?: string
+          result?: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          event_created_at?: string | null
+          event_id?: string
+          processed_at?: string
+          provider?: string
+          result?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       case_audit_log: {
         Row: {
           actor_id: string | null
@@ -555,6 +585,7 @@ export type Database = {
           created_at: string
           europol_serials: string[]
           id: string
+          is_demo: boolean
           name: string
           orsr_addresses: Json
           reference_date: string
@@ -569,6 +600,7 @@ export type Database = {
           created_at?: string
           europol_serials?: string[]
           id?: string
+          is_demo?: boolean
           name: string
           orsr_addresses?: Json
           reference_date?: string
@@ -583,6 +615,7 @@ export type Database = {
           created_at?: string
           europol_serials?: string[]
           id?: string
+          is_demo?: boolean
           name?: string
           orsr_addresses?: Json
           reference_date?: string
@@ -591,6 +624,42 @@ export type Database = {
           updated_at?: string
           user_id?: string
           valid_licences?: string[]
+        }
+        Relationships: []
+      }
+      deletion_requests: {
+        Row: {
+          created_at: string
+          error_detail: string | null
+          finished_at: string | null
+          id: string
+          scope: string
+          status: string
+          steps: Json
+          target_case_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_detail?: string | null
+          finished_at?: string | null
+          id?: string
+          scope: string
+          status?: string
+          steps?: Json
+          target_case_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_detail?: string | null
+          finished_at?: string | null
+          id?: string
+          scope?: string
+          status?: string
+          steps?: Json
+          target_case_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -624,6 +693,51 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          customer_id: string | null
+          last_event_at: string | null
+          plan: string
+          price_id: string | null
+          provider: string
+          status: string
+          subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          customer_id?: string | null
+          last_event_at?: string | null
+          plan?: string
+          price_id?: string | null
+          provider?: string
+          status?: string
+          subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          customer_id?: string | null
+          last_event_at?: string | null
+          plan?: string
+          price_id?: string | null
+          provider?: string
+          status?: string
+          subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -651,6 +765,7 @@ export type Database = {
     }
     Functions: {
       commit_import: { Args: { _import: string; _rows: Json }; Returns: number }
+      current_plan: { Args: { _user: string }; Returns: string }
       entity_belongs: {
         Args: { _case: string; _entity: string; _user: string }
         Returns: boolean
