@@ -130,7 +130,19 @@ export type AiRunResult = {
   payload?: AiPayload;
   usage?: { prompt: number | null; completion: number | null };
   /** Text alebo návrhy — vždy s pôvodnými identifikátormi záznamov. */
-  output?: Record<string, unknown>;
+  output?: {
+    summary?: string;
+    explanation?: string;
+    unverified?: string[];
+    cited?: string[];
+    suggestions?: {
+      transaction: string;
+      normalized: string;
+      counterparty?: string;
+      confidence: string;
+    }[];
+    idMap?: { entities: Record<string, string>; transactions: Record<string, string> };
+  };
 };
 
 export const runAiTask = createServerFn({ method: "POST" })
@@ -269,7 +281,7 @@ export const runAiTask = createServerFn({ method: "POST" })
       model: result.model,
       usage: result.usage,
       output: {
-        ...output,
+        ...(output as AiRunResult["output"]),
         /** Preklad pseudonymov späť na skutočné záznamy prebieha na serveri. */
         idMap: { entities: pseudonyms.entityBack, transactions: pseudonyms.transactionBack },
       },
