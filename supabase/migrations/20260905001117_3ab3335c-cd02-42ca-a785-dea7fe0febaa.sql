@@ -1,0 +1,2 @@
+revoke all on function public.reserve_ai_call(uuid, uuid, text, text, text, text, integer) from anon, authenticated, public;
+grant execute on function public.reserve_ai_call(uuid, uuid, text, text, text, text, integer) to service_role;
