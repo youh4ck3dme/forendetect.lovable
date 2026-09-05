@@ -287,10 +287,13 @@ function ImportCsv() {
       for (const [name, choice] of Object.entries(partyMap)) {
         if (choice === "new") {
           const created = await upsertEntity({
-            caseId: activeCase.id,
-            name,
-            kind: "company",
-            role: "protistrana z importu",
+            data: {
+              caseId: activeCase.id,
+              name,
+              kind: "company",
+              role: "protistrana z importu",
+              country: "SK",
+            },
           });
           ids[name] = created.id;
         } else {
