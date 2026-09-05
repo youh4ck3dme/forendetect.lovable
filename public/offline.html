@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Bez pripojenia — Forendo</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        margin: 0; min-height: 100vh; display: grid; place-items: center;
+        font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+        background: #f5f5f7; color: #16181d; padding: 24px;
+      }
+      @media (prefers-color-scheme: dark) { body { background: #101216; color: #f2f3f5; } }
+      main { max-width: 420px; text-align: center; }
+      h1 { font-size: 20px; margin: 0 0 12px; }
+      p { font-size: 14px; line-height: 1.5; opacity: 0.75; margin: 0 0 10px; }
+      button {
+        margin-top: 16px; border: 0; border-radius: 14px; padding: 10px 18px;
+        font: inherit; font-weight: 600; cursor: pointer; background: #16181d; color: #fff;
+      }
+      @media (prefers-color-scheme: dark) { button { background: #f2f3f5; color: #101216; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Ste bez pripojenia</h1>
+      <p>
+        Forendo pracuje s prípadmi v zabezpečenom cloude, preto bez internetu nie sú dostupné
+        prípady, importy, nálezy, správy ani AI asistent.
+      </p>
+      <p>Žiadne údaje z prípadov sa v prehliadači neukladajú na offline použitie.</p>
+      <button onclick="location.reload()">Skúsiť znova</button>
+    </main>
+  </body>
+</html>
