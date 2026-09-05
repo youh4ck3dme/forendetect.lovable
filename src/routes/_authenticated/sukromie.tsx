@@ -51,8 +51,8 @@ function PrivacyScreen() {
   async function handleExport() {
     setBusy(true);
     try {
-      const payload = await runExport({ data: undefined });
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const { json } = await runExport({ data: undefined });
+      const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;

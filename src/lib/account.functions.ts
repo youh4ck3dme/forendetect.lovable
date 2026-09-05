@@ -43,15 +43,15 @@ export const exportMyData = createServerFn({ method: "POST" })
 
     for (const table of tables) {
       const column = table === "profiles" ? "id" : "user_id";
-      const { data, error } = await supabase
-        .from(table)
-        .select("*")
-        .eq(column, userId)
-        .limit(50000);
+      // Voľná schéma: tabuľky majú rôzne stĺpce, dotaz je vždy obmedzený na vlastníka.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const query = (supabase.from(table) as any).select("*").eq(column, userId).limit(50000);
+      const { data, error } = await query;
       payload[table] = error ? { error: error.message } : (data ?? []);
     }
 
-    return payload;
+    // Serializované ako text, aby prenos zostal jednoznačne typovaný.
+    return { json: JSON.stringify(payload, null, 2) };
   });
 
 /** Vymaže jeden prípad vrátane závislých záznamov. */
@@ -109,7 +109,10 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
       .select("id")
       .single();
 
-    async function run(step: string, fn: () => Promise<{ error: { message: string } | null }>) {
+    async function run(
+      step: string,
+      fn: () => PromiseLike<{ error: { message: string } | null }>,
+    ) {
       const { error } = await fn();
       steps.push({ step, ok: !error, ...(error ? { detail: error.message } : {}) });
       if (error) throw new Error(`${step}: ${error.message}`);
