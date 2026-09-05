@@ -45,7 +45,7 @@ export function buildReportHtml(
     .map(
       (a) => `<tr>
         <td><strong>${escapeHtml(a.title)}</strong><br /><span class="muted">${escapeHtml(a.detail)}</span></td>
-        <td class="nowrap">${escapeHtml(a.source)}</td>
+        <td class="nowrap">${escapeHtml(a.source)}<br /><span class="muted">${escapeHtml(evidenceOf(a.id) || "—")}</span></td>
         <td class="nowrap" style="color:${severityColor[a.severity]}"><strong>${severityLabel[a.severity]}</strong></td>
         <td class="num">${a.score}</td>
       </tr>`,
