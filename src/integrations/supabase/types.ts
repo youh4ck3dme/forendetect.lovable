@@ -699,6 +699,7 @@ export type Database = {
           created_at: string
           current_period_end: string | null
           customer_id: string | null
+          environment: string
           last_event_at: string | null
           plan: string
           price_id: string | null
@@ -713,6 +714,7 @@ export type Database = {
           created_at?: string
           current_period_end?: string | null
           customer_id?: string | null
+          environment?: string
           last_event_at?: string | null
           plan?: string
           price_id?: string | null
@@ -727,6 +729,7 @@ export type Database = {
           created_at?: string
           current_period_end?: string | null
           customer_id?: string | null
+          environment?: string
           last_event_at?: string | null
           plan?: string
           price_id?: string | null

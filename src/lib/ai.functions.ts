@@ -11,6 +11,7 @@ import { buildAiPayload, buildPseudonyms, PROMPT_VERSION, type AiPayload } from 
  * a vracajú text a návrhy, ktoré musí používateľ výslovne prijať.
  */
 
+/** Predvolený limit bez platného predplatného; plán ho môže zvýšiť. */
 export const AI_DAILY_LIMIT = 25;
 
 const taskEnum = z.enum(["explain_finding", "case_summary", "normalize_descriptions"]);
@@ -89,17 +90,22 @@ export const getAiStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { mistralConfigured, mistralModel } = await import("@/lib/ai/mistral.server");
+    const { getQuotas } = await import("@/lib/entitlements.server");
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
-    const { count } = await context.supabase
-      .from("ai_usage")
-      .select("id", { count: "exact", head: true })
-      .gte("created_at", since)
-      .neq("status", "failed");
+    const [{ count }, quotas] = await Promise.all([
+      context.supabase
+        .from("ai_usage")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", since)
+        .neq("status", "failed"),
+      getQuotas(context.userId),
+    ]);
     return {
       configured: mistralConfigured(),
       model: mistralConfigured() ? mistralModel() : null,
       promptVersion: PROMPT_VERSION,
-      dailyLimit: AI_DAILY_LIMIT,
+      plan: quotas.plan,
+      dailyLimit: quotas.aiPerDay,
       used: count ?? 0,
     };
   });
@@ -184,6 +190,8 @@ export const runAiTask = createServerFn({ method: "POST" })
     }
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { getQuotas } = await import("@/lib/entitlements.server");
+    const quotas = await getQuotas(context.userId);
     const { data: reservationId, error: reserveError } = await supabaseAdmin.rpc(
       "reserve_ai_call",
       {
@@ -193,7 +201,7 @@ export const runAiTask = createServerFn({ method: "POST" })
         _model: mistralModel(),
         _prompt_version: PROMPT_VERSION,
         _input_revision: analysis.dataFingerprint,
-        _daily_limit: AI_DAILY_LIMIT,
+        _daily_limit: quotas.aiPerDay,
       },
     );
     if (reserveError) {
