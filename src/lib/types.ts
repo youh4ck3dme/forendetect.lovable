@@ -155,3 +155,31 @@ export interface BulkFileItem {
   usedOcr?: boolean;
   error?: string;
 }
+
+export interface ExtractedCaseEntity {
+  name: string;
+  role?: string | undefined;
+  birthDate?: string | undefined;
+  note?: string | undefined;
+}
+
+export interface ParsedCaseDocument {
+  success: boolean;
+  fileName: string;
+  charCount: number;
+  usedOcr: boolean;
+  rawText: string;
+  metadata: {
+    caseId?: string | undefined;
+    documentType?: string | undefined;
+    date?: string | undefined;
+    location?: string | undefined;
+  };
+  entities: {
+    persons: ExtractedCaseEntity[];
+    weapons: string[];
+    vehicles: string[];
+    companies: string[];
+    legalParagraphs: string[];
+  };
+}
