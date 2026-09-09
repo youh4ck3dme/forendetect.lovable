@@ -7,10 +7,43 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/tanstack/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import path from "node:path";
+import type { Plugin, ResolvedConfig } from "vite";
+
+// Windows path normalization wrapper for mcpPlugin to resolve OS backslash mismatch
+function safeMcpPlugin(): Plugin {
+  const plugin = mcpPlugin();
+  return {
+    ...plugin,
+    configResolved(this: unknown, config: ResolvedConfig) {
+      const normalizedConfig = {
+        ...config,
+        root: path.resolve(config.root),
+      };
+      if (typeof plugin.configResolved === "function") {
+        return (
+          plugin.configResolved as (this: unknown, config: ResolvedConfig) => void | Promise<void>
+        ).call(this, normalizedConfig);
+      }
+      if (plugin.configResolved && "handler" in plugin.configResolved) {
+        return (
+          plugin.configResolved as {
+            handler: (this: unknown, config: ResolvedConfig) => void | Promise<void>;
+          }
+        ).handler.call(this, normalizedConfig);
+      }
+    },
+  };
+}
 
 export default defineConfig({
+  vite: {
+    server: {
+      port: 5656,
+    },
+  },
   plugins: [
-    mcpPlugin(),
+    safeMcpPlugin(),
     VitePWA({
       // Registrácia prebieha výhradne cez src/lib/pwa.ts (nikdy v náhľade a vývoji).
       injectRegister: null,
@@ -33,7 +66,12 @@ export default defineConfig({
         icons: [
           { src: "/pwa-192.png", sizes: "192x192", type: "image/png" },
           { src: "/pwa-512.png", sizes: "512x512", type: "image/png" },
-          { src: "/pwa-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+          {
+            src: "/pwa-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
         ],
       },
       workbox: {

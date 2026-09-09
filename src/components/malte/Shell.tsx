@@ -1,11 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Bell, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import type React from "react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import malteMark from "@/assets/malte-mark.png";
 import { CommandPalette, CommandPaletteTrigger } from "@/components/malte/CommandPalette";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
+import { NotificationsBell } from "@/components/malte/NotificationsBell";
 import { navItems, secondaryItems } from "@/components/malte/nav";
 import { severityLabel } from "@/forensic";
 import { useActiveCase } from "@/hooks/useActiveCase";
@@ -20,8 +21,9 @@ function DesktopSidebar() {
       <div className="flex items-center gap-2 px-2">
         <img src={malteMark} alt="" width={30} height={30} className="h-7 w-7" aria-hidden />
         <span className="text-lg font-extrabold tracking-tight">Forendo</span>
-        <span className="ml-auto">
+        <span className="ml-auto flex items-center gap-1.5">
           <ThemeToggle />
+          <NotificationsBell />
         </span>
       </div>
 
@@ -96,7 +98,7 @@ export function PhoneFrame({ children }: { children: ReactNode }) {
       <DesktopSidebar />
       <div className="flex min-w-0 flex-1 justify-center py-0 sm:px-4 sm:py-10 lg:px-6 lg:py-8">
         <div className="w-full min-w-0 max-w-[min(100%,560px)] sm:overflow-hidden sm:rounded-[2.5rem] sm:border sm:border-border sm:bg-card sm:shadow-elevated lg:max-w-[min(100%,1180px)] lg:rounded-3xl xl:max-w-[min(100%,1320px)] 2xl:max-w-[min(100%,1480px)]">
-          <div className="relative flex min-h-screen flex-col sm:min-h-[860px] lg:min-h-[calc(100vh-4rem)]">
+          <div className="relative flex min-h-screen flex-col sm:min-h-215 lg:min-h-[calc(100vh-4rem)]">
             {children}
           </div>
         </div>
@@ -160,7 +162,16 @@ export function AppHeader({
     >
       <StatusBar />
       <div className="flex items-center gap-3 px-5 pt-2 pb-3 lg:pt-4">
-        {back ? <ChevronLeft className="h-5 w-5 opacity-90" role="img" aria-label="Späť" /> : null}
+        {back ? (
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            aria-label="Späť"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-surface-2/80 active:scale-90 transition-all"
+          >
+            <ChevronLeft className="h-5 w-5 opacity-90" aria-hidden />
+          </button>
+        ) : null}
         {brand ? (
           <img src={malteMark} alt="Forendo" width={28} height={28} className="h-7 w-7 lg:hidden" />
         ) : null}
@@ -176,15 +187,13 @@ export function AppHeader({
           <span className="lg:hidden">
             <ThemeToggle />
           </span>
-          {actions ?? <Bell className="h-5 w-5 opacity-90" role="img" aria-label="Upozornenia" />}
+          {actions ?? <NotificationsBell />}
         </div>
       </div>
       <div
         className={cn(
           "origin-top transition-all duration-300",
-          scrolled
-            ? "pointer-events-none max-h-0 scale-y-95 opacity-0"
-            : "max-h-[420px] opacity-100",
+          scrolled ? "pointer-events-none max-h-0 scale-y-95 opacity-0" : "max-h-105 opacity-100",
         )}
       >
         {children}

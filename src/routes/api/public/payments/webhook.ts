@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { type StripeEnv, verifyWebhook } from "@/lib/stripe.server";
+import type { Database } from "@/integrations/supabase/types";
 
-// Typy tabuliek predplatného nie sú v generovanom súbore, preto voľná schéma.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let _supabase: any = null;
-function getSupabase() {
+let _supabase: SupabaseClient<Database> | null = null;
+function getSupabase(): SupabaseClient<Database> {
   if (!_supabase) {
-    _supabase = createClient<any>(
+    _supabase = createClient<Database>(
       process.env["SUPABASE_URL"]!,
       process.env["SUPABASE_SERVICE_ROLE_KEY"]!,
     );
@@ -15,7 +14,28 @@ function getSupabase() {
   return _supabase;
 }
 
-function planFromPrice(price: any): { priceId: string | null; plan: string } {
+type StripePrice = {
+  lookup_key?: string;
+  metadata?: { lovable_external_id?: string };
+  id?: string;
+};
+
+type StripeSubscription = {
+  id: string;
+  status: string;
+  metadata?: { userId?: string };
+  items?: {
+    data?: Array<{
+      price?: StripePrice;
+      current_period_end?: number;
+    }>;
+  };
+  current_period_end?: number;
+  cancel_at_period_end?: boolean;
+  customer?: string | { id?: string };
+};
+
+function planFromPrice(price?: StripePrice | null): { priceId: string | null; plan: string } {
   const priceId: string | null =
     price?.lookup_key ?? price?.metadata?.lovable_external_id ?? price?.id ?? null;
   const plan = priceId && priceId.startsWith("pro_") ? "pro" : "free";
@@ -26,7 +46,7 @@ function iso(seconds: number | null | undefined): string | null {
   return seconds ? new Date(seconds * 1000).toISOString() : null;
 }
 
-async function upsertSubscription(subscription: any, env: StripeEnv) {
+async function upsertSubscription(subscription: StripeSubscription, env: StripeEnv) {
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error("payments webhook: subscription without userId metadata");
@@ -46,7 +66,7 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
         customer_id:
           typeof subscription.customer === "string"
             ? subscription.customer
-            : subscription.customer?.id,
+            : (subscription.customer?.id ?? null),
         subscription_id: subscription.id,
         price_id: priceId,
         plan: subscription.status === "canceled" ? "free" : plan,
@@ -59,7 +79,7 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
     );
 }
 
-async function markCanceled(subscription: any, env: StripeEnv) {
+async function markCanceled(subscription: StripeSubscription, env: StripeEnv) {
   await getSupabase()
     .from("subscriptions")
     .update({
@@ -92,12 +112,14 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
 
         const supabase = getSupabase();
 
+        const object = event.data.object as unknown as StripeSubscription;
+
         // Idempotencia: duplicitná udalosť sa zapíše len raz.
         const { error: claimError } = await supabase.from("billing_events").insert({
           event_id: `${env}:${event.id}`,
           provider: "stripe",
           type: event.type,
-          user_id: (event.data.object as any)?.metadata?.userId ?? null,
+          user_id: object.metadata?.userId ?? null,
           event_created_at: iso(event.created),
           result: "processing",
         });
@@ -108,7 +130,6 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
 
         let result = "ok";
         try {
-          const object = event.data.object as any;
           switch (event.type) {
             case "customer.subscription.created":
             case "customer.subscription.updated":

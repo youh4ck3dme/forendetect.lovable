@@ -47,7 +47,7 @@ function assertUpdated(count: number | null): void {
 
 export const saveCase = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         id: uuid.optional(),
@@ -113,7 +113,7 @@ const entityInput = z.object({
 
 export const saveEntity = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => entityInput.parse(input))
+  .validator((input: unknown) => entityInput.parse(input))
   .handler(async ({ data, context }) => {
     const payload = {
       case_id: data.caseId,
@@ -184,7 +184,7 @@ const transactionInput = z.object({
 
 export const saveTransaction = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     transactionInput
       .refine((value) => value.fromId !== value.toId, {
         message: "Odosielateľ a príjemca nesmú byť rovnaký subjekt.",
@@ -228,7 +228,7 @@ export const saveTransaction = createServerFn({ method: "POST" })
 
 export const saveRelation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         id: uuid.optional(),
@@ -273,7 +273,7 @@ export const saveRelation = createServerFn({ method: "POST" })
 
 export const saveWeapon = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         id: uuid.optional(),
@@ -322,7 +322,7 @@ export const saveWeapon = createServerFn({ method: "POST" })
 
 export const saveEvent = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         id: uuid.optional(),
@@ -382,7 +382,7 @@ const deleteInput = z.object({
 /** Zistí, čo mazanie ovplyvní — aby nevznikli osirelé referencie. */
 export const getDeleteImpact = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => deleteInput.parse(input))
+  .validator((input: unknown) => deleteInput.parse(input))
   .handler(async ({ data, context }) => {
     const blockers: string[] = [];
     const cascades: string[] = [];
@@ -434,7 +434,7 @@ export const getDeleteImpact = createServerFn({ method: "POST" })
 
 export const deleteRecord = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => deleteInput.parse(input))
+  .validator((input: unknown) => deleteInput.parse(input))
   .handler(async ({ data, context }) => {
     const table = RECORD_TABLES[data.type as RecordType];
     const { error } = await context.supabase.from(table).delete().eq("id", data.id);
@@ -481,7 +481,14 @@ export const createDemoCase = createServerFn({ method: "POST" })
 
     const entities = [
       { name: "Subjekt A s.r.o.", kind: "company", role: "odberateľ", country: "SK", x: 20, y: 30 },
-      { name: "Subjekt B s.r.o.", kind: "company", role: "sprostredkovateľ", country: "CZ", x: 55, y: 20 },
+      {
+        name: "Subjekt B s.r.o.",
+        kind: "company",
+        role: "sprostredkovateľ",
+        country: "CZ",
+        x: 55,
+        y: 20,
+      },
       { name: "Subjekt C Ltd.", kind: "company", role: "príjemca", country: "CY", x: 80, y: 60 },
       { name: "Osoba D (fiktívna)", kind: "person", role: "konateľ", country: "SK", x: 35, y: 70 },
     ];
@@ -497,12 +504,54 @@ export const createDemoCase = createServerFn({ method: "POST" })
     const c = byName("Subjekt C");
 
     const transactions = [
-      { date: day(30), amount: 48000, from_id: a, to_id: b, destination_country: "CZ", description: "Poradenské služby (ukážka)" },
-      { date: day(28), amount: 47500, from_id: b, to_id: c, destination_country: "CY", description: "Licenčný poplatok (ukážka)" },
-      { date: day(21), amount: 9900, from_id: a, to_id: b, destination_country: "CZ", description: "Marketing (ukážka)" },
-      { date: day(20), amount: 9900, from_id: a, to_id: b, destination_country: "CZ", description: "Marketing (ukážka)" },
-      { date: day(19), amount: 9900, from_id: a, to_id: b, destination_country: "CZ", description: "Marketing (ukážka)" },
-      { date: day(7), amount: 62000, from_id: b, to_id: c, destination_country: "CY", description: "Vyrovnanie (ukážka)" },
+      {
+        date: day(30),
+        amount: 48000,
+        from_id: a,
+        to_id: b,
+        destination_country: "CZ",
+        description: "Poradenské služby (ukážka)",
+      },
+      {
+        date: day(28),
+        amount: 47500,
+        from_id: b,
+        to_id: c,
+        destination_country: "CY",
+        description: "Licenčný poplatok (ukážka)",
+      },
+      {
+        date: day(21),
+        amount: 9900,
+        from_id: a,
+        to_id: b,
+        destination_country: "CZ",
+        description: "Marketing (ukážka)",
+      },
+      {
+        date: day(20),
+        amount: 9900,
+        from_id: a,
+        to_id: b,
+        destination_country: "CZ",
+        description: "Marketing (ukážka)",
+      },
+      {
+        date: day(19),
+        amount: 9900,
+        from_id: a,
+        to_id: b,
+        destination_country: "CZ",
+        description: "Marketing (ukážka)",
+      },
+      {
+        date: day(7),
+        amount: 62000,
+        from_id: b,
+        to_id: c,
+        destination_country: "CY",
+        description: "Vyrovnanie (ukážka)",
+      },
     ];
     const { error: txError } = await supabase.from("case_transactions").insert(
       transactions.map((t) => ({

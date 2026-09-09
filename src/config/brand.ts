@@ -5,7 +5,8 @@
 export const BRAND = {
   name: "Forendo",
   legalNote: "Forendo je pracovný názov. Dostupnosť značky nie je overená.",
-  tagline: "Premeňte transakcie na prehľad finančných tokov, vysvetliteľné nálezy a správu so zdrojmi.",
+  tagline:
+    "Premeňte transakcie na prehľad finančných tokov, vysvetliteľné nálezy a správu so zdrojmi.",
   short: "Analytický nástroj pre finančné toky",
   /** Kroky hlavného toku — používajú sa v onboarde aj v prázdnych stavoch. */
   flow: [

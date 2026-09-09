@@ -5,7 +5,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Check, ExternalLink, ShieldCheck } from "lucide-react";
 
-import { AppHeader, BottomNav, Card, PhoneFrame, Screen, SectionTitle } from "@/components/malte/Shell";
+import {
+  AppHeader,
+  BottomNav,
+  Card,
+  PhoneFrame,
+  Screen,
+  SectionTitle,
+} from "@/components/malte/Shell";
 import { Button } from "@/components/ui/button";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { StripeEmbeddedCheckout } from "@/components/StripeEmbeddedCheckout";
@@ -20,8 +27,7 @@ export const Route = createFileRoute("/_authenticated/predplatne")({
       { title: `Predplatné — ${BRAND.name}` },
       {
         name: "description",
-        content:
-          "Plán, kvóty serverových služieb a správa fakturácie. Ceny sú zatiaľ testovacie.",
+        content: "Plán, kvóty serverových služieb a správa fakturácie. Ceny sú zatiaľ testovacie.",
       },
       { property: "og:title", content: `Predplatné — ${BRAND.name}` },
       { property: "og:description", content: "Plán, kvóty a správa fakturácie." },
@@ -76,9 +82,7 @@ function SubscriptionScreen() {
         <Card className="space-y-2">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-primary" aria-hidden />
-            <p className="text-sm font-semibold">
-              Váš plán: {isLoading ? "…" : PLANS[plan].name}
-            </p>
+            <p className="text-sm font-semibold">Váš plán: {isLoading ? "…" : PLANS[plan].name}</p>
           </div>
           <p className="text-[11px] text-muted-foreground">
             Stav: {data?.status ?? "neaktívny"}
@@ -161,7 +165,12 @@ function SubscriptionScreen() {
         ) : null}
 
         {plan === "pro" || data?.status !== "inactive" ? (
-          <Button variant="outline" className="w-full" onClick={handlePortal} disabled={!configured}>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handlePortal}
+            disabled={!configured}
+          >
             <ExternalLink className="mr-1 h-4 w-4" aria-hidden /> Správa fakturácie
           </Button>
         ) : null}

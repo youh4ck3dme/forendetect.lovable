@@ -16,7 +16,8 @@ export function getConnectionApiKey(env: StripeEnv): string {
 
 /** True keď je platobné prostredie nakonfigurované (inak UI ukáže „nenakonfigurované“). */
 export function paymentsConfigured(env: StripeEnv): boolean {
-  const key = env === "sandbox" ? process.env["STRIPE_SANDBOX_API_KEY"] : process.env["STRIPE_LIVE_API_KEY"];
+  const key =
+    env === "sandbox" ? process.env["STRIPE_SANDBOX_API_KEY"] : process.env["STRIPE_LIVE_API_KEY"];
   return Boolean(key) && Boolean(process.env["LOVABLE_API_KEY"]);
 }
 
@@ -87,7 +88,12 @@ export function getStripeErrorMessage(error: unknown): string {
 export async function verifyWebhook(
   req: Request,
   env: StripeEnv,
-): Promise<{ id: string; type: string; created?: number; data: { object: any } }> {
+): Promise<{
+  id: string;
+  type: string;
+  created?: number;
+  data: { object: Record<string, unknown> };
+}> {
   const signature = req.headers.get("stripe-signature");
   const body = await req.text();
   const secret =

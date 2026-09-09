@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { createCase } from "@/lib/case-data";
 import { createDemoCase } from "@/lib/case-write.functions";
+import { isDevFreeEntryActive } from "@/lib/dev-auth";
+import { createDevDemoCase } from "@/lib/dev-cases";
 import { useServerFn } from "@tanstack/react-start";
 import { BRAND } from "@/config/brand";
 import { EntityForm } from "@/components/malte/CaseForms";
@@ -52,6 +54,13 @@ function Cases() {
   async function handleCreateDemo() {
     setBusy(true);
     try {
+      if (isDevFreeEntryActive()) {
+        const id = createDevDemoCase();
+        refresh();
+        setActiveCaseId(id);
+        toast.success("Ukážkový prípad so syntetickými dátami bol vytvorený.");
+        return;
+      }
       const { id } = await makeDemo({ data: undefined });
       refresh();
       setActiveCaseId(id);

@@ -113,8 +113,14 @@ export const getAiStatus = createServerFn({ method: "POST" })
 /** Náhľad presných dát, ktoré by odišli poskytovateľovi (bez volania AI). */
 export const previewAiPayload = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
-    z.object({ caseId: z.string().uuid(), task: taskEnum, alertId: z.string().max(200).optional() }).parse(input),
+  .validator((input: unknown) =>
+    z
+      .object({
+        caseId: z.string().uuid(),
+        task: taskEnum,
+        alertId: z.string().max(200).optional(),
+      })
+      .parse(input),
   )
   .handler(async ({ data, context }) => {
     const analysis = await loadAnalysis(context.supabase, data.caseId);
@@ -147,13 +153,16 @@ export type AiRunResult = {
       counterparty?: string;
       confidence: string;
     }[];
-    idMap?: { entities: Record<string, string>; transactions: Record<string, string> };
+    idMap?: {
+      entities: Record<string, string>;
+      transactions: Record<string, string>;
+    };
   };
 };
 
 export const runAiTask = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         caseId: z.string().uuid(),
@@ -163,9 +172,8 @@ export const runAiTask = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }): Promise<AiRunResult> => {
-    const { callMistral, mistralConfigured, mistralModel } = await import(
-      "@/lib/ai/mistral.server"
-    );
+    const { callMistral, mistralConfigured, mistralModel } =
+      await import("@/lib/ai/mistral.server");
     const analysis = await loadAnalysis(context.supabase, data.caseId);
     const pseudonyms = buildPseudonyms(analysis);
     const scope =
@@ -216,19 +224,34 @@ export const runAiTask = createServerFn({ method: "POST" })
     if (serialized.length > 120_000) {
       await supabaseAdmin
         .from("ai_usage")
-        .update({ status: "failed", error_code: "payload_too_large", finished_at: new Date().toISOString() })
+        .update({
+          status: "failed",
+          error_code: "payload_too_large",
+          finished_at: new Date().toISOString(),
+        })
         .eq("id", reservationId);
-      return { ...base, status: "failed", message: "Prípad je pre jedno volanie príliš veľký." };
+      return {
+        ...base,
+        status: "failed",
+        message: "Prípad je pre jedno volanie príliš veľký.",
+      };
     }
 
     const result = await callMistral({
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: `${instructions[data.task]}\n\n<data>\n${serialized}\n</data>` },
+        {
+          role: "user",
+          content: `${instructions[data.task]}\n\n<data>\n${serialized}\n</data>`,
+        },
       ],
     });
 
-    const finish = async (status: string, errorCode?: string, usage?: { prompt: number | null; completion: number | null }) => {
+    const finish = async (
+      status: string,
+      errorCode?: string,
+      usage?: { prompt: number | null; completion: number | null },
+    ) => {
       await supabaseAdmin
         .from("ai_usage")
         .update({
@@ -258,13 +281,21 @@ export const runAiTask = createServerFn({ method: "POST" })
       parsedJson = JSON.parse(result.content);
     } catch {
       await finish("failed", "invalid_json", result.usage);
-      return { ...base, status: "failed", message: "Odpoveď AI nebola platný JSON." };
+      return {
+        ...base,
+        status: "failed",
+        message: "Odpoveď AI nebola platný JSON.",
+      };
     }
 
     const parsed = schemas[data.task].safeParse(parsedJson);
     if (!parsed.success) {
       await finish("failed", "schema_mismatch", result.usage);
-      return { ...base, status: "failed", message: "Odpoveď AI nezodpovedala očakávanej štruktúre." };
+      return {
+        ...base,
+        status: "failed",
+        message: "Odpoveď AI nezodpovedala očakávanej štruktúre.",
+      };
     }
 
     // Každý citovaný identifikátor musí pochádzať z odoslaných dát.
@@ -277,9 +308,9 @@ export const runAiTask = createServerFn({ method: "POST" })
       output["cited"] = (output["cited"] as string[]).filter((id) => allowed.has(id));
     }
     if (Array.isArray(output["suggestions"])) {
-      output["suggestions"] = (
-        output["suggestions"] as { transaction: string }[]
-      ).filter((s) => allowed.has(s.transaction));
+      output["suggestions"] = (output["suggestions"] as { transaction: string }[]).filter((s) =>
+        allowed.has(s.transaction),
+      );
     }
 
     await finish("succeeded", undefined, result.usage);
@@ -291,7 +322,345 @@ export const runAiTask = createServerFn({ method: "POST" })
       output: {
         ...(output as AiRunResult["output"]),
         /** Preklad pseudonymov späť na skutočné záznamy prebieha na serveri. */
-        idMap: { entities: pseudonyms.entityBack, transactions: pseudonyms.transactionBack },
+        idMap: {
+          entities: pseudonyms.entityBack,
+          transactions: pseudonyms.transactionBack,
+        },
       },
+    };
+  });
+
+// ═════════════════════════════════════════════════════════════════
+// FORENZNÝ AUTOPILOT — ENDPOINTY
+// ═════════════════════════════════════════════════════════════════
+
+export async function extractSingleBufferText(
+  fileName: string,
+  fileBase64?: string,
+  textContent?: string,
+): Promise<{
+  success: boolean;
+  text: string;
+  charCount: number;
+  fileName: string;
+  usedOcr?: boolean;
+}> {
+  const lower = fileName.toLowerCase();
+
+  if (textContent) {
+    return {
+      success: true,
+      text: textContent,
+      charCount: textContent.length,
+      fileName,
+    };
+  }
+
+  if (!fileBase64) {
+    throw new Error("Nebol poskytnutý žiadny súbor ani text.");
+  }
+
+  const buffer = Buffer.from(fileBase64, "base64");
+
+  // 1. Textové a dátové formáty
+  if (
+    lower.endsWith(".txt") ||
+    lower.endsWith(".md") ||
+    lower.endsWith(".csv") ||
+    lower.endsWith(".json")
+  ) {
+    const text = buffer.toString("utf-8");
+    return { success: true, text, charCount: text.length, fileName };
+  }
+
+  // 2. HTML / HTM súbory
+  if (lower.endsWith(".html") || lower.endsWith(".htm")) {
+    const rawHtml = buffer.toString("utf-8");
+    const text = rawHtml
+      .replace(/<style[\s\S]*?<\/style>/gi, "")
+      .replace(/<script[\s\S]*?<\/script>/gi, "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+    return { success: true, text, charCount: text.length, fileName };
+  }
+
+  // 3. Tabuľky Excel (XLSX, XLS)
+  if (lower.endsWith(".xlsx") || lower.endsWith(".xls")) {
+    try {
+      const XLSX = await import("xlsx");
+      const workbook = XLSX.read(buffer, { type: "buffer" });
+      const sheetTexts: string[] = [];
+      for (const sheetName of workbook.SheetNames) {
+        const sheet = workbook.Sheets[sheetName];
+        if (!sheet) continue;
+        const csv = XLSX.utils.sheet_to_csv(sheet);
+        if (csv.trim()) {
+          sheetTexts.push(`--- HÁROK: ${sheetName} ---\n${csv.trim()}`);
+        }
+      }
+      const text = sheetTexts.join("\n\n");
+      return {
+        success: true,
+        text,
+        charCount: text.length,
+        fileName,
+        usedOcr: false,
+      };
+    } catch (err: unknown) {
+      throw new Error(
+        (err instanceof Error ? err.message : null) ||
+          "Extrakcia Excel (XLSX/XLS) tabuľky zlyhala.",
+      );
+    }
+  }
+
+  // 4. PDF dokumenty s automatickým OCR fallbackom
+  if (lower.endsWith(".pdf")) {
+    let localText = "";
+    try {
+      const pdfModule = (await import("pdf-parse")) as unknown as Record<string, unknown>;
+      const pdfParse = (
+        typeof pdfModule === "function" ? pdfModule : (pdfModule["default"] ?? pdfModule)
+      ) as (b: Buffer) => Promise<{ text: string }>;
+      const pdfData = await pdfParse(buffer);
+      localText = (pdfData.text || "").trim();
+    } catch (err) {
+      console.warn("Lokálne pdf-parse zlyhalo, skúšam Mistral OCR fallback:", err);
+    }
+
+    // Ak má PDF dostatočnú textovú vrstvu, vrátime lokálne extrahovaný text
+    if (localText.length >= 50) {
+      return {
+        success: true,
+        text: localText,
+        charCount: localText.length,
+        fileName,
+        usedOcr: false,
+      };
+    }
+
+    // Fallback pre skenované PDF: zavolaj Mistral OCR
+    try {
+      const { callMistralOcr } = await import("./ai/mistral.server");
+      const ocrText = await callMistralOcr(buffer, fileName);
+      return {
+        success: true,
+        text: ocrText,
+        charCount: ocrText.length,
+        fileName,
+        usedOcr: true,
+      };
+    } catch (ocrErr: unknown) {
+      throw new Error(
+        (ocrErr instanceof Error ? ocrErr.message : null) ||
+          "PDF neobsahuje textovú vrstvu a OCR rozpoznávanie cez Mistral zlyhalo. Skontrolujte MISTRAL_API_KEY.",
+      );
+    }
+  }
+
+  // 5. Obrázky (skeny, fotodokumentácia, zápisnice) cez OCR
+  if (/\.(png|jpe?g|webp|tiff?|bmp)$/i.test(lower)) {
+    try {
+      const { callMistralOcr } = await import("./ai/mistral.server");
+      const ocrText = await callMistralOcr(buffer, fileName);
+      return {
+        success: true,
+        text: ocrText,
+        charCount: ocrText.length,
+        fileName,
+        usedOcr: true,
+      };
+    } catch (ocrErr: unknown) {
+      throw new Error(
+        (ocrErr instanceof Error ? ocrErr.message : null) || "OCR rozpoznávanie obrázku zlyhalo.",
+      );
+    }
+  }
+
+  // 6. Word DOCX dokumenty
+  if (lower.endsWith(".docx")) {
+    try {
+      const mammoth = await import("mammoth");
+      const result = await mammoth.extractRawText({ buffer });
+      return {
+        success: true,
+        text: result.value,
+        charCount: result.value.length,
+        fileName,
+        usedOcr: false,
+      };
+    } catch (err: unknown) {
+      throw new Error(
+        (err instanceof Error ? err.message : null) ||
+          "Extrakcia DOCX zlyhala. Nainštalujte knižnicu mammoth.",
+      );
+    }
+  }
+
+  // 7. RTF dokumenty
+  if (lower.endsWith(".rtf")) {
+    const rawRtf = buffer.toString("utf-8");
+    const text = rawRtf
+      .replace(/\\par[d]?/g, "\n")
+      .replace(/\\tab/g, "\t")
+      .replace(/\\[a-z0-9-]+/gi, "")
+      .replace(/[{}]/g, "")
+      .trim();
+    return { success: true, text, charCount: text.length, fileName };
+  }
+
+  throw new Error(
+    `Nepodporovaný formát: ${fileName}. Podporované sú .pdf, .docx, .xlsx, .xls, .txt, .md, .csv, .json, .png, .jpg, .webp, .html, .rtf`,
+  );
+}
+
+export const extractFileText = createServerFn({ method: "POST" })
+  .validator((d: { fileBase64?: string; textContent?: string; fileName: string }) => d)
+  .handler(async ({ data }) => {
+    return extractSingleBufferText(data.fileName, data.fileBase64, data.textContent);
+  });
+
+export const extractBulkFilesText = createServerFn({ method: "POST" })
+  .validator((d: { files: { fileName: string; fileBase64?: string; textContent?: string }[] }) => d)
+  .handler(async ({ data }) => {
+    const { files } = data;
+    if (!files || files.length === 0) {
+      throw new Error("Neboli poskytnuté žiadne súbory na extrakciu.");
+    }
+
+    const results: {
+      fileName: string;
+      success: boolean;
+      text: string;
+      charCount: number;
+      usedOcr?: boolean | undefined;
+      error?: string | undefined;
+    }[] = [];
+
+    for (const file of files) {
+      try {
+        const res = await extractSingleBufferText(file.fileName, file.fileBase64, file.textContent);
+        results.push({
+          fileName: file.fileName,
+          success: true,
+          text: res.text,
+          charCount: res.charCount,
+          usedOcr: res.usedOcr,
+        });
+      } catch (err: unknown) {
+        results.push({
+          fileName: file.fileName,
+          success: false,
+          text: "",
+          charCount: 0,
+          error: err instanceof Error ? err.message : "Chyba spracovania súboru",
+        });
+      }
+    }
+
+    const aggregatedParts: string[] = [];
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i];
+      if (!r || !r.success) continue;
+      aggregatedParts.push(
+        `=================================================================\n` +
+          `=== DOKUMENT [${i + 1}/${results.length}]: ${r.fileName} ===\n` +
+          `=================================================================\n\n` +
+          r.text,
+      );
+    }
+
+    const aggregatedText = aggregatedParts.join("\n\n\n");
+    return {
+      success: true,
+      totalFiles: files.length,
+      successfulFiles: results.filter((r) => r.success).length,
+      results,
+      aggregatedText,
+      totalCharCount: aggregatedText.length,
+    };
+  });
+
+export const runForensicAutopilot = createServerFn({ method: "POST" })
+  .validator((d: { caseId: string; documentText: string; fileName?: string }) => d)
+  .handler(async ({ data }) => {
+    const { caseId, documentText } = data;
+    if (!documentText || documentText.trim().length < 30) {
+      throw new Error("Dokument je príliš krátky (minimálne 30 znakov).");
+    }
+
+    const { buildUserPrompt, FORENSIC_AUTOPILOT_SYSTEM_PROMPT } = await import("./ai-prompt");
+    const { callMistral } = await import("./ai/mistral.server");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const typeImport = await import("./types");
+    type ForensicDossier = import("./types").ForensicDossier;
+
+    const userPrompt = buildUserPrompt(documentText);
+    const result = await callMistral({
+      messages: [
+        {
+          role: "system",
+          content: FORENSIC_AUTOPILOT_SYSTEM_PROMPT,
+        },
+        {
+          role: "user",
+          content: userPrompt,
+        },
+      ],
+      maxTokens: 8000,
+    });
+
+    if (result.status !== "ok") {
+      throw new Error(result.message || "Volanie AI zlyhalo.");
+    }
+
+    let parsed: ForensicDossier;
+    try {
+      parsed = JSON.parse(result.content);
+    } catch {
+      const match = result.content.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error("Odpoveď AI nebola platným JSON.");
+      parsed = JSON.parse(match[0]);
+    }
+
+    parsed.caseId = caseId || "case-autopilot";
+    parsed.generatedAt = new Date().toISOString();
+
+    if (caseId && caseId !== "current" && caseId !== "demo") {
+      try {
+        await supabaseAdmin
+          .from("cases")
+          .update({
+            forensic_dossier: parsed as unknown as import("@/integrations/supabase/types").Json,
+            forensic_dossier_updated_at: new Date().toISOString(),
+          })
+          .eq("id", caseId);
+      } catch (e) {
+        console.warn("Nepodarilo sa uložiť dossier do cases:", e);
+      }
+    }
+
+    return { success: true, dossier: parsed };
+  });
+
+export const getForensicDossier = createServerFn({ method: "GET" })
+  .validator((d: { caseId: string }) => d)
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    type ForensicDossier = import("./types").ForensicDossier;
+
+    const { data: row, error } = await supabaseAdmin
+      .from("cases")
+      .select("forensic_dossier")
+      .eq("id", data.caseId)
+      .maybeSingle();
+
+    if (error) throw new Error(`Supabase: ${error.message}`);
+    return {
+      success: true,
+      dossier:
+        ((row as { forensic_dossier?: unknown } | null)
+          ?.forensic_dossier as ForensicDossier | null) ?? null,
     };
   });

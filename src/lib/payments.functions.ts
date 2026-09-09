@@ -56,7 +56,7 @@ async function resolveOrCreateCustomer(
 /** Stav predplatného sa vždy číta z overeného záznamu, nikdy zo success stránky. */
 export const getSubscriptionState = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { environment: StripeEnv }) => data)
+  .validator((data: { environment: StripeEnv }) => data)
   .handler(async ({ data, context }): Promise<SubscriptionState> => {
     const { supabase, userId } = context;
     const configured = paymentsConfigured(data.environment);
@@ -85,7 +85,7 @@ export const getSubscriptionState = createServerFn({ method: "POST" })
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { priceId: string; returnUrl: string; environment: StripeEnv }) => {
+  .validator((data: { priceId: string; returnUrl: string; environment: StripeEnv }) => {
     if (!/^[a-zA-Z0-9_-]+$/.test(data.priceId)) throw new Error("Neplatný identifikátor ceny.");
     return data;
   })
@@ -129,7 +129,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
 export const createPortalSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { returnUrl?: string; environment: StripeEnv }) => data)
+  .validator((data: { returnUrl?: string; environment: StripeEnv }) => data)
   .handler(async ({ data, context }): Promise<PortalResult> => {
     if (!paymentsConfigured(data.environment)) {
       return { error: "Platby nie sú nakonfigurované." };

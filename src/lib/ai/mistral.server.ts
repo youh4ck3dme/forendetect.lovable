@@ -77,17 +77,29 @@ export async function callMistral(options: CallOptions): Promise<MistralResult> 
       if (response.status === 429 || response.status === 503) {
         const header = response.headers.get("retry-after");
         const after = header ? Number(header) : 2;
-        return { kind: "retry", after: Number.isFinite(after) ? Math.min(after, 10) : 2 };
+        return {
+          kind: "retry",
+          after: Number.isFinite(after) ? Math.min(after, 10) : 2,
+        };
       }
       if (!response.ok) {
-        return { status: "failed", message: `Poskytovateľ vrátil chybu ${response.status}.` };
+        return {
+          status: "failed",
+          message: `Poskytovateľ vrátil chybu ${response.status}.`,
+        };
       }
       return { kind: "ok", body: await response.json() };
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
-        return { status: "timeout", message: "Volanie AI prekročilo časový limit." };
+        return {
+          status: "timeout",
+          message: "Volanie AI prekročilo časový limit.",
+        };
       }
-      return { status: "failed", message: "Spojenie s poskytovateľom zlyhalo." };
+      return {
+        status: "failed",
+        message: "Spojenie s poskytovateľom zlyhalo.",
+      };
     } finally {
       clearTimeout(timer);
     }
@@ -128,4 +140,107 @@ export async function callMistral(options: CallOptions): Promise<MistralResult> 
     },
     model,
   };
+}
+
+/**
+ * Mistral OCR API (POST https://api.mistral.ai/v1/ocr).
+ * Slúži ako fallback pre skenované PDF (bez textovej vrstvy) a obrázky listín.
+ * 1. Upload dočasného súboru cez /v1/files (purpose: "ocr")
+ * 2. Získanie podpísanej URL cez /v1/files/:id/url
+ * 3. Spustenie mistral-ocr-latest
+ * 4. Asynchrónne zmazanie dočasného súboru
+ */
+export async function callMistralOcr(fileBuffer: Buffer, fileName: string): Promise<string> {
+  const apiKey = process.env["MISTRAL_API_KEY"];
+  if (!apiKey) {
+    throw new Error("MISTRAL_API_KEY nie je nastavený. Pre OCR je potrebný API kľúč.");
+  }
+
+  // 1. Upload do /v1/files
+  const formData = new FormData();
+  const blob = new Blob([new Uint8Array(fileBuffer)]);
+  formData.append("file", blob, fileName);
+  formData.append("purpose", "ocr");
+
+  const uploadRes = await fetch("https://api.mistral.ai/v1/files", {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+    },
+    body: formData,
+  });
+
+  if (!uploadRes.ok) {
+    const errText = await uploadRes.text();
+    throw new Error(`Mistral File Upload zlyhal (${uploadRes.status}): ${errText}`);
+  }
+
+  const uploadData = (await uploadRes.json()) as { id: string };
+  const fileId = uploadData.id;
+
+  try {
+    // 2. Získaj signed URL
+    const signedUrlRes = await fetch(`https://api.mistral.ai/v1/files/${fileId}/url`, {
+      headers: {
+        authorization: `Bearer ${apiKey}`,
+      },
+    });
+
+    if (!signedUrlRes.ok) {
+      const errText = await signedUrlRes.text();
+      throw new Error(`Získanie signed URL zlyhalo (${signedUrlRes.status}): ${errText}`);
+    }
+
+    const signedUrlData = (await signedUrlRes.json()) as { url: string };
+    const documentUrl = signedUrlData.url;
+
+    // 3. Spusť OCR
+    const isImage = /\.(png|jpe?g|webp|tiff?|bmp)$/i.test(fileName);
+    const docPayload = isImage
+      ? { type: "image_url", image_url: documentUrl }
+      : { type: "document_url", document_url: documentUrl };
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 60_000); // 60s timeout pre OCR
+
+    try {
+      const ocrRes = await fetch("https://api.mistral.ai/v1/ocr", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "mistral-ocr-latest",
+          document: docPayload,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!ocrRes.ok) {
+        const errText = await ocrRes.text();
+        throw new Error(`Mistral OCR API zlyhalo (${ocrRes.status}): ${errText}`);
+      }
+
+      const ocrData = (await ocrRes.json()) as {
+        pages?: Array<{ index: number; markdown: string }>;
+      };
+
+      const extracted = ocrData.pages?.map((p) => p.markdown).join("\n\n") || "";
+      if (!extracted.trim()) {
+        throw new Error("Mistral OCR nerozpoznalo žiadny text v nahranom dokumente.");
+      }
+      return extracted;
+    } finally {
+      clearTimeout(timer);
+    }
+  } finally {
+    // 4. Cleanup: zmaž súbor z Mistral storage na pozadí
+    fetch(`https://api.mistral.ai/v1/files/${fileId}`, {
+      method: "DELETE",
+      headers: { authorization: `Bearer ${apiKey}` },
+    }).catch((err) => {
+      console.warn("Nepodarilo sa vymazať dočasný súbor z Mistral storage:", err);
+    });
+  }
 }

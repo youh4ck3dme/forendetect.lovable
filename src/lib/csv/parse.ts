@@ -81,7 +81,12 @@ export function detectDelimiter(sample: string): Detection<Delimiter> {
     n: firstLine.split(d).length - 1,
   }));
   const present = counts.filter((c) => c.n > 0).sort((a, b) => b.n - a.n);
-  if (present.length === 0) return { value: null, ambiguous: true, candidates: [...(Object.keys(DELIMITERS) as Delimiter[])] };
+  if (present.length === 0)
+    return {
+      value: null,
+      ambiguous: true,
+      candidates: [...(Object.keys(DELIMITERS) as Delimiter[])],
+    };
   const top = present[0]!;
   const tie = present.filter((c) => c.n === top.n);
   return {
@@ -140,7 +145,11 @@ export function parseDateValue(raw: string, format: DateFormat): string | null {
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
   const iso = `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   const check = new Date(`${iso}T00:00:00Z`);
-  if (Number.isNaN(check.getTime()) || check.getUTCDate() !== day || check.getUTCMonth() + 1 !== month) {
+  if (
+    Number.isNaN(check.getTime()) ||
+    check.getUTCDate() !== day ||
+    check.getUTCMonth() + 1 !== month
+  ) {
     return null;
   }
   return iso;
@@ -178,6 +187,6 @@ export function parseAmountValue(raw: string, decimal: DecimalSeparator): number
 export function parseCurrencyValue(raw: string): string | null {
   const s = raw.trim().toUpperCase();
   if (/^[A-Z]{3}$/.test(s)) return s;
-  const map: Record<string, string> = { "€": "EUR", "$": "USD", "£": "GBP", "KČ": "CZK" };
+  const map: Record<string, string> = { "€": "EUR", $: "USD", "£": "GBP", KČ: "CZK" };
   return map[s] ?? null;
 }

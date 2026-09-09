@@ -33,7 +33,9 @@ export function buildReportHtml(
   const imports = context.imports ?? [];
   const dates = analysis.case.transactions.map((t) => t.date).sort();
   const range =
-    dates.length > 0 ? `${formatDate(dates[0] as string)} – ${formatDate(dates[dates.length - 1] as string)}` : "—";
+    dates.length > 0
+      ? `${formatDate(dates[0] as string)} – ${formatDate(dates[dates.length - 1] as string)}`
+      : "—";
   const evidenceOf = (alertId: string) => {
     const tx = analysis.case.transactions.filter((t) => alertId.includes(t.id));
     return tx

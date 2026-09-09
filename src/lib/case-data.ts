@@ -1,6 +1,20 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { ForensicCase } from "@/forensic";
 import { mapCaseRows } from "@/lib/case-mapper";
+import { isDevFreeEntryActive } from "@/lib/dev-auth";
+import {
+  listDevCases,
+  loadDevCase,
+  loadDevCaseRevisions,
+  createDevCase,
+  updateDevCase,
+  upsertDevEntity,
+  upsertDevTransaction,
+  upsertDevRelation,
+  upsertDevWeapon,
+  upsertDevEvent,
+  deleteDevRecord,
+} from "@/lib/dev-cases";
 import {
   deleteRecord,
   getDeleteImpact,
@@ -23,23 +37,45 @@ export type CaseSummary = {
 
 /** Čítanie ide priamo cez klienta (RLS obmedzí dáta na prihláseného používateľa). */
 export async function listCases(): Promise<CaseSummary[]> {
-  const { data, error } = await supabase
-    .from("cases")
-    .select("id, name, subtitle, reference_date, base_currency, created_at")
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    name: row.name,
-    subtitle: row.subtitle ?? "",
-    referenceDate: row.reference_date,
-    baseCurrency: row.base_currency ?? "EUR",
-    createdAt: row.created_at,
-  }));
+  if (isDevFreeEntryActive()) {
+    return listDevCases();
+  }
+  try {
+    const { data, error } = await supabase
+      .from("cases")
+      .select("id, name, subtitle, reference_date, base_currency, created_at")
+      .order("created_at", { ascending: false });
+    if (error) {
+      return [];
+    }
+    return (
+      (data ?? []) as Array<{
+        id: string;
+        name: string;
+        subtitle: string | null;
+        reference_date: string;
+        base_currency: string | null;
+        created_at: string;
+      }>
+    ).map((row) => ({
+      id: row.id,
+      name: row.name,
+      subtitle: row.subtitle ?? "",
+      referenceDate: row.reference_date,
+      baseCurrency: row.base_currency ?? "EUR",
+      createdAt: row.created_at,
+    }));
+  } catch (err) {
+    console.error("Chyba pri čítaní prípadov:", err);
+    return [];
+  }
 }
 
 /** Načíta celý prípad a poskladá ho do tvaru, ktorý očakáva forenzné jadro. */
 export async function loadCase(caseId: string): Promise<ForensicCase> {
+  if (isDevFreeEntryActive()) {
+    return loadDevCase(caseId);
+  }
   const [caseRow, entities, transactions, weapons, relations, events] = await Promise.all([
     supabase.from("cases").select("*").eq("id", caseId).maybeSingle(),
     supabase.from("case_entities").select("*").eq("case_id", caseId),
@@ -64,6 +100,9 @@ export async function loadCase(caseId: string): Promise<ForensicCase> {
 
 /** Revízie záznamov pre ochranu pred prepísaním súbežnou úpravou. */
 export async function loadCaseRevisions(caseId: string): Promise<Record<string, number>> {
+  if (isDevFreeEntryActive()) {
+    return loadDevCaseRevisions(caseId);
+  }
   const tables = [
     "cases",
     "case_entities",
@@ -88,38 +127,110 @@ export async function loadCaseRevisions(caseId: string): Promise<Record<string, 
   return out;
 }
 
-/* Zápisy idú výhradne cez serverové funkcie so Zod validáciou. */
+/* Zápisy: v Dev Free Entry režime lokálne, v produkcii cez serverové funkcie */
 export const createCase = async (input: {
   name: string;
   subtitle?: string;
   referenceDate?: string;
   baseCurrency?: string;
-}) => (await saveCase({ data: { ...input } })).id;
+}) => {
+  if (isDevFreeEntryActive()) {
+    return createDevCase(input);
+  }
+  return (await saveCase({ data: { ...input } })).id;
+};
 
-export const updateCase = saveCase;
-export const upsertEntity = saveEntity;
-export const upsertTransaction = saveTransaction;
-export const upsertRelation = saveRelation;
-export const upsertWeapon = saveWeapon;
-export const upsertEvent = saveEvent;
+export const updateCase = async (args: NonNullable<Parameters<typeof saveCase>[0]>) => {
+  if (isDevFreeEntryActive()) {
+    return updateDevCase(args.data as Parameters<typeof updateDevCase>[0]);
+  }
+  return saveCase(args);
+};
+
+export const upsertEntity = async (args: NonNullable<Parameters<typeof saveEntity>[0]>) => {
+  if (isDevFreeEntryActive()) {
+    return upsertDevEntity(args.data as Record<string, unknown>);
+  }
+  return saveEntity(args);
+};
+
+export const upsertTransaction = async (
+  args: NonNullable<Parameters<typeof saveTransaction>[0]>,
+) => {
+  if (isDevFreeEntryActive()) {
+    return upsertDevTransaction(args.data as Record<string, unknown>);
+  }
+  return saveTransaction(args);
+};
+
+export const upsertRelation = async (args: NonNullable<Parameters<typeof saveRelation>[0]>) => {
+  if (isDevFreeEntryActive()) {
+    return upsertDevRelation(args.data as Record<string, unknown>);
+  }
+  return saveRelation(args);
+};
+
+export const upsertWeapon = async (args: NonNullable<Parameters<typeof saveWeapon>[0]>) => {
+  if (isDevFreeEntryActive()) {
+    return upsertDevWeapon(args.data as Record<string, unknown>);
+  }
+  return saveWeapon(args);
+};
+
+export const upsertEvent = async (args: NonNullable<Parameters<typeof saveEvent>[0]>) => {
+  if (isDevFreeEntryActive()) {
+    return upsertDevEvent(args.data as Record<string, unknown>);
+  }
+  return saveEvent(args);
+};
+
 export const describeDeleteImpact = getDeleteImpact;
 
 export const deleteCase = async (id: string) => {
+  if (isDevFreeEntryActive()) {
+    deleteDevRecord("case", id);
+    return;
+  }
   await deleteRecord({ data: { type: "case", id } });
 };
+
 export const deleteEntity = async (id: string) => {
+  if (isDevFreeEntryActive()) {
+    deleteDevRecord("entity", id);
+    return;
+  }
   await deleteRecord({ data: { type: "entity", id } });
 };
+
 export const deleteTransaction = async (id: string) => {
+  if (isDevFreeEntryActive()) {
+    deleteDevRecord("transaction", id);
+    return;
+  }
   await deleteRecord({ data: { type: "transaction", id } });
 };
+
 export const deleteRelation = async (id: string) => {
+  if (isDevFreeEntryActive()) {
+    deleteDevRecord("relation", id);
+    return;
+  }
   await deleteRecord({ data: { type: "relation", id } });
 };
+
 export const deleteWeapon = async (id: string) => {
+  if (isDevFreeEntryActive()) {
+    deleteDevRecord("weapon", id);
+    return;
+  }
   await deleteRecord({ data: { type: "weapon", id } });
 };
+
 export const deleteEvent = async (id: string) => {
+  if (isDevFreeEntryActive()) {
+    deleteDevRecord("event", id);
+    return;
+  }
   await deleteRecord({ data: { type: "event", id } });
 };
 
@@ -149,7 +260,23 @@ export async function listCaseImports(caseId: string): Promise<CaseImportMeta[]>
     .eq("case_id", caseId)
     .order("created_at", { ascending: true });
   if (error) throw error;
-  return (data ?? []).map((row) => ({
+  return (
+    (data ?? []) as Array<{
+      id: string;
+      filename: string;
+      byte_size: number;
+      sha256: string;
+      parser_version: string;
+      column_mapping: Record<string, unknown> | null;
+      total_rows: number;
+      valid_rows: number;
+      error_rows: number;
+      partial: boolean;
+      status: string;
+      original_stored: boolean;
+      created_at: string;
+    }>
+  ).map((row) => ({
     id: row.id,
     filename: row.filename,
     byteSize: row.byte_size,

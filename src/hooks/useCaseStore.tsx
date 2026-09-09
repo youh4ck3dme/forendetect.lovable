@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useCallback,
@@ -30,12 +31,25 @@ export type CaseState = {
   theme: ThemeMode;
 };
 
+const THEME_STORAGE_KEY = "malte:theme";
+
+function getInitialTheme(): ThemeMode {
+  if (typeof window === "undefined") return "system";
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === "light" || saved === "dark" || saved === "system") return saved;
+  } catch {
+    // ignore
+  }
+  return "system";
+}
+
 const EMPTY: CaseState = {
   riskFilter: [],
   reviewed: [],
   runLog: [],
   exports: 0,
-  theme: "system",
+  theme: getInitialTheme(),
 };
 const KEY = "malte:case-state";
 
@@ -45,6 +59,8 @@ type Ctx = {
   toggleRisk: (level: Severity) => void;
   clearRisk: () => void;
   toggleReviewed: (id: string) => void;
+  markAllReviewed: (ids: string[]) => void;
+  clearReviewed: () => void;
   logRun: (entry: Omit<RunLogEntry, "at">) => void;
   countExport: () => void;
   setTheme: (theme: ThemeMode) => void;
@@ -61,7 +77,14 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
     let active = true;
     idbGet<CaseState>(KEY)
       .then((stored) => {
-        if (active && stored) setState({ ...EMPTY, ...stored });
+        if (active && stored) {
+          const resolvedTheme =
+            (typeof window !== "undefined" &&
+              (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode)) ||
+            stored.theme ||
+            "system";
+          setState({ ...EMPTY, ...stored, theme: resolvedTheme });
+        }
       })
       .catch(() => undefined)
       .finally(() => {
@@ -86,6 +109,7 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
     const apply = () => {
       const dark = state.theme === "dark" || (state.theme === "system" && media.matches);
       root.classList.toggle("dark", dark);
+      root.style.colorScheme = dark ? "dark" : "light";
     };
     apply();
     media.addEventListener("change", apply);
@@ -111,6 +135,12 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
             ? prev.reviewed.filter((r) => r !== id)
             : [...prev.reviewed, id],
         })),
+      markAllReviewed: (ids) =>
+        update((prev) => ({
+          ...prev,
+          reviewed: Array.from(new Set([...prev.reviewed, ...ids])),
+        })),
+      clearReviewed: () => update((prev) => ({ ...prev, reviewed: [] })),
       logRun: (entry) =>
         update((prev) => ({
           ...prev,
@@ -120,7 +150,14 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
           ].slice(0, 30),
         })),
       countExport: () => update((prev) => ({ ...prev, exports: prev.exports + 1 })),
-      setTheme: (theme) => update((prev) => ({ ...prev, theme })),
+      setTheme: (theme) => {
+        try {
+          localStorage.setItem(THEME_STORAGE_KEY, theme);
+        } catch {
+          // ignore
+        }
+        update((prev) => ({ ...prev, theme }));
+      },
       reset: () => {
         void idbClear().catch(() => undefined);
         setState(EMPTY);

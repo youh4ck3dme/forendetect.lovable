@@ -57,7 +57,7 @@ export const exportMyData = createServerFn({ method: "POST" })
 /** Vymaže jeden prípad vrátane závislých záznamov. */
 export const deleteCaseCompletely = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ caseId: z.string().uuid() }).parse(input))
+  .validator((input: unknown) => z.object({ caseId: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -87,9 +87,7 @@ export const deleteCaseCompletely = createServerFn({ method: "POST" })
  */
 export const deleteMyAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
-    z.object({ confirmEmail: z.string().trim().email() }).parse(input),
-  )
+  .validator((input: unknown) => z.object({ confirmEmail: z.string().trim().email() }).parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const {
@@ -109,10 +107,7 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
       .select("id")
       .single();
 
-    async function run(
-      step: string,
-      fn: () => PromiseLike<{ error: { message: string } | null }>,
-    ) {
+    async function run(step: string, fn: () => PromiseLike<{ error: { message: string } | null }>) {
       const { error } = await fn();
       steps.push({ step, ok: !error, ...(error ? { detail: error.message } : {}) });
       if (error) throw new Error(`${step}: ${error.message}`);

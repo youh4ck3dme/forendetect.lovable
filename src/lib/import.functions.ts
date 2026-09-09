@@ -21,7 +21,7 @@ function fail(error: { message?: string; code?: string } | null, fallback: strin
 /** Vytvorí záznam o importe (stav „pripravený"). Transakcie sa ešte nezapisujú. */
 export const createImport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         caseId: uuid,
@@ -78,8 +78,14 @@ const commitRow = z.object({
   from_id: uuid,
   to_id: uuid,
   payer_id: uuid.nullable().optional(),
-  origin_country: z.string().regex(/^[A-Za-z]{2}$/).default("SK"),
-  destination_country: z.string().regex(/^[A-Za-z]{2}$/).default("SK"),
+  origin_country: z
+    .string()
+    .regex(/^[A-Za-z]{2}$/)
+    .default("SK"),
+  destination_country: z
+    .string()
+    .regex(/^[A-Za-z]{2}$/)
+    .default("SK"),
   description: z.string().max(2000).default(""),
   source_row: z.number().int().min(1),
 });
@@ -87,7 +93,7 @@ const commitRow = z.object({
 /** Atomické potvrdenie: databázová funkcia zapíše všetky riadky, alebo žiadny. */
 export const commitImport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         importId: uuid,
@@ -116,8 +122,10 @@ export const commitImport = createServerFn({ method: "POST" })
 /** Označí import ako zlyhaný (napr. po zrušení pred potvrdením). */
 export const failImport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
-    z.object({ importId: uuid, reason: z.string().max(300).default("Zrušené používateľom.") }).parse(input),
+  .validator((input: unknown) =>
+    z
+      .object({ importId: uuid, reason: z.string().max(300).default("Zrušené používateľom.") })
+      .parse(input),
   )
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase
@@ -135,7 +143,7 @@ export const failImport = createServerFn({ method: "POST" })
  */
 export const storeImportOriginal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) =>
+  .validator((input: unknown) =>
     z
       .object({
         importId: uuid,
@@ -180,7 +188,7 @@ export const storeImportOriginal = createServerFn({ method: "POST" })
 /** Podpísaný odkaz na originál — len pre vlastníka importu. */
 export const getImportOriginalUrl = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ importId: uuid }).parse(input))
+  .validator((input: unknown) => z.object({ importId: uuid }).parse(input))
   .handler(async ({ data, context }) => {
     const { data: imp } = await context.supabase
       .from("case_imports")

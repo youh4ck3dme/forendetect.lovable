@@ -111,7 +111,7 @@ function Consent() {
       return;
     }
     if (result.redirected) return;
-    window.location.href = window.location.href;
+    window.location.reload();
   }
 
   if (!authorizationId) {

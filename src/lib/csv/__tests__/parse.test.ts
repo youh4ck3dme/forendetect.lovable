@@ -40,7 +40,14 @@ describe("CSV parser", () => {
       ["02.01.2026", "50,00", "USD", "A", "B"],
     ];
     const result = validateRows(rows, {
-      mapping: { ...EMPTY_MAPPING, date: 0, amount: 1, currency: 2, counterpartyFrom: 3, counterpartyTo: 4 },
+      mapping: {
+        ...EMPTY_MAPPING,
+        date: 0,
+        amount: 1,
+        currency: 2,
+        counterpartyFrom: 3,
+        counterpartyTo: 4,
+      },
       dateFormat: "DD.MM.YYYY",
       decimal: ",",
       defaultCurrency: "EUR",
@@ -56,8 +63,26 @@ describe("CSV parser", () => {
 
   it("podobné platby iba označí, nemaže ich", () => {
     const rows = [
-      { sourceRow: 2, date: "2026-01-01", amount: 10, currency: "EUR", description: "", from: "A", to: "B", method: "transfer" as const },
-      { sourceRow: 3, date: "2026-01-01", amount: 10, currency: "EUR", description: "", from: "A", to: "B", method: "transfer" as const },
+      {
+        sourceRow: 2,
+        date: "2026-01-01",
+        amount: 10,
+        currency: "EUR",
+        description: "",
+        from: "A",
+        to: "B",
+        method: "transfer" as const,
+      },
+      {
+        sourceRow: 3,
+        date: "2026-01-01",
+        amount: 10,
+        currency: "EUR",
+        description: "",
+        from: "A",
+        to: "B",
+        method: "transfer" as const,
+      },
     ];
     const groups = findSimilar(rows);
     expect(groups).toHaveLength(1);

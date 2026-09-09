@@ -116,7 +116,9 @@ function ImportCsv() {
         type: "module",
       });
       workerRef.current = worker;
-      worker.onmessage = (event: MessageEvent<{ kind: string; value?: number } & Record<string, unknown>>) => {
+      worker.onmessage = (
+        event: MessageEvent<{ kind: string; value?: number } & Record<string, unknown>>,
+      ) => {
         const data = event.data;
         if (data.kind === "progress") {
           setProgress(typeof data.value === "number" ? data.value : null);
@@ -197,7 +199,8 @@ function ImportCsv() {
       header.forEach((name, index) => {
         const n = name.toLowerCase();
         if (guess.date < 0 && /dat/.test(n)) guess.date = index;
-        else if (guess.amount < 0 && /(suma|amount|čiast|ciast|betrag)/.test(n)) guess.amount = index;
+        else if (guess.amount < 0 && /(suma|amount|čiast|ciast|betrag)/.test(n))
+          guess.amount = index;
         else if (guess.currency < 0 && /(mena|currency)/.test(n)) guess.currency = index;
         else if (guess.counterpartyFrom < 0 && /(odosiel|from|platiteľ|platitel)/.test(n))
           guess.counterpartyFrom = index;
@@ -265,7 +268,10 @@ function ImportCsv() {
 
   const similar = useMemo(() => (result ? findSimilar(result.valid) : []), [result]);
   const unresolved = useMemo(
-    () => Object.entries(partyMap).filter(([, v]) => v.startsWith("suggest:")).map(([k]) => k),
+    () =>
+      Object.entries(partyMap)
+        .filter(([, v]) => v.startsWith("suggest:"))
+        .map(([k]) => k),
     [partyMap],
   );
 
@@ -358,10 +364,15 @@ function ImportCsv() {
     } catch (error) {
       if (importId) {
         await failImport({
-          data: { importId, reason: error instanceof Error ? error.message.slice(0, 300) : "Zlyhanie" },
+          data: {
+            importId,
+            reason: error instanceof Error ? error.message.slice(0, 300) : "Zlyhanie",
+          },
         }).catch(() => undefined);
       }
-      toast.error(error instanceof Error ? error.message : "Import zlyhal. Nezapísal sa žiadny riadok.");
+      toast.error(
+        error instanceof Error ? error.message : "Import zlyhal. Nezapísal sa žiadny riadok.",
+      );
     } finally {
       setBusy(false);
     }
@@ -528,9 +539,7 @@ function ImportCsv() {
                     aria-label={MAPPING_LABELS[field]}
                     className={inputClass}
                     value={mapping[field]}
-                    onChange={(e) =>
-                      setMapping({ ...mapping, [field]: Number(e.target.value) })
-                    }
+                    onChange={(e) => setMapping({ ...mapping, [field]: Number(e.target.value) })}
                   >
                     <option value={-1}>— nepriradené —</option>
                     {header.map((name, index) => (
@@ -669,7 +678,10 @@ function ImportCsv() {
             </p>
             <p className="text-caption">
               Zapísaných {summary.inserted} transakcií. Každá má odkaz na import a číslo zdrojového
-              riadka. {summary.stored ? "Originál je uložený v súkromnom úložisku." : "Originál sa neukladal."}
+              riadka.{" "}
+              {summary.stored
+                ? "Originál je uložený v súkromnom úložisku."
+                : "Originál sa neukladal."}
             </p>
             <Button
               className="w-full"
