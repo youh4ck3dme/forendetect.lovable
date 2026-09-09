@@ -115,13 +115,19 @@
     oklch(0.975 0.002 260) 55%,
     oklch(0.94 0.004 260)
   );
-  --gradient-surface: linear-gradient(180deg, oklch(1 0 0), oklch(0.98 0.002 260));
+  --gradient-surface: linear-gradient(
+    180deg,
+    oklch(1 0 0),
+    oklch(0.98 0.002 260)
+  );
   --shadow-soft: 0 1px 2px oklch(0.24 0.012 260 / 0.05);
   --shadow-card:
-    0 1px 2px oklch(0.24 0.012 260 / 0.06), 0 8px 24px -14px oklch(0.24 0.012 260 / 0.16);
+    0 1px 2px oklch(0.24 0.012 260 / 0.06),
+    0 8px 24px -14px oklch(0.24 0.012 260 / 0.16);
   --shadow-elevated: 0 18px 40px -20px oklch(0.24 0.012 260 / 0.3);
   --shadow-glow:
-    0 0 0 1px oklch(0.72 0.01 260 / 0.35), 0 10px 28px -14px oklch(0.24 0.012 260 / 0.25);
+    0 0 0 1px oklch(0.72 0.01 260 / 0.35),
+    0 10px 28px -14px oklch(0.24 0.012 260 / 0.25);
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 140ms;
   --dur-base: 240ms;
@@ -180,11 +186,17 @@
     oklch(0.26 0.005 260) 55%,
     oklch(0.22 0.004 260)
   );
-  --gradient-surface: linear-gradient(180deg, oklch(0.25 0.005 260), oklch(0.22 0.004 260));
+  --gradient-surface: linear-gradient(
+    180deg,
+    oklch(0.25 0.005 260),
+    oklch(0.22 0.004 260)
+  );
   --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.35);
-  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 10px 28px -14px oklch(0 0 0 / 0.6);
+  --shadow-card:
+    0 1px 2px oklch(0 0 0 / 0.4), 0 10px 28px -14px oklch(0 0 0 / 0.6);
   --shadow-elevated: 0 18px 40px -18px oklch(0 0 0 / 0.7);
-  --shadow-glow: 0 0 0 1px oklch(1 0 0 / 0.18), 0 12px 32px -14px oklch(0 0 0 / 0.55);
+  --shadow-glow:
+    0 0 0 1px oklch(1 0 0 / 0.18), 0 12px 32px -14px oklch(0 0 0 / 0.55);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);

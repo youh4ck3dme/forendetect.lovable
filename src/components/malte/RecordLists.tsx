@@ -53,9 +53,12 @@ export function TransactionList({
                   {formatMoney(transaction.amount, transaction.currency)}
                 </p>
                 <p className="text-caption truncate">
-                  {formatDate(transaction.date)} • {names.get(transaction.fromId) ?? "?"} →{" "}
+                  {formatDate(transaction.date)} •{" "}
+                  {names.get(transaction.fromId) ?? "?"} →{" "}
                   {names.get(transaction.toId) ?? "?"}
-                  {transaction.description ? ` • ${transaction.description}` : ""}
+                  {transaction.description
+                    ? ` • ${transaction.description}`
+                    : ""}
                 </p>
               </div>
               <button
@@ -80,7 +83,12 @@ export function TransactionList({
   );
 }
 
-export function EntityList({ caseId, entities, revisions, onChanged }: ListProps) {
+export function EntityList({
+  caseId,
+  entities,
+  revisions,
+  onChanged,
+}: ListProps) {
   const [editing, setEditing] = useState<string | null>(null);
 
   return (

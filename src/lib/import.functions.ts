@@ -13,8 +13,12 @@ export const IMPORT_MAX_ROWS = 20_000;
 const uuid = z.string().uuid();
 const sha256 = z.string().regex(/^[0-9a-f]{64}$/, "Neplatný kontrolný súčet.");
 
-function fail(error: { message?: string; code?: string } | null, fallback: string): never {
-  if (error?.code === "42501") throw new Error("Nemáte oprávnenie na túto operáciu.");
+function fail(
+  error: { message?: string; code?: string } | null,
+  fallback: string,
+): never {
+  if (error?.code === "42501")
+    throw new Error("Nemáte oprávnenie na túto operáciu.");
   throw new Error(error?.message ? `${fallback} (${error.message})` : fallback);
 }
 
@@ -72,7 +76,10 @@ const commitRow = z.object({
   amount: z
     .number()
     .refine((v) => v !== 0, "Suma nesmie byť nula.")
-    .refine((v) => Math.round(v * 100) === Math.round(v * 100), "Neplatná suma."),
+    .refine(
+      (v) => Math.round(v * 100) === Math.round(v * 100),
+      "Neplatná suma.",
+    ),
   currency: z.string().regex(/^[A-Za-z]{3}$/),
   method: z.enum(["cash", "transfer"]),
   from_id: uuid,
@@ -105,10 +112,13 @@ export const commitImport = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: inserted, error } = await context.supabase.rpc("commit_import", {
-      _import: data.importId,
-      _rows: data.rows,
-    });
+    const { data: inserted, error } = await context.supabase.rpc(
+      "commit_import",
+      {
+        _import: data.importId,
+        _rows: data.rows,
+      },
+    );
     if (error) {
       await context.supabase
         .from("case_imports")
@@ -124,7 +134,10 @@ export const failImport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((input: unknown) =>
     z
-      .object({ importId: uuid, reason: z.string().max(300).default("Zrušené používateľom.") })
+      .object({
+        importId: uuid,
+        reason: z.string().max(300).default("Zrušené používateľom."),
+      })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
@@ -160,14 +173,19 @@ export const storeImportOriginal = createServerFn({ method: "POST" })
       .maybeSingle();
     if (readError) fail(readError, "Import sa nenašiel.");
     if (!imp) throw new Error("Import sa nenašiel.");
-    if (imp.sha256 !== data.sha256) throw new Error("Kontrolný súčet sa nezhoduje s importom.");
+    if (imp.sha256 !== data.sha256)
+      throw new Error("Kontrolný súčet sa nezhoduje s importom.");
     if (imp.original_stored) return { path: imp.storage_path };
 
-    const bytes = Uint8Array.from(atob(data.contentBase64), (c) => c.charCodeAt(0));
-    if (bytes.byteLength > IMPORT_MAX_BYTES) throw new Error("Súbor je príliš veľký.");
+    const bytes = Uint8Array.from(atob(data.contentBase64), (c) =>
+      c.charCodeAt(0),
+    );
+    if (bytes.byteLength > IMPORT_MAX_BYTES)
+      throw new Error("Súbor je príliš veľký.");
 
     const path = `imports/${context.userId}/${data.importId}.csv`;
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
     const { error: uploadError } = await supabaseAdmin.storage
       .from("private-bucket")
       .upload(path, bytes, { contentType: "text/csv", upsert: false });
@@ -195,13 +213,17 @@ export const getImportOriginalUrl = createServerFn({ method: "POST" })
       .select("id, filename, storage_path, original_stored, user_id")
       .eq("id", data.importId)
       .maybeSingle();
-    if (!imp || imp.user_id !== context.userId) throw new Error("Import sa nenašiel.");
-    if (!imp.original_stored || !imp.storage_path) throw new Error("Originál nie je uložený.");
+    if (!imp || imp.user_id !== context.userId)
+      throw new Error("Import sa nenašiel.");
+    if (!imp.original_stored || !imp.storage_path)
+      throw new Error("Originál nie je uložený.");
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
     const { data: signed, error } = await supabaseAdmin.storage
       .from("private-bucket")
       .createSignedUrl(imp.storage_path, 300, { download: imp.filename });
-    if (error || !signed) throw new Error("Odkaz na stiahnutie sa nepodarilo vytvoriť.");
+    if (error || !signed)
+      throw new Error("Odkaz na stiahnutie sa nepodarilo vytvoriť.");
     return { url: signed.signedUrl };
   });

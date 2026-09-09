@@ -40,13 +40,17 @@ export function DonutChart({
             strokeWidth={stroke}
             strokeDasharray={`${c * incomeRatio} ${c}`}
             strokeLinecap="round"
-            style={{ transition: "stroke-dasharray 700ms var(--ease-out-soft)" }}
+            style={{
+              transition: "stroke-dasharray 700ms var(--ease-out-soft)",
+            }}
           />
         </g>
       </svg>
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-metric">{Math.round(incomeRatio * 100)} %</span>
-        <span className="text-[9px] text-muted-foreground">{caption ?? "bezhotovostne"}</span>
+        <span className="text-[9px] text-muted-foreground">
+          {caption ?? "bezhotovostne"}
+        </span>
       </div>
     </div>
   );
@@ -90,7 +94,12 @@ export function BalanceChart({
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           const ratio = (e.clientX - rect.left) / rect.width;
-          setHover(Math.max(0, Math.min(data.length - 1, Math.round(ratio * (data.length - 1)))));
+          setHover(
+            Math.max(
+              0,
+              Math.min(data.length - 1, Math.round(ratio * (data.length - 1))),
+            ),
+          );
         }}
       >
         <defs>
@@ -159,7 +168,9 @@ export function BalanceChart({
         >
           {format(data[hover]!)}
           {labels?.[hover] ? (
-            <span className="block font-normal text-muted-foreground">{labels[hover]}</span>
+            <span className="block font-normal text-muted-foreground">
+              {labels[hover]}
+            </span>
           ) : null}
         </div>
       ) : null}
@@ -181,7 +192,10 @@ export function RiskBar({
           <span
             key={s.label}
             title={`${s.label}: ${s.value}`}
-            style={{ width: `${(s.value / total) * 100}%`, backgroundColor: s.color }}
+            style={{
+              width: `${(s.value / total) * 100}%`,
+              backgroundColor: s.color,
+            }}
             className="h-full transition-[width] duration-700"
           />
         ))}
@@ -192,9 +206,14 @@ export function RiskBar({
             key={s.label}
             className="flex items-center gap-1.5 text-[10px] text-muted-foreground"
           >
-            <span className="h-2 w-2 rounded-full" style={{ backgroundColor: s.color }} />
+            <span
+              className="h-2 w-2 rounded-full"
+              style={{ backgroundColor: s.color }}
+            />
             {s.label}
-            <span className="font-semibold tnum text-foreground">{s.value}</span>
+            <span className="font-semibold tnum text-foreground">
+              {s.value}
+            </span>
           </span>
         ))}
       </div>

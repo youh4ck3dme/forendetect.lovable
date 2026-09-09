@@ -35,7 +35,10 @@ async function resolveOrCreateCustomer(
     if (found.data.length) return found.data[0]!.id;
   }
   if (options.email) {
-    const existing = await stripe.customers.list({ email: options.email, limit: 1 });
+    const existing = await stripe.customers.list({
+      email: options.email,
+      limit: 1,
+    });
     if (existing.data.length) {
       const customer = existing.data[0]!;
       if (options.userId && customer.metadata?.["userId"] !== options.userId) {
@@ -71,7 +74,8 @@ export const getSubscriptionState = createServerFn({ method: "POST" })
     const active =
       row &&
       ACTIVE_STATUSES.includes(row.status) &&
-      (!row.current_period_end || new Date(row.current_period_end).getTime() > Date.now());
+      (!row.current_period_end ||
+        new Date(row.current_period_end).getTime() > Date.now());
 
     return {
       configured,
@@ -85,18 +89,25 @@ export const getSubscriptionState = createServerFn({ method: "POST" })
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((data: { priceId: string; returnUrl: string; environment: StripeEnv }) => {
-    if (!/^[a-zA-Z0-9_-]+$/.test(data.priceId)) throw new Error("Neplatný identifikátor ceny.");
-    return data;
-  })
+  .validator(
+    (data: { priceId: string; returnUrl: string; environment: StripeEnv }) => {
+      if (!/^[a-zA-Z0-9_-]+$/.test(data.priceId))
+        throw new Error("Neplatný identifikátor ceny.");
+      return data;
+    },
+  )
   .handler(async ({ data, context }): Promise<CheckoutResult> => {
     if (!paymentsConfigured(data.environment)) {
-      return { error: "Platby nie sú nakonfigurované. Chýba platobné pripojenie prostredia." };
+      return {
+        error:
+          "Platby nie sú nakonfigurované. Chýba platobné pripojenie prostredia.",
+      };
     }
     try {
       const stripe = createStripeClient(data.environment);
       const prices = await stripe.prices.list({ lookup_keys: [data.priceId] });
-      if (!prices.data.length) return { error: "Cena sa nenašla — chýba price_id v katalógu." };
+      if (!prices.data.length)
+        return { error: "Cena sa nenašla — chýba price_id v katalógu." };
       const stripePrice = prices.data[0]!;
 
       const {

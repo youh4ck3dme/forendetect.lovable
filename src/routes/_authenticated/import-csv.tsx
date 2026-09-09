@@ -1,6 +1,13 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { AlertTriangle, CheckCircle2, FileUp, Loader2, ShieldAlert, X } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  FileUp,
+  Loader2,
+  ShieldAlert,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   AppHeader,
@@ -73,7 +80,9 @@ type Step = "file" | "mapping" | "review" | "done";
 
 async function sha256Hex(buffer: ArrayBuffer): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", buffer);
-  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return [...new Uint8Array(digest)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 function base64(buffer: ArrayBuffer): string {
@@ -105,45 +114,58 @@ function ImportCsv() {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
   const [replacementChars, setReplacementChars] = useState(false);
-  const [summary, setSummary] = useState<{ inserted: number; stored: boolean } | null>(null);
+  const [summary, setSummary] = useState<{
+    inserted: number;
+    stored: boolean;
+  } | null>(null);
   const workerRef = useRef<Worker | null>(null);
 
   const defaultCurrency = activeCase.baseCurrency || "EUR";
 
-  const runWorker = useCallback(<T,>(message: unknown, expect: string): Promise<T> => {
-    return new Promise((resolve, reject) => {
-      const worker = new Worker(new URL("../../workers/csv.worker.ts", import.meta.url), {
-        type: "module",
+  const runWorker = useCallback(
+    <T,>(message: unknown, expect: string): Promise<T> => {
+      return new Promise((resolve, reject) => {
+        const worker = new Worker(
+          new URL("../../workers/csv.worker.ts", import.meta.url),
+          {
+            type: "module",
+          },
+        );
+        workerRef.current = worker;
+        worker.onmessage = (
+          event: MessageEvent<
+            { kind: string; value?: number } & Record<string, unknown>
+          >,
+        ) => {
+          const data = event.data;
+          if (data.kind === "progress") {
+            setProgress(typeof data.value === "number" ? data.value : null);
+            return;
+          }
+          if (data.kind === "error") {
+            worker.terminate();
+            workerRef.current = null;
+            reject(
+              new Error(String(data["message"] ?? "Spracovanie zlyhalo.")),
+            );
+            return;
+          }
+          if (data.kind === expect) {
+            worker.terminate();
+            workerRef.current = null;
+            resolve(data as T);
+          }
+        };
+        worker.onerror = () => {
+          worker.terminate();
+          workerRef.current = null;
+          reject(new Error("Spracovanie súboru zlyhalo."));
+        };
+        worker.postMessage(message);
       });
-      workerRef.current = worker;
-      worker.onmessage = (
-        event: MessageEvent<{ kind: string; value?: number } & Record<string, unknown>>,
-      ) => {
-        const data = event.data;
-        if (data.kind === "progress") {
-          setProgress(typeof data.value === "number" ? data.value : null);
-          return;
-        }
-        if (data.kind === "error") {
-          worker.terminate();
-          workerRef.current = null;
-          reject(new Error(String(data["message"] ?? "Spracovanie zlyhalo.")));
-          return;
-        }
-        if (data.kind === expect) {
-          worker.terminate();
-          workerRef.current = null;
-          resolve(data as T);
-        }
-      };
-      worker.onerror = () => {
-        worker.terminate();
-        workerRef.current = null;
-        reject(new Error("Spracovanie súboru zlyhalo."));
-      };
-      worker.postMessage(message);
-    });
-  }, []);
+    },
+    [],
+  );
 
   function cancelWork() {
     workerRef.current?.terminate();
@@ -155,7 +177,9 @@ function ImportCsv() {
 
   async function handleFile(picked: File) {
     if (picked.size > IMPORT_MAX_BYTES) {
-      toast.error(`Súbor je väčší než ${Math.round(IMPORT_MAX_BYTES / 1024 / 1024)} MB.`);
+      toast.error(
+        `Súbor je väčší než ${Math.round(IMPORT_MAX_BYTES / 1024 / 1024)} MB.`,
+      );
       return;
     }
     setBusy(true);
@@ -174,7 +198,9 @@ function ImportCsv() {
       setStep("mapping");
       if (detected.value) await parseWith(buf, encoding, detected.value);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Súbor sa nepodarilo načítať.");
+      toast.error(
+        error instanceof Error ? error.message : "Súbor sa nepodarilo načítať.",
+      );
     } finally {
       setBusy(false);
     }
@@ -183,8 +209,16 @@ function ImportCsv() {
   async function parseWith(buf: ArrayBuffer, enc: Encoding, delim: Delimiter) {
     setBusy(true);
     try {
-      const parsed = await runWorker<{ rows: string[][]; replacement: boolean }>(
-        { kind: "parse", buffer: buf.slice(0), encoding: enc, delimiter: delim },
+      const parsed = await runWorker<{
+        rows: string[][];
+        replacement: boolean;
+      }>(
+        {
+          kind: "parse",
+          buffer: buf.slice(0),
+          encoding: enc,
+          delimiter: delim,
+        },
         "parsed",
       );
       if (parsed.rows.length > IMPORT_MAX_ROWS) {
@@ -201,14 +235,25 @@ function ImportCsv() {
         if (guess.date < 0 && /dat/.test(n)) guess.date = index;
         else if (guess.amount < 0 && /(suma|amount|čiast|ciast|betrag)/.test(n))
           guess.amount = index;
-        else if (guess.currency < 0 && /(mena|currency)/.test(n)) guess.currency = index;
-        else if (guess.counterpartyFrom < 0 && /(odosiel|from|platiteľ|platitel)/.test(n))
+        else if (guess.currency < 0 && /(mena|currency)/.test(n))
+          guess.currency = index;
+        else if (
+          guess.counterpartyFrom < 0 &&
+          /(odosiel|from|platiteľ|platitel)/.test(n)
+        )
           guess.counterpartyFrom = index;
-        else if (guess.counterpartyTo < 0 && /(prijem|príjem|to|benefic)/.test(n))
+        else if (
+          guess.counterpartyTo < 0 &&
+          /(prijem|príjem|to|benefic)/.test(n)
+        )
           guess.counterpartyTo = index;
-        else if (guess.description < 0 && /(popis|description|účel|ucel|sprava|správa)/.test(n))
+        else if (
+          guess.description < 0 &&
+          /(popis|description|účel|ucel|sprava|správa)/.test(n)
+        )
           guess.description = index;
-        else if (guess.method < 0 && /(sposob|spôsob|typ|method)/.test(n)) guess.method = index;
+        else if (guess.method < 0 && /(sposob|spôsob|typ|method)/.test(n))
+          guess.method = index;
       });
       setMapping(guess);
       const amounts = body.slice(0, 50).map((r) => r[guess.amount] ?? "");
@@ -216,7 +261,11 @@ function ImportCsv() {
       setDecimal(detectDecimalSeparator(amounts).value);
       setDateFormat(detectDateFormat(dates.filter(Boolean)).value);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Súbor sa nepodarilo prečítať.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Súbor sa nepodarilo prečítať.",
+      );
     } finally {
       setBusy(false);
       setProgress(null);
@@ -224,7 +273,10 @@ function ImportCsv() {
   }
 
   const mappingReady =
-    delimiter && decimal && dateFormat && REQUIRED_FIELDS.every((f) => mapping[f] >= 0);
+    delimiter &&
+    decimal &&
+    dateFormat &&
+    REQUIRED_FIELDS.every((f) => mapping[f] >= 0);
 
   async function runValidation() {
     if (!mappingReady) return;
@@ -266,7 +318,10 @@ function ImportCsv() {
     }
   }
 
-  const similar = useMemo(() => (result ? findSimilar(result.valid) : []), [result]);
+  const similar = useMemo(
+    () => (result ? findSimilar(result.valid) : []),
+    [result],
+  );
   const unresolved = useMemo(
     () =>
       Object.entries(partyMap)
@@ -278,11 +333,15 @@ function ImportCsv() {
   async function confirmImport() {
     if (!result || !file || !buffer) return;
     if (result.errors.length > 0 && !allowPartial) {
-      toast.error("Súbor obsahuje chybné riadky. Opravte súbor alebo povoľte čiastočný import.");
+      toast.error(
+        "Súbor obsahuje chybné riadky. Opravte súbor alebo povoľte čiastočný import.",
+      );
       return;
     }
     if (unresolved.length > 0) {
-      toast.error("Potvrďte priradenie protistrán — subjekty sa nespájajú automaticky.");
+      toast.error(
+        "Potvrďte priradenie protistrán — subjekty sa nespájajú automaticky.",
+      );
       return;
     }
     setBusy(true);
@@ -339,9 +398,12 @@ function ImportCsv() {
             method: r.method,
             from_id: ids[r.from] as string,
             to_id: ids[r.to] as string,
-            origin_country: activeCase.entities.find((e) => e.id === ids[r.from])?.country ?? "SK",
+            origin_country:
+              activeCase.entities.find((e) => e.id === ids[r.from])?.country ??
+              "SK",
             destination_country:
-              activeCase.entities.find((e) => e.id === ids[r.to])?.country ?? "SK",
+              activeCase.entities.find((e) => e.id === ids[r.to])?.country ??
+              "SK",
             description: r.description,
             source_row: r.sourceRow,
           })),
@@ -352,7 +414,11 @@ function ImportCsv() {
       let stored = false;
       if (storeOriginal) {
         await storeImportOriginal({
-          data: { importId: created.id, contentBase64: base64(buffer), sha256: hash },
+          data: {
+            importId: created.id,
+            contentBase64: base64(buffer),
+            sha256: hash,
+          },
         });
         stored = true;
       }
@@ -366,12 +432,15 @@ function ImportCsv() {
         await failImport({
           data: {
             importId,
-            reason: error instanceof Error ? error.message.slice(0, 300) : "Zlyhanie",
+            reason:
+              error instanceof Error ? error.message.slice(0, 300) : "Zlyhanie",
           },
         }).catch(() => undefined);
       }
       toast.error(
-        error instanceof Error ? error.message : "Import zlyhal. Nezapísal sa žiadny riadok.",
+        error instanceof Error
+          ? error.message
+          : "Import zlyhal. Nezapísal sa žiadny riadok.",
       );
     } finally {
       setBusy(false);
@@ -405,16 +474,19 @@ function ImportCsv() {
             Import do prípadu {activeCase.name}
           </h1>
           <p className="text-caption">
-            Postup: súbor → mapovanie stĺpcov → kontrola → potvrdenie. Pred potvrdením sa nezapíše
-            žiadna transakcia. Súbor sa spracúva vo vašom prehliadači; uložené dáta (a originál, ak
-            ho potvrdíte) sa ukladajú do zabezpečeného cloudu aplikácie, nie iba do zariadenia.
+            Postup: súbor → mapovanie stĺpcov → kontrola → potvrdenie. Pred
+            potvrdením sa nezapíše žiadna transakcia. Súbor sa spracúva vo vašom
+            prehliadači; uložené dáta (a originál, ak ho potvrdíte) sa ukladajú
+            do zabezpečeného cloudu aplikácie, nie iba do zariadenia.
           </p>
         </Card>
 
         {step === "file" ? (
           <Card className="space-y-3">
             <label className="block space-y-1">
-              <span className="text-[11px] font-medium text-muted-foreground">Súbor CSV</span>
+              <span className="text-[11px] font-medium text-muted-foreground">
+                Súbor CSV
+              </span>
               <input
                 aria-label="Súbor CSV"
                 type="file"
@@ -427,7 +499,8 @@ function ImportCsv() {
               />
             </label>
             <p className="text-caption">
-              Limit {Math.round(IMPORT_MAX_BYTES / 1024 / 1024)} MB a {IMPORT_MAX_ROWS} riadkov.
+              Limit {Math.round(IMPORT_MAX_BYTES / 1024 / 1024)} MB a{" "}
+              {IMPORT_MAX_ROWS} riadkov.
             </p>
           </Card>
         ) : null}
@@ -437,16 +510,19 @@ function ImportCsv() {
             <SectionTitle>Formát súboru</SectionTitle>
             <Card className="space-y-3">
               <p className="text-caption">
-                {file.name} • {(file.size / 1024).toFixed(1)} kB • SHA-256 {hash.slice(0, 16)}…
+                {file.name} • {(file.size / 1024).toFixed(1)} kB • SHA-256{" "}
+                {hash.slice(0, 16)}…
               </p>
               {replacementChars ? (
                 <p className="flex items-center gap-2 text-xs text-risk-high">
-                  <ShieldAlert className="h-4 w-4" aria-hidden /> Text obsahuje neznáme znaky —
-                  zvoľte iné kódovanie.
+                  <ShieldAlert className="h-4 w-4" aria-hidden /> Text obsahuje
+                  neznáme znaky — zvoľte iné kódovanie.
                 </p>
               ) : null}
               <label className="block space-y-1">
-                <span className="text-[11px] font-medium text-muted-foreground">Kódovanie</span>
+                <span className="text-[11px] font-medium text-muted-foreground">
+                  Kódovanie
+                </span>
                 <select
                   aria-label="Kódovanie"
                   className={inputClass}
@@ -454,7 +530,8 @@ function ImportCsv() {
                   onChange={(e) => {
                     const next = e.target.value as Encoding;
                     setEncoding(next);
-                    if (buffer && delimiter) void parseWith(buffer, next, delimiter);
+                    if (buffer && delimiter)
+                      void parseWith(buffer, next, delimiter);
                   }}
                 >
                   {ENCODINGS.map((e) => (
@@ -465,7 +542,9 @@ function ImportCsv() {
                 </select>
               </label>
               <label className="block space-y-1">
-                <span className="text-[11px] font-medium text-muted-foreground">Oddeľovač</span>
+                <span className="text-[11px] font-medium text-muted-foreground">
+                  Oddeľovač
+                </span>
                 <select
                   aria-label="Oddeľovač"
                   className={inputClass}
@@ -494,13 +573,16 @@ function ImportCsv() {
               </label>
               <label className="block space-y-1">
                 <span className="text-[11px] font-medium text-muted-foreground">
-                  Desatinný oddeľovač {decimal ? "" : "(nejednoznačný — zvoľte)"}
+                  Desatinný oddeľovač{" "}
+                  {decimal ? "" : "(nejednoznačný — zvoľte)"}
                 </span>
                 <select
                   aria-label="Desatinný oddeľovač"
                   className={inputClass}
                   value={decimal ?? ""}
-                  onChange={(e) => setDecimal(e.target.value as DecimalSeparator)}
+                  onChange={(e) =>
+                    setDecimal(e.target.value as DecimalSeparator)
+                  }
                 >
                   <option value="">— zvoľte —</option>
                   <option value=",">čiarka (1 234,56)</option>
@@ -529,38 +611,57 @@ function ImportCsv() {
 
             <SectionTitle>Mapovanie stĺpcov</SectionTitle>
             <Card className="space-y-2">
-              {(Object.keys(MAPPING_LABELS) as (keyof ColumnMapping)[]).map((field) => (
-                <label key={field} className="block space-y-1">
-                  <span className="text-[11px] font-medium text-muted-foreground">
-                    {MAPPING_LABELS[field]}
-                    {REQUIRED_FIELDS.includes(field) ? " *" : " (nepovinné)"}
-                  </span>
-                  <select
-                    aria-label={MAPPING_LABELS[field]}
-                    className={inputClass}
-                    value={mapping[field]}
-                    onChange={(e) => setMapping({ ...mapping, [field]: Number(e.target.value) })}
-                  >
-                    <option value={-1}>— nepriradené —</option>
-                    {header.map((name, index) => (
-                      <option key={`${name}-${index}`} value={index}>
-                        {name || `stĺpec ${index + 1}`}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              ))}
-              <Button className="w-full" disabled={!mappingReady || busy} onClick={runValidation}>
-                {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+              {(Object.keys(MAPPING_LABELS) as (keyof ColumnMapping)[]).map(
+                (field) => (
+                  <label key={field} className="block space-y-1">
+                    <span className="text-[11px] font-medium text-muted-foreground">
+                      {MAPPING_LABELS[field]}
+                      {REQUIRED_FIELDS.includes(field) ? " *" : " (nepovinné)"}
+                    </span>
+                    <select
+                      aria-label={MAPPING_LABELS[field]}
+                      className={inputClass}
+                      value={mapping[field]}
+                      onChange={(e) =>
+                        setMapping({
+                          ...mapping,
+                          [field]: Number(e.target.value),
+                        })
+                      }
+                    >
+                      <option value={-1}>— nepriradené —</option>
+                      {header.map((name, index) => (
+                        <option key={`${name}-${index}`} value={index}>
+                          {name || `stĺpec ${index + 1}`}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                ),
+              )}
+              <Button
+                className="w-full"
+                disabled={!mappingReady || busy}
+                onClick={runValidation}
+              >
+                {busy ? (
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                ) : null}
                 Skontrolovať riadky
               </Button>
               {busy ? (
-                <Button variant="outline" className="w-full" onClick={cancelWork}>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={cancelWork}
+                >
                   <X className="h-4 w-4" aria-hidden /> Zrušiť spracovanie
                 </Button>
               ) : null}
               {progress !== null ? (
-                <p className="text-caption">Priebeh: {Math.round(progress * 100)} %</p>
+                <p className="text-caption">
+                  Priebeh: {Math.round(progress * 100)} %
+                </p>
               ) : null}
             </Card>
           </>
@@ -572,23 +673,32 @@ function ImportCsv() {
             <Card className="space-y-2">
               <p className="text-sm">
                 <strong>{result.valid.length}</strong> platných riadkov,{" "}
-                <strong className={result.errors.length ? "text-risk-high" : ""}>
+                <strong
+                  className={result.errors.length ? "text-risk-high" : ""}
+                >
                   {result.errors.length}
                 </strong>{" "}
                 chybných.
               </p>
               <div className="space-y-1">
-                {Object.entries(result.totalsByCurrency).map(([currency, total]) => (
-                  <p key={currency} className="text-caption">
-                    Súčet {currency}: <strong>{formatMoney(total, currency)}</strong>
-                  </p>
-                ))}
+                {Object.entries(result.totalsByCurrency).map(
+                  ([currency, total]) => (
+                    <p key={currency} className="text-caption">
+                      Súčet {currency}:{" "}
+                      <strong>{formatMoney(total, currency)}</strong>
+                    </p>
+                  ),
+                )}
               </div>
               {similar.length > 0 ? (
                 <p className="flex items-start gap-2 text-xs text-risk-medium">
-                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                  {similar.length} skupín podobných platieb (rovnaký deň, suma a strany). Môže ísť o
-                  legitímne opakované platby — nič sa automaticky nemaže.
+                  <AlertTriangle
+                    className="mt-0.5 h-4 w-4 shrink-0"
+                    aria-hidden
+                  />
+                  {similar.length} skupín podobných platieb (rovnaký deň, suma a
+                  strany). Môže ísť o legitímne opakované platby — nič sa
+                  automaticky nemaže.
                 </p>
               ) : null}
             </Card>
@@ -603,7 +713,9 @@ function ImportCsv() {
                     </p>
                   ))}
                   {result.errors.length > 50 ? (
-                    <p className="text-caption">… a ďalších {result.errors.length - 50}.</p>
+                    <p className="text-caption">
+                      … a ďalších {result.errors.length - 50}.
+                    </p>
                   ) : null}
                   <label className="flex items-center gap-2 text-xs">
                     <input
@@ -620,16 +732,21 @@ function ImportCsv() {
             <SectionTitle>Priradenie protistrán</SectionTitle>
             <Card className="space-y-2">
               <p className="text-caption">
-                Rovnaké meno neznamená rovnaký subjekt — priradenie potvrďte ručne.
+                Rovnaké meno neznamená rovnaký subjekt — priradenie potvrďte
+                ručne.
               </p>
               {result.counterparties.map((name) => (
                 <label key={name} className="block space-y-1">
-                  <span className="text-[11px] font-medium text-muted-foreground">{name}</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">
+                    {name}
+                  </span>
                   <select
                     aria-label={`Protistrana ${name}`}
                     className={inputClass}
                     value={partyMap[name] ?? "new"}
-                    onChange={(e) => setPartyMap({ ...partyMap, [name]: e.target.value })}
+                    onChange={(e) =>
+                      setPartyMap({ ...partyMap, [name]: e.target.value })
+                    }
                   >
                     {partyMap[name]?.startsWith("suggest:") ? (
                       <option value={partyMap[name]}>— potvrďte voľbu —</option>
@@ -654,18 +771,25 @@ function ImportCsv() {
                   onChange={(e) => setStoreOriginal(e.target.checked)}
                 />
                 <span>
-                  Uložiť originálny súbor do súkromného úložiska aplikácie (Lovable Cloud). Originál
-                  sa nikdy neprepíše pri neskoršej editácii transakcií a stiahnuť ho môžete len vy.
+                  Uložiť originálny súbor do súkromného úložiska aplikácie
+                  (Lovable Cloud). Originál sa nikdy neprepíše pri neskoršej
+                  editácii transakcií a stiahnuť ho môžete len vy.
                 </span>
               </label>
               <p className="text-caption">Kontrolný súčet SHA-256: {hash}</p>
             </Card>
 
             <Button className="w-full" disabled={busy} onClick={confirmImport}>
-              {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
+              {busy ? (
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+              ) : null}
               Potvrdiť a importovať {result.valid.length} riadkov
             </Button>
-            <Button variant="outline" className="w-full" onClick={() => setStep("mapping")}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => setStep("mapping")}
+            >
               Späť na mapovanie
             </Button>
           </>
@@ -674,11 +798,12 @@ function ImportCsv() {
         {step === "done" && summary ? (
           <Card className="space-y-2">
             <p className="flex items-center gap-2 text-sm font-semibold">
-              <CheckCircle2 className="h-4 w-4 text-risk-low" aria-hidden /> Import dokončený
+              <CheckCircle2 className="h-4 w-4 text-risk-low" aria-hidden />{" "}
+              Import dokončený
             </p>
             <p className="text-caption">
-              Zapísaných {summary.inserted} transakcií. Každá má odkaz na import a číslo zdrojového
-              riadka.{" "}
+              Zapísaných {summary.inserted} transakcií. Každá má odkaz na import
+              a číslo zdrojového riadka.{" "}
               {summary.stored
                 ? "Originál je uložený v súkromnom úložisku."
                 : "Originál sa neukladal."}

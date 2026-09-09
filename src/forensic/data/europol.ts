@@ -8,7 +8,9 @@ import type { EuropolRecord } from "../types";
  */
 export const EUROPOL_RECORDS: EuropolRecord[] = [];
 
-const BY_SERIAL = new Map(EUROPOL_RECORDS.map((r) => [normalizeSerial(r.serial), r]));
+const BY_SERIAL = new Map(
+  EUROPOL_RECORDS.map((r) => [normalizeSerial(r.serial), r]),
+);
 
 export function normalizeSerial(serial: string): string {
   return serial.replace(/[\s\-_.]/g, "").toUpperCase();

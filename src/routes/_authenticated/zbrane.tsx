@@ -11,7 +11,11 @@ import {
   Screen,
   SectionTitle,
 } from "@/components/malte/Shell";
-import { detectSerialBatches, EUROPOL_STATUS_LABEL, formatDate } from "@/forensic";
+import {
+  detectSerialBatches,
+  EUROPOL_STATUS_LABEL,
+  formatDate,
+} from "@/forensic";
 
 export const Route = createFileRoute("/_authenticated/zbrane")({
   head: () => ({
@@ -25,7 +29,8 @@ export const Route = createFileRoute("/_authenticated/zbrane")({
       { property: "og:title", content: "Register zbraní — Forendo" },
       {
         property: "og:description",
-        content: "Sériové čísla, držitelia a zhody v medzinárodnej databáze odcudzených zbraní.",
+        content:
+          "Sériové čísla, držitelia a zhody v medzinárodnej databáze odcudzených zbraní.",
       },
     ],
   }),
@@ -48,7 +53,11 @@ function Weapons() {
 
       <Screen>
         <AddPanel label="Pridať zbraň">
-          <WeaponForm caseId={activeCase.id} entities={activeCase.entities} onSaved={refresh} />
+          <WeaponForm
+            caseId={activeCase.id}
+            entities={activeCase.entities}
+            onSaved={refresh}
+          />
         </AddPanel>
         <Card className="flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-risk-high/12 text-risk-high">
@@ -68,7 +77,13 @@ function Weapons() {
 
         <Card className="divide-y divide-border p-0">
           {analysis.weapons.map(
-            ({ weapon, europolMatch, invalidLicence, europolRecord, fuzzyMatch }) => (
+            ({
+              weapon,
+              europolMatch,
+              invalidLicence,
+              europolRecord,
+              fuzzyMatch,
+            }) => (
               <div key={weapon.id} className="space-y-1 p-4">
                 <div className="flex items-center gap-3">
                   <div className="min-w-0">
@@ -80,19 +95,32 @@ function Weapons() {
                     </p>
                   </div>
                   <span className="ml-auto">
-                    <RiskChip level={europolMatch ? "critical" : invalidLicence ? "high" : "low"}>
-                      {europolMatch ? "Sledovaná" : invalidLicence ? "Bez licencie" : "Čisté"}
+                    <RiskChip
+                      level={
+                        europolMatch
+                          ? "critical"
+                          : invalidLicence
+                            ? "high"
+                            : "low"
+                      }
+                    >
+                      {europolMatch
+                        ? "Sledovaná"
+                        : invalidLicence
+                          ? "Bez licencie"
+                          : "Čisté"}
                     </RiskChip>
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  Držiteľ {names.get(weapon.holderId) ?? weapon.holderId} • dodávateľ{" "}
-                  {names.get(weapon.supplierId) ?? weapon.supplierId}
+                  Držiteľ {names.get(weapon.holderId) ?? weapon.holderId} •
+                  dodávateľ {names.get(weapon.supplierId) ?? weapon.supplierId}
                 </p>
                 {europolRecord ? (
                   <p className="rounded-lg bg-risk-high/10 px-2 py-1 text-[11px] text-risk-high">
-                    {fuzzyMatch ? "Pravdepodobná zhoda" : "Zhoda"} • {europolRecord.caseRef} •{" "}
-                    {europolRecord.seizedCountry} • {EUROPOL_STATUS_LABEL[europolRecord.status]} •{" "}
+                    {fuzzyMatch ? "Pravdepodobná zhoda" : "Zhoda"} •{" "}
+                    {europolRecord.caseRef} • {europolRecord.seizedCountry} •{" "}
+                    {EUROPOL_STATUS_LABEL[europolRecord.status]} •{" "}
                     {formatDate(europolRecord.seizedAt)}
                   </p>
                 ) : null}
@@ -108,9 +136,12 @@ function Weapons() {
               {batches.map((b) => (
                 <div key={b.prefix} className="space-y-1">
                   <p className="text-xs font-semibold">
-                    Dávka {b.prefix}* — {b.serials.length} zbraní, {b.holderIds.length} držiteľov
+                    Dávka {b.prefix}* — {b.serials.length} zbraní,{" "}
+                    {b.holderIds.length} držiteľov
                   </p>
-                  <p className="text-[11px] text-muted-foreground tnum">{b.serials.join(", ")}</p>
+                  <p className="text-[11px] text-muted-foreground tnum">
+                    {b.serials.join(", ")}
+                  </p>
                   <p className="text-[10px] text-muted-foreground">
                     {b.holderIds.map((id) => names.get(id) ?? id).join(", ")}
                   </p>

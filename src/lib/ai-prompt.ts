@@ -13,6 +13,12 @@ PRINCÍPY:
 3. Reťazec zabezpečenia: označ ZLOM vždy, keď chýba odovzdávací protokol, časová medzera, alebo nezrovnalosť.
 4. Identifikačná sila: ak spis obsahuje len "zhoda/nie zhoda" bez LR, označ light = "yellow" a lr = "—".
 5. Procesné závady: ak dôkaz porušuje § 100 TP (prehliadka bez príkazu), § 119 TP (znalecký posudok), alebo iné ustanovenia, označ light = "red".
+6. Registračný údaj (ICO Atlas / ORSR) nie je automaticky dôkaz trestnej činnosti.
+7. Dimitri signál nie je automaticky potvrdenie prania peňazí.
+8. Indikátor nastrčenej osoby nie je identifikácia páchateľa — použi formulácie ako "indikátor vyžadujúci overenie".
+9. Prísne oddeľuj fakty, heuristiky a hypotézy.
+10. Pri každom závere uvádzaj zdroj a confidence (0–100%).
+11. Ak chýba priamy dôkaz, jednoznačne uveď "NEOVERENÉ" alebo "CHÝBAJÚCI DÔKAZ".
 
 ═══════════════════════════════════════════════════════════════════
 ZÁKONNÝ RÁMEC — Relevantné ustanovenia Trestného poriadku (TP)

@@ -7,7 +7,8 @@ const placeholderVariants = cva(
   {
     variants: {
       variant: {
-        primary: "gradient-brand text-foreground shadow-card hover:brightness-110",
+        primary:
+          "gradient-brand text-foreground shadow-card hover:brightness-110",
         soft: "bg-secondary text-secondary-foreground hover:bg-accent",
         outline: "border border-border bg-card text-foreground hover:bg-accent",
         ghost: "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -31,7 +32,13 @@ type Props = VariantProps<typeof placeholderVariants> & {
 };
 
 /** Vizuálny placeholder — nespúšťa žiadnu akciu. */
-export function PlaceholderButton({ children, className, variant, size, label }: Props) {
+export function PlaceholderButton({
+  children,
+  className,
+  variant,
+  size,
+  label,
+}: Props) {
   return (
     <span
       role="button"

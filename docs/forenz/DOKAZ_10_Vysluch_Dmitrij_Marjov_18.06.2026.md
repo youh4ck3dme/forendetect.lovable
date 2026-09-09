@@ -2,14 +2,14 @@
 
 ## Metadáta
 
-* **Osoba/subjekt:** Dmitrij Marjov
-* **Typ dokumentu:** zápisnica o výsluchu svedka
-* **Miesto:** Banská Bystrica
-* **ČVS:** PPZ-51/UBOK-PZ-ST-2025
-* **Dátumový rozpor:** titulná strana a ukončenie výsluchu uvádzajú **18.06.2026**; hlavičky strán 2–11 uvádzajú **18.06.2025**. Obe hodnoty sú zachované bez svojvoľnej opravy.
-* **Úplnosť:** 11 obrazových strán výsluchu Dmitrija Marjova. Archív obsahoval aj fotografiu `IMG20260831050830.jpg`, označenú ako 10. strana výsluchu svedka Michala Žembera z 17.02.2025. Táto cudzia strana nepatrí do tohto prepisu a nebola sem zaradená.
-* Zdroj: `Proton Drive Download - 2026-08-31.zip`, dodal používateľ.
-* **Stav prepisu:** pracovný OCR prepis z originálnych fotografií. Pri presných citáciách treba porovnať s príslušnou fotografiou.
+- **Osoba/subjekt:** Dmitrij Marjov
+- **Typ dokumentu:** zápisnica o výsluchu svedka
+- **Miesto:** Banská Bystrica
+- **ČVS:** PPZ-51/UBOK-PZ-ST-2025
+- **Dátumový rozpor:** titulná strana a ukončenie výsluchu uvádzajú **18.06.2026**; hlavičky strán 2–11 uvádzajú **18.06.2025**. Obe hodnoty sú zachované bez svojvoľnej opravy.
+- **Úplnosť:** 11 obrazových strán výsluchu Dmitrija Marjova. Archív obsahoval aj fotografiu `IMG20260831050830.jpg`, označenú ako 10. strana výsluchu svedka Michala Žembera z 17.02.2025. Táto cudzia strana nepatrí do tohto prepisu a nebola sem zaradená.
+- Zdroj: `Proton Drive Download - 2026-08-31.zip`, dodal používateľ.
+- **Stav prepisu:** pracovný OCR prepis z originálnych fotografií. Pri presných citáciách treba porovnať s príslušnou fotografiou.
 
 ---DÔKAZ 10 – Výsluch svedka Dmitrija Marjova
 
@@ -18,7 +18,7 @@ Typ dokumentu: zápisnica o výsluchu svedka
 Miesto: Banská Bystrica
 Dátumový rozpor: titulná strana a ukončenie výsluchu uvádzajú 18.06.2026; hlavičky strán 2–11 uvádzajú 18.06.2025. Obe hodnoty sú zachované bez svojvoľnej opravy.
 Úplnosť: 11 obrazových strán výsluchu Dmitrija Marjova. ZIP navyše obsahoval fotografiu IMG20260831050830.jpg, ktorá je označená ako 10. strana výsluchu svedka Michala Žembera z 17.02.2025; nepatrí do tohto prepisu a nebola sem zaradená.
-Zdroj: Proton Drive Download - [2026-08-31.zip](<http://2026-08-31.zip>), dodal používateľ.
+Zdroj: Proton Drive Download - [2026-08-31.zip](http://2026-08-31.zip), dodal používateľ.
 Stav prepisu: pracovný OCR prepis z originálnych fotografií; zachováva členenie podľa dodaných fotografií. Pred použitím presných citátov treba porovnať s príslušnou fotografiou.
 
 ===== FOTO 1: IMG20260831050709.jpg =====
@@ -106,8 +106,7 @@ Podľa § 136 ods. 1 Trestného poriadku, ak máte dôvodnú obavu, že Vy alebo
 
 Podľa § 136 ods. 2 Trestného poriadku, ak je dôvodná obava, že oznámením Vašej totožnosti, bydliska, prípadne miesta pobytu je ohrozený Váš život, zdravie, telesná integrita alebo ak také nebezpečenstvo hrozí Vašej blízkej osobe, môže sa Vám povoliť, aby ste neuvádzali údaje o svojej osobe.
 
-===== FOTO 3: IMG20260831050729.jpg =====
-3. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 3: IMG20260831050729.jpg ===== 3. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
 Súhlas na postup podľa § 136 ods. 2 Trestného poriadku dáva predseda senátu v prípravnom konaní prokurátor.
 
@@ -136,8 +135,7 @@ Podľa § 140 ods. 1 Trestného poriadku má svedok nárok na náhradu nevyhnutn
 
 Na tento nárok treba svedka v predvolaní upozorniť. Ak bol svedok k výsluchu predvolaný iným spôsobom ako písomne (ústne, telefonicky, faxom) alebo predvedený, postupuje sa pri určovaní svedočného obdobne, ako by bol predvolaný na výsluch písomne.
 
-===== FOTO 4: IMG20260831050741.jpg =====
-4. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 4: IMG20260831050741.jpg ===== 4. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
 Ako svedka Vás ďalej poučujem o tom, že táto zápisnica alebo jej podstatná časť môže byť podľa § 263 ods. 1 Trestného poriadku prečítaná na hlavnom pojednávaní, ak s tým súhlasí prokurátor a obžalovaný a súd nepovažuje osobný výsluch za potrebný.
 
@@ -161,8 +159,7 @@ Výzva a upozornenie pre svedka v zmysle vyššie citovaného poučenia a oznám
 
 Svedok bol vyšetrovateľom ústne vyzvaný, aby pri tomto výsluchu nepoužíval žiadne záznamové zariadenie (o jeho použití na účely tohto úkonu je oprávnený rozhodnúť len policajt alebo prokurátor podľa § 58 odsek 7 Trestného poriadku) a taktiež mobilný telefón.
 
-===== FOTO 5: IMG20260831050748.jpg =====
-5. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 5: IMG20260831050748.jpg ===== 5. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
 Svedok bol vyšetrovateľom upozornený, že nevyhovenie výzve môže byť potrestané poriadkovou pokutou, a to až do výšky 1.650,- € (§ 70 Trestného poriadku). Svedok svojim podpisom berie uvedené poučenie a výzvu na vedomie.
 
@@ -191,8 +188,7 @@ Podľa § 3 ods. 2 zákona žiadosť o poskytnutie ochrany podľa odseku 1 obsah
 
 Podľa § 4 ods. 1 zákona ak prokurátor alebo súd zistí, že osoba, ktorá podala žiadosť o poskytnutie ochrany podľa § 3 ods. 1 zákona, je oznamovateľom, bezodkladne písomne oznámi inšpektorátu práce,
 
-===== FOTO 6: IMG20260831050804.jpg =====
-6. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 6: IMG20260831050804.jpg ===== 6. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
 zamestnávateľovi a oznamovateľovi, že sa oznamovateľovi poskytuje ochrana podľa § 7 zákona; to neplatí, ak osoba požiadala o ochranu podľa odseku 2. Doručením písomného oznámenia prokurátora alebo súdu zamestnávateľovi podľa prvej vety sa oznamovateľ stáva chráneným oznamovateľom.
 
@@ -224,8 +220,7 @@ Orgán, ktorý oznamovateľovi zaslal písomné oznámenie podľa § 4 ods. 1 al
 
 Žiadosť o poskytnutie odmeny podľa § 9 odsek 1 zákona môže podať oznamovateľ ministerstvu do šiestich mesiacov odo dňa doručenia oznámenia. Na žiadosti o poskytnutie odmeny podané po tejto lehote sa neprihliada. Žiadosť obsahuje meno a priezvisko, dátum narodenia a adresu bydliska oznamovateľa a
 
-===== FOTO 7: IMG20260831050810.jpg =====
-7. strana zápisnice o výsluchu svedka Dmitrij Marjev zo dňa 18.06.2025
+===== FOTO 7: IMG20260831050810.jpg ===== 7. strana zápisnice o výsluchu svedka Dmitrij Marjev zo dňa 18.06.2025
 
 odôvodnenie žiadosti; k žiadosti oznamovateľ priloží kópiu oznámenia o nadobudnutie právoplatnosti rozhodnutia.
 
@@ -251,14 +246,13 @@ Potom, niekedy v roku 2024, niekedy v októbri až novembri, som sa osobne zozn�
 
 Ja som potom bol s Cohenom v kontakte iba ohľadom tohto auta, keďže na ňom bolo potrebné vykonať nejaký základný servis. My sme mali spolu bežný kontakt.
 
-===== FOTO 8: IMG20260831050823.jpg =====
-8. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 8: IMG20260831050823.jpg ===== 8. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
-Keďže ja som aj zakladal firmy na Slovensku a v Česku a potom som ich predával, jednu českú firmu som predal aj Norbertovi Skyrčákovi, tak ma oslovil Cohen, že potrebuje firmu pre jeho kamošai nespomínam si meno. Keďže vtedy sa akurát vtedy sa akurát predávala jedna firma v Čechách, túto som chcel predať Cohenovi. Lenže toto bolo treba zo strany Cohena aj zaplatiť. Tak som oslovil Cohena, že či to vie zaplatiť a on mi odovzdal pri osobnom stretnutí bankomatovú kartu, že tam príde platba a potom si s tou kartou môžem peniaze vytiahnuť. Boli sme dohodnutí, že mi potom pošle pín keď ku karte a ja si to môžem vytiahnuť. Bankomatová karta, ktorú mi odovzdal, bola vedená na osobu Erik Babčan, EB-EU s.r.o., karta č. 4234 7305 7598 2857, 06/29 s tým, že ja som si potom vytiahol 1000 €, dňa 19.01.2025, ktoré som potom použil na nákup spoločnosti pre Cohena a ďalšie poplatky s tým súvisiace. Ja mám odfotenú túto bankomatovú kartu, fotografia z duného dňa. On chcel, aby som mu túto kartu odfotil aj z jednej aj z druhej strany. My sme si písali vtedy spolu cez aplikáciu telegram a whatsapp, takže už nemám tieto konverzácie k dispozícii. Ale viem tieto fotografie tej karty poslať na email. svedkovi bol nadiktovaný email vyšetrovateľa [jan.dolniak@minv.sk](<mailto:jan.dolniak@minv.sk>), v čase 10:34 a 10:35 doručené z emailu [info@shadowarms.sk](<mailto:info@shadowarms.sk>)Mne to vtedy bolo zvláštne, že mi poslal kartu na túto spoločnosť na EB-EU s.r.o., ja som sa ho na to aj pýtal. On povedal, že to je jeho nová firma, ktorá obchoduje so zbraňami.
+Keďže ja som aj zakladal firmy na Slovensku a v Česku a potom som ich predával, jednu českú firmu som predal aj Norbertovi Skyrčákovi, tak ma oslovil Cohen, že potrebuje firmu pre jeho kamošai nespomínam si meno. Keďže vtedy sa akurát vtedy sa akurát predávala jedna firma v Čechách, túto som chcel predať Cohenovi. Lenže toto bolo treba zo strany Cohena aj zaplatiť. Tak som oslovil Cohena, že či to vie zaplatiť a on mi odovzdal pri osobnom stretnutí bankomatovú kartu, že tam príde platba a potom si s tou kartou môžem peniaze vytiahnuť. Boli sme dohodnutí, že mi potom pošle pín keď ku karte a ja si to môžem vytiahnuť. Bankomatová karta, ktorú mi odovzdal, bola vedená na osobu Erik Babčan, EB-EU s.r.o., karta č. 4234 7305 7598 2857, 06/29 s tým, že ja som si potom vytiahol 1000 €, dňa 19.01.2025, ktoré som potom použil na nákup spoločnosti pre Cohena a ďalšie poplatky s tým súvisiace. Ja mám odfotenú túto bankomatovú kartu, fotografia z duného dňa. On chcel, aby som mu túto kartu odfotil aj z jednej aj z druhej strany. My sme si písali vtedy spolu cez aplikáciu telegram a whatsapp, takže už nemám tieto konverzácie k dispozícii. Ale viem tieto fotografie tej karty poslať na email. svedkovi bol nadiktovaný email vyšetrovateľa [jan.dolniak@minv.sk](mailto:jan.dolniak@minv.sk), v čase 10:34 a 10:35 doručené z emailu [info@shadowarms.sk](mailto:info@shadowarms.sk)Mne to vtedy bolo zvláštne, že mi poslal kartu na túto spoločnosť na EB-EU s.r.o., ja som sa ho na to aj pýtal. On povedal, že to je jeho nová firma, ktorá obchoduje so zbraňami.
 
 Potom sme ešte boli v kontakte, ale čisto len kvôli zmenám vo firme, ale boli to stále rôzne firmy. Chcel vypracovať dokumenty.
 
-Potom niekedy cez leto 2025, nepamätám si presne ale bolo leto, ma oslovil Cohen s tým, že potrebuje dodávateľa na zbrane, na Glocky a Beretty a ďalšie. Keďže ja som fanúšik a fotograf zbrani, tak chcel odo mňa teda odporúčiť obchod, ale sa chcel poradiť. On povedal, že potrebuje nového dodávateľa zbrani. Ja som mu odporúčil [Gunbroker.sk](<http://Gunbroker.sk>), to patrilo Michalovi Žemberovi, spoločnosti PETRIS Slovakia s.r.o. Ja si nepamätám, že či ma Cohen takto oslovil osobne alebo správou. Ja som Cohenovi poslal aj ich stránku, aby si pozrel ponuku.
+Potom niekedy cez leto 2025, nepamätám si presne ale bolo leto, ma oslovil Cohen s tým, že potrebuje dodávateľa na zbrane, na Glocky a Beretty a ďalšie. Keďže ja som fanúšik a fotograf zbrani, tak chcel odo mňa teda odporúčiť obchod, ale sa chcel poradiť. On povedal, že potrebuje nového dodávateľa zbrani. Ja som mu odporúčil [Gunbroker.sk](http://Gunbroker.sk), to patrilo Michalovi Žemberovi, spoločnosti PETRIS Slovakia s.r.o. Ja si nepamätám, že či ma Cohen takto oslovil osobne alebo správou. Ja som Cohenovi poslal aj ich stránku, aby si pozrel ponuku.
 
 Ja si pamätám, že raz som bol aj v Nitre na predajni Michala Žembera, bol tam so mnou aj Dimitri Cohen, ale nepamätám si, že či toto bolo ich prvé stretnutie alebo že či som ich vtedy bol zoznámiť.
 
@@ -268,8 +262,7 @@ Cohen mi povedal, že on predáva zbrane vo veľkom, že má svojich zákazníko
 
 K veci chcem doplniť, že ja vlastním auto BMW X6m, čierne, ev.č. MT872FN, ktoré vlastním už niekoľko rokov. Toto auto malo pokazenú prevodovku. Keď chodil Dimitri Cohen ku mne na návštevy, tak sa ma pýtal, že čo s tým autom, že je to škoda, že tam tak stojí. On mi navrhol, že by ho kúpil na splátky. Ja som súhlasil a podpísali sme zmluvu o budúcej zmluve zo dňa 27.09.2025, kde bola dohodnutá celková suma na 34 000€ a on mi bude v splátkach platiť 2000 € mesačne, splatné vždy do 25. dňa v mesiaci. On mi zaplatil len akontáciu 4000 € a nič viac mi neplatil. Fotografiu zmluvy posielam vyšetrovateľovi na email. * v čase 11:02 doručené na email *
 
-===== FOTO 10: IMG20260831050901.jpg =====
-9. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 10: IMG20260831050901.jpg ===== 9. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
 02.10.2025 si to auto prišiel prevziať na odťahovke. Ja som v tom aute mal GPS, takže som vedel, kde sa to auto pohybuje.
 
@@ -279,12 +272,11 @@ Ešte čo sa týka toho môjho auta BMW, toto auto sa už Cohenovi nevrátilo. C
 
 Potom, v 06.12.2025, som sa stretol s Cohenom v Sučanoch. S Cohenom sme sa rozprávali asi 10 minút. Cohen mi hovoril, že keď budem mať už aj ja licenciu na nákup a predaj zbraní (v tom čase som ju mal vydanú, len som mu o tom nepovedal), že dohodne jeho klientov a dohodí mi ich, že by som im predával 300-400 zbraní mesačne, a že z jednej pištole zarobíme 100 €. Ja som oponoval, že keď ja predám zbraň bežným spôsobom, že zarobím cca 150-180 €a pýtal som sa, že či je to legálne to čo mi on navrhol a on povedal, že kde sa už dá zarobiť legálne. Tým myslel to, že táto činnosť mala byť nelegálna. Dokonca aj povedal, po mňa ako predajcu by to bolo legálne a ďalej, ten predaj, by už bol nelegálny. Ja som mu povedal, že toto radšej nebudem robiť. On povedal, že dobre a ďalej sme to neriešili. On išiel potom ďalej, svojou cestou. Ja mám z toho stretnutia aj nahrávku na mojom mobilnom telefóne. Ja som si to nahral z dôvodu, že mne to prišlo už podozrivé, už som mal licenciu a prišlo mi nereálne, že by na Slovensku predal 300-400 zbraní mesačne, takže mi to už prišlo trochu podozrivé. Túto nahrávku som ochotný vydať do trestného konania, mám ju vo svojom telefóne.
 
-Cohen mi potom volal o pár dní na to, že chcel peniaze požičať na cestu. Potom mi volal ešte 09.12.2025, že chcel vzor splnomocnenia na to, že môže prenášať zbrane. Nešlo to na konkrétnu firmu, tam išlo o šablónu, aby si ju vyplnil, tak som zaslal umelou inteligenciou vygenerované splnomocnenie na email [ivankamarek.sk@gmail.com](<mailto:ivankamarek.sk@gmail.com>). Celý email prepošlem vyšetrovateľovi. * v čase 11.38 bol doručený email* Viem už potom, že Cohena len zadržali, v ten istý deň, policajti. Mne potom volala jeho frajerka Barbora Minarovicová, že čo je s ním, že nevie sa mu dovolať. Takto mi volala viackrát, ja som jej ale nevedel povedať.
+Cohen mi potom volal o pár dní na to, že chcel peniaze požičať na cestu. Potom mi volal ešte 09.12.2025, že chcel vzor splnomocnenia na to, že môže prenášať zbrane. Nešlo to na konkrétnu firmu, tam išlo o šablónu, aby si ju vyplnil, tak som zaslal umelou inteligenciou vygenerované splnomocnenie na email [ivankamarek.sk@gmail.com](mailto:ivankamarek.sk@gmail.com). Celý email prepošlem vyšetrovateľovi. * v čase 11.38 bol doručený email* Viem už potom, že Cohena len zadržali, v ten istý deň, policajti. Mne potom volala jeho frajerka Barbora Minarovicová, že čo je s ním, že nevie sa mu dovolať. Takto mi volala viackrát, ja som jej ale nevedel povedať.
 
 Posledný telefonický kontakt bol, keď som Cohenovi posielal ten vzor splnomocnenia a s jeho frajerkou keď som jej posielal peniaze za servis vozidla. Od toho momentu som s ním už nebol v žiadnom kontakte.
 
-===== FOTO 11: IMG20260831050911.jpg =====
-10. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 11: IMG20260831050911.jpg ===== 10. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
 To je všetko, čo k veci uvádzam. Ako som povedal, som ochotný do konania vydať listiny, ktoré som našiel v aute a pečiatku a taktiež aj nahrávku z rozhovoru a gps súradnice.
 
@@ -324,8 +316,7 @@ Otázka vyšetrovateľa: Vám peniaze vracal v hotovosti alebo posielal na úče
 
 Odpoved': aj tak, aj tak.
 
-===== FOTO 12: IMG20260831050917.jpg =====
-11. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
+===== FOTO 12: IMG20260831050917.jpg ===== 11. strana zápisnice o výsluchu svedka Dmitrij Marjov zo dňa 18.06.2025
 
 Otázka vyšetrovateľa: aké autá užíval Dimitri Cohen?
 
@@ -345,7 +336,7 @@ Odpoveď: nie, len ten jedenkrát, čo som vyššie opísal.
 
 Otázka vyšetrovateľa: poznáte sa osobou Ivan Von Draxler?
 
-Odpoveď: poznám ho len ako predajcu zbraní. Prevádzkuje [svetpusiek.sk](<http://svetpusiek.sk>)
+Odpoveď: poznám ho len ako predajcu zbraní. Prevádzkuje [svetpusiek.sk](http://svetpusiek.sk)
 
 Výsluch skončený dňa 18. 06. 2026 o 12:00 hod.
 

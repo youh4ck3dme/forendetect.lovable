@@ -54,7 +54,11 @@ function EntityNode({ data }: NodeProps) {
       <p
         className={cn(
           "text-[9px] font-semibold tnum",
-          d.score >= 80 ? "text-risk-high" : d.score >= 60 ? "text-risk-medium" : "text-risk-low",
+          d.score >= 80
+            ? "text-risk-high"
+            : d.score >= 60
+              ? "text-risk-medium"
+              : "text-risk-low",
         )}
       >
         {d.score}/100
@@ -81,7 +85,10 @@ export function NetworkGraph({
   highlightedPathIds?: string[];
   onSelect: (entityId: string) => void;
 }) {
-  const highlighted = useMemo(() => new Set(highlightedPathIds ?? []), [highlightedPathIds]);
+  const highlighted = useMemo(
+    () => new Set(highlightedPathIds ?? []),
+    [highlightedPathIds],
+  );
 
   const nodes = useMemo<Node[]>(
     () =>
@@ -115,7 +122,9 @@ export function NetworkGraph({
     }));
 
     const flowEdges: Edge[] = analysis.transactions.map((t) => {
-      const onPath = highlighted.has(t.transaction.fromId) && highlighted.has(t.transaction.toId);
+      const onPath =
+        highlighted.has(t.transaction.fromId) &&
+        highlighted.has(t.transaction.toId);
       return {
         id: `tx-${t.transaction.id}`,
         source: t.transaction.fromId,

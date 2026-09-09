@@ -1,7 +1,24 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { analyzeCase, EMPTY_CASE, type CaseAnalysis, type ForensicCase } from "@/forensic";
-import { listCases, loadCase, loadCaseRevisions, type CaseSummary } from "@/lib/case-data";
+import {
+  analyzeCase,
+  EMPTY_CASE,
+  type CaseAnalysis,
+  type ForensicCase,
+} from "@/forensic";
+import {
+  listCases,
+  loadCase,
+  loadCaseRevisions,
+  type CaseSummary,
+} from "@/lib/case-data";
 
 type Ctx = {
   cases: CaseSummary[];
@@ -81,11 +98,16 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
     },
   };
 
-  return <ActiveCaseContext.Provider value={value}>{children}</ActiveCaseContext.Provider>;
+  return (
+    <ActiveCaseContext.Provider value={value}>
+      {children}
+    </ActiveCaseContext.Provider>
+  );
 }
 
 export function useActiveCase(): Ctx {
   const ctx = useContext(ActiveCaseContext);
-  if (!ctx) throw new Error("useActiveCase musí byť použitý v ActiveCaseProvider");
+  if (!ctx)
+    throw new Error("useActiveCase musí byť použitý v ActiveCaseProvider");
   return ctx;
 }

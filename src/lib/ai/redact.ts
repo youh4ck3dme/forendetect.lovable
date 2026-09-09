@@ -22,7 +22,12 @@ export type Pseudonyms = {
 };
 
 export type AiPayload = {
-  case: { pseudonym: string; baseCurrency: string; referenceDate: string; revision: string };
+  case: {
+    pseudonym: string;
+    baseCurrency: string;
+    referenceDate: string;
+    revision: string;
+  };
   entities: { id: string; kind: string; role: string; country: string }[];
   transactions: {
     id: string;
@@ -68,7 +73,9 @@ export function buildPseudonyms(analysis: CaseAnalysis): Pseudonyms {
 export type PayloadScope =
   | { task: "explain_finding"; alertId: string }
   | { task: "case_summary" }
-  | { task: "normalize_descriptions" };
+  | { task: "normalize_descriptions" }
+  | { task: "alt_devil" }
+  | { task: "admiss_audit" };
 
 function flagsOfAlert(analysis: CaseAnalysis, alertId: string): Flag[] {
   const alert = analysis.alerts.find((a) => a.id === alertId);
@@ -78,7 +85,9 @@ function flagsOfAlert(analysis: CaseAnalysis, alertId: string): Flag[] {
     ...analysis.transactions.flatMap((t) => t.flags),
     ...analysis.weapons.flatMap((w) => w.flags),
   ];
-  return all.filter((f) => alert.id.includes(f.code) || alert.title === f.label);
+  return all.filter(
+    (f) => alert.id.includes(f.code) || alert.title === f.label,
+  );
 }
 
 /** Zostaví minimalizovaný a pseudonymizovaný obsah pre konkrétnu úlohu. */
@@ -90,8 +99,13 @@ export function buildAiPayload(
   const alias = (id: string) => pseudonyms.entity[id] ?? "S?";
   const txAlias = (id: string) => pseudonyms.transaction[id] ?? "T?";
 
-  const flags = scope.task === "explain_finding" ? flagsOfAlert(analysis, scope.alertId) : [];
-  const evidenceIds = new Set(flags.flatMap((f) => (f.evidence ?? []).map((e) => e.id)));
+  const flags =
+    scope.task === "explain_finding"
+      ? flagsOfAlert(analysis, scope.alertId)
+      : [];
+  const evidenceIds = new Set(
+    flags.flatMap((f) => (f.evidence ?? []).map((e) => e.id)),
+  );
 
   const includeTx =
     scope.task === "case_summary" || scope.task === "normalize_descriptions"
@@ -102,7 +116,8 @@ export function buildAiPayload(
     scope.task === "explain_finding"
       ? analysis.case.entities.filter(
           (e) =>
-            evidenceIds.has(e.id) || includeTx.some((t) => t.fromId === e.id || t.toId === e.id),
+            evidenceIds.has(e.id) ||
+            includeTx.some((t) => t.fromId === e.id || t.toId === e.id),
         )
       : analysis.case.entities;
 
@@ -131,7 +146,9 @@ export function buildAiPayload(
     })),
     findings: (scope.task === "explain_finding"
       ? flags
-      : analysis.alerts.slice(0, 30).flatMap((a) => flagsOfAlert(analysis, a.id))
+      : analysis.alerts
+          .slice(0, 30)
+          .flatMap((a) => flagsOfAlert(analysis, a.id))
     ).map((f) => ({
       ruleId: f.ruleId ?? f.code,
       kind: f.kind ?? "heuristika",

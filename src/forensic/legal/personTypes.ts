@@ -33,7 +33,8 @@ export const PERSON_TYPES: Record<PersonTypeId, PersonType> = {
   suspect: {
     id: "suspect",
     label: "Podozrivý",
-    description: "Osoba, voči ktorej smeruje podozrenie pred vznesením obvinenia.",
+    description:
+      "Osoba, voči ktorej smeruje podozrenie pred vznesením obvinenia.",
     procedural: ["§ 85", "§ 196"],
     suspectLike: true,
   },
@@ -61,7 +62,8 @@ export const PERSON_TYPES: Record<PersonTypeId, PersonType> = {
   cooperating_witness: {
     id: "cooperating_witness",
     label: "Spolupracujúci svedok",
-    description: "Svedok so zvláštnou ochranou pri usvedčovaní organizovanej skupiny.",
+    description:
+      "Svedok so zvláštnou ochranou pri usvedčovaní organizovanej skupiny.",
     procedural: ["§ 136", "§ 218"],
     suspectLike: false,
   },
@@ -103,7 +105,8 @@ export const PERSON_TYPES: Record<PersonTypeId, PersonType> = {
   legal_entity: {
     id: "legal_entity",
     label: "Právnická osoba",
-    description: "Subjekt s možnou trestnou zodpovednosťou podľa zák. 91/2016 Z. z.",
+    description:
+      "Subjekt s možnou trestnou zodpovednosťou podľa zák. 91/2016 Z. z.",
     procedural: ["§ 3 zák. 91/2016"],
     suspectLike: true,
   },
@@ -147,5 +150,7 @@ export const PERSON_TYPES: Record<PersonTypeId, PersonType> = {
 export const PERSON_TYPE_LIST: PersonType[] = Object.values(PERSON_TYPES);
 
 export function personType(id: PersonTypeId | string | undefined): PersonType {
-  return PERSON_TYPES[(id as PersonTypeId) ?? "unknown"] ?? PERSON_TYPES.unknown;
+  return (
+    PERSON_TYPES[(id as PersonTypeId) ?? "unknown"] ?? PERSON_TYPES.unknown
+  );
 }

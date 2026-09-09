@@ -1,10 +1,20 @@
 import type { TemporalPattern, Transaction } from "../types";
 import { daysBetween, formatDate, formatEur, levelFromScore } from "./utils";
 
-const WEEKDAYS = ["nedeľa", "pondelok", "utorok", "streda", "štvrtok", "piatok", "sobota"];
+const WEEKDAYS = [
+  "nedeľa",
+  "pondelok",
+  "utorok",
+  "streda",
+  "štvrtok",
+  "piatok",
+  "sobota",
+];
 
 /** Detekcia časových vzorov v transakciách (deň v týždni, pravidelnosť, dávky, eskalácia). */
-export function detectTemporalPatterns(transactions: Transaction[]): TemporalPattern[] {
+export function detectTemporalPatterns(
+  transactions: Transaction[],
+): TemporalPattern[] {
   if (transactions.length < 3) return [];
   const sorted = [...transactions].sort((a, b) => a.date.localeCompare(b.date));
   const patterns: TemporalPattern[] = [];
@@ -31,7 +41,9 @@ export function detectTemporalPatterns(transactions: Transaction[]): TemporalPat
   }
 
   // 2. Víkendová aktivita — mimo bežných obchodných dní.
-  const weekend = sorted.filter((t) => [0, 6].includes(new Date(t.date).getUTCDay()));
+  const weekend = sorted.filter((t) =>
+    [0, 6].includes(new Date(t.date).getUTCDay()),
+  );
   if (weekend.length >= 2) {
     patterns.push({
       code: "WEEKEND_ACTIVITY",
@@ -45,9 +57,13 @@ export function detectTemporalPatterns(transactions: Transaction[]): TemporalPat
 
   // 3. Pravidelný interval (metronóm) — nízky rozptyl odstupov.
   if (sorted.length >= 4) {
-    const gaps = sorted.slice(1).map((t, i) => daysBetween(sorted[i]!.date, t.date));
+    const gaps = sorted
+      .slice(1)
+      .map((t, i) => daysBetween(sorted[i]!.date, t.date));
     const mean = gaps.reduce((s, g) => s + g, 0) / gaps.length;
-    const sd = Math.sqrt(gaps.reduce((s, g) => s + (g - mean) ** 2, 0) / gaps.length);
+    const sd = Math.sqrt(
+      gaps.reduce((s, g) => s + (g - mean) ** 2, 0) / gaps.length,
+    );
     if (mean > 0 && sd / mean <= 0.45) {
       patterns.push({
         code: "REGULAR_INTERVAL",
@@ -81,8 +97,10 @@ export function detectTemporalPatterns(transactions: Transaction[]): TemporalPat
   // 5. Eskalácia súm v čase.
   const first = sorted.slice(0, Math.ceil(sorted.length / 2));
   const second = sorted.slice(Math.ceil(sorted.length / 2));
-  const avgFirst = first.reduce((s, t) => s + t.amount, 0) / Math.max(1, first.length);
-  const avgSecond = second.reduce((s, t) => s + t.amount, 0) / Math.max(1, second.length);
+  const avgFirst =
+    first.reduce((s, t) => s + t.amount, 0) / Math.max(1, first.length);
+  const avgSecond =
+    second.reduce((s, t) => s + t.amount, 0) / Math.max(1, second.length);
   if (avgFirst > 0 && avgSecond / avgFirst >= 1.5) {
     patterns.push({
       code: "ESCALATION",

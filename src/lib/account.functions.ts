@@ -45,7 +45,10 @@ export const exportMyData = createServerFn({ method: "POST" })
       const column = table === "profiles" ? "id" : "user_id";
       // Voľná schéma: tabuľky majú rôzne stĺpce, dotaz je vždy obmedzený na vlastníka.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const query = (supabase.from(table) as any).select("*").eq(column, userId).limit(50000);
+      const query = (supabase.from(table) as any)
+        .select("*")
+        .eq(column, userId)
+        .limit(50000);
       const { data, error } = await query;
       payload[table] = error ? { error: error.message } : (data ?? []);
     }
@@ -57,7 +60,9 @@ export const exportMyData = createServerFn({ method: "POST" })
 /** Vymaže jeden prípad vrátane závislých záznamov. */
 export const deleteCaseCompletely = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((input: unknown) => z.object({ caseId: z.string().uuid() }).parse(input))
+  .validator((input: unknown) =>
+    z.object({ caseId: z.string().uuid() }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -67,15 +72,27 @@ export const deleteCaseCompletely = createServerFn({ method: "POST" })
       .eq("id", data.caseId)
       .eq("user_id", userId)
       .maybeSingle();
-    if (!owned) throw new Error("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+    if (!owned)
+      throw new Error("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
 
     const steps: { step: string; ok: boolean; detail?: string }[] = [];
     for (const table of CASE_TABLES) {
-      const { error } = await supabase.from(table).delete().eq("case_id", data.caseId);
-      steps.push({ step: table, ok: !error, ...(error ? { detail: error.message } : {}) });
-      if (error) throw new Error(`Mazanie zlyhalo pri ${table}: ${error.message}`);
+      const { error } = await supabase
+        .from(table)
+        .delete()
+        .eq("case_id", data.caseId);
+      steps.push({
+        step: table,
+        ok: !error,
+        ...(error ? { detail: error.message } : {}),
+      });
+      if (error)
+        throw new Error(`Mazanie zlyhalo pri ${table}: ${error.message}`);
     }
-    const { error } = await supabase.from("cases").delete().eq("id", data.caseId);
+    const { error } = await supabase
+      .from("cases")
+      .delete()
+      .eq("id", data.caseId);
     if (error) throw new Error(`Prípad sa nepodarilo zmazať: ${error.message}`);
 
     return { ok: true, steps };
@@ -87,18 +104,24 @@ export const deleteCaseCompletely = createServerFn({ method: "POST" })
  */
 export const deleteMyAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((input: unknown) => z.object({ confirmEmail: z.string().trim().email() }).parse(input))
+  .validator((input: unknown) =>
+    z.object({ confirmEmail: z.string().trim().email() }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user?.email || user.email.toLowerCase() !== data.confirmEmail.toLowerCase()) {
+    if (
+      !user?.email ||
+      user.email.toLowerCase() !== data.confirmEmail.toLowerCase()
+    ) {
       throw new Error("Potvrdzovací e-mail sa nezhoduje s prihláseným účtom.");
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
     const steps: { step: string; ok: boolean; detail?: string }[] = [];
 
     const { data: request } = await supabaseAdmin
@@ -107,18 +130,31 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
       .select("id")
       .single();
 
-    async function run(step: string, fn: () => PromiseLike<{ error: { message: string } | null }>) {
+    async function run(
+      step: string,
+      fn: () => PromiseLike<{ error: { message: string } | null }>,
+    ) {
       const { error } = await fn();
-      steps.push({ step, ok: !error, ...(error ? { detail: error.message } : {}) });
+      steps.push({
+        step,
+        ok: !error,
+        ...(error ? { detail: error.message } : {}),
+      });
       if (error) throw new Error(`${step}: ${error.message}`);
     }
 
     try {
       for (const table of CASE_TABLES) {
-        await run(table, () => supabaseAdmin.from(table).delete().eq("user_id", userId));
+        await run(table, () =>
+          supabaseAdmin.from(table).delete().eq("user_id", userId),
+        );
       }
-      await run("cases", () => supabaseAdmin.from("cases").delete().eq("user_id", userId));
-      await run("ai_usage", () => supabaseAdmin.from("ai_usage").delete().eq("user_id", userId));
+      await run("cases", () =>
+        supabaseAdmin.from("cases").delete().eq("user_id", userId),
+      );
+      await run("ai_usage", () =>
+        supabaseAdmin.from("ai_usage").delete().eq("user_id", userId),
+      );
       await run("case_audit_log", () =>
         supabaseAdmin.from("case_audit_log").delete().eq("user_id", userId),
       );
@@ -130,21 +166,31 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
       if (files?.length) {
         await supabaseAdmin.storage
           .from("private-bucket")
-          .remove(files.map((f) => `imports/${userId}/${f.name}`));
+          .remove(
+            files.map((f: { name: string }) => `imports/${userId}/${f.name}`),
+          );
       }
       steps.push({ step: "storage", ok: true });
 
-      await run("profiles", () => supabaseAdmin.from("profiles").delete().eq("id", userId));
+      await run("profiles", () =>
+        supabaseAdmin.from("profiles").delete().eq("id", userId),
+      );
 
       // Identita ide ako posledná — až keď sú dáta preukázateľne zmazané.
-      const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+      const { error: authError } =
+        await supabaseAdmin.auth.admin.deleteUser(userId);
       steps.push({ step: "auth", ok: !authError });
-      if (authError) throw new Error(`Identitu sa nepodarilo zmazať: ${authError.message}`);
+      if (authError)
+        throw new Error(`Identitu sa nepodarilo zmazať: ${authError.message}`);
 
       if (request?.id) {
         await supabaseAdmin
           .from("deletion_requests")
-          .update({ status: "done", steps, finished_at: new Date().toISOString() })
+          .update({
+            status: "done",
+            steps,
+            finished_at: new Date().toISOString(),
+          })
           .eq("id", request.id);
       }
 

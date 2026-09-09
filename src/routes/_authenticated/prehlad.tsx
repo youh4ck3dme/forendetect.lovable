@@ -27,7 +27,10 @@ import { RiskGauge } from "@/components/malte/RiskGauge";
 import { RiskBar } from "@/components/malte/Charts";
 import { EmptyState } from "@/components/malte/EmptyState";
 import { CommandPaletteTrigger } from "@/components/malte/CommandPalette";
-import { DetectorSheet, type DetectorTarget } from "@/components/malte/DetectorSheet";
+import {
+  DetectorSheet,
+  type DetectorTarget,
+} from "@/components/malte/DetectorSheet";
 import { useCaseStore, passesFilter } from "@/hooks/useCaseStore";
 import { exportCaseReport } from "@/lib/report";
 import { toast } from "sonner";
@@ -46,7 +49,8 @@ export const Route = createFileRoute("/_authenticated/prehlad")({
       { property: "og:title", content: "Forendo — Prehľad prípadu" },
       {
         property: "og:description",
-        content: "Analýza. Dôkazy. Rozhodnutia. Rizikový profil prípadu na jednej obrazovke.",
+        content:
+          "Analýza. Dôkazy. Rozhodnutia. Rizikový profil prípadu na jednej obrazovke.",
       },
     ],
   }),
@@ -62,12 +66,34 @@ function Index() {
     acc[a.severity] = (acc[a.severity] ?? 0) + 1;
     return acc;
   }, {});
-  const visible = alerts.filter((a) => passesFilter(state.riskFilter, a.severity));
+  const visible = alerts.filter((a) =>
+    passesFilter(state.riskFilter, a.severity),
+  );
   const stats = [
-    { label: "Subjekty", value: String(totals.entities), icon: Users, to: "/osoby" },
-    { label: "Firmy", value: String(totals.companies), icon: Building2, to: "/osoby" },
-    { label: "Zbrane", value: String(totals.weapons), icon: Crosshair, to: "/zbrane" },
-    { label: "Reťazce", value: String(chains.length), icon: Network, to: "/siet" },
+    {
+      label: "Subjekty",
+      value: String(totals.entities),
+      icon: Users,
+      to: "/osoby",
+    },
+    {
+      label: "Firmy",
+      value: String(totals.companies),
+      icon: Building2,
+      to: "/osoby",
+    },
+    {
+      label: "Zbrane",
+      value: String(totals.weapons),
+      icon: Crosshair,
+      to: "/zbrane",
+    },
+    {
+      label: "Reťazce",
+      value: String(chains.length),
+      icon: Network,
+      to: "/siet",
+    },
   ];
 
   const exportReport = () => {
@@ -84,7 +110,9 @@ function Index() {
       <AppHeader title="Forendo — prehľad prípadu" brand>
         <div className="px-5">
           <div className="rounded-2xl bg-foreground/10 p-4 backdrop-blur">
-            <p className="text-[10px] tracking-wide uppercase opacity-80">Prebiehajúci prípad</p>
+            <p className="text-[10px] tracking-wide uppercase opacity-80">
+              Prebiehajúci prípad
+            </p>
             <p className="mt-1 text-base font-semibold">{activeCase.name}</p>
             <p className="text-[11px] opacity-75">{activeCase.subtitle}</p>
 
@@ -92,7 +120,9 @@ function Index() {
               <RiskGauge score={caseScore} level={caseLevel} label="/100" />
               <div className="min-w-0 space-y-2">
                 <p className="text-[10px] opacity-80">Celková rizikovosť</p>
-                <p className="text-display">{severityLabel[caseLevel].toUpperCase()}</p>
+                <p className="text-display">
+                  {severityLabel[caseLevel].toUpperCase()}
+                </p>
                 <div className="flex flex-wrap gap-1.5">
                   {topFlags.slice(0, 3).map((flag) => (
                     <RiskChip key={flag.code}>{flag.label}</RiskChip>
@@ -137,7 +167,10 @@ function Index() {
               <p className="text-sm font-semibold">Kľúčové ukazovatele</p>
             </div>
             <Metric label="Objem transakcií" value={formatEur(totals.volume)} />
-            <Metric label="Podiel hotovosti" value={`${Math.round(totals.cashRatio * 100)} %`} />
+            <Metric
+              label="Podiel hotovosti"
+              value={`${Math.round(totals.cashRatio * 100)} %`}
+            />
             <Metric
               label="Zhody EUROPOL"
               value={`${totals.europolMatches} / ${totals.weapons}`}
@@ -149,15 +182,31 @@ function Index() {
             <p className="text-sm font-semibold">Rozdelenie zistení</p>
             <RiskBar
               segments={[
-                { label: "Kritické", value: counts.critical ?? 0, color: "var(--risk-high)" },
-                { label: "Vysoké", value: counts.high ?? 0, color: "var(--risk-medium)" },
-                { label: "Stredné", value: counts.medium ?? 0, color: "var(--primary-glow)" },
-                { label: "Nízke", value: counts.low ?? 0, color: "var(--risk-low)" },
+                {
+                  label: "Kritické",
+                  value: counts.critical ?? 0,
+                  color: "var(--risk-high)",
+                },
+                {
+                  label: "Vysoké",
+                  value: counts.high ?? 0,
+                  color: "var(--risk-medium)",
+                },
+                {
+                  label: "Stredné",
+                  value: counts.medium ?? 0,
+                  color: "var(--primary-glow)",
+                },
+                {
+                  label: "Nízke",
+                  value: counts.low ?? 0,
+                  color: "var(--risk-low)",
+                },
               ]}
             />
             <p className="text-caption">
-              Spolu {alerts.length} zistení z {totals.transactions} transakcií a {totals.entities}{" "}
-              subjektov.
+              Spolu {alerts.length} zistení z {totals.transactions} transakcií a{" "}
+              {totals.entities} subjektov.
             </p>
           </Card>
         </div>
@@ -215,7 +264,12 @@ function Index() {
           </Link>
         </Button>
 
-        <Button size="lg" variant="outline" className="w-full" onClick={exportReport}>
+        <Button
+          size="lg"
+          variant="outline"
+          className="w-full"
+          onClick={exportReport}
+        >
           <Download className="h-4 w-4" aria-hidden />
           Exportovať správu do PDF
         </Button>
@@ -227,11 +281,21 @@ function Index() {
   );
 }
 
-function Metric({ label, value, tone }: { label: string; value: string; tone?: "high" }) {
+function Metric({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "high";
+}) {
   return (
     <div className="flex items-center justify-between text-xs">
       <span className="text-muted-foreground">{label}</span>
-      <span className={`font-semibold tnum ${tone === "high" ? "text-risk-high" : ""}`}>
+      <span
+        className={`font-semibold tnum ${tone === "high" ? "text-risk-high" : ""}`}
+      >
         {value}
       </span>
     </div>

@@ -29,10 +29,14 @@ export const Route = createFileRoute("/_authenticated/pripady")({
       { title: "Prípady — Forendo" },
       {
         name: "description",
-        content: "Vytvárajte prípady, pridávajte osoby a firmy a prepínajte medzi vyšetrovaniami.",
+        content:
+          "Vytvárajte prípady, pridávajte osoby a firmy a prepínajte medzi vyšetrovaniami.",
       },
       { property: "og:title", content: "Prípady — Forendo" },
-      { property: "og:description", content: "Správa vašich prípadov a analýz finančných tokov." },
+      {
+        property: "og:description",
+        content: "Správa vašich prípadov a analýz finančných tokov.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -44,8 +48,15 @@ const inputClass =
   "h-10 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none focus:ring-2 focus:ring-ring";
 
 function Cases() {
-  const { cases, activeCaseId, setActiveCaseId, activeCase, hasCase, refresh, revisions } =
-    useActiveCase();
+  const {
+    cases,
+    activeCaseId,
+    setActiveCaseId,
+    activeCase,
+    hasCase,
+    refresh,
+    revisions,
+  } = useActiveCase();
   const [name, setName] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [busy, setBusy] = useState(false);
@@ -66,7 +77,11 @@ function Cases() {
       setActiveCaseId(id);
       toast.success("Ukážkový prípad so syntetickými dátami bol vytvorený.");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Ukážku sa nepodarilo vytvoriť.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Ukážku sa nepodarilo vytvoriť.",
+      );
     } finally {
       setBusy(false);
     }
@@ -77,14 +92,21 @@ function Cases() {
     if (!name.trim()) return;
     setBusy(true);
     try {
-      const id = await createCase({ name: name.trim(), subtitle: subtitle.trim() });
+      const id = await createCase({
+        name: name.trim(),
+        subtitle: subtitle.trim(),
+      });
       setName("");
       setSubtitle("");
       refresh();
       setActiveCaseId(id);
       toast.success("Prípad vytvorený.");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Prípad sa nepodarilo vytvoriť.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Prípad sa nepodarilo vytvoriť.",
+      );
     } finally {
       setBusy(false);
     }
@@ -98,7 +120,9 @@ function Cases() {
       />
       <Screen>
         <Card className="space-y-3">
-          <h1 className="text-base font-semibold tracking-tight">Nový prípad</h1>
+          <h1 className="text-base font-semibold tracking-tight">
+            Nový prípad
+          </h1>
           <form className="space-y-2" onSubmit={handleCreateCase}>
             <input
               aria-label="Názov prípadu"
@@ -124,10 +148,15 @@ function Cases() {
         <Card className="space-y-2">
           <p className="text-sm font-semibold">Ukážkový prípad</p>
           <p className="text-[11px] text-muted-foreground">
-            Syntetické dáta bez osobných údajov, výslovne označené ako ukážka. Do vašich reálnych
-            prípadov sa nikdy nepridávajú automaticky.
+            Syntetické dáta bez osobných údajov, výslovne označené ako ukážka.
+            Do vašich reálnych prípadov sa nikdy nepridávajú automaticky.
           </p>
-          <Button variant="outline" size="sm" disabled={busy} onClick={handleCreateDemo}>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={handleCreateDemo}
+          >
             Vytvoriť ukážkový prípad
           </Button>
         </Card>
@@ -149,10 +178,15 @@ function Cases() {
                   onClick={() => setActiveCaseId(item.id)}
                 >
                   <p className="text-sm font-semibold">{item.name}</p>
-                  <p className="text-caption">{item.subtitle || item.referenceDate}</p>
+                  <p className="text-caption">
+                    {item.subtitle || item.referenceDate}
+                  </p>
                 </button>
                 {activeCaseId === item.id ? (
-                  <CheckCircle2 className="h-4 w-4 text-primary" aria-label="Aktívny prípad" />
+                  <CheckCircle2
+                    className="h-4 w-4 text-primary"
+                    aria-label="Aktívny prípad"
+                  />
                 ) : null}
                 <DeleteRecordButton
                   type="case"

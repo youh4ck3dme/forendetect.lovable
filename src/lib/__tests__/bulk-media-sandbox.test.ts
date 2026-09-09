@@ -5,20 +5,33 @@ import { extractSingleBufferText } from "../ai.functions";
 describe("Bulk Media Sandbox & File Extraction", () => {
   it("extrahuje čistý text z TXT súboru", async () => {
     const textContent = "Zápisnica o výsluchu svedka Mareka Plcha.";
-    const res = await extractSingleBufferText("vyslech.txt", undefined, textContent);
+    const res = await extractSingleBufferText(
+      "vyslech.txt",
+      undefined,
+      textContent,
+    );
     expect(res.success).toBe(true);
     expect(res.text).toBe(textContent);
     expect(res.charCount).toBe(textContent.length);
   });
 
   it("extrahuje a očistí CSV a JSON súbory", async () => {
-    const csvContent = "datum,suma,platitel,prijemca\n2025-01-22,32000,vklad,EB-EU";
-    const resCsv = await extractSingleBufferText("transakcie.csv", undefined, csvContent);
+    const csvContent =
+      "datum,suma,platitel,prijemca\n2025-01-22,32000,vklad,EB-EU";
+    const resCsv = await extractSingleBufferText(
+      "transakcie.csv",
+      undefined,
+      csvContent,
+    );
     expect(resCsv.success).toBe(true);
     expect(resCsv.text).toContain("32000");
 
     const jsonContent = JSON.stringify({ kauza: "Tatragen", zbrane: 242 });
-    const resJson = await extractSingleBufferText("data.json", undefined, jsonContent);
+    const resJson = await extractSingleBufferText(
+      "data.json",
+      undefined,
+      jsonContent,
+    );
     expect(resJson.success).toBe(true);
     expect(resJson.text).toContain("Tatragen");
   });
@@ -44,7 +57,10 @@ describe("Bulk Media Sandbox & File Extraction", () => {
     ];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     XLSX.utils.book_append_sheet(wb, ws, "Platby");
-    const xlsxBuffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;
+    const xlsxBuffer = XLSX.write(wb, {
+      type: "buffer",
+      bookType: "xlsx",
+    }) as Buffer;
     const base64 = xlsxBuffer.toString("base64");
 
     const res = await extractSingleBufferText("transakcie.xlsx", base64);
@@ -56,8 +72,8 @@ describe("Bulk Media Sandbox & File Extraction", () => {
 
   it("odmietne nepodporovaný formát s jasným chybovým hlásením", async () => {
     const base64 = Buffer.from("fake exe content").toString("base64");
-    await expect(extractSingleBufferText("malware.exe", base64)).rejects.toThrow(
-      /Nepodporovaný formát/,
-    );
+    await expect(
+      extractSingleBufferText("malware.exe", base64),
+    ).rejects.toThrow(/Nepodporovaný formát/);
   });
 });

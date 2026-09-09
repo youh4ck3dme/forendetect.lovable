@@ -44,7 +44,9 @@ type CallOptions = {
  * Po nejednoznačnom zlyhaní (timeout, prerušené spojenie) sa neopakuje —
  * požiadavka už mohla byť u poskytovateľa spracovaná a účtovaná.
  */
-export async function callMistral(options: CallOptions): Promise<MistralResult> {
+export async function callMistral(
+  options: CallOptions,
+): Promise<MistralResult> {
   const apiKey = process.env["MISTRAL_API_KEY"];
   if (!apiKey) {
     return { status: "not_configured", message: "AI nie je nakonfigurovaná." };
@@ -53,7 +55,9 @@ export async function callMistral(options: CallOptions): Promise<MistralResult> 
   const doFetch = options.fetchImpl ?? fetch;
 
   const attempt = async (): Promise<
-    { kind: "ok"; body: unknown } | { kind: "retry"; after: number } | MistralResult
+    | { kind: "ok"; body: unknown }
+    | { kind: "retry"; after: number }
+    | MistralResult
   > => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -134,9 +138,14 @@ export async function callMistral(options: CallOptions): Promise<MistralResult> 
     content,
     // Chýbajúcu spotrebu neuvádzame ako nulu — ostáva neznáma.
     usage: {
-      prompt: typeof body.usage?.prompt_tokens === "number" ? body.usage.prompt_tokens : null,
+      prompt:
+        typeof body.usage?.prompt_tokens === "number"
+          ? body.usage.prompt_tokens
+          : null,
       completion:
-        typeof body.usage?.completion_tokens === "number" ? body.usage.completion_tokens : null,
+        typeof body.usage?.completion_tokens === "number"
+          ? body.usage.completion_tokens
+          : null,
     },
     model,
   };
@@ -150,10 +159,15 @@ export async function callMistral(options: CallOptions): Promise<MistralResult> 
  * 3. Spustenie mistral-ocr-latest
  * 4. Asynchrónne zmazanie dočasného súboru
  */
-export async function callMistralOcr(fileBuffer: Buffer, fileName: string): Promise<string> {
+export async function callMistralOcr(
+  fileBuffer: Buffer,
+  fileName: string,
+): Promise<string> {
   const apiKey = process.env["MISTRAL_API_KEY"];
   if (!apiKey) {
-    throw new Error("MISTRAL_API_KEY nie je nastavený. Pre OCR je potrebný API kľúč.");
+    throw new Error(
+      "MISTRAL_API_KEY nie je nastavený. Pre OCR je potrebný API kľúč.",
+    );
   }
 
   // 1. Upload do /v1/files
@@ -172,7 +186,9 @@ export async function callMistralOcr(fileBuffer: Buffer, fileName: string): Prom
 
   if (!uploadRes.ok) {
     const errText = await uploadRes.text();
-    throw new Error(`Mistral File Upload zlyhal (${uploadRes.status}): ${errText}`);
+    throw new Error(
+      `Mistral File Upload zlyhal (${uploadRes.status}): ${errText}`,
+    );
   }
 
   const uploadData = (await uploadRes.json()) as { id: string };
@@ -180,15 +196,20 @@ export async function callMistralOcr(fileBuffer: Buffer, fileName: string): Prom
 
   try {
     // 2. Získaj signed URL
-    const signedUrlRes = await fetch(`https://api.mistral.ai/v1/files/${fileId}/url`, {
-      headers: {
-        authorization: `Bearer ${apiKey}`,
+    const signedUrlRes = await fetch(
+      `https://api.mistral.ai/v1/files/${fileId}/url`,
+      {
+        headers: {
+          authorization: `Bearer ${apiKey}`,
+        },
       },
-    });
+    );
 
     if (!signedUrlRes.ok) {
       const errText = await signedUrlRes.text();
-      throw new Error(`Získanie signed URL zlyhalo (${signedUrlRes.status}): ${errText}`);
+      throw new Error(
+        `Získanie signed URL zlyhalo (${signedUrlRes.status}): ${errText}`,
+      );
     }
 
     const signedUrlData = (await signedUrlRes.json()) as { url: string };
@@ -219,16 +240,21 @@ export async function callMistralOcr(fileBuffer: Buffer, fileName: string): Prom
 
       if (!ocrRes.ok) {
         const errText = await ocrRes.text();
-        throw new Error(`Mistral OCR API zlyhalo (${ocrRes.status}): ${errText}`);
+        throw new Error(
+          `Mistral OCR API zlyhalo (${ocrRes.status}): ${errText}`,
+        );
       }
 
       const ocrData = (await ocrRes.json()) as {
         pages?: Array<{ index: number; markdown: string }>;
       };
 
-      const extracted = ocrData.pages?.map((p) => p.markdown).join("\n\n") || "";
+      const extracted =
+        ocrData.pages?.map((p) => p.markdown).join("\n\n") || "";
       if (!extracted.trim()) {
-        throw new Error("Mistral OCR nerozpoznalo žiadny text v nahranom dokumente.");
+        throw new Error(
+          "Mistral OCR nerozpoznalo žiadny text v nahranom dokumente.",
+        );
       }
       return extracted;
     } finally {
@@ -240,7 +266,10 @@ export async function callMistralOcr(fileBuffer: Buffer, fileName: string): Prom
       method: "DELETE",
       headers: { authorization: `Bearer ${apiKey}` },
     }).catch((err) => {
-      console.warn("Nepodarilo sa vymazať dočasný súbor z Mistral storage:", err);
+      console.warn(
+        "Nepodarilo sa vymazať dočasný súbor z Mistral storage:",
+        err,
+      );
     });
   }
 }

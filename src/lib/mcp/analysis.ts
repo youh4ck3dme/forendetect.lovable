@@ -12,7 +12,8 @@ export async function caseAnalysis(ctx?: Ctx): Promise<CaseAnalysis> {
   const userId = ctx?.getUserId?.();
   if (!userId) return analyzeCase(EMPTY_CASE);
 
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { supabaseAdmin } =
+    await import("@/integrations/supabase/client.server");
   const { data: row } = await supabaseAdmin
     .from("cases")
     .select("*")
@@ -23,13 +24,34 @@ export async function caseAnalysis(ctx?: Ctx): Promise<CaseAnalysis> {
   if (!row) return analyzeCase(EMPTY_CASE);
 
   const caseId = row.id;
-  const [entities, transactions, weapons, relations, events] = await Promise.all([
-    supabaseAdmin.from("case_entities").select("*").eq("case_id", caseId).eq("user_id", userId),
-    supabaseAdmin.from("case_transactions").select("*").eq("case_id", caseId).eq("user_id", userId),
-    supabaseAdmin.from("case_weapons").select("*").eq("case_id", caseId).eq("user_id", userId),
-    supabaseAdmin.from("case_relations").select("*").eq("case_id", caseId).eq("user_id", userId),
-    supabaseAdmin.from("case_events").select("*").eq("case_id", caseId).eq("user_id", userId),
-  ]);
+  const [entities, transactions, weapons, relations, events] =
+    await Promise.all([
+      supabaseAdmin
+        .from("case_entities")
+        .select("*")
+        .eq("case_id", caseId)
+        .eq("user_id", userId),
+      supabaseAdmin
+        .from("case_transactions")
+        .select("*")
+        .eq("case_id", caseId)
+        .eq("user_id", userId),
+      supabaseAdmin
+        .from("case_weapons")
+        .select("*")
+        .eq("case_id", caseId)
+        .eq("user_id", userId),
+      supabaseAdmin
+        .from("case_relations")
+        .select("*")
+        .eq("case_id", caseId)
+        .eq("user_id", userId),
+      supabaseAdmin
+        .from("case_events")
+        .select("*")
+        .eq("case_id", caseId)
+        .eq("user_id", userId),
+    ]);
 
   return analyzeCase(
     mapCaseRows(
@@ -48,7 +70,8 @@ export function text(value: unknown) {
     content: [
       {
         type: "text" as const,
-        text: typeof value === "string" ? value : JSON.stringify(value, null, 2),
+        text:
+          typeof value === "string" ? value : JSON.stringify(value, null, 2),
       },
     ],
   };

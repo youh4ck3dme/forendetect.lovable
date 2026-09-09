@@ -11,7 +11,8 @@ const sampleDossier: ForensicDossier = {
     timeline: [
       {
         time: "2024-10-15 08:30",
-        event: "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Tatragen v Žiline.",
+        event:
+          "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Tatragen v Žiline.",
         source: "Zápisnica o výsluchu svedka M. Plcha (č. l. 42)",
         chainBreak: false,
         severity: "info",
@@ -19,7 +20,8 @@ const sampleDossier: ForensicDossier = {
       },
       {
         time: "2024-10-18 14:00",
-        event: "Zaistenie vozidla BMW X6 (D. Marjov) — nájdené kúpne zmluvy a pečiatky.",
+        event:
+          "Zaistenie vozidla BMW X6 (D. Marjov) — nájdené kúpne zmluvy a pečiatky.",
         source: "Protokol o prehliadke iných priestorov (č. l. 88)",
         chainBreak: true,
         severity: "critical",
@@ -54,13 +56,15 @@ const sampleDossier: ForensicDossier = {
         id: "DA-1",
         defenseClaim: "Cohen: 'V aute som sa len viezol ako tlmočník.'",
         risk: "VYSOKÉ",
-        counterStrike: "Vozidlo malo pečiatky EB-EU a rukou písané zoznamy kalibrov.",
+        counterStrike:
+          "Vozidlo malo pečiatky EB-EU a rukou písané zoznamy kalibrov.",
         evidenceGap: "Chýba grafologická expertíza rukou písaných zoznamov.",
         paragraph: "§ 142 TP",
       },
       {
         id: "DA-2",
-        defenseClaim: "Babčan: 'V Tatragene som v živote nebol a Mareka Plcha nepoznám.'",
+        defenseClaim:
+          "Babčan: 'V Tatragene som v živote nebol a Mareka Plcha nepoznám.'",
         risk: "KRITICKÉ",
         counterStrike: "Svedok Marek Plch 3x overil totožnosť z OP a ZP.",
         evidenceGap: "Protokoly neboli podrobené porovnaniu podpisového vzoru.",
@@ -95,9 +99,12 @@ const sampleDossier: ForensicDossier = {
     ],
   },
   judgeReadyText: {
-    skutkovyStav: "Skutkový stav preukázaný listinnými dôkazmi a výpoveďami svedkov.",
-    vyporiadanie: "Tvrdenia obhajoby sú účelové a vyvrátené konfrontáciou podľa § 125 TP.",
-    vedecke: "Znalecké posudky KEU PZ spĺňajú podmienky § 100 TP s LR > 1 000 000.",
+    skutkovyStav:
+      "Skutkový stav preukázaný listinnými dôkazmi a výpoveďami svedkov.",
+    vyporiadanie:
+      "Tvrdenia obhajoby sú účelové a vyvrátené konfrontáciou podľa § 125 TP.",
+    vedecke:
+      "Znalecké posudky KEU PZ spĺňajú podmienky § 100 TP s LR > 1 000 000.",
   },
 };
 
@@ -126,7 +133,9 @@ describe("autopilot-dossier (Forenzný Autopilot Integrácia)", () => {
   });
 
   it("overuje stav zákonných paragrafov", () => {
-    const narusene = sampleDossier.evidenceStrength.paragraphs.find((p) => p.status === "Narušené");
+    const narusene = sampleDossier.evidenceStrength.paragraphs.find(
+      (p) => p.status === "Narušené",
+    );
     expect(narusene).toBeDefined();
     expect(narusene?.para).toBe("§ 98 TP");
   });

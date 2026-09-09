@@ -1,4 +1,10 @@
-import type { Entity, LaunderingSignal, MoneyPath, Severity, Transaction } from "../types";
+import type {
+  Entity,
+  LaunderingSignal,
+  MoneyPath,
+  Severity,
+  Transaction,
+} from "../types";
 import { daysBetween, formatEur, levelFromScore } from "./utils";
 
 const MAX_HOPS = 4;
@@ -10,7 +16,10 @@ const MIN_PASS_RATIO = 0.5;
  * Sledovanie peňazí cez viacero spoločností (layering).
  * Prehľadáva reťaz transakcií v chronologickom poradí: A → B → C …
  */
-export function traceMoneyPaths(transactions: Transaction[], shellIds: string[] = []): MoneyPath[] {
+export function traceMoneyPaths(
+  transactions: Transaction[],
+  shellIds: string[] = [],
+): MoneyPath[] {
   const shells = new Set(shellIds);
   const sorted = [...transactions].sort((a, b) => a.date.localeCompare(b.date));
   const paths: MoneyPath[] = [];
@@ -42,9 +51,13 @@ export function traceMoneyPaths(transactions: Transaction[], shellIds: string[] 
 function toPath(chain: Transaction[], shells: Set<string>): MoneyPath {
   const entityIds = [chain[0]!.fromId, ...chain.map((t) => t.toId)];
   const amount = Math.min(...chain.map((t) => t.amount));
-  const spanDays = Math.round(daysBetween(chain[0]!.date, chain[chain.length - 1]!.date));
+  const spanDays = Math.round(
+    daysBetween(chain[0]!.date, chain[chain.length - 1]!.date),
+  );
   const viaShellIds = entityIds.slice(1, -1).filter((id) => shells.has(id));
-  const crossesBorder = chain.some((t) => t.originCountry !== t.destinationCountry);
+  const crossesBorder = chain.some(
+    (t) => t.originCountry !== t.destinationCountry,
+  );
   const returnsToOrigin = entityIds[0] === entityIds[entityIds.length - 1];
 
   let score = 25 + chain.length * 12;
@@ -73,7 +86,10 @@ function toPath(chain: Transaction[], shells: Set<string>): MoneyPath {
 /** Odstráni trasy, ktoré sú len prefixom dlhšej trasy. */
 function dedupePaths(paths: MoneyPath[]): MoneyPath[] {
   return paths.filter(
-    (p) => !paths.some((other) => other.id !== p.id && other.id.startsWith(`${p.id}>`)),
+    (p) =>
+      !paths.some(
+        (other) => other.id !== p.id && other.id.startsWith(`${p.id}>`),
+      ),
   );
 }
 
@@ -123,7 +139,9 @@ export function detectLaunderingSignals(
     }
 
     // Štruktúrovanie: viac platieb tesne pod ohlasovacím limitom.
-    const structuring = outflow.filter((t) => t.amount >= 12_000 && t.amount < 15_000);
+    const structuring = outflow.filter(
+      (t) => t.amount >= 12_000 && t.amount < 15_000,
+    );
     if (structuring.length >= 2) {
       signals.push(
         signal(
@@ -139,7 +157,8 @@ export function detectLaunderingSignals(
     // Vklad v hotovosti, výber prevodom do zahraničia (placement → integration).
     const cashIn = inflow.some((t) => t.method === "cash");
     const wireOutAbroad = outflow.some(
-      (t) => t.method === "transfer" && t.originCountry !== t.destinationCountry,
+      (t) =>
+        t.method === "transfer" && t.originCountry !== t.destinationCountry,
     );
     const cashOutAbroad = outflow.some((t) => t.method === "cash");
     if ((cashIn || cashOutAbroad) && wireOutAbroad) {
@@ -175,7 +194,10 @@ function signal(
   };
 }
 
-function fastestTurnaround(inflow: Transaction[], outflow: Transaction[]): number | null {
+function fastestTurnaround(
+  inflow: Transaction[],
+  outflow: Transaction[],
+): number | null {
   let best: number | null = null;
   for (const i of inflow) {
     for (const o of outflow) {

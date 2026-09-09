@@ -14,7 +14,9 @@ export function detectShellCompany(
   if (entity.kind !== "company") return [];
   const flags: Flag[] = [];
 
-  const registered = entity.ico ? forensicCase.orsrAddresses[entity.ico] : undefined;
+  const registered = entity.ico
+    ? forensicCase.orsrAddresses[entity.ico]
+    : undefined;
   if (registered && entity.address && registered !== entity.address) {
     flags.push({
       code: "ADDRESS_MISMATCH",
@@ -71,7 +73,9 @@ export function detectShellCompany(
     });
   }
 
-  const own = transactions.filter((t) => t.fromId === entity.id || t.toId === entity.id);
+  const own = transactions.filter(
+    (t) => t.fromId === entity.id || t.toId === entity.id,
+  );
   const volume = own.reduce((s, t) => s + t.amount, 0);
   if (volume > HIGH_VALUE_THRESHOLD && own.length <= LOW_ACTIVITY_TX_COUNT) {
     flags.push({
@@ -97,7 +101,10 @@ export function isShell(flags: Flag[]): boolean {
   return core.filter((c) => codes.has(c)).length >= 2;
 }
 
-function firstActivity(entityId: string, transactions: Transaction[]): string | undefined {
+function firstActivity(
+  entityId: string,
+  transactions: Transaction[],
+): string | undefined {
   return transactions
     .filter((t) => t.fromId === entityId || t.toId === entityId)
     .map((t) => t.date)

@@ -14,7 +14,10 @@ export const Route = createFileRoute("/_authenticated/vitajte")({
           "Krátky sprievodca: ako v Forendo založiť prípad, spustiť detektory a čítať výsledky.",
       },
       { property: "og:title", content: "Vitajte v Forendo" },
-      { property: "og:description", content: "Tri kroky k prvému forenznému prípadu." },
+      {
+        property: "og:description",
+        content: "Tri kroky k prvému forenznému prípadu.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -73,7 +76,9 @@ function Welcome() {
           <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary text-muted-foreground">
             <Icon className="h-6 w-6" aria-hidden />
           </span>
-          <h1 className="text-2xl font-extrabold tracking-tight">{current.title}</h1>
+          <h1 className="text-2xl font-extrabold tracking-tight">
+            {current.title}
+          </h1>
           <p className="text-sm text-muted-foreground">{current.detail}</p>
         </div>
 
@@ -91,7 +96,12 @@ function Welcome() {
         </div>
 
         <div className="flex items-center justify-between gap-3">
-          <Button type="button" variant="ghost" disabled={busy} onClick={finish}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={busy}
+            onClick={finish}
+          >
             Preskočiť
           </Button>
           {step < steps.length - 1 ? (

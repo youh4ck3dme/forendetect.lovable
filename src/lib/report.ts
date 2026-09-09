@@ -1,4 +1,10 @@
-import { formatDate, formatEur, severityLabel, type CaseAnalysis, type Severity } from "@/forensic";
+import {
+  formatDate,
+  formatEur,
+  severityLabel,
+  type CaseAnalysis,
+  type Severity,
+} from "@/forensic";
 import { RULE_CATALOG, SCORE_METHODOLOGY } from "@/forensic/core/rules";
 import { APP_VERSION } from "@/lib/version";
 import { listCaseImports, type CaseImportMeta } from "@/lib/case-data";
@@ -6,7 +12,12 @@ import { listCaseImports, type CaseImportMeta } from "@/lib/case-data";
 /** Doplnkový kontext reportu: pôvod dát a prípadný text od AI (vždy oddelený). */
 export type ReportContext = {
   imports?: CaseImportMeta[];
-  ai?: { task: string; text: string; model: string; promptVersion: string } | null;
+  ai?: {
+    task: string;
+    text: string;
+    model: string;
+    promptVersion: string;
+  } | null;
   legalStatus?: string;
 };
 
@@ -28,7 +39,9 @@ export function buildReportHtml(
   filter: Severity[],
   context: ReportContext = {},
 ): string {
-  const alerts = analysis.alerts.filter((a) => filter.length === 0 || filter.includes(a.severity));
+  const alerts = analysis.alerts.filter(
+    (a) => filter.length === 0 || filter.includes(a.severity),
+  );
   const generated = new Date().toLocaleString("sk-SK");
   const imports = context.imports ?? [];
   const dates = analysis.case.transactions.map((t) => t.date).sort();
@@ -39,7 +52,9 @@ export function buildReportHtml(
   const evidenceOf = (alertId: string) => {
     const tx = analysis.case.transactions.filter((t) => alertId.includes(t.id));
     return tx
-      .map((t) => (t.sourceRow ? `riadok ${t.sourceRow}` : `záznam ${t.id.slice(0, 8)}`))
+      .map((t) =>
+        t.sourceRow ? `riadok ${t.sourceRow}` : `záznam ${t.id.slice(0, 8)}`,
+      )
       .join(", ");
   };
 
@@ -201,7 +216,8 @@ export function exportCaseReport(
   const html = buildReportHtml(analysis, filter, context);
   const frame = document.createElement("iframe");
   frame.setAttribute("aria-hidden", "true");
-  frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
+  frame.style.cssText =
+    "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
   document.body.appendChild(frame);
 
   const doc = frame.contentDocument;

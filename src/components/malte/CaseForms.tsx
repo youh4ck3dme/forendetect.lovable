@@ -3,7 +3,13 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/malte/Shell";
-import type { CaseEvent, Entity, Relation, Transaction, Weapon } from "@/forensic";
+import type {
+  CaseEvent,
+  Entity,
+  Relation,
+  Transaction,
+  Weapon,
+} from "@/forensic";
 import {
   upsertEntity,
   upsertEvent,
@@ -18,7 +24,9 @@ export const inputClass =
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block space-y-1">
-      <span className="text-[11px] font-medium text-muted-foreground">{label}</span>
+      <span className="text-[11px] font-medium text-muted-foreground">
+        {label}
+      </span>
       {children}
     </label>
   );
@@ -38,7 +46,8 @@ function useSubmit(onSaved: () => void) {
       toast.success(successMessage);
       onSaved();
     } catch (cause) {
-      const message = cause instanceof Error ? cause.message : "Uloženie zlyhalo.";
+      const message =
+        cause instanceof Error ? cause.message : "Uloženie zlyhalo.";
       setError(message);
       toast.error(message);
     } finally {
@@ -69,12 +78,19 @@ function FormFooter({
       ) : null}
       <div className="flex gap-2">
         {onCancel ? (
-          <Button type="button" variant="ghost" className="flex-1" onClick={onCancel}>
+          <Button
+            type="button"
+            variant="ghost"
+            className="flex-1"
+            onClick={onCancel}
+          >
             Zrušiť
           </Button>
         ) : null}
         <Button type="submit" className="flex-1" disabled={busy}>
-          {busy ? <Loader2 className="mr-1 h-4 w-4 animate-spin" aria-hidden /> : null}
+          {busy ? (
+            <Loader2 className="mr-1 h-4 w-4 animate-spin" aria-hidden />
+          ) : null}
           {label}
         </Button>
       </div>
@@ -99,11 +115,15 @@ export function EntityForm({
   initial,
 }: Common & { initial?: Entity }) {
   const [name, setName] = useState(initial?.name ?? "");
-  const [kind, setKind] = useState<"person" | "company">(initial?.kind ?? "person");
+  const [kind, setKind] = useState<"person" | "company">(
+    initial?.kind ?? "person",
+  );
   const [role, setRole] = useState(initial?.role ?? "");
   const [ico, setIco] = useState(initial?.ico ?? "");
   const [address, setAddress] = useState(initial?.address ?? "");
-  const [registeredAddress, setRegisteredAddress] = useState(initial?.registeredAddress ?? "");
+  const [registeredAddress, setRegisteredAddress] = useState(
+    initial?.registeredAddress ?? "",
+  );
   const [country, setCountry] = useState(initial?.country ?? "SK");
   const { busy, error, run } = useSubmit(onSaved);
 
@@ -117,7 +137,9 @@ export function EntityForm({
             () =>
               upsertEntity({
                 data: {
-                  ...(initial ? { id: initial.id, expectedRevision: revision } : {}),
+                  ...(initial
+                    ? { id: initial.id, expectedRevision: revision }
+                    : {}),
                   caseId,
                   name,
                   kind,
@@ -158,12 +180,20 @@ export function EntityForm({
           ))}
         </div>
         <Field label="Rola v prípade">
-          <input className={inputClass} value={role} onChange={(e) => setRole(e.target.value)} />
+          <input
+            className={inputClass}
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          />
         </Field>
         {kind === "company" ? (
           <>
             <Field label="IČO">
-              <input className={inputClass} value={ico} onChange={(e) => setIco(e.target.value)} />
+              <input
+                className={inputClass}
+                value={ico}
+                onChange={(e) => setIco(e.target.value)}
+              />
             </Field>
             <Field label="Deklarovaná adresa">
               <input
@@ -210,12 +240,24 @@ export function TransactionForm({
   onCancel,
   revision,
   initial,
-}: Common & { entities: Entity[]; baseCurrency: string; initial?: Transaction }) {
-  const [date, setDate] = useState(initial?.date ?? new Date().toISOString().slice(0, 10));
+}: Common & {
+  entities: Entity[];
+  baseCurrency: string;
+  initial?: Transaction;
+}) {
+  const [date, setDate] = useState(
+    initial?.date ?? new Date().toISOString().slice(0, 10),
+  );
   const [amount, setAmount] = useState(initial ? String(initial.amount) : "");
-  const [currency, setCurrency] = useState(initial?.currency ?? baseCurrency ?? "EUR");
-  const [method, setMethod] = useState<"cash" | "transfer">(initial?.method ?? "transfer");
-  const [fromId, setFromId] = useState(initial?.fromId ?? entities[0]?.id ?? "");
+  const [currency, setCurrency] = useState(
+    initial?.currency ?? baseCurrency ?? "EUR",
+  );
+  const [method, setMethod] = useState<"cash" | "transfer">(
+    initial?.method ?? "transfer",
+  );
+  const [fromId, setFromId] = useState(
+    initial?.fromId ?? entities[0]?.id ?? "",
+  );
   const [toId, setToId] = useState(initial?.toId ?? entities[1]?.id ?? "");
   const [payerId, setPayerId] = useState(initial?.payerId ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
@@ -241,7 +283,9 @@ export function TransactionForm({
             () =>
               upsertTransaction({
                 data: {
-                  ...(initial ? { id: initial.id, expectedRevision: revision } : {}),
+                  ...(initial
+                    ? { id: initial.id, expectedRevision: revision }
+                    : {}),
                   caseId,
                   date,
                   amount: Number(amount.replace(",", ".")),
@@ -308,7 +352,11 @@ export function TransactionForm({
           ))}
         </div>
         <Field label="Odosielateľ">
-          <select className={inputClass} value={fromId} onChange={(e) => setFromId(e.target.value)}>
+          <select
+            className={inputClass}
+            value={fromId}
+            onChange={(e) => setFromId(e.target.value)}
+          >
             {entities.map((entity) => (
               <option key={entity.id} value={entity.id}>
                 {entity.name}
@@ -317,7 +365,11 @@ export function TransactionForm({
           </select>
         </Field>
         <Field label="Príjemca">
-          <select className={inputClass} value={toId} onChange={(e) => setToId(e.target.value)}>
+          <select
+            className={inputClass}
+            value={toId}
+            onChange={(e) => setToId(e.target.value)}
+          >
             {entities.map((entity) => (
               <option key={entity.id} value={entity.id}>
                 {entity.name}
@@ -367,7 +419,9 @@ export function RelationForm({
   revision,
   initial,
 }: Common & { entities: Entity[]; initial?: Relation & { id?: string } }) {
-  const [fromId, setFromId] = useState(initial?.fromId ?? entities[0]?.id ?? "");
+  const [fromId, setFromId] = useState(
+    initial?.fromId ?? entities[0]?.id ?? "",
+  );
   const [toId, setToId] = useState(initial?.toId ?? entities[1]?.id ?? "");
   const [label, setLabel] = useState(initial?.label ?? "");
   const { busy, error, run } = useSubmit(onSaved);
@@ -375,7 +429,9 @@ export function RelationForm({
   if (entities.length < 2) {
     return (
       <Card>
-        <p className="text-caption">Na zadanie vzťahu potrebujete aspoň dva subjekty.</p>
+        <p className="text-caption">
+          Na zadanie vzťahu potrebujete aspoň dva subjekty.
+        </p>
       </Card>
     );
   }
@@ -390,7 +446,9 @@ export function RelationForm({
             () =>
               upsertRelation({
                 data: {
-                  ...(initial?.id ? { id: initial.id, expectedRevision: revision } : {}),
+                  ...(initial?.id
+                    ? { id: initial.id, expectedRevision: revision }
+                    : {}),
                   caseId,
                   fromId,
                   toId,
@@ -402,7 +460,11 @@ export function RelationForm({
         }}
       >
         <Field label="Od subjektu">
-          <select className={inputClass} value={fromId} onChange={(e) => setFromId(e.target.value)}>
+          <select
+            className={inputClass}
+            value={fromId}
+            onChange={(e) => setFromId(e.target.value)}
+          >
             {entities.map((entity) => (
               <option key={entity.id} value={entity.id}>
                 {entity.name}
@@ -411,7 +473,11 @@ export function RelationForm({
           </select>
         </Field>
         <Field label="K subjektu">
-          <select className={inputClass} value={toId} onChange={(e) => setToId(e.target.value)}>
+          <select
+            className={inputClass}
+            value={toId}
+            onChange={(e) => setToId(e.target.value)}
+          >
             {entities.map((entity) => (
               <option key={entity.id} value={entity.id}>
                 {entity.name}
@@ -428,7 +494,12 @@ export function RelationForm({
             onChange={(e) => setLabel(e.target.value)}
           />
         </Field>
-        <FormFooter busy={busy} error={error} label="Uložiť vzťah" onCancel={onCancel} />
+        <FormFooter
+          busy={busy}
+          error={error}
+          label="Uložiť vzťah"
+          onCancel={onCancel}
+        />
       </form>
     </Card>
   );
@@ -447,8 +518,12 @@ export function WeaponForm({
   const [brand, setBrand] = useState(initial?.brand ?? "");
   const [model, setModel] = useState(initial?.model ?? "");
   const [serial, setSerial] = useState(initial?.serial ?? "");
-  const [holderId, setHolderId] = useState(initial?.holderId ?? entities[0]?.id ?? "");
-  const [supplierId, setSupplierId] = useState(initial?.supplierId ?? entities[0]?.id ?? "");
+  const [holderId, setHolderId] = useState(
+    initial?.holderId ?? entities[0]?.id ?? "",
+  );
+  const [supplierId, setSupplierId] = useState(
+    initial?.supplierId ?? entities[0]?.id ?? "",
+  );
   const [acquiredAt, setAcquiredAt] = useState(initial?.acquiredAt ?? "");
   const [licence, setLicence] = useState(initial?.licence ?? "");
   const { busy, error, run } = useSubmit(onSaved);
@@ -456,7 +531,9 @@ export function WeaponForm({
   if (entities.length === 0) {
     return (
       <Card>
-        <p className="text-caption">Najprv pridajte subjekty — držiteľa a dodávateľa.</p>
+        <p className="text-caption">
+          Najprv pridajte subjekty — držiteľa a dodávateľa.
+        </p>
       </Card>
     );
   }
@@ -471,7 +548,9 @@ export function WeaponForm({
             () =>
               upsertWeapon({
                 data: {
-                  ...(initial ? { id: initial.id, expectedRevision: revision } : {}),
+                  ...(initial
+                    ? { id: initial.id, expectedRevision: revision }
+                    : {}),
                   caseId,
                   brand,
                   model,
@@ -495,7 +574,11 @@ export function WeaponForm({
           />
         </Field>
         <Field label="Model">
-          <input className={inputClass} value={model} onChange={(e) => setModel(e.target.value)} />
+          <input
+            className={inputClass}
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+          />
         </Field>
         <Field label="Výrobné číslo">
           <input
@@ -546,7 +629,12 @@ export function WeaponForm({
             onChange={(e) => setLicence(e.target.value)}
           />
         </Field>
-        <FormFooter busy={busy} error={error} label="Uložiť zbraň" onCancel={onCancel} />
+        <FormFooter
+          busy={busy}
+          error={error}
+          label="Uložiť zbraň"
+          onCancel={onCancel}
+        />
       </form>
     </Card>
   );
@@ -561,7 +649,9 @@ export function EventForm({
   revision,
   initial,
 }: Common & { initial?: CaseEvent & { id?: string } }) {
-  const [date, setDate] = useState(initial?.date ?? new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(
+    initial?.date ?? new Date().toISOString().slice(0, 10),
+  );
   const [title, setTitle] = useState(initial?.title ?? "");
   const [detail, setDetail] = useState(initial?.detail ?? "");
   const [severity, setSeverity] = useState(initial?.severity ?? "low");
@@ -577,7 +667,9 @@ export function EventForm({
             () =>
               upsertEvent({
                 data: {
-                  ...(initial?.id ? { id: initial.id, expectedRevision: revision } : {}),
+                  ...(initial?.id
+                    ? { id: initial.id, expectedRevision: revision }
+                    : {}),
                   caseId,
                   date,
                   title,
@@ -625,14 +717,25 @@ export function EventForm({
             <option value="critical">Kritická</option>
           </select>
         </Field>
-        <FormFooter busy={busy} error={error} label="Uložiť udalosť" onCancel={onCancel} />
+        <FormFooter
+          busy={busy}
+          error={error}
+          label="Uložiť udalosť"
+          onCancel={onCancel}
+        />
       </form>
     </Card>
   );
 }
 
 /** Rozbaľovací panel na pridanie záznamu priamo na príslušnej obrazovke. */
-export function AddPanel({ label, children }: { label: string; children: ReactNode }) {
+export function AddPanel({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-2">

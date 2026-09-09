@@ -96,7 +96,8 @@ export const TATRAGEN_CROSS_CONTRADICTIONS: TestimonyContradiction[] = [
   },
   {
     id: "TC-05",
-    topic: "Úmyselné marenie evidencie a strata evidenčných kníh zbraní LA 002318",
+    topic:
+      "Úmyselné marenie evidencie a strata evidenčných kníh zbraní LA 002318",
     personA: {
       name: "Erik Babčan & Dimitri Cohen",
       status: "obvinení",
@@ -147,12 +148,21 @@ export function getCrossContradictionStats(
   contradictions: TestimonyContradiction[] = TATRAGEN_CROSS_CONTRADICTIONS,
 ) {
   const total = contradictions.length;
-  const critical = contradictions.filter((c) => c.contradictionSeverity === "critical").length;
-  const high = contradictions.filter((c) => c.contradictionSeverity === "high").length;
-  const medium = contradictions.filter((c) => c.contradictionSeverity === "medium").length;
+  const critical = contradictions.filter(
+    (c) => c.contradictionSeverity === "critical",
+  ).length;
+  const high = contradictions.filter(
+    (c) => c.contradictionSeverity === "high",
+  ).length;
+  const medium = contradictions.filter(
+    (c) => c.contradictionSeverity === "medium",
+  ).length;
   const avgDeceit =
     total > 0
-      ? Math.round(contradictions.reduce((acc, c) => acc + c.deceitPercentage, 0) / total)
+      ? Math.round(
+          contradictions.reduce((acc, c) => acc + c.deceitPercentage, 0) /
+            total,
+        )
       : 0;
 
   return {

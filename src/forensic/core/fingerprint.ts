@@ -12,7 +12,15 @@ export function dataFingerprint(input: ForensicCase): string {
     baseCurrency: input.baseCurrency,
     entities: [...input.entities]
       .sort((a, b) => a.id.localeCompare(b.id))
-      .map((e) => [e.id, e.name, e.kind, e.role, e.ico ?? "", e.country, e.licence ?? ""]),
+      .map((e) => [
+        e.id,
+        e.name,
+        e.kind,
+        e.role,
+        e.ico ?? "",
+        e.country,
+        e.licence ?? "",
+      ]),
     transactions: [...input.transactions]
       .sort((a, b) => a.id.localeCompare(b.id))
       .map((t) => [
@@ -28,8 +36,17 @@ export function dataFingerprint(input: ForensicCase): string {
       ]),
     weapons: [...input.weapons]
       .sort((a, b) => a.id.localeCompare(b.id))
-      .map((w) => [w.id, w.serial, w.holderId, w.supplierId, w.acquiredAt, w.licence ?? ""]),
-    relations: [...input.relations].map((r) => [r.fromId, r.toId, r.label]).sort(),
+      .map((w) => [
+        w.id,
+        w.serial,
+        w.holderId,
+        w.supplierId,
+        w.acquiredAt,
+        w.licence ?? "",
+      ]),
+    relations: [...input.relations]
+      .map((r) => [r.fromId, r.toId, r.label])
+      .sort(),
     events: [...input.events].map((e) => [e.date, e.title, e.severity]).sort(),
   };
 

@@ -1,4 +1,7 @@
-import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout,
+} from "@stripe/react-stripe-js";
 import { getStripe, getStripeEnvironment } from "@/lib/stripe";
 import { createCheckoutSession } from "@/lib/payments.functions";
 
@@ -18,13 +21,17 @@ export function StripeEmbeddedCheckout({
       },
     });
     if ("error" in result) throw new Error(result.error);
-    if (!result.clientSecret) throw new Error("Platobná brána nevrátila reláciu.");
+    if (!result.clientSecret)
+      throw new Error("Platobná brána nevrátila reláciu.");
     return result.clientSecret;
   };
 
   return (
     <div id="checkout" className="overflow-hidden rounded-2xl">
-      <EmbeddedCheckoutProvider stripe={getStripe()} options={{ fetchClientSecret }}>
+      <EmbeddedCheckoutProvider
+        stripe={getStripe()}
+        options={{ fetchClientSecret }}
+      >
         <EmbeddedCheckout />
       </EmbeddedCheckoutProvider>
     </div>

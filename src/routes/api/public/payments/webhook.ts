@@ -35,9 +35,15 @@ type StripeSubscription = {
   customer?: string | { id?: string };
 };
 
-function planFromPrice(price?: StripePrice | null): { priceId: string | null; plan: string } {
+function planFromPrice(price?: StripePrice | null): {
+  priceId: string | null;
+  plan: string;
+} {
   const priceId: string | null =
-    price?.lookup_key ?? price?.metadata?.lovable_external_id ?? price?.id ?? null;
+    price?.lookup_key ??
+    price?.metadata?.lovable_external_id ??
+    price?.id ??
+    null;
   const plan = priceId && priceId.startsWith("pro_") ? "pro" : "free";
   return { priceId, plan };
 }
@@ -46,7 +52,10 @@ function iso(seconds: number | null | undefined): string | null {
   return seconds ? new Date(seconds * 1000).toISOString() : null;
 }
 
-async function upsertSubscription(subscription: StripeSubscription, env: StripeEnv) {
+async function upsertSubscription(
+  subscription: StripeSubscription,
+  env: StripeEnv,
+) {
   const userId = subscription.metadata?.userId;
   if (!userId) {
     console.error("payments webhook: subscription without userId metadata");
@@ -115,14 +124,16 @@ export const Route = createFileRoute("/api/public/payments/webhook")({
         const object = event.data.object as unknown as StripeSubscription;
 
         // Idempotencia: duplicitná udalosť sa zapíše len raz.
-        const { error: claimError } = await supabase.from("billing_events").insert({
-          event_id: `${env}:${event.id}`,
-          provider: "stripe",
-          type: event.type,
-          user_id: object.metadata?.userId ?? null,
-          event_created_at: iso(event.created),
-          result: "processing",
-        });
+        const { error: claimError } = await supabase
+          .from("billing_events")
+          .insert({
+            event_id: `${env}:${event.id}`,
+            provider: "stripe",
+            type: event.type,
+            user_id: object.metadata?.userId ?? null,
+            event_created_at: iso(event.created),
+            result: "processing",
+          });
         if (claimError) {
           // Unikátny kľúč = už spracované (alebo práve spracúvané).
           return Response.json({ received: true, duplicate: true });

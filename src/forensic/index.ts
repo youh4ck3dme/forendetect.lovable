@@ -17,18 +17,40 @@ import { detectSuspiciousFlows } from "./core/crossBorder";
 import { buildCorridors, detectTransitAnomalies } from "./core/crossBorder";
 import { detectLaunderingSignals, traceMoneyPaths } from "./core/laundering";
 import { detectTemporalPatterns } from "./core/temporal";
-import { formatDate, formatEur, levelFromScore, scoreFromFlags, severityOrder } from "./core/utils";
+import {
+  formatDate,
+  formatEur,
+  levelFromScore,
+  scoreFromFlags,
+  severityOrder,
+} from "./core/utils";
 
 export * from "./types";
+export * from "./normalization";
+export * from "./ico-atlas";
+export * from "./dimitri";
 export { EMPTY_CASE } from "./data/empty";
-export { formatDate, formatEur, levelFromScore, scoreFromFlags } from "./core/utils";
-export { TX_RULES, monitorTransaction, flagTransaction } from "./core/transactions";
+export {
+  formatDate,
+  formatEur,
+  levelFromScore,
+  scoreFromFlags,
+} from "./core/utils";
+export {
+  TX_RULES,
+  monitorTransaction,
+  flagTransaction,
+} from "./core/transactions";
 export { detectShellCompany, isShell } from "./core/shellCompany";
 export { analyzeWeapon, detectVolumeSurge } from "./core/weapons";
 export { detectChains } from "./core/network";
 export { detectSuspiciousFlows } from "./core/crossBorder";
 export { HIGH_RISK_DESTINATIONS } from "./core/crossBorder";
-export { buildCorridors, detectTransitAnomalies, COUNTRY_LABEL } from "./core/crossBorder";
+export {
+  buildCorridors,
+  detectTransitAnomalies,
+  COUNTRY_LABEL,
+} from "./core/crossBorder";
 export { traceMoneyPaths, detectLaunderingSignals } from "./core/laundering";
 export { detectTemporalPatterns } from "./core/temporal";
 export { dataFingerprint } from "./core/fingerprint";
@@ -68,11 +90,13 @@ export {
 export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
   const { transactions, weapons, entities, relations } = forensicCase;
 
-  const transactionAnalyses: TransactionAnalysis[] = transactions.map((transaction) => {
-    const flags = flagTransaction(transaction, transactions);
-    const score = scoreFromFlags(flags);
-    return { transaction, flags, score, level: levelFromScore(score) };
-  });
+  const transactionAnalyses: TransactionAnalysis[] = transactions.map(
+    (transaction) => {
+      const flags = flagTransaction(transaction, transactions);
+      const score = scoreFromFlags(flags);
+      return { transaction, flags, score, level: levelFromScore(score) };
+    },
+  );
 
   const weaponAnalyses = weapons.map((w) => analyzeWeapon(w, forensicCase));
 
@@ -84,9 +108,14 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
 
   const entityAnalyses: EntityAnalysis[] = entities.map((entity) => {
     const own = transactions.filter(
-      (t) => t.fromId === entity.id || t.toId === entity.id || t.payerId === entity.id,
+      (t) =>
+        t.fromId === entity.id ||
+        t.toId === entity.id ||
+        t.payerId === entity.id,
     );
-    const flags: Flag[] = [...detectShellCompany(entity, forensicCase, transactions)];
+    const flags: Flag[] = [
+      ...detectShellCompany(entity, forensicCase, transactions),
+    ];
 
     const surge = detectVolumeSurge(weapons, entity.id);
     if (surge) flags.push(surge);
@@ -165,7 +194,8 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
     }
 
     const controlled = relations.filter(
-      (r) => r.fromId === entity.id && shellSet.has(r.toId) && r.label !== "dodávka",
+      (r) =>
+        r.fromId === entity.id && shellSet.has(r.toId) && r.label !== "dodávka",
     );
     if (controlled.length > 0) {
       flags.push({
@@ -189,14 +219,20 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
     };
   });
 
-  const shellIds = entityAnalyses.filter((e) => e.isShell).map((e) => e.entity.id);
+  const shellIds = entityAnalyses
+    .filter((e) => e.isShell)
+    .map((e) => e.entity.id);
   const chains = detectChains(relations, transactions, shellIds);
   const crossBorder = detectSuspiciousFlows(transactions);
   const countryOf = (id: string) => entities.find((e) => e.id === id)?.country;
   const transitAnomalies = detectTransitAnomalies(transactions, countryOf);
   const corridors = buildCorridors(transactions);
   const moneyPaths = traceMoneyPaths(transactions, shellIds);
-  const launderingSignals = detectLaunderingSignals(entities, transactions, shellIds);
+  const launderingSignals = detectLaunderingSignals(
+    entities,
+    transactions,
+    shellIds,
+  );
   const temporalPatterns = detectTemporalPatterns(transactions);
 
   const alerts: Alert[] = [
@@ -292,7 +328,12 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
   const highCount = alerts.filter((a) => a.severity === "high").length;
   const caseScore = Math.min(
     100,
-    Math.round(criticalCount * 9 + highCount * 4 + chains.length * 6 + crossBorder.length * 3),
+    Math.round(
+      criticalCount * 9 +
+        highCount * 4 +
+        chains.length * 6 +
+        crossBorder.length * 3,
+    ),
   );
 
   const companies = entities.filter((e) => e.kind === "company").length;
@@ -320,11 +361,16 @@ export function analyzeCase(forensicCase: ForensicCase): CaseAnalysis {
       transactions: transactions.length,
       volume: sumVolume(
         transactions
-          .filter((t) => (t.currency || "EUR") === (forensicCase.baseCurrency || "EUR"))
+          .filter(
+            (t) =>
+              (t.currency || "EUR") === (forensicCase.baseCurrency || "EUR"),
+          )
           .map((t) => t.amount),
       ),
       volumeByCurrency: sumByCurrency(transactions),
-      currencies: [...new Set(transactions.map((t) => t.currency || "EUR"))].sort(),
+      currencies: [
+        ...new Set(transactions.map((t) => t.currency || "EUR")),
+      ].sort(),
       cashRatio: cashRatio(transactions),
       weapons: weapons.length,
       europolMatches: weaponAnalyses.filter((w) => w.europolMatch).length,
@@ -341,13 +387,16 @@ export const severityLabel: Record<Alert["severity"], string> = {
 
 function sortFlags(flags: Flag[]): Flag[] {
   return [...flags].sort(
-    (a, b) => severityOrder[b.severity] - severityOrder[a.severity] || b.weight - a.weight,
+    (a, b) =>
+      severityOrder[b.severity] - severityOrder[a.severity] ||
+      b.weight - a.weight,
   );
 }
 
 function dedupeFlags(flags: Flag[]): Flag[] {
   const map = new Map<string, Flag>();
-  for (const flag of sortFlags(flags)) if (!map.has(flag.code)) map.set(flag.code, flag);
+  for (const flag of sortFlags(flags))
+    if (!map.has(flag.code)) map.set(flag.code, flag);
   return [...map.values()];
 }
 

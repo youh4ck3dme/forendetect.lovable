@@ -8,7 +8,11 @@ export default defineTool({
   description:
     "Run the transaction monitoring rules for one transaction id and return its flags and risk score.",
   inputSchema: { transactionId: z.string().trim().min(1) },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  annotations: {
+    readOnlyHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async ({ transactionId }, ctx) => {
     const a = await caseAnalysis(ctx);
     const found = a.transactions.find(
@@ -20,7 +24,9 @@ export default defineTool({
       );
     }
     const nameOf = (id?: string) =>
-      id ? (a.entities.find((e) => e.entity.id === id)?.entity.name ?? id) : undefined;
+      id
+        ? (a.entities.find((e) => e.entity.id === id)?.entity.name ?? id)
+        : undefined;
     return text({
       transaction: {
         ...found.transaction,

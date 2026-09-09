@@ -8,7 +8,11 @@ export default defineTool({
   description:
     "Slovak legal assessment of the signed-in user's case: provisions of 300/2005, 301/2005 and 460/1992 tied to concrete detections, per-law availability gaps and procedural roles of the persons involved.",
   inputSchema: {},
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  annotations: {
+    readOnlyHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async (_args, ctx) => {
     const legal = buildLegalContext(await caseAnalysis(ctx));
     return text({

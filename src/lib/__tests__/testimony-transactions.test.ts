@@ -10,7 +10,8 @@ describe("Testimony & Financial Analysis Models", () => {
     const q1: InvestigativeQuestionAnswer = {
       questionNumber: 1,
       question: "1. Kto zbrane nakupoval a odovzdával?",
-      answer: "Erik Babčan nakupoval, Dimitri Cohen distribuoval z BMW na odpočívadlách D1.",
+      answer:
+        "Erik Babčan nakupoval, Dimitri Cohen distribuoval z BMW na odpočívadlách D1.",
       identifiedPersons: ["Erik Babčan", "Dimitri Cohen", "Marek Plch"],
       directEvidence: ["Výpoveď Plcha", "Kúpne zmluvy", "Pečiatky v BMW"],
       unverifiedHypotheses: ["Odberatelia na D1"],
@@ -38,7 +39,8 @@ describe("Testimony & Financial Analysis Models", () => {
         status: "konateľ TATRAGEN",
         claim: "Babčan bol 3x osobne v predajni, predložil OP a ZP.",
       },
-      factualRecord: "Plch stotožnil Babčana, v hárkoch sú podpisy a ZP Babčana.",
+      factualRecord:
+        "Plch stotožnil Babčana, v hárkoch sú podpisy a ZP Babčana.",
       deceitPercentage: 95,
       contradictionSeverity: "critical",
       proceduralResolution: "Konfrontácia § 125 TP a grafológia § 142 TP.",
@@ -78,11 +80,14 @@ describe("Testimony & Financial Analysis Models", () => {
           redFlag: "Štiepenie pod 15k limit AML",
         },
       ],
-      financingConclusion: "Klasické znaky legalizácie príjmov z TČ (§ 233a TZ).",
+      financingConclusion:
+        "Klasické znaky legalizácie príjmov z TČ (§ 233a TZ).",
     };
 
     expect(fin.cashVolume + fin.transferVolume).toBe(fin.totalVolume);
-    const calculatedRatio = Number(((fin.cashVolume / fin.totalVolume) * 100).toFixed(1));
+    const calculatedRatio = Number(
+      ((fin.cashVolume / fin.totalVolume) * 100).toFixed(1),
+    );
     expect(fin.cashRatioPercent).toBe(calculatedRatio);
     expect(fin.cashRatioPercent).toBeGreaterThan(50); // dominantný podiel hotovosti
     expect(fin.suspiciousFlows.length).toBeGreaterThanOrEqual(2);

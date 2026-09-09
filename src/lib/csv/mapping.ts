@@ -85,8 +85,18 @@ function cell(row: string[], index: number): string {
 
 const CASH_WORDS = ["hotovost", "hotovosť", "cash", "vklad v hotovosti"];
 
-export function validateRows(rows: string[][], options: ValidationOptions): ValidationResult {
-  const { mapping, dateFormat, decimal, defaultCurrency, defaultMethod, hasHeader } = options;
+export function validateRows(
+  rows: string[][],
+  options: ValidationOptions,
+): ValidationResult {
+  const {
+    mapping,
+    dateFormat,
+    decimal,
+    defaultCurrency,
+    defaultMethod,
+    hasHeader,
+  } = options;
   const body = hasHeader ? rows.slice(1) : rows;
   const offset = hasHeader ? 2 : 1;
 
@@ -101,17 +111,22 @@ export function validateRows(rows: string[][], options: ValidationOptions): Vali
 
     const dateRaw = cell(raw, mapping.date);
     const date = parseDateValue(dateRaw, dateFormat);
-    if (!date) reasons.push(`Dátum „${dateRaw || "—"}" nezodpovedá formátu ${dateFormat}.`);
+    if (!date)
+      reasons.push(
+        `Dátum „${dateRaw || "—"}" nezodpovedá formátu ${dateFormat}.`,
+      );
 
     const amountRaw = cell(raw, mapping.amount);
     const amount = parseAmountValue(amountRaw, decimal);
-    if (amount === null) reasons.push(`Suma „${amountRaw || "—"}" sa nedá prečítať.`);
+    if (amount === null)
+      reasons.push(`Suma „${amountRaw || "—"}" sa nedá prečítať.`);
     else if (amount === 0) reasons.push("Suma je nula.");
 
     let currency = defaultCurrency;
     if (mapping.currency >= 0) {
       const parsed = parseCurrencyValue(cell(raw, mapping.currency));
-      if (!parsed) reasons.push(`Menu „${cell(raw, mapping.currency) || "—"}" nepoznám.`);
+      if (!parsed)
+        reasons.push(`Menu „${cell(raw, mapping.currency) || "—"}" nepoznám.`);
       else currency = parsed;
     }
 
@@ -136,7 +151,8 @@ export function validateRows(rows: string[][], options: ValidationOptions): Vali
 
     parties.add(from);
     parties.add(to);
-    totals[currency] = Math.round(((totals[currency] ?? 0) + Math.abs(amount)) * 100) / 100;
+    totals[currency] =
+      Math.round(((totals[currency] ?? 0) + Math.abs(amount)) * 100) / 100;
     valid.push({
       sourceRow,
       date,
@@ -161,7 +177,9 @@ export function validateRows(rows: string[][], options: ValidationOptions): Vali
  * Podobné transakcie v rámci jedného súboru. Nejde o duplicitu na zmazanie —
  * dve identické platby môžu byť legitímne. Slúži len na upozornenie používateľa.
  */
-export function findSimilar(rows: ParsedRow[]): { key: string; rows: number[] }[] {
+export function findSimilar(
+  rows: ParsedRow[],
+): { key: string; rows: number[] }[] {
   const groups = new Map<string, number[]>();
   for (const r of rows) {
     const key = `${r.date}|${r.amount}|${r.currency}|${r.from}→${r.to}`;

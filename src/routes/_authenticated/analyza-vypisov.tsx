@@ -25,11 +25,19 @@ import {
 import { BalanceChart, DonutChart } from "@/components/malte/Charts";
 import { Button } from "@/components/ui/button";
 import { RiskFilter } from "@/components/malte/RiskFilter";
-import { DetectorSheet, type DetectorTarget } from "@/components/malte/DetectorSheet";
+import {
+  DetectorSheet,
+  type DetectorTarget,
+} from "@/components/malte/DetectorSheet";
 import { useCaseStore, passesFilter } from "@/hooks/useCaseStore";
 import { exportCaseReport } from "@/lib/report";
 import { toast } from "sonner";
-import { formatDate, formatEur, severityLabel, type Severity } from "@/forensic";
+import {
+  formatDate,
+  formatEur,
+  severityLabel,
+  type Severity,
+} from "@/forensic";
 
 export const Route = createFileRoute("/_authenticated/analyza-vypisov")({
   head: () => ({
@@ -43,14 +51,20 @@ export const Route = createFileRoute("/_authenticated/analyza-vypisov")({
       { property: "og:title", content: "Analýza transakcií — Forendo" },
       {
         property: "og:description",
-        content: "Automatické vyhodnotenie transakcií prípadu podľa forenzných pravidiel.",
+        content:
+          "Automatické vyhodnotenie transakcií prípadu podľa forenzných pravidiel.",
       },
     ],
   }),
   component: StatementAnalysis,
 });
 
-const flagIcon = { critical: AlertTriangle, high: AlertTriangle, medium: Layers, low: Banknote };
+const flagIcon = {
+  critical: AlertTriangle,
+  high: AlertTriangle,
+  medium: Layers,
+  low: Banknote,
+};
 const flagTone = {
   critical: "bg-risk-high text-risk-high-foreground",
   high: "bg-risk-high/12 text-risk-high",
@@ -63,19 +77,77 @@ function StatementAnalysis() {
   const { transactions, totals, crossBorder } = analysis;
   const { state, countExport } = useCaseStore();
   const [target, setTarget] = useState<DetectorTarget | null>(null);
+  const [dimitriReport, setDimitriReport] = useState<
+    import("@/forensic").DimitriCheckerReport | null
+  >(null);
+  const [dimitriWarnings, setDimitriWarnings] = useState<string[]>([]);
+  const [rawDimitriPayload, setRawDimitriPayload] = useState<unknown>(null);
+
+  const handleDimitriFileUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "json" | "csv",
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const { parseDimitriCheckerReport, validateDimitriReferences } =
+        await import("@/forensic");
+      const report = parseDimitriCheckerReport(text);
+      const { warnings } = validateDimitriReferences(report, activeCase);
+
+      setRawDimitriPayload(type === "json" ? JSON.parse(text) : text);
+      setDimitriReport(report);
+      setDimitriWarnings(warnings);
+    } catch (err) {
+      toast.error(
+        `Spracovanie ${type.toUpperCase()} zlyhalo: ${(err as Error).message}`,
+      );
+    }
+  };
+
+  const confirmDimitriImport = async () => {
+    if (!dimitriReport || !rawDimitriPayload) return;
+    try {
+      const { importDimitriCheckerReport } =
+        await import("@/lib/dimitri.functions");
+      const res = await importDimitriCheckerReport({
+        data: {
+          caseId: activeCase.id,
+          reportPayload: rawDimitriPayload,
+        },
+      });
+      toast.success(
+        `Dimitri report bol úspešne pridaný. Vzniklo ${res.alertsCount} alertov.`,
+      );
+      setDimitriReport(null);
+      setRawDimitriPayload(null);
+      setDimitriWarnings([]);
+      refresh();
+    } catch (err) {
+      toast.error(`Uloženie reportu zlyhalo: ${(err as Error).message}`);
+    }
+  };
+
   const cash = activeCase.transactions
     .filter((t) => t.method === "cash")
     .reduce((s, t) => s + t.amount, 0);
   const transfer = totals.volume - cash;
-  const sorted = [...activeCase.transactions].sort((a, b) => a.date.localeCompare(b.date));
+  const sorted = [...activeCase.transactions].sort((a, b) =>
+    a.date.localeCompare(b.date),
+  );
   const cumulative = sorted.reduce<number[]>((acc, t) => {
     acc.push((acc[acc.length - 1] ?? 0) + t.amount);
     return acc;
   }, []);
-  const counts = transactions.reduce<Partial<Record<Severity, number>>>((acc, t) => {
-    acc[t.level] = (acc[t.level] ?? 0) + 1;
-    return acc;
-  }, {});
+  const counts = transactions.reduce<Partial<Record<Severity, number>>>(
+    (acc, t) => {
+      acc[t.level] = (acc[t.level] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
   const flagged = [...transactions]
     .filter((t) => passesFilter(state.riskFilter, t.level))
     .sort((a, b) => b.score - a.score);
@@ -128,6 +200,192 @@ function StatementAnalysis() {
             onSaved={refresh}
           />
         </AddPanel>
+
+        {/* Panel: Dimitri Checker (Cezhraničné analýzy a V4 trasy) */}
+        <Card className="space-y-3 bg-secondary/20 p-4 border border-border/60">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Globe2 className="h-4 w-4 text-primary" aria-hidden />
+              <h3 className="text-sm font-semibold">Dimitri Checker</h3>
+            </div>
+            <span className="text-[10px] rounded bg-primary/15 px-2 py-0.5 font-medium text-primary">
+              Cezhraničný výkaz
+            </span>
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Importujte výstup Dimitri Checker (JSON alebo CSV) pre analýzu V4
+            trás, sprostredkovateľov a indikátorov možnej nastrčenej osoby.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <label className="h-8 cursor-pointer inline-flex items-center justify-center rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90">
+              Importovať JSON
+              <input
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={(e) => handleDimitriFileUpload(e, "json")}
+              />
+            </label>
+            <label className="h-8 cursor-pointer inline-flex items-center justify-center rounded-md border border-border bg-card px-3 text-xs font-medium text-foreground hover:bg-accent">
+              Importovať CSV
+              <input
+                type="file"
+                accept=".csv,.txt"
+                className="hidden"
+                onChange={(e) => handleDimitriFileUpload(e, "csv")}
+              />
+            </label>
+          </div>
+        </Card>
+
+        {/* Modal Náhľadu Dimitri Reportu */}
+        {dimitriReport && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+            <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div>
+                  <h4 className="text-base font-bold">
+                    Report Dimitri Checker
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    ID: {dimitriReport.reportId} •{" "}
+                    {new Date(dimitriReport.capturedAt).toLocaleString("sk-SK")}
+                  </p>
+                </div>
+                <RiskChip level="high">V4 Cezhraničná analýza</RiskChip>
+              </div>
+
+              <div className="space-y-3 text-xs">
+                <div>
+                  <span className="font-semibold text-muted-foreground">
+                    Dotknuté krajiny:{" "}
+                  </span>
+                  <span className="font-medium text-foreground">
+                    {dimitriReport.countries.join(", ") || "SK, CZ, HU, PL"}
+                  </span>
+                </div>
+
+                {/* Trasy */}
+                <div className="pt-2 border-t border-border">
+                  <p className="font-semibold mb-1">
+                    Trasy a objemy tokov ({dimitriReport.routes.length}):
+                  </p>
+                  <div className="space-y-1">
+                    {dimitriReport.routes.map((r, idx) => (
+                      <div
+                        key={idx}
+                        className="flex justify-between rounded bg-secondary/50 p-2"
+                      >
+                        <span>
+                          {r.fromCountry} ➔ {r.toCountry}
+                        </span>
+                        <span className="font-semibold">
+                          {r.amount ? formatEur(r.amount) : "Neuvedený objem"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sprostredkovatelia */}
+                {dimitriReport.intermediaries.length > 0 && (
+                  <div className="pt-2 border-t border-border">
+                    <p className="font-semibold mb-1">
+                      Sprostredkovatelia ({dimitriReport.intermediaries.length}
+                      ):
+                    </p>
+                    <ul className="list-disc pl-4 text-muted-foreground">
+                      {dimitriReport.intermediaries.map((im, idx) => (
+                        <li key={idx}>
+                          <strong className="text-foreground">{im.name}</strong>{" "}
+                          ({im.role || "sprostredkovateľ"})
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Signály */}
+                <div className="pt-2 border-t border-border">
+                  <p className="font-semibold mb-1">
+                    Detegované signály ({dimitriReport.signals.length}):
+                  </p>
+                  <div className="space-y-1.5">
+                    {dimitriReport.signals.map((sig, idx) => (
+                      <div
+                        key={idx}
+                        className="rounded border border-border p-2 space-y-0.5"
+                      >
+                        <div className="flex justify-between font-semibold">
+                          <span>{sig.label}</span>
+                          <span className="text-primary">
+                            {sig.confidence}% confidence
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground text-[11px]">
+                          {sig.detail}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Indikátory možnej nastrčenej osoby */}
+                {dimitriReport.nomineeIndicators &&
+                  dimitriReport.nomineeIndicators.length > 0 && (
+                    <div className="pt-2 border-t bg-risk-high/5 p-2.5 rounded-lg border border-risk-high/20">
+                      <p className="font-semibold text-risk-high mb-1">
+                        Indikátory možnej nastrčenej osoby:
+                      </p>
+                      <div className="space-y-1 text-muted-foreground">
+                        {dimitriReport.nomineeIndicators.map((nom, idx) => (
+                          <div key={idx} className="text-[11px]">
+                            <strong className="text-foreground">
+                              {nom.name}
+                            </strong>
+                            : {nom.indicators.join(", ")} (Confidence:{" "}
+                            {nom.confidence}%)
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                {/* Varovania / Unlinked references */}
+                {dimitriWarnings.length > 0 && (
+                  <div className="pt-2 border-t border-border text-risk-medium">
+                    <p className="font-semibold mb-1">
+                      Upozornenia ku kontrolám odkazov:
+                    </p>
+                    <ul className="list-disc pl-4 space-y-0.5 text-[11px]">
+                      {dimitriWarnings.map((w, idx) => (
+                        <li key={idx}>{w}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-3 border-t border-border flex gap-2">
+                <Button
+                  type="button"
+                  onClick={confirmDimitriImport}
+                  className="flex-1 gradient-brand text-foreground text-xs"
+                >
+                  Uložiť report do prípadu
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setDimitriReport(null)}
+                  className="text-xs"
+                >
+                  Zrušiť
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
         <TransactionList
           caseId={activeCase.id}
           entities={activeCase.entities}
@@ -142,7 +400,8 @@ function StatementAnalysis() {
             <div>
               <p className="text-sm font-semibold">Sumár transakcií</p>
               <p className="text-[11px] text-muted-foreground">
-                {formatDate(sorted[0]!.date)} – {formatDate(sorted[sorted.length - 1]!.date)}
+                {formatDate(sorted[0]!.date)} –{" "}
+                {formatDate(sorted[sorted.length - 1]!.date)}
               </p>
               <p className="mt-3 text-2xl font-bold tracking-tight tnum">
                 {formatEur(totals.volume)}
@@ -150,14 +409,24 @@ function StatementAnalysis() {
               <p className="mt-1 text-[11px] font-semibold text-risk-high">
                 {Math.round(totals.cashRatio * 100)} % v hotovosti
               </p>
-              <p className="text-[10px] text-muted-foreground">{totals.transactions} transakcií</p>
+              <p className="text-[10px] text-muted-foreground">
+                {totals.transactions} transakcií
+              </p>
             </div>
             <DonutChart incomeRatio={1 - totals.cashRatio} />
           </div>
 
           <div className="mt-4 space-y-2">
-            <Legend color="var(--income)" label="Bezhotovostné" value={formatEur(transfer)} />
-            <Legend color="var(--expense)" label="Hotovosť" value={formatEur(cash)} />
+            <Legend
+              color="var(--income)"
+              label="Bezhotovostné"
+              value={formatEur(transfer)}
+            />
+            <Legend
+              color="var(--expense)"
+              label="Hotovosť"
+              value={formatEur(cash)}
+            />
           </div>
         </Card>
 
@@ -165,13 +434,17 @@ function StatementAnalysis() {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-sm font-semibold">Kumulatívny objem</p>
-              <p className="text-[11px] text-muted-foreground">Podľa dátumu transakcie</p>
+              <p className="text-[11px] text-muted-foreground">
+                Podľa dátumu transakcie
+              </p>
             </div>
             <div className="text-right">
               <p className="text-[10px] text-muted-foreground">
                 {formatDate(sorted[sorted.length - 1]!.date)}
               </p>
-              <p className="text-sm font-semibold tnum">{formatEur(totals.volume)}</p>
+              <p className="text-sm font-semibold tnum">
+                {formatEur(totals.volume)}
+              </p>
             </div>
           </div>
           <div className="mt-3">
@@ -193,15 +466,21 @@ function StatementAnalysis() {
               <button
                 type="button"
                 key={flow.transactionId}
-                onClick={() => setTarget({ kind: "transaction", id: flow.transactionId })}
+                onClick={() =>
+                  setTarget({ kind: "transaction", id: flow.transactionId })
+                }
                 className="flex w-full items-center gap-3 rounded-lg text-xs transition-colors hover:bg-accent"
               >
                 <span className="rounded-lg bg-primary/10 px-2 py-1 font-semibold text-primary">
                   {flow.route}
                 </span>
-                <span className="tnum text-muted-foreground">{formatEur(flow.amount)}</span>
+                <span className="tnum text-muted-foreground">
+                  {formatEur(flow.amount)}
+                </span>
                 <span className="ml-auto">
-                  <RiskChip level={flow.score >= 80 ? "critical" : "high"}>{flow.score}</RiskChip>
+                  <RiskChip level={flow.score >= 80 ? "critical" : "high"}>
+                    {flow.score}
+                  </RiskChip>
                 </span>
               </button>
             ))}
@@ -220,7 +499,10 @@ function StatementAnalysis() {
                 key={`${p.code}-${p.transactionIds[0] ?? "x"}`}
                 onClick={() =>
                   p.transactionIds[0]
-                    ? setTarget({ kind: "transaction", id: p.transactionIds[0] })
+                    ? setTarget({
+                        kind: "transaction",
+                        id: p.transactionIds[0],
+                      })
                     : undefined
                 }
                 className="w-full space-y-1 rounded-lg text-left transition-colors hover:bg-accent"
@@ -251,7 +533,9 @@ function StatementAnalysis() {
               <button
                 type="button"
                 key={transaction.id}
-                onClick={() => setTarget({ kind: "transaction", id: transaction.id })}
+                onClick={() =>
+                  setTarget({ kind: "transaction", id: transaction.id })
+                }
                 className="block w-full space-y-2 p-4 text-left transition-colors hover:bg-accent"
               >
                 <div className="flex items-center gap-3">
@@ -261,9 +545,12 @@ function StatementAnalysis() {
                     <Icon className="h-4 w-4" aria-hidden />
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold">{transaction.description}</p>
+                    <p className="truncate text-sm font-semibold">
+                      {transaction.description}
+                    </p>
                     <p className="truncate text-[11px] text-muted-foreground tnum">
-                      {formatDate(transaction.date)} • {formatEur(transaction.amount)} •{" "}
+                      {formatDate(transaction.date)} •{" "}
+                      {formatEur(transaction.amount)} •{" "}
                       {transaction.method === "cash" ? "hotovosť" : "prevod"}
                     </p>
                   </div>
@@ -284,7 +571,9 @@ function StatementAnalysis() {
                     </span>
                   ))}
                   {flags.length === 0 ? (
-                    <span className="text-[10px] text-muted-foreground">Bez príznakov</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      Bez príznakov
+                    </span>
                   ) : null}
                 </div>
               </button>
@@ -304,7 +593,9 @@ function StatementAnalysis() {
             const ok = exportCaseReport(analysis, state.riskFilter);
             if (ok) {
               countExport();
-              toast.success("Správa vygenerovaná — uložte ako PDF v dialógu tlače.");
+              toast.success(
+                "Správa vygenerovaná — uložte ako PDF v dialógu tlače.",
+              );
             } else {
               toast.error("Export sa nepodarilo spustiť.");
             }
@@ -320,10 +611,21 @@ function StatementAnalysis() {
   );
 }
 
-function Legend({ color, label, value }: { color: string; label: string; value: string }) {
+function Legend({
+  color,
+  label,
+  value,
+}: {
+  color: string;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="flex items-center gap-2 text-xs">
-      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+      <span
+        className="h-2 w-2 rounded-full"
+        style={{ backgroundColor: color }}
+      />
       <span className="text-muted-foreground">{label}</span>
       <span className="ml-auto font-semibold tnum">{value}</span>
     </div>

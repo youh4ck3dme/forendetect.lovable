@@ -46,25 +46,29 @@ export const LEGAL_SOURCES: Record<LawCode, LawSource> = {
       {
         ref: "§ 294",
         title: "Nedovolené ozbrojovanie a obchodovanie so zbraňami",
-        summary: "Zadováženie, držba alebo sprostredkovanie zbraní bez oprávnenia.",
+        summary:
+          "Zadováženie, držba alebo sprostredkovanie zbraní bez oprávnenia.",
         kind: "substantive",
       },
       {
         ref: "§ 296",
         title: "Založenie, zosnovanie a podporovanie zločineckej skupiny",
-        summary: "Účasť na štruktúrovanej skupine zameranej na páchanie trestnej činnosti.",
+        summary:
+          "Účasť na štruktúrovanej skupine zameranej na páchanie trestnej činnosti.",
         kind: "substantive",
       },
       {
         ref: "§ 277a",
         title: "Daňový podvod",
-        summary: "Neoprávnené uplatnenie nároku alebo skrátenie dane vo väčšom rozsahu.",
+        summary:
+          "Neoprávnené uplatnenie nároku alebo skrátenie dane vo väčšom rozsahu.",
         kind: "substantive",
       },
       {
         ref: "§ 261",
         title: "Poškodzovanie finančných záujmov Európskej únie",
-        summary: "Použitie nepravdivého dokladu pri cezhraničných finančných tokoch.",
+        summary:
+          "Použitie nepravdivého dokladu pri cezhraničných finančných tokoch.",
         kind: "substantive",
       },
     ],
@@ -79,7 +83,8 @@ export const LEGAL_SOURCES: Record<LawCode, LawSource> = {
       {
         ref: "§ 89",
         title: "Zaistenie veci dôležitej pre trestné konanie",
-        summary: "Zaistenie zbraní, dokladov a nosičov dát potrebných na dokazovanie.",
+        summary:
+          "Zaistenie zbraní, dokladov a nosičov dát potrebných na dokazovanie.",
         kind: "procedural",
       },
       {
@@ -92,13 +97,15 @@ export const LEGAL_SOURCES: Record<LawCode, LawSource> = {
       {
         ref: "§ 116",
         title: "Zisťovanie údajov o bankových operáciách",
-        summary: "Vyžiadanie výpisov a údajov o transakciách na základe príkazu sudcu.",
+        summary:
+          "Vyžiadanie výpisov a údajov o transakciách na základe príkazu sudcu.",
         kind: "procedural",
       },
       {
         ref: "§ 3",
         title: "Súčinnosť orgánov a medzinárodná spolupráca",
-        summary: "Podklad pre dožiadanie do zahraničia a overenie v EUROPOL evidencii.",
+        summary:
+          "Podklad pre dožiadanie do zahraničia a overenie v EUROPOL evidencii.",
         kind: "procedural",
       },
     ],
@@ -113,19 +120,22 @@ export const LEGAL_SOURCES: Record<LawCode, LawSource> = {
       {
         ref: "čl. 20",
         title: "Právo vlastniť majetok",
-        summary: "Zásah do majetku (zaistenie) je prípustný len na základe zákona a primerane.",
+        summary:
+          "Zásah do majetku (zaistenie) je prípustný len na základe zákona a primerane.",
         kind: "constitutional",
       },
       {
         ref: "čl. 22",
         title: "Listové tajomstvo a tajomstvo správ",
-        summary: "Získavanie údajov o komunikácii a platbách vyžaduje zákonný podklad.",
+        summary:
+          "Získavanie údajov o komunikácii a platbách vyžaduje zákonný podklad.",
         kind: "constitutional",
       },
       {
         ref: "čl. 17",
         title: "Osobná sloboda",
-        summary: "Obmedzenie slobody len zo zákonných dôvodov a na nevyhnutný čas.",
+        summary:
+          "Obmedzenie slobody len zo zákonných dôvodov a na nevyhnutný čas.",
         kind: "constitutional",
       },
     ],
@@ -140,6 +150,9 @@ export function isLawAvailable(code: LawCode): boolean {
   return LEGAL_SOURCES[code].availability === "available";
 }
 
-export function findProvision(code: LawCode, ref: string): Provision | undefined {
+export function findProvision(
+  code: LawCode,
+  ref: string,
+): Provision | undefined {
   return LEGAL_SOURCES[code].provisions.find((p) => p.ref === ref);
 }

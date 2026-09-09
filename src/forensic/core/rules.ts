@@ -28,7 +28,8 @@ export const RULE_CATALOG: Record<string, RuleDoc> = {
     condition: "Suma je presne 20/25/30/35/40 tis. v mene transakcie",
     weight: 18,
     severity: "medium",
-    basis: "Dohoda produktu — okrúhle sumy sú typické pre dohodnuté, nie trhové ceny.",
+    basis:
+      "Dohoda produktu — okrúhle sumy sú typické pre dohodnuté, nie trhové ceny.",
   },
   CASH_HIGH_VALUE: {
     id: "CASH_HIGH_VALUE",

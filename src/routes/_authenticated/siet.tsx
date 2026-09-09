@@ -12,12 +12,17 @@ import {
   Screen,
   SectionTitle,
 } from "@/components/malte/Shell";
-import { DetectorSheet, type DetectorTarget } from "@/components/malte/DetectorSheet";
+import {
+  DetectorSheet,
+  type DetectorTarget,
+} from "@/components/malte/DetectorSheet";
 import { cn } from "@/lib/utils";
 import { COUNTRY_LABEL, formatEur } from "@/forensic";
 
 const NetworkGraph = lazy(() =>
-  import("@/components/malte/NetworkGraph").then((m) => ({ default: m.NetworkGraph })),
+  import("@/components/malte/NetworkGraph").then((m) => ({
+    default: m.NetworkGraph,
+  })),
 );
 
 export const Route = createFileRoute("/_authenticated/siet")({
@@ -32,7 +37,8 @@ export const Route = createFileRoute("/_authenticated/siet")({
       { property: "og:title", content: "Sieťová analýza — Forendo" },
       {
         property: "og:description",
-        content: "Vizualizácia toku peňazí cez schránkové firmy a rizikové koridory EÚ.",
+        content:
+          "Vizualizácia toku peňazí cez schránkové firmy a rizikové koridory EÚ.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -47,7 +53,9 @@ function NetworkScreen() {
     analysis.entities.find((e) => e.entity.id === id)?.entity.name ?? id;
   const [target, setTarget] = useState<DetectorTarget | null>(null);
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
-  const [pathId, setPathId] = useState<string | null>(analysis.moneyPaths[0]?.id ?? null);
+  const [pathId, setPathId] = useState<string | null>(
+    analysis.moneyPaths[0]?.id ?? null,
+  );
 
   const activePath = analysis.moneyPaths.find((p) => p.id === pathId) ?? null;
 
@@ -82,7 +90,9 @@ function NetworkScreen() {
               <NetworkGraph
                 analysis={analysis}
                 {...(selectedId ? { selectedId } : {})}
-                {...(activePath ? { highlightedPathIds: activePath.entityIds } : {})}
+                {...(activePath
+                  ? { highlightedPathIds: activePath.entityIds }
+                  : {})}
                 onSelect={(id) => {
                   setSelectedId(id);
                   setTarget({ kind: "entity", id });
@@ -135,7 +145,9 @@ function NetworkScreen() {
           ) : null}
         </Card>
 
-        <SectionTitle>Signály prania peňazí ({analysis.launderingSignals.length})</SectionTitle>
+        <SectionTitle>
+          Signály prania peňazí ({analysis.launderingSignals.length})
+        </SectionTitle>
         <Card className="divide-y divide-border p-0">
           {analysis.launderingSignals.map((s) => (
             <button
@@ -176,7 +188,10 @@ function NetworkScreen() {
               </div>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
                 <div
-                  className={cn("h-full rounded-full", c.highRisk ? "bg-risk-high" : "bg-primary")}
+                  className={cn(
+                    "h-full rounded-full",
+                    c.highRisk ? "bg-risk-high" : "bg-primary",
+                  )}
                   style={{ width: `${c.score}%` }}
                 />
               </div>
@@ -184,7 +199,9 @@ function NetworkScreen() {
           ))}
         </Card>
 
-        <SectionTitle>Reťazce obchodovania ({analysis.chains.length})</SectionTitle>
+        <SectionTitle>
+          Reťazce obchodovania ({analysis.chains.length})
+        </SectionTitle>
         <Card className="space-y-3">
           {analysis.chains.map((chain) => (
             <button

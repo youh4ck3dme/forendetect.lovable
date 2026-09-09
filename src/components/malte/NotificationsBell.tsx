@@ -11,7 +11,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { useCaseStore } from "@/hooks/useCaseStore";
@@ -92,7 +96,8 @@ export function NotificationsBell({ className }: { className?: string }) {
           <Bell
             className={cn(
               "h-4 w-4 transition-transform duration-300 group-hover:rotate-12",
-              unreadCriticalCount > 0 && "animate-[bounce_2s_ease-in-out_infinite]",
+              unreadCriticalCount > 0 &&
+                "animate-[bounce_2s_ease-in-out_infinite]",
             )}
             aria-hidden
           />
@@ -189,7 +194,9 @@ export function NotificationsBell({ className }: { className?: string }) {
           {filteredAlerts.length === 0 ? (
             <div className="flex flex-col items-center justify-center p-8 text-center">
               <ShieldCheck className="h-10 w-10 text-risk-low opacity-80 mb-2" />
-              <p className="text-sm font-semibold text-foreground">Žiadne upozornenia</p>
+              <p className="text-sm font-semibold text-foreground">
+                Žiadne upozornenia
+              </p>
               <p className="text-xs text-muted-foreground mt-1 max-w-55">
                 {tab === "unread"
                   ? "Všetky zistenia v tomto prípade sú prečítané a preverené."

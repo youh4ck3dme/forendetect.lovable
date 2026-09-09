@@ -1,4 +1,9 @@
-import type { EvidenceRef, Flag, Transaction, TransactionAnalysis } from "../types";
+import type {
+  EvidenceRef,
+  Flag,
+  Transaction,
+  TransactionAnalysis,
+} from "../types";
 import { daysBetween, levelFromScore, scoreFromFlags } from "./utils";
 import { formatMoney, sumMoney, sumVolume } from "./money";
 import { withRuleMeta } from "./rules";
@@ -10,7 +15,10 @@ export const TX_RULES = {
   cashIntensiveRatio: 0.8,
 };
 
-const txRef = (t: Transaction): EvidenceRef => ({ type: "transaction", id: t.id });
+const txRef = (t: Transaction): EvidenceRef => ({
+  type: "transaction",
+  id: t.id,
+});
 
 /** Sumy sa porovnávajú v absolútnej hodnote — záporná suma je opačný smer, nie iná veľkosť. */
 function magnitude(tx: Transaction): number {
@@ -58,7 +66,10 @@ export function flagTransaction(tx: Transaction, all: Transaction[]): Flag[] {
   // Rovnaký deň sa vyhodnocuje len v rámci jednej meny — sumy sa nekonvertujú.
   const sameDay = sameCurrency.filter((t) => t.date === tx.date);
   const sameDaySum = sumVolume(sameDay.map((t) => t.amount));
-  if (sameDay.length >= TX_RULES.sameDay.count && sameDaySum >= TX_RULES.sameDay.amount) {
+  if (
+    sameDay.length >= TX_RULES.sameDay.count &&
+    sameDaySum >= TX_RULES.sameDay.amount
+  ) {
     flags.push(
       withRuleMeta(
         {
@@ -76,7 +87,8 @@ export function flagTransaction(tx: Transaction, all: Transaction[]): Flag[] {
 
   const related = all.filter(
     (t) =>
-      (t.fromId === tx.fromId || (tx.payerId != null && t.payerId === tx.payerId)) &&
+      (t.fromId === tx.fromId ||
+        (tx.payerId != null && t.payerId === tx.payerId)) &&
       daysBetween(t.date, tx.date) <= TX_RULES.rapidSuccessive.days,
   );
   if (related.length >= TX_RULES.rapidSuccessive.count) {
@@ -88,7 +100,10 @@ export function flagTransaction(tx: Transaction, all: Transaction[]): Flag[] {
           detail: `${related.length} transakcií rovnakej strany za 6 mesiacov`,
           weight: 16,
           severity: "high",
-          values: { count: related.length, windowDays: TX_RULES.rapidSuccessive.days },
+          values: {
+            count: related.length,
+            windowDays: TX_RULES.rapidSuccessive.days,
+          },
         },
         related.map(txRef),
       ),
@@ -115,7 +130,9 @@ export function flagTransaction(tx: Transaction, all: Transaction[]): Flag[] {
 
 export function cashRatio(transactions: Transaction[]): number {
   if (transactions.length === 0) return 0;
-  const cash = sumVolume(transactions.filter((t) => t.method === "cash").map((t) => t.amount));
+  const cash = sumVolume(
+    transactions.filter((t) => t.method === "cash").map((t) => t.amount),
+  );
   const total = sumVolume(transactions.map((t) => t.amount));
   return total === 0 ? 0 : cash / total;
 }

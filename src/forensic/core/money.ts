@@ -23,7 +23,10 @@ export function roundMoney(value: number): number {
 
 /** Súčet v jednej mene — sčítava v centoch, aby nevznikala chyba plávajúcej čiarky. */
 export function sumMoney(values: number[]): number {
-  const cents = values.reduce((sum, value) => sum + Math.round(value * 10 ** MONEY_SCALE), 0);
+  const cents = values.reduce(
+    (sum, value) => sum + Math.round(value * 10 ** MONEY_SCALE),
+    0,
+  );
   return cents / 10 ** MONEY_SCALE;
 }
 

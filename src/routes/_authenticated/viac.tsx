@@ -44,14 +44,21 @@ export const Route = createFileRoute("/_authenticated/viac")({
           "Časová os prípadu, register zbraní, audit log a nastavenia bezpečnosti aplikácie Forendo.",
       },
       { property: "og:title", content: "Viac — Forendo" },
-      { property: "og:description", content: "Časová os prípadu, dokumenty, export a bezpečnosť." },
+      {
+        property: "og:description",
+        content: "Časová os prípadu, dokumenty, export a bezpečnosť.",
+      },
     ],
   }),
   component: More,
 });
 
 const links = [
-  { title: "Dôkazy a dokumenty", detail: "Evidencia spisového materiálu", icon: FileText },
+  {
+    title: "Dôkazy a dokumenty",
+    detail: "Evidencia spisového materiálu",
+    icon: FileText,
+  },
   { title: "Audit log", detail: "Kompletná história úkonov", icon: History },
   { title: "Bezpečnosť", detail: "Šifrované úložisko, 2FA", icon: Lock },
   { title: "Export prípadu", detail: "PDF / CSV výstup", icon: Share2 },
@@ -70,7 +77,9 @@ function More() {
       const { url } = await fetchSourceUrl({ data: undefined });
       window.location.href = url;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Stiahnutie zlyhalo.");
+      toast.error(
+        error instanceof Error ? error.message : "Stiahnutie zlyhalo.",
+      );
     }
   }
 
@@ -109,7 +118,10 @@ function More() {
                 {analysis.totals.europolMatches} zhôd v databáze EUROPOL
               </p>
             </div>
-            <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" aria-hidden />
+            <ChevronRight
+              className="ml-auto h-4 w-4 text-muted-foreground"
+              aria-hidden
+            />
           </Card>
         </Link>
 
@@ -124,22 +136,34 @@ function More() {
                 7 read-only nástrojov pre AI klientov
               </p>
             </div>
-            <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" aria-hidden />
+            <ChevronRight
+              className="ml-auto h-4 w-4 text-muted-foreground"
+              aria-hidden
+            />
           </Card>
         </Link>
 
-        <button type="button" onClick={handleSourceDownload} className="block w-full text-left">
+        <button
+          type="button"
+          onClick={handleSourceDownload}
+          className="block w-full text-left"
+        >
           <Card className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <Download className="h-4 w-4" aria-hidden />
             </span>
             <div className="min-w-0">
-              <p className="text-sm font-semibold">Stiahnuť zdrojový kód (ZIP)</p>
+              <p className="text-sm font-semibold">
+                Stiahnuť zdrojový kód (ZIP)
+              </p>
               <p className="truncate text-[11px] text-muted-foreground">
                 Dostupné len pre správcu — odkaz platí 5 minút
               </p>
             </div>
-            <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" aria-hidden />
+            <ChevronRight
+              className="ml-auto h-4 w-4 text-muted-foreground"
+              aria-hidden
+            />
           </Card>
         </button>
 
@@ -163,7 +187,8 @@ function More() {
             </span>
           </div>
           <p className="text-[10px] text-muted-foreground">
-            Stav je uložený v prehliadači (IndexedDB) a prežije obnovenie stránky.
+            Stav je uložený v prehliadači (IndexedDB) a prežije obnovenie
+            stránky.
           </p>
         </Card>
 
@@ -176,7 +201,10 @@ function More() {
             </p>
           ) : (
             state.runLog.slice(0, 8).map((run) => (
-              <div key={`${run.id}-${run.at}`} className="flex items-center gap-3 p-4">
+              <div
+                key={`${run.id}-${run.at}`}
+                className="flex items-center gap-3 p-4"
+              >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold">{run.target}</p>
                   <p className="truncate font-mono text-[10px] text-muted-foreground">
@@ -202,11 +230,19 @@ function More() {
               </div>
               <div className="min-w-0 pb-1">
                 <div className="flex items-center gap-2">
-                  <p className="truncate text-sm font-semibold">{event.title}</p>
-                  <RiskChip level={event.severity}>{severityLabel[event.severity]}</RiskChip>
+                  <p className="truncate text-sm font-semibold">
+                    {event.title}
+                  </p>
+                  <RiskChip level={event.severity}>
+                    {severityLabel[event.severity]}
+                  </RiskChip>
                 </div>
-                <p className="text-[11px] text-muted-foreground">{event.detail}</p>
-                <p className="text-[10px] text-muted-foreground tnum">{formatDate(event.date)}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {event.detail}
+                </p>
+                <p className="text-[10px] text-muted-foreground tnum">
+                  {formatDate(event.date)}
+                </p>
               </div>
             </div>
           ))}
@@ -222,9 +258,14 @@ function More() {
               </span>
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold">{title}</p>
-                <p className="truncate text-[11px] text-muted-foreground">{detail}</p>
+                <p className="truncate text-[11px] text-muted-foreground">
+                  {detail}
+                </p>
               </div>
-              <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground" aria-hidden />
+              <ChevronRight
+                className="ml-auto h-4 w-4 text-muted-foreground"
+                aria-hidden
+              />
             </div>
           ))}
         </Card>
@@ -234,7 +275,9 @@ function More() {
           onClick={() => {
             if (exportCaseReport(analysis, state.riskFilter)) {
               countExport();
-              toast.success("Správa vygenerovaná — uložte ako PDF v dialógu tlače.");
+              toast.success(
+                "Správa vygenerovaná — uložte ako PDF v dialógu tlače.",
+              );
             } else {
               toast.error("Export sa nepodarilo spustiť.");
             }

@@ -12,7 +12,11 @@ const activeStyles: Record<Severity, string> = {
   low: "bg-risk-low/20 text-risk-low border-risk-low/40",
 };
 
-export function RiskFilter({ counts }: { counts?: Partial<Record<Severity, number>> }) {
+export function RiskFilter({
+  counts,
+}: {
+  counts?: Partial<Record<Severity, number>>;
+}) {
   const { state, toggleRisk, clearRisk } = useCaseStore();
 
   return (

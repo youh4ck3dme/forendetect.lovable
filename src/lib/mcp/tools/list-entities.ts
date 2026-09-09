@@ -14,7 +14,11 @@ export default defineTool({
       .default(false)
       .describe("Return only entities detected as shell companies."),
   },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  annotations: {
+    readOnlyHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async ({ kind, shellOnly }, ctx) => {
     let items = (await caseAnalysis(ctx)).entities;
     if (kind) items = items.filter((e) => e.entity.kind === kind);

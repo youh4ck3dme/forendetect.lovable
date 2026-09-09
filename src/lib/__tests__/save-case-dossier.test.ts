@@ -4,7 +4,11 @@ import type { ForensicDossier } from "@/lib/types";
 // In-memory mock database state for cases table
 let dbCases: Record<
   string,
-  { id: string; forensic_dossier: unknown; forensic_dossier_updated_at: string | null }
+  {
+    id: string;
+    forensic_dossier: unknown;
+    forensic_dossier_updated_at: string | null;
+  }
 > = {};
 
 // Mock Supabase admin client
@@ -42,7 +46,8 @@ vi.mock("@/integrations/supabase/client.server", () => {
                 return {
                   maybeSingle: () => {
                     const row = dbCases[val];
-                    if (!row) return Promise.resolve({ error: null, data: null });
+                    if (!row)
+                      return Promise.resolve({ error: null, data: null });
                     return Promise.resolve({
                       error: null,
                       data: { forensic_dossier: row.forensic_dossier },
@@ -73,14 +78,16 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
 
   const sampleBabcanDossier: ForensicDossier = {
     caseId: "PPZ-51/UBOK-PZ-ST-2025",
-    caseTitle: "Kauza Tatragen & Babčan (Nedovolené ozbrojovanie & Legalizácia príjmov)",
+    caseTitle:
+      "Kauza Tatragen & Babčan (Nedovolené ozbrojovanie & Legalizácia príjmov)",
     defendabilityIndex: 42,
     generatedAt: "2026-09-09T10:00:00.000Z",
     facts: {
       timeline: [
         {
           time: "2024-10-15 08:30",
-          event: "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Tatragen v Žiline.",
+          event:
+            "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Tatragen v Žiline.",
           source: "Zápisnica o výsluchu svedka M. Plcha (č. l. 42)",
           chainBreak: false,
           severity: "info",
@@ -88,7 +95,8 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
         },
         {
           time: "2024-10-18 14:00",
-          event: "Zaistenie vozidla BMW X6 (D. Marjov) — nájdené kúpne zmluvy a pečiatky.",
+          event:
+            "Zaistenie vozidla BMW X6 (D. Marjov) — nájdené kúpne zmluvy a pečiatky.",
           source: "Protokol o prehliadke iných priestorov (č. l. 88)",
           chainBreak: true,
           severity: "critical",
@@ -123,7 +131,8 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
           id: "DA-1",
           defenseClaim: "Cohen: 'V aute som sa len viezol ako tlmočník.'",
           risk: "VYSOKÉ",
-          counterStrike: "Vozidlo malo pečiatky EB-EU a rukou písané zoznamy kalibrov.",
+          counterStrike:
+            "Vozidlo malo pečiatky EB-EU a rukou písané zoznamy kalibrov.",
           evidenceGap: "Chýba grafologická expertíza rukou písaných zoznamov.",
           paragraph: "§ 142 TP",
         },
@@ -192,7 +201,9 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
     });
 
     // 2. Prečítame dossier z databázy
-    const fetchResult = await handleGetForensicDossier("PPZ-51/UBOK-PZ-ST-2025");
+    const fetchResult = await handleGetForensicDossier(
+      "PPZ-51/UBOK-PZ-ST-2025",
+    );
 
     expect(fetchResult.success).toBe(true);
     expect(fetchResult.dossier).toBeDefined();
@@ -218,8 +229,12 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
 
     // Útok obhajoby & medzery (Os O6 Devil's Advocate)
     expect(retrieved.defenseAttack.attacks).toHaveLength(1);
-    expect(retrieved.defenseAttack.attacks[0]?.defenseClaim).toContain("tlmočník");
-    expect(retrieved.defenseAttack.attacks[0]?.evidenceGap).toContain("grafologická expertíza");
+    expect(retrieved.defenseAttack.attacks[0]?.defenseClaim).toContain(
+      "tlmočník",
+    );
+    expect(retrieved.defenseAttack.attacks[0]?.evidenceGap).toContain(
+      "grafologická expertíza",
+    );
 
     // Súdna sila & paragrafy (Os O8 Trestný poriadok / Trestný zákon)
     expect(retrieved.evidenceStrength.paragraphs).toHaveLength(2);

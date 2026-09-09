@@ -47,7 +47,11 @@ export const PLANS: Record<PlanId, PlanConfig> = {
     interval: "month",
     priceId: "pro_monthly",
     quotas: { aiPerDay: 200, importRows: 50000 },
-    features: ["200 AI odpovedí denne", "Väčšie importy (50 000 riadkov)", "Prednostná podpora"],
+    features: [
+      "200 AI odpovedí denne",
+      "Väčšie importy (50 000 riadkov)",
+      "Prednostná podpora",
+    ],
   },
 };
 

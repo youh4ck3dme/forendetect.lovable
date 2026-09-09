@@ -2,14 +2,14 @@
 
 ## Metadáta
 
-* **Osoba/subjekt:** Michal Žember
-* **Typ dokumentu:** zápisnica o výsluchu svedka
-* **Miesto:** Nitra
-* **ČVS:** PPZ-51/UBOK-PZ-ST-2025
-* **Dátumový rozpor:** titulná strana a ukončenie výsluchu uvádzajú **17.02.2026**; hlavičky strán 2–10 uvádzajú **17.02.2025**. Obe hodnoty sú zachované bez svojvoľnej opravy.
-* **Úplnosť:** 10 obrazových strán.
-* Zdroj: `MICHAL ZEMBER Drive Download - 2026-08-31 (1).zip`, dodal používateľ.
-* **Stav prepisu:** pracovný OCR prepis z originálnych fotografií. Pri presných citáciách treba porovnať s príslušnou fotografiou.
+- **Osoba/subjekt:** Michal Žember
+- **Typ dokumentu:** zápisnica o výsluchu svedka
+- **Miesto:** Nitra
+- **ČVS:** PPZ-51/UBOK-PZ-ST-2025
+- **Dátumový rozpor:** titulná strana a ukončenie výsluchu uvádzajú **17.02.2026**; hlavičky strán 2–10 uvádzajú **17.02.2025**. Obe hodnoty sú zachované bez svojvoľnej opravy.
+- **Úplnosť:** 10 obrazových strán.
+- Zdroj: `MICHAL ZEMBER Drive Download - 2026-08-31 (1).zip`, dodal používateľ.
+- **Stav prepisu:** pracovný OCR prepis z originálnych fotografií. Pri presných citáciách treba porovnať s príslušnou fotografiou.
 
 ---===== FOTO 1: IMG20260831051414.jpg =====
 MINISTERSTVO VNÚTRA SLOVENSKEJ REPUBLIKY
@@ -67,8 +67,7 @@ Podľa § 129 ods. 3 Trestného poriadku sa zákaz výsluchu podľa odseku 2 nev
 
 Podľa § 130 ods. 1 Trestného poriadku máte právo odoprieť výpoveď ako svedok, ak ste príbuzný obvineného v priamom rade, jeho súrodenec, osvojiteľ, osvojenec, manžel alebo druh. Ak je viac obvinených a ste v uvedenom pomere len k niektorému z nich, máte právo odoprieť výpoveď ohľadne iných obvinených
 
-===== FOTO 2: IMG20260831051422.jpg =====
-2. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 2: IMG20260831051422.jpg ===== 2. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 len vtedy, keď nemožno oddeliť výpoveď, ktorá sa ich týka, od výpovede týkajúcej sa obvineného, s ktorým ste v tomto pomere.
 
@@ -92,8 +91,7 @@ Podľa § 136 ods. 1 Trestného poriadku, ak máte dôvodnú obavu, že Vy alebo
 
 Podľa § 136 ods. 2 Trestného poriadku, ak je dôvodná obava, že oznámením Vašej totožnosti, bydliska, prípadne miesta pobytu je ohrozený Váš život, zdravie, telesná integrita alebo ak také nebezpečenstvo hrozí Vašej blízkej osobe, môže sa Vám povoliť, aby ste neuvádzali údaje o svojej osobe.
 
-===== FOTO 3: IMG20260831051427.jpg =====
-3. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 3: IMG20260831051427.jpg ===== 3. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 Súhlas na postup podľa § 136 ods. 2 Trestného poriadku dáva predseda senátu v prípravnom konaní prokurátor.
 
@@ -122,8 +120,7 @@ Podľa § 140 ods. 1 Trestného poriadku má svedok nárok na náhradu nevyhnutn
 
 Na tento nárok treba svedka v predvolaní upozorniť. Ak bol svedok k výsluchu predvolaný iným spôsobom ako písomne (ústne, telefonicky, faxom) alebo predvedený, postupuje sa pri určovaní svedočného obdobne, ako by bol predvolaný na výsluch písomne.
 
-===== FOTO 4: IMG20260831051438.jpg =====
-4. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 4: IMG20260831051438.jpg ===== 4. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 Ako svedka Vás ďalej poučujem o tom, že táto zápisnica alebo jej podstatná časť môže byť podľa § 263 ods. 1 Trestného poriadku prečítaná na hlavnom pojednávaní, ak s tým súhlasí prokurátor a obžalovaný a súd nepovažuje osobný výsluch za potrebný.
 
@@ -147,8 +144,7 @@ Výzva a upozornenie pre svedka v zmysle vyššie citovaného poučenia a oznám
 
 Svedok bol vyšetrovateľom ústne vyzvaný, aby pri tomto výsluchu nepoužíval žiadne záznamové zariadenie (o jeho použití na účely tohto úkonu je oprávnený rozhodnúť len policajú alebo prokurátor podľa § 58 odsek 7 Trestného poriadku) a taktiež mobilný telefón.
 
-===== FOTO 5: IMG20260831051442.jpg =====
-5. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 5: IMG20260831051442.jpg ===== 5. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 Svedok bol vyšetrovateľom upozornený, že nevyhovenie výzve môže byť potrestané poriadkovou pokutou, a to až do výšky 1.650,- € (§ 70 Trestného poriadku). Svedok svojim podpisom berie uvedené poučenie a výzvu na vedomie.
 
@@ -177,8 +173,7 @@ Podľa § 3 ods. 2 zákona žiadosť o poskytnutie ochrany podľa odseku 1 obsah
 
 Podľa § 4 ods. 1 zákona ak prokurátor alebo súd zistí, že osoba, ktorá podala žiadosť o poskytnutie ochrany podľa § 3 ods. 1 zákona, je oznamovateľom, bezodkladne písomne oznámi inšpektorátu práce,
 
-===== FOTO 6: IMG20260831051452.jpg =====
-6. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 6: IMG20260831051452.jpg ===== 6. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 zamestnávateľovi a oznamovateľovi, že sa oznamovateľovi poskytuje ochrana podľa § 7 zákona; to neplatí, ak osoba požiadala o ochranu podľa odseku 2. Doručením písomného oznámenia prokurátora alebo súdu zamestnávateľovi podľa prvej vety sa oznamovateľ stáva chráneným oznamovateľom.
 
@@ -210,8 +205,7 @@ Orgán, ktorý oznamovateľovi zaslal písomné oznámenie podľa § 4 ods. 1 al
 
 Žiadosť o poskytnutie odmeny podľa § 9 odsek 1 zákona môže podať oznamovateľ ministerstvu do šiestich mesiacov odo dňa doručenia oznámenia. Na žiadosti o poskytnutie odmeny podané po tejto lehote sa neprihliada. Žiadosť obsahuje meno a priezvisko, dátum narodenia a adresu bydliska oznamovateľa a
 
-===== FOTO 7: IMG20260831051458.jpg =====
-7. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 7: IMG20260831051458.jpg ===== 7. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 odôvodnenie žiadosti; k žiadosti oznamovateľ priloží kópiu oznámenia o nadobudnutie právoplatnosti rozhodnutia.
 
@@ -233,8 +227,7 @@ Na začiatok uvádzam, že s firmou EB-EU s.r.o., reps. s jej konateľmi ma zozn
 
 Potom následne ku mne prišiel na predajňu pán Marjov z shadowarms a spolu s Cohenom z EB-EU, kde ma Cohen oslovil, že majú firmu so zbraňami, čo obcohduje, majú aj licenciu, ktorú mi predložil a že by mali záujem nakúpiť zbrane pre svojho klienta ako firma EB-EU s.r.o., v celkovom množstve od 200 do 400 kusov. Ja som tomu najprv neprikladal nejakú významú vážnosť, pretože od vypuknutia vojny na Ukrajine som bol na regulérnej báze oslovený, že chce kúpiť niekto od 200 do 1000 zbraní, že nech si to naceníme a urobíme čo najlepšiu cenu a podobne. Ale väčšinou sa obchodný vzťah nikdy nenaplnil, lebo sa jednalo o špekulantov. My sami dodávame veci na Ukrajinu od roku 2022 a poznám, aký obtiažny proces to je, aby tam dodávateľský subjekt schválený a overený. Cohen ale tvrdil, že tam majú klienta na východe, bližšie to nešpecifikoval. Ja keď som im povedal, že nie je možné naraz kúpiť, lebo takéto skladové zásoby nemám. Oni povedali, že ak tak aj iné. Ja som im potom povedal, že im to preverím a že im vytvorím ponuku
 
-===== FOTO 8: IMG20260831051509.jpg =====
-8. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 8: IMG20260831051509.jpg ===== 8. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 a zistím, kde je čo skladom. Potom odišli. Ako som povedal, toto bolo niekedy na prelome júla a augusta 2025. Ja som si overil spoločnosť EB-EU aj na oddelení dokladov, ORPZ Nitra, kde som volal alebo písal, kde mi potvrdili, že spoločnosť EB-EU má aktívnu licenciu a nebola jej odňatá.
 
@@ -254,8 +247,7 @@ Takto, v rozmedzí od od 03.09.2025 až do 08.10.2025 sa zastavil Cohen ešte dv
 
 Potom zhruba začiatkom októbra spomenul, že sa s Babčanom nie v dobrom rozišli, že Babčan jemu dlhuje peniaze a že ďalšie nákupy chce realizovať na ďalšiu firmu. Posledná faktúra bola 250165, kde on už mal inú licenciu na firmu Bark Factory Eneterprise s.r.o., kde som ja síce vystavil faktúru na EB-EÚ, avšak oni mi ju opečiatkovali a podpísali za spoločnosť Bar Factory Enterprise s.r.o., ktorá mala taktiež zbrojnú licenciu, ktorú som si odfotil a rovnako overil ako v prvom prípade s Eb-EÚ, že je aktívna. Dal mi dokonca vtedy k telefónu aj majiteľa, ktorý
 
-===== FOTO 9: IMG20260831051515.jpg =====
-9. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 9: IMG20260831051515.jpg ===== 9. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 odsúhlasil všetko. Volal sa Filip Flat, alebo Fiat, neviem presne. A takto to vlastne ukončilo EB-EÚ.
 
@@ -283,8 +275,7 @@ Otázka vyšetrovateľa: Predložil Cohen alebo Babčan zbrojný preukaz?
 
 Odpoveď: nepýtal som si, takže nie. Pre mňa bola podstatná licencia a doklady na stotožnenie osoby.
 
-===== FOTO 10: IMG20260831051522.jpg =====
-10. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
+===== FOTO 10: IMG20260831051522.jpg ===== 10. strana zápisnice o výsluchu svedka Michal Žember zo dňa 17.02.2025
 
 Otázka vyšetrovateľa: vravel Cohen alebo Erik Babčan, že ako s týmito zbraňami naložil, čo s nimi urobil? Rozprával všeobecne niečo Babčan, keď tam bola?
 

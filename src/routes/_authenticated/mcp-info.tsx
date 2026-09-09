@@ -21,7 +21,8 @@ export const Route = createFileRoute("/_authenticated/mcp-info")({
       { property: "og:title", content: "Agentné API (MCP) — Forendo" },
       {
         property: "og:description",
-        content: "Pripojte AI klienta na /mcp a čítajte alerty, subjekty, transakcie a zbrane.",
+        content:
+          "Pripojte AI klienta na /mcp a čítajte alerty, subjekty, transakcie a zbrane.",
       },
     ],
   }),
@@ -29,13 +30,31 @@ export const Route = createFileRoute("/_authenticated/mcp-info")({
 });
 
 const tools = [
-  { name: "case_overview", detail: "Celkové rizikové skóre, súhrnné počty a top príznaky." },
+  {
+    name: "case_overview",
+    detail: "Celkové rizikové skóre, súhrnné počty a top príznaky.",
+  },
   { name: "list_alerts", detail: "Zoznam zistení s filtrom podľa závažnosti." },
-  { name: "list_entities", detail: "Osoby a firmy vrátane indikátorov schránkovej firmy." },
-  { name: "analyze_entity", detail: "Detail subjektu: príznaky, transakcie, prepojenia." },
-  { name: "analyze_transaction", detail: "Pravidlá monitoringu pre konkrétnu transakciu." },
-  { name: "list_weapons", detail: "Register zbraní a zhody v databáze EUROPOL." },
-  { name: "network_analysis", detail: "Reťazce, cesty peňazí a cezhraničné koridory." },
+  {
+    name: "list_entities",
+    detail: "Osoby a firmy vrátane indikátorov schránkovej firmy.",
+  },
+  {
+    name: "analyze_entity",
+    detail: "Detail subjektu: príznaky, transakcie, prepojenia.",
+  },
+  {
+    name: "analyze_transaction",
+    detail: "Pravidlá monitoringu pre konkrétnu transakciu.",
+  },
+  {
+    name: "list_weapons",
+    detail: "Register zbraní a zhody v databáze EUROPOL.",
+  },
+  {
+    name: "network_analysis",
+    detail: "Reťazce, cesty peňazí a cezhraničné koridory.",
+  },
 ];
 
 function McpInfo() {
@@ -50,13 +69,17 @@ function McpInfo() {
         <Card className="space-y-2">
           <p className="text-sm font-semibold">Pripojenie MCP klienta</p>
           <p className="text-caption">
-            Forendo vystavuje read-only MCP server. V AI klientovi pridajte server s touto adresou:
+            Forendo vystavuje read-only MCP server. V AI klientovi pridajte
+            server s touto adresou:
           </p>
           <pre className="overflow-x-auto rounded-xl bg-secondary p-3 font-mono text-[11px] text-secondary-foreground">
-            {typeof window !== "undefined" ? `${window.location.origin}/mcp` : "/mcp"}
+            {typeof window !== "undefined"
+              ? `${window.location.origin}/mcp`
+              : "/mcp"}
           </pre>
           <p className="text-caption">
-            Transport: Streamable HTTP, protokol JSON-RPC 2.0, volanie nástroja cez
+            Transport: Streamable HTTP, protokol JSON-RPC 2.0, volanie nástroja
+            cez
             <span className="font-mono"> tools/call</span>.
           </p>
         </Card>
@@ -79,8 +102,9 @@ function McpInfo() {
 
         <Card>
           <p className="text-caption">
-            Server je chránený OAuth prihlásením a sprístupňuje výhradne dáta vášho účtu. Nič sa cez
-            neho nedá meniť. Podrobná dokumentácia je v repozitári v súbore docs/mcp-api.md.
+            Server je chránený OAuth prihlásením a sprístupňuje výhradne dáta
+            vášho účtu. Nič sa cez neho nedá meniť. Podrobná dokumentácia je v
+            repozitári v súbore docs/mcp-api.md.
           </p>
         </Card>
       </Screen>

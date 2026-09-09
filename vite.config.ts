@@ -22,13 +22,19 @@ function safeMcpPlugin(): Plugin {
       };
       if (typeof plugin.configResolved === "function") {
         return (
-          plugin.configResolved as (this: unknown, config: ResolvedConfig) => void | Promise<void>
+          plugin.configResolved as (
+            this: unknown,
+            config: ResolvedConfig,
+          ) => void | Promise<void>
         ).call(this, normalizedConfig);
       }
       if (plugin.configResolved && "handler" in plugin.configResolved) {
         return (
           plugin.configResolved as {
-            handler: (this: unknown, config: ResolvedConfig) => void | Promise<void>;
+            handler: (
+              this: unknown,
+              config: ResolvedConfig,
+            ) => void | Promise<void>;
           }
         ).handler.call(this, normalizedConfig);
       }
@@ -76,7 +82,12 @@ export default defineConfig({
       },
       workbox: {
         // Cachujú sa výhradne verejné statické súbory zostavenia.
-        globPatterns: ["**/*.{js,css,woff2}", "offline.html", "pwa-*.png", "favicon.png"],
+        globPatterns: [
+          "**/*.{js,css,woff2}",
+          "offline.html",
+          "pwa-*.png",
+          "favicon.png",
+        ],
         globIgnores: ["**/node_modules/**", "**/_server/**"],
         navigateFallback: null,
         cleanupOutdatedCaches: true,
@@ -85,7 +96,8 @@ export default defineConfig({
         runtimeCaching: [
           {
             // Prihlásené HTML, API, podpísané URL ani AI komunikácia sa necachujú.
-            urlPattern: ({ request }: { request: Request }) => request.mode === "navigate",
+            urlPattern: ({ request }: { request: Request }) =>
+              request.mode === "navigate",
             handler: "NetworkOnly",
             options: { precacheFallback: { fallbackURL: "/offline.html" } },
           },

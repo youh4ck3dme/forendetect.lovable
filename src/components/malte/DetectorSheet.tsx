@@ -26,7 +26,8 @@ import {
 } from "@/forensic";
 import { useActiveCase } from "@/hooks/useActiveCase";
 
-export type DetectorTarget = { kind: "entity"; id: string } | { kind: "transaction"; id: string };
+export type DetectorTarget =
+  { kind: "entity"; id: string } | { kind: "transaction"; id: string };
 
 type Result = {
   title: string;
@@ -39,14 +40,24 @@ type Result = {
   verdict: string;
 };
 
-function runDetector(target: DetectorTarget, activeCase: ForensicCase): Result | null {
+function runDetector(
+  target: DetectorTarget,
+  activeCase: ForensicCase,
+): Result | null {
   if (target.kind === "entity") {
     const entity = activeCase.entities.find((e) => e.id === target.id);
     if (!entity) return null;
-    const flags = detectShellCompany(entity, activeCase, activeCase.transactions);
+    const flags = detectShellCompany(
+      entity,
+      activeCase,
+      activeCase.transactions,
+    );
     const score = scoreFromFlags(flags);
     const own = activeCase.transactions.filter(
-      (t) => t.fromId === entity.id || t.toId === entity.id || t.payerId === entity.id,
+      (t) =>
+        t.fromId === entity.id ||
+        t.toId === entity.id ||
+        t.payerId === entity.id,
     );
     return {
       title: entity.name,
@@ -59,7 +70,9 @@ function runDetector(target: DetectorTarget, activeCase: ForensicCase): Result |
         { label: "Deklarovaná adresa", value: entity.address ?? "—" },
         {
           label: "Adresa v ORSR",
-          value: (entity.ico ? activeCase.orsrAddresses[entity.ico] : undefined) ?? "nenájdená",
+          value:
+            (entity.ico ? activeCase.orsrAddresses[entity.ico] : undefined) ??
+            "nenájdená",
         },
         { label: "IČO", value: entity.ico ?? "—" },
         {
@@ -94,8 +107,14 @@ function runDetector(target: DetectorTarget, activeCase: ForensicCase): Result |
     facts: [
       { label: "Odosielateľ", value: nameOf(transaction.fromId) },
       { label: "Príjemca", value: nameOf(transaction.toId) },
-      { label: "Skutočný platiteľ", value: nameOf(transaction.payerId ?? transaction.fromId) },
-      { label: "Forma", value: transaction.method === "cash" ? "hotovosť" : "prevod" },
+      {
+        label: "Skutočný platiteľ",
+        value: nameOf(transaction.payerId ?? transaction.fromId),
+      },
+      {
+        label: "Forma",
+        value: transaction.method === "cash" ? "hotovosť" : "prevod",
+      },
       {
         label: "Trasa",
         value: `${transaction.originCountry} → ${transaction.destinationCountry}`,
@@ -164,7 +183,10 @@ export function DetectorSheet({
   const reviewed = state.reviewed.includes(reviewedId);
 
   return (
-    <Sheet open={target !== null} onOpenChange={(open) => (open ? undefined : onClose())}>
+    <Sheet
+      open={target !== null}
+      onOpenChange={(open) => (open ? undefined : onClose())}
+    >
       <SheetContent
         side={desktop ? "right" : "bottom"}
         className={
@@ -193,7 +215,9 @@ export function DetectorSheet({
                 <ShieldAlert className="h-5 w-5" aria-hidden />
               </span>
               <div>
-                <p className="font-mono text-[11px] text-muted-foreground">{result.detector}</p>
+                <p className="font-mono text-[11px] text-muted-foreground">
+                  {result.detector}
+                </p>
                 <p className="text-sm font-semibold">{result.verdict}</p>
               </div>
               <span className="ml-auto">
@@ -209,15 +233,24 @@ export function DetectorSheet({
               </p>
               <div className="space-y-2">
                 {result.flags.map((flag) => (
-                  <div key={flag.code} className="rounded-xl border border-border p-3">
+                  <div
+                    key={flag.code}
+                    className="rounded-xl border border-border p-3"
+                  >
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-semibold">{flag.label}</p>
                       <span className="ml-auto">
-                        <RiskChip level={flag.severity}>+{flag.weight}</RiskChip>
+                        <RiskChip level={flag.severity}>
+                          +{flag.weight}
+                        </RiskChip>
                       </span>
                     </div>
-                    <p className="mt-1 text-[11px] text-muted-foreground">{flag.detail}</p>
-                    <p className="mt-1 font-mono text-[10px] text-muted-foreground">{flag.code}</p>
+                    <p className="mt-1 text-[11px] text-muted-foreground">
+                      {flag.detail}
+                    </p>
+                    <p className="mt-1 font-mono text-[10px] text-muted-foreground">
+                      {flag.code}
+                    </p>
                   </div>
                 ))}
                 {result.flags.length === 0 ? (
@@ -229,10 +262,15 @@ export function DetectorSheet({
             </div>
 
             <div>
-              <p className="mb-2 text-xs font-semibold text-muted-foreground">Vstupné údaje</p>
+              <p className="mb-2 text-xs font-semibold text-muted-foreground">
+                Vstupné údaje
+              </p>
               <dl className="space-y-1 rounded-xl border border-border p-3 text-xs">
                 {result.facts.map((fact) => (
-                  <div key={fact.label} className="flex items-start justify-between gap-4">
+                  <div
+                    key={fact.label}
+                    className="flex items-start justify-between gap-4"
+                  >
                     <dt className="text-muted-foreground">{fact.label}</dt>
                     <dd className="text-right font-medium">{fact.value}</dd>
                   </div>

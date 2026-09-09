@@ -13,6 +13,7 @@ Palantir a i2 sú ťažké, drahé a vyžadujú vyškoleného analytika. Malte c
 register, do 10 minút má zoznam červených vlajok s odkazom na dôkaz.
 
 Tri veci, ktoré musia byť v MVP lepšie než u konkurencie:
+
 1. **Vysvetliteľnosť** — každé skóre má rozpad na príznaky s váhou a zdrojovým riadkom.
 2. **Čas do prvého výsledku** — import → detekcia → report bez konzultanta.
 3. **Cena a nasadenie** — jeden tenant, žiadny 6-mesačný implementačný projekt.
@@ -21,7 +22,7 @@ Tri veci, ktoré musia byť v MVP lepšie než u konkurencie:
 
 ## 2. Minimálny funkčný produkt (MVP)
 
-MVP = *jeden vyšetrovateľ dokáže sám uzavrieť triáž jedného prípadu a odovzdať report.*
+MVP = _jeden vyšetrovateľ dokáže sám uzavrieť triáž jedného prípadu a odovzdať report._
 
 **M1 — Import dát**
 CSV/XLSX výpisy transakcií, zoznam subjektov, zoznam zbraní/komodít. Mapovanie stĺpcov,
@@ -58,20 +59,20 @@ multi-tenant SaaS billing.
 
 ## 3. Prioritizovaný backlog (8–10 týždňov, 1 FE + 1 FS vývojár)
 
-| # | Funkcia | Hodnota | Týždne | Odhad hodín | Náklad (60 €/h) |
-|---|---|---|---|---|---|
-| 1 | Backend + auth + dátový model prípadu | Kritická | T1–T2 | 90 | 5 400 € |
-| 2 | Import CSV/XLSX + mapovanie stĺpcov | Kritická | T2–T3 | 80 | 4 800 € |
-| 3 | Detekčný engine na serveri + konfigurovateľné váhy | Kritická | T3–T4 | 70 | 4 200 € |
-| 4 | Alert queue: filtre, triedenie, stavy, priradenie | Vysoká | T4–T5 | 60 | 3 600 € |
-| 5 | Detail subjektu / transakcie s rozpadom skóre | Vysoká | T5 | 40 | 2 400 € |
-| 6 | Sieťový graf (interaktívny, cesty, zvýraznenie) | Vysoká | T6–T7 | 70 | 4 200 € |
-| 7 | PDF report s metodikou | Vysoká | T7 | 40 | 2 400 € |
-| 8 | Audit trail + verzionovanie pravidiel | Vysoká | T8 | 40 | 2 400 € |
-| 9 | Časová os prípadu | Stredná | T8 | 25 | 1 500 € |
-| 10 | Sankčné/PEP zoznamy (statický import) | Stredná | T9 | 35 | 2 100 € |
-| 11 | Tímová spolupráca: komentáre k alertom | Stredná | T9 | 30 | 1 800 € |
-| 12 | Pilotné dolaďovanie, bezpečnostný audit, dokumentácia | Kritická | T10 | 60 | 3 600 € |
+| #   | Funkcia                                               | Hodnota  | Týždne | Odhad hodín | Náklad (60 €/h) |
+| --- | ----------------------------------------------------- | -------- | ------ | ----------- | --------------- |
+| 1   | Backend + auth + dátový model prípadu                 | Kritická | T1–T2  | 90          | 5 400 €         |
+| 2   | Import CSV/XLSX + mapovanie stĺpcov                   | Kritická | T2–T3  | 80          | 4 800 €         |
+| 3   | Detekčný engine na serveri + konfigurovateľné váhy    | Kritická | T3–T4  | 70          | 4 200 €         |
+| 4   | Alert queue: filtre, triedenie, stavy, priradenie     | Vysoká   | T4–T5  | 60          | 3 600 €         |
+| 5   | Detail subjektu / transakcie s rozpadom skóre         | Vysoká   | T5     | 40          | 2 400 €         |
+| 6   | Sieťový graf (interaktívny, cesty, zvýraznenie)       | Vysoká   | T6–T7  | 70          | 4 200 €         |
+| 7   | PDF report s metodikou                                | Vysoká   | T7     | 40          | 2 400 €         |
+| 8   | Audit trail + verzionovanie pravidiel                 | Vysoká   | T8     | 40          | 2 400 €         |
+| 9   | Časová os prípadu                                     | Stredná  | T8     | 25          | 1 500 €         |
+| 10  | Sankčné/PEP zoznamy (statický import)                 | Stredná  | T9     | 35          | 2 100 €         |
+| 11  | Tímová spolupráca: komentáre k alertom                | Stredná  | T9     | 30          | 1 800 €         |
+| 12  | Pilotné dolaďovanie, bezpečnostný audit, dokumentácia | Kritická | T10    | 60          | 3 600 €         |
 
 **Spolu: ~640 hodín ≈ 38 400 €** pri 60 €/h. Pri internom tíme (2 ľudia × 10 týždňov)
 cca 30 000–45 000 € podľa seniority. Prevádzka (hosting, DB, storage) do 200 €/mesiac.
@@ -83,12 +84,14 @@ Rezerva: plánuj 15 % buffer (≈ 1,5 týždňa) na integračné prekvapenia pri
 ## 4. Čo má najväčšiu hodnotu pre zákazníka
 
 **Polícia / NAKA**
+
 1. Sieťový graf a reťazce — priamo mapuje na vyšetrovaciu verziu.
 2. Vysvetliteľné skóre + PDF report — použiteľné do spisu.
 3. Audit trail — obhájiteľnosť dôkazu pred súdom.
 4. Import výpisov — dnes to robia ručne v Exceli, tu je najväčšia úspora času.
 
 **Banky / FIU**
+
 1. Transakčný monitoring s nízkou mierou falošných poplachov.
 2. Alert queue s workflow a SLA — audit regulátora sa pýta práve na toto.
 3. Sankčné a PEP zoznamy.
@@ -101,15 +104,15 @@ funkcie, ktoré nesmú z MVP vypadnúť za žiadnych okolností.
 
 ## 5. Odložené na fázu 2
 
-| Funkcia | Prečo odložiť | Odhad fázy 2 |
-|---|---|---|
-| ML/AI anomálie a scoring | Potrebuje označené dáta z pilotu; pravidlá zatiaľ stačia | 6–8 týždňov |
-| OSINT konektory (ORSR, RPVS, obchodný vestník) | Právne a integračné riziko, dlhé rokovania | 4–6 týždňov |
-| Real-time monitoring a streamovanie | Dávkový režim pokrýva vyšetrovanie | 4 týždne |
-| Multi-tenant SaaS + billing | Prvé nasadenia budú on-prem/dedikované | 4 týždne |
-| Mobilná aplikácia | Analytická práca prebieha na desktope | 6 týždňov |
-| Rozpoznávanie textu z naskenovaných výpisov (OCR) | Vysoká chybovosť, potrebuje vlastný pipeline | 4 týždne |
-| Kryptomenová analýza | Iná dátová doména | 8 týždňov |
+| Funkcia                                           | Prečo odložiť                                            | Odhad fázy 2 |
+| ------------------------------------------------- | -------------------------------------------------------- | ------------ |
+| ML/AI anomálie a scoring                          | Potrebuje označené dáta z pilotu; pravidlá zatiaľ stačia | 6–8 týždňov  |
+| OSINT konektory (ORSR, RPVS, obchodný vestník)    | Právne a integračné riziko, dlhé rokovania               | 4–6 týždňov  |
+| Real-time monitoring a streamovanie               | Dávkový režim pokrýva vyšetrovanie                       | 4 týždne     |
+| Multi-tenant SaaS + billing                       | Prvé nasadenia budú on-prem/dedikované                   | 4 týždne     |
+| Mobilná aplikácia                                 | Analytická práca prebieha na desktope                    | 6 týždňov    |
+| Rozpoznávanie textu z naskenovaných výpisov (OCR) | Vysoká chybovosť, potrebuje vlastný pipeline             | 4 týždne     |
+| Kryptomenová analýza                              | Iná dátová doména                                        | 8 týždňov    |
 
 ---
 

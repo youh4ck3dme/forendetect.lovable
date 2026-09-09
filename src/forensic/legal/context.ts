@@ -1,5 +1,11 @@
 import type { CaseAnalysis, EntityAnalysis, Severity } from "../types";
-import { LEGAL_SOURCES, type LawCode, type LawSource, type Provision, findProvision } from "./laws";
+import {
+  LEGAL_SOURCES,
+  type LawCode,
+  type LawSource,
+  type Provision,
+  findProvision,
+} from "./laws";
 import { PERSON_TYPES, type PersonTypeId, personType } from "./personTypes";
 
 export type LegalAssessment = {
@@ -50,47 +56,98 @@ type Rule = {
   minSeverity?: Severity;
 };
 
-const SEVERITY_RANK: Record<Severity, number> = { low: 1, medium: 2, high: 3, critical: 4 };
+const SEVERITY_RANK: Record<Severity, number> = {
+  low: 1,
+  medium: 2,
+  high: 3,
+  critical: 4,
+};
 
 const RULES: Rule[] = [
   // 300/2005 — hmotné právo
   {
     law: "300/2005",
     ref: "§ 233",
-    triggers: ["LAYERING", "PASSTHROUGH", "SHELL_CONTROL", "ROUND_AMOUNT", "CASH_INTENSIVE"],
+    triggers: [
+      "LAYERING",
+      "PASSTHROUGH",
+      "SHELL_CONTROL",
+      "ROUND_AMOUNT",
+      "CASH_INTENSIVE",
+    ],
   },
   {
     law: "300/2005",
     ref: "§ 294",
-    triggers: ["EUROPOL_HOLDER", "LICENSE_ISSUE", "WEAPON_EUROPOL", "SERIAL_BATCH", "VOLUME_SURGE"],
+    triggers: [
+      "EUROPOL_HOLDER",
+      "LICENSE_ISSUE",
+      "WEAPON_EUROPOL",
+      "SERIAL_BATCH",
+      "VOLUME_SURGE",
+    ],
   },
-  { law: "300/2005", ref: "§ 296", triggers: ["SHELL_CONTROL", "CHAIN", "THIRD_PARTY_PAYER"] },
+  {
+    law: "300/2005",
+    ref: "§ 296",
+    triggers: ["SHELL_CONTROL", "CHAIN", "THIRD_PARTY_PAYER"],
+  },
   {
     law: "300/2005",
     ref: "§ 277a",
-    triggers: ["NO_INVENTORY", "ADDRESS_MISMATCH", "NO_CONTACT", "NO_CONTACT_PERSON"],
+    triggers: [
+      "NO_INVENTORY",
+      "ADDRESS_MISMATCH",
+      "NO_CONTACT",
+      "NO_CONTACT_PERSON",
+    ],
   },
-  { law: "300/2005", ref: "§ 261", triggers: ["CROSS_BORDER", "TRANSIT_ANOMALY"] },
+  {
+    law: "300/2005",
+    ref: "§ 261",
+    triggers: ["CROSS_BORDER", "TRANSIT_ANOMALY"],
+  },
   // 301/2005 — procesné úkony
   {
     law: "301/2005",
     ref: "§ 95",
-    triggers: ["LAYERING", "PASSTHROUGH", "ROUND_AMOUNT", "CASH_INTENSIVE", "SHELL_CONTROL"],
+    triggers: [
+      "LAYERING",
+      "PASSTHROUGH",
+      "ROUND_AMOUNT",
+      "CASH_INTENSIVE",
+      "SHELL_CONTROL",
+    ],
   },
   {
     law: "301/2005",
     ref: "§ 89",
-    triggers: ["EUROPOL_HOLDER", "LICENSE_ISSUE", "WEAPON_EUROPOL", "SERIAL_BATCH"],
+    triggers: [
+      "EUROPOL_HOLDER",
+      "LICENSE_ISSUE",
+      "WEAPON_EUROPOL",
+      "SERIAL_BATCH",
+    ],
   },
   {
     law: "301/2005",
     ref: "§ 116",
-    triggers: ["THIRD_PARTY_FUNDING", "THIRD_PARTY_PAYER", "SAME_DAY", "RAPID_REPEAT"],
+    triggers: [
+      "THIRD_PARTY_FUNDING",
+      "THIRD_PARTY_PAYER",
+      "SAME_DAY",
+      "RAPID_REPEAT",
+    ],
   },
   {
     law: "301/2005",
     ref: "§ 3",
-    triggers: ["CROSS_BORDER", "TRANSIT_ANOMALY", "WEAPON_EUROPOL", "EUROPOL_HOLDER"],
+    triggers: [
+      "CROSS_BORDER",
+      "TRANSIT_ANOMALY",
+      "WEAPON_EUROPOL",
+      "EUROPOL_HOLDER",
+    ],
   },
   // 460/1992 — ústavné limity zásahov
   {
@@ -101,7 +158,12 @@ const RULES: Rule[] = [
   {
     law: "460/1992",
     ref: "čl. 22",
-    triggers: ["THIRD_PARTY_FUNDING", "SAME_DAY", "RAPID_REPEAT", "CROSS_BORDER"],
+    triggers: [
+      "THIRD_PARTY_FUNDING",
+      "SAME_DAY",
+      "RAPID_REPEAT",
+      "CROSS_BORDER",
+    ],
   },
   {
     law: "460/1992",
@@ -246,14 +308,16 @@ function inferPersonType(entity: EntityAnalysis): LegalPersonAssignment {
         ...base,
         typeId: "statutory_body",
         label: PERSON_TYPES.statutory_body.label,
-        reason: "Vysoké rizikové skóre pri výkone funkcie v dotknutých spoločnostiach.",
+        reason:
+          "Vysoké rizikové skóre pri výkone funkcie v dotknutých spoločnostiach.",
       };
     }
     return {
       ...base,
       typeId: "witness",
       label: PERSON_TYPES.witness.label,
-      reason: "Bez samostatných rizikových indikátorov, relevantná pre výsluch.",
+      reason:
+        "Bez samostatných rizikových indikátorov, relevantná pre výsluch.",
     };
   }
 
@@ -262,7 +326,8 @@ function inferPersonType(entity: EntityAnalysis): LegalPersonAssignment {
       ...base,
       typeId: "legal_entity",
       label: PERSON_TYPES.legal_entity.label,
-      reason: "Schránková spoločnosť — možná trestná zodpovednosť právnickej osoby.",
+      reason:
+        "Schránková spoločnosť — možná trestná zodpovednosť právnickej osoby.",
     };
   }
   if (entity.score >= 35) {
@@ -288,8 +353,12 @@ function inferPersonType(entity: EntityAnalysis): LegalPersonAssignment {
  */
 export function buildLegalContext(analysis: CaseAnalysis): LegalContext {
   const sources = Object.values(LEGAL_SOURCES);
-  const availableLaws = sources.filter((s) => s.availability === "available").map((s) => s.code);
-  const unavailableLaws = sources.filter((s) => s.availability !== "available").map((s) => s.code);
+  const availableLaws = sources
+    .filter((s) => s.availability === "available")
+    .map((s) => s.code);
+  const unavailableLaws = sources
+    .filter((s) => s.availability !== "available")
+    .map((s) => s.code);
 
   const gaps: LegalGap[] = sources
     .filter((s) => s.availability !== "available")
@@ -315,18 +384,21 @@ export function buildLegalContext(analysis: CaseAnalysis): LegalContext {
     const matched = signals.filter(
       (s) =>
         rule.triggers.includes(s.code) &&
-        (!rule.minSeverity || SEVERITY_RANK[s.severity] >= SEVERITY_RANK[rule.minSeverity]),
+        (!rule.minSeverity ||
+          SEVERITY_RANK[s.severity] >= SEVERITY_RANK[rule.minSeverity]),
     );
     if (matched.length === 0) continue;
 
     const severity = matched.reduce<Severity>(
-      (acc, s) => (SEVERITY_RANK[s.severity] > SEVERITY_RANK[acc] ? s.severity : acc),
+      (acc, s) =>
+        SEVERITY_RANK[s.severity] > SEVERITY_RANK[acc] ? s.severity : acc,
       "low",
     );
     const confidence = Math.min(
       100,
       Math.round(
-        matched.reduce((sum, s) => sum + s.score, 0) / matched.length + (matched.length - 1) * 4,
+        matched.reduce((sum, s) => sum + s.score, 0) / matched.length +
+          (matched.length - 1) * 4,
       ),
     );
 
@@ -344,7 +416,9 @@ export function buildLegalContext(analysis: CaseAnalysis): LegalContext {
   }
 
   assessments.sort(
-    (a, b) => SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity] || b.confidence - a.confidence,
+    (a, b) =>
+      SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity] ||
+      b.confidence - a.confidence,
   );
 
   return {

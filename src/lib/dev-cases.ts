@@ -237,7 +237,10 @@ export function getStoredDevCases(): StoredDevCase[] {
     const raw = window.localStorage.getItem(DEV_CASES_STORAGE_KEY);
     if (!raw) {
       const initial = [buildSyntheticDemoCase()];
-      window.localStorage.setItem(DEV_CASES_STORAGE_KEY, JSON.stringify(initial));
+      window.localStorage.setItem(
+        DEV_CASES_STORAGE_KEY,
+        JSON.stringify(initial),
+      );
       return initial;
     }
     const parsed = JSON.parse(raw);
@@ -374,7 +377,8 @@ export function updateDevCase(data: {
       id,
       name: data.name,
       subtitle: data.subtitle ?? "",
-      referenceDate: data.referenceDate ?? new Date().toISOString().slice(0, 10),
+      referenceDate:
+        data.referenceDate ?? new Date().toISOString().slice(0, 10),
       baseCurrency: data.baseCurrency ?? "EUR",
       createdAt: new Date().toISOString(),
       revision: 1,
@@ -406,9 +410,13 @@ export function upsertDevEntity(data: Record<string, unknown>): { id: string } {
     y: Number(data["y"] ?? 50),
     ...(data["ico"] ? { ico: String(data["ico"]) } : {}),
     ...(data["address"] ? { address: String(data["address"]) } : {}),
-    ...(data["registeredAddress"] ? { registeredAddress: String(data["registeredAddress"]) } : {}),
+    ...(data["registeredAddress"]
+      ? { registeredAddress: String(data["registeredAddress"]) }
+      : {}),
     ...(data["licence"] ? { licence: String(data["licence"]) } : {}),
-    ...(data["incorporatedAt"] ? { incorporatedAt: String(data["incorporatedAt"]) } : {}),
+    ...(data["incorporatedAt"]
+      ? { incorporatedAt: String(data["incorporatedAt"]) }
+      : {}),
     ...(data["note"] ? { note: String(data["note"]) } : {}),
   };
 
@@ -422,7 +430,9 @@ export function upsertDevEntity(data: Record<string, unknown>): { id: string } {
   return { id };
 }
 
-export function upsertDevTransaction(data: Record<string, unknown>): { id: string } {
+export function upsertDevTransaction(data: Record<string, unknown>): {
+  id: string;
+} {
   const cases = getStoredDevCases();
   const caseId = data["caseId"] as string;
   const target = cases.find((c) => c.id === caseId);
@@ -453,7 +463,9 @@ export function upsertDevTransaction(data: Record<string, unknown>): { id: strin
   return { id };
 }
 
-export function upsertDevRelation(data: Record<string, unknown>): { id: string } {
+export function upsertDevRelation(data: Record<string, unknown>): {
+  id: string;
+} {
   const cases = getStoredDevCases();
   const caseId = data["caseId"] as string;
   const target = cases.find((c) => c.id === caseId);
@@ -468,7 +480,9 @@ export function upsertDevRelation(data: Record<string, unknown>): { id: string }
     label: String(data["label"] ?? data["role"] ?? "Vzťah"),
   };
 
-  const existingIdx = target.relations.findIndex((r) => r.fromId === fromId && r.toId === toId);
+  const existingIdx = target.relations.findIndex(
+    (r) => r.fromId === fromId && r.toId === toId,
+  );
   if (existingIdx >= 0) {
     target.relations[existingIdx] = rel;
   } else {
@@ -492,7 +506,9 @@ export function upsertDevWeapon(data: Record<string, unknown>): { id: string } {
     serial: String(data["serial"] ?? data["serialNumber"] ?? ""),
     holderId: String(data["holderId"] ?? data["ownerEntityId"] ?? ""),
     supplierId: String(data["supplierId"] ?? ""),
-    acquiredAt: String(data["acquiredAt"] ?? new Date().toISOString().slice(0, 10)),
+    acquiredAt: String(
+      data["acquiredAt"] ?? new Date().toISOString().slice(0, 10),
+    ),
     ...(data["licence"] ? { licence: String(data["licence"]) } : {}),
   };
 
@@ -534,10 +550,12 @@ export function deleteDevRecord(type: string, id: string): void {
   }
   for (const c of cases) {
     if (type === "entity") c.entities = c.entities.filter((e) => e.id !== id);
-    if (type === "transaction") c.transactions = c.transactions.filter((t) => t.id !== id);
+    if (type === "transaction")
+      c.transactions = c.transactions.filter((t) => t.id !== id);
     if (type === "relation") {
       c.relations = c.relations.filter(
-        (r) => `${r.fromId}-${r.toId}` !== id && r.fromId !== id && r.toId !== id,
+        (r) =>
+          `${r.fromId}-${r.toId}` !== id && r.fromId !== id && r.toId !== id,
       );
     }
     if (type === "weapon") c.weapons = c.weapons.filter((w) => w.id !== id);

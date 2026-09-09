@@ -4,7 +4,8 @@ import { toast } from "sonner";
 import { describeDeleteImpact } from "@/lib/case-data";
 import { deleteRecord } from "@/lib/case-write.functions";
 
-type RecordType = "case" | "entity" | "transaction" | "relation" | "weapon" | "event";
+type RecordType =
+  "case" | "entity" | "transaction" | "relation" | "weapon" | "event";
 
 /**
  * Mazanie so zobrazením dopadu. Ak na záznam odkazujú iné záznamy,
@@ -29,7 +30,9 @@ export function DeleteRecordButton({
     try {
       const impact = await describeDeleteImpact({ data: { type, id } });
       if (!impact.canDelete) {
-        toast.error(`Nedá sa zmazať — odkazuje naň ${impact.blockers.join(", ")}.`);
+        toast.error(
+          `Nedá sa zmazať — odkazuje naň ${impact.blockers.join(", ")}.`,
+        );
         return;
       }
       const warning = impact.cascades.length

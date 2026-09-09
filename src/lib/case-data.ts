@@ -76,14 +76,15 @@ export async function loadCase(caseId: string): Promise<ForensicCase> {
   if (isDevFreeEntryActive()) {
     return loadDevCase(caseId);
   }
-  const [caseRow, entities, transactions, weapons, relations, events] = await Promise.all([
-    supabase.from("cases").select("*").eq("id", caseId).maybeSingle(),
-    supabase.from("case_entities").select("*").eq("case_id", caseId),
-    supabase.from("case_transactions").select("*").eq("case_id", caseId),
-    supabase.from("case_weapons").select("*").eq("case_id", caseId),
-    supabase.from("case_relations").select("*").eq("case_id", caseId),
-    supabase.from("case_events").select("*").eq("case_id", caseId),
-  ]);
+  const [caseRow, entities, transactions, weapons, relations, events] =
+    await Promise.all([
+      supabase.from("cases").select("*").eq("id", caseId).maybeSingle(),
+      supabase.from("case_entities").select("*").eq("case_id", caseId),
+      supabase.from("case_transactions").select("*").eq("case_id", caseId),
+      supabase.from("case_weapons").select("*").eq("case_id", caseId),
+      supabase.from("case_relations").select("*").eq("case_id", caseId),
+      supabase.from("case_events").select("*").eq("case_id", caseId),
+    ]);
 
   const row = caseRow.data;
   if (!row) throw new Error("Prípad sa nenašiel.");
@@ -99,7 +100,9 @@ export async function loadCase(caseId: string): Promise<ForensicCase> {
 }
 
 /** Revízie záznamov pre ochranu pred prepísaním súbežnou úpravou. */
-export async function loadCaseRevisions(caseId: string): Promise<Record<string, number>> {
+export async function loadCaseRevisions(
+  caseId: string,
+): Promise<Record<string, number>> {
   if (isDevFreeEntryActive()) {
     return loadDevCaseRevisions(caseId);
   }
@@ -121,7 +124,8 @@ export async function loadCaseRevisions(caseId: string): Promise<Record<string, 
   const out: Record<string, number> = {};
   for (const result of results) {
     for (const row of result.data ?? []) {
-      out[(row as { id: string }).id] = (row as { revision?: number }).revision ?? 1;
+      out[(row as { id: string }).id] =
+        (row as { revision?: number }).revision ?? 1;
     }
   }
   return out;
@@ -140,14 +144,18 @@ export const createCase = async (input: {
   return (await saveCase({ data: { ...input } })).id;
 };
 
-export const updateCase = async (args: NonNullable<Parameters<typeof saveCase>[0]>) => {
+export const updateCase = async (
+  args: NonNullable<Parameters<typeof saveCase>[0]>,
+) => {
   if (isDevFreeEntryActive()) {
     return updateDevCase(args.data as Parameters<typeof updateDevCase>[0]);
   }
   return saveCase(args);
 };
 
-export const upsertEntity = async (args: NonNullable<Parameters<typeof saveEntity>[0]>) => {
+export const upsertEntity = async (
+  args: NonNullable<Parameters<typeof saveEntity>[0]>,
+) => {
   if (isDevFreeEntryActive()) {
     return upsertDevEntity(args.data as Record<string, unknown>);
   }
@@ -163,21 +171,27 @@ export const upsertTransaction = async (
   return saveTransaction(args);
 };
 
-export const upsertRelation = async (args: NonNullable<Parameters<typeof saveRelation>[0]>) => {
+export const upsertRelation = async (
+  args: NonNullable<Parameters<typeof saveRelation>[0]>,
+) => {
   if (isDevFreeEntryActive()) {
     return upsertDevRelation(args.data as Record<string, unknown>);
   }
   return saveRelation(args);
 };
 
-export const upsertWeapon = async (args: NonNullable<Parameters<typeof saveWeapon>[0]>) => {
+export const upsertWeapon = async (
+  args: NonNullable<Parameters<typeof saveWeapon>[0]>,
+) => {
   if (isDevFreeEntryActive()) {
     return upsertDevWeapon(args.data as Record<string, unknown>);
   }
   return saveWeapon(args);
 };
 
-export const upsertEvent = async (args: NonNullable<Parameters<typeof saveEvent>[0]>) => {
+export const upsertEvent = async (
+  args: NonNullable<Parameters<typeof saveEvent>[0]>,
+) => {
   if (isDevFreeEntryActive()) {
     return upsertDevEvent(args.data as Record<string, unknown>);
   }
@@ -251,7 +265,9 @@ export type CaseImportMeta = {
 };
 
 /** Metadáta importov pre dohľadateľnosť zdrojov v reporte. */
-export async function listCaseImports(caseId: string): Promise<CaseImportMeta[]> {
+export async function listCaseImports(
+  caseId: string,
+): Promise<CaseImportMeta[]> {
   const { data, error } = await supabase
     .from("case_imports")
     .select(

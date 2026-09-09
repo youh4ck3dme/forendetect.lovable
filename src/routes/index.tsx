@@ -14,10 +14,14 @@ export const Route = createFileRoute("/")({
         content:
           "Forendo pomáha vyšetrovateľom odhaliť schránkové firmy, pranie peňazí a cezhraničné toky v jednom prehľadnom prípade.",
       },
-      { property: "og:title", content: "Forendo — forenzná analýza finančných tokov" },
+      {
+        property: "og:title",
+        content: "Forendo — forenzná analýza finančných tokov",
+      },
       {
         property: "og:description",
-        content: "Analýza. Dôkazy. Rozhodnutia. Forenzná platforma pre finančnú kriminalitu.",
+        content:
+          "Analýza. Dôkazy. Rozhodnutia. Forenzná platforma pre finančnú kriminalitu.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -30,7 +34,8 @@ const features = [
   {
     icon: ShieldCheck,
     title: "Detektory rizika",
-    detail: "Schránkové firmy, pranie peňazí, zbrane a časové vzorce v jednom skóre.",
+    detail:
+      "Schránkové firmy, pranie peňazí, zbrane a časové vzorce v jednom skóre.",
   },
   {
     icon: Network,
@@ -67,7 +72,14 @@ function Landing() {
     <main className="min-h-screen overflow-x-hidden bg-background">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-5 py-14">
         <header className="flex items-center gap-2">
-          <img src={malteMark} alt="" width={30} height={30} className="h-7 w-7" aria-hidden />
+          <img
+            src={malteMark}
+            alt=""
+            width={30}
+            height={30}
+            className="h-7 w-7"
+            aria-hidden
+          />
           <span className="text-lg font-extrabold tracking-tight">Forendo</span>
           <div className="ml-auto">
             <Button asChild variant="ghost" size="sm">
@@ -84,22 +96,28 @@ function Landing() {
             Analýza. Dôkazy. Rozhodnutia.
           </h1>
           <p className="text-muted-foreground">
-            Forendo spája finančné toky, subjekty a zbrane do jedného prípadu a upozorní na to, čo
-            si zaslúži pozornosť vyšetrovateľa.
+            Forendo spája finančné toky, subjekty a zbrane do jedného prípadu a
+            upozorní na to, čo si zaslúži pozornosť vyšetrovateľa.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild size="lg">
               <Link to="/auth">
-                Začať zadarmo <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
+                Začať zadarmo{" "}
+                <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
             </Button>
           </div>
-          {checking ? <p className="text-caption">Overujeme prihlásenie…</p> : null}
+          {checking ? (
+            <p className="text-caption">Overujeme prihlásenie…</p>
+          ) : null}
         </section>
 
         <section className="grid gap-4 sm:grid-cols-3">
           {features.map(({ icon: Icon, title, detail }) => (
-            <div key={title} className="rounded-2xl border border-border bg-card p-5">
+            <div
+              key={title}
+              className="rounded-2xl border border-border bg-card p-5"
+            >
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-muted-foreground">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>

@@ -1,8 +1,15 @@
 import type { Flag, ForensicCase, Weapon, WeaponAnalysis } from "../types";
-import { fuzzyEuropolSerial, matchEuropolSerial, normalizeSerial } from "../data/europol";
+import {
+  fuzzyEuropolSerial,
+  matchEuropolSerial,
+  normalizeSerial,
+} from "../data/europol";
 import { daysBetween } from "./utils";
 
-export function analyzeWeapon(weapon: Weapon, forensicCase: ForensicCase): WeaponAnalysis {
+export function analyzeWeapon(
+  weapon: Weapon,
+  forensicCase: ForensicCase,
+): WeaponAnalysis {
   const flags: Flag[] = [];
   const record = matchEuropolSerial(weapon.serial);
   const fuzzy = record ? null : fuzzyEuropolSerial(weapon.serial);
@@ -10,7 +17,8 @@ export function analyzeWeapon(weapon: Weapon, forensicCase: ForensicCase): Weapo
     .map(normalizeSerial)
     .includes(normalizeSerial(weapon.serial));
   const europolMatch = record !== null || inCaseList;
-  const invalidLicence = !weapon.licence || !forensicCase.validLicences.includes(weapon.licence);
+  const invalidLicence =
+    !weapon.licence || !forensicCase.validLicences.includes(weapon.licence);
 
   if (europolMatch) {
     flags.push({
@@ -48,7 +56,9 @@ export function analyzeWeapon(weapon: Weapon, forensicCase: ForensicCase): Weapo
     flags.push({
       code: "INVALID_LICENSE",
       label: "Neplatná zbrojná licencia",
-      detail: weapon.licence ? `Licencia ${weapon.licence} nie je platná` : "Prevod bez licencie",
+      detail: weapon.licence
+        ? `Licencia ${weapon.licence} nie je platná`
+        : "Prevod bez licencie",
       weight: 28,
       severity: "critical",
     });
@@ -80,7 +90,10 @@ export function detectSerialBatches(weapons: Weapon[]): {
   }
 
   return [...groups.entries()]
-    .filter(([, group]) => group.length >= 3 && new Set(group.map((w) => w.holderId)).size >= 2)
+    .filter(
+      ([, group]) =>
+        group.length >= 3 && new Set(group.map((w) => w.holderId)).size >= 2,
+    )
     .map(([prefix, group]) => ({
       prefix,
       serials: group.map((w) => w.serial).sort(),
@@ -89,7 +102,10 @@ export function detectSerialBatches(weapons: Weapon[]): {
 }
 
 /** Náhly nárast objemu: prvé nadobudnutie vs. počet kusov v okne 8 mesiacov. */
-export function detectVolumeSurge(weapons: Weapon[], holderId: string): Flag | null {
+export function detectVolumeSurge(
+  weapons: Weapon[],
+  holderId: string,
+): Flag | null {
   const own = weapons
     .filter((w) => w.holderId === holderId)
     .sort((a, b) => a.acquiredAt.localeCompare(b.acquiredAt));

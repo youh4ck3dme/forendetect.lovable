@@ -24,13 +24,20 @@ const money = z
   .finite("Suma musí byť číslo.")
   .refine((value) => value !== 0, "Suma nesmie byť nula.")
   .refine((value) => Math.abs(value) < 1e15, "Suma je mimo rozsahu.")
-  .refine((value) => Math.round(value * 100) === value * 100, "Najviac dve desatinné miesta.");
+  .refine(
+    (value) => Math.round(value * 100) === value * 100,
+    "Najviac dve desatinné miesta.",
+  );
 const shortText = z.string().trim().max(200);
 const longText = z.string().trim().max(2000);
 const revision = z.number().int().positive();
 
-function fail(error: { message: string; code?: string } | null, fallback: string): never {
-  if (error?.code === "42501") throw new Error("Nemáte oprávnenie na túto operáciu.");
+function fail(
+  error: { message: string; code?: string } | null,
+  fallback: string,
+): never {
+  if (error?.code === "42501")
+    throw new Error("Nemáte oprávnenie na túto operáciu.");
   throw new Error(error?.message ? `${fallback} (${error.message})` : fallback);
 }
 
@@ -63,13 +70,19 @@ export const saveCase = createServerFn({ method: "POST" })
     const payload = {
       name: data.name,
       subtitle: data.subtitle,
-      reference_date: data.referenceDate ?? new Date().toISOString().slice(0, 10),
+      reference_date:
+        data.referenceDate ?? new Date().toISOString().slice(0, 10),
       base_currency: data.baseCurrency,
     };
     if (data.id) {
-      const query = context.supabase.from("cases").update(payload).eq("id", data.id);
+      const query = context.supabase
+        .from("cases")
+        .update(payload)
+        .eq("id", data.id);
       const { data: rows, error } = await (
-        data.expectedRevision ? query.eq("revision", data.expectedRevision) : query
+        data.expectedRevision
+          ? query.eq("revision", data.expectedRevision)
+          : query
       ).select("id");
       if (error) fail(error, "Prípad sa nepodarilo uložiť.");
       assertUpdated(rows?.length ?? 0);
@@ -131,9 +144,14 @@ export const saveEntity = createServerFn({ method: "POST" })
       note: data.note || null,
     };
     if (data.id) {
-      const query = context.supabase.from("case_entities").update(payload).eq("id", data.id);
+      const query = context.supabase
+        .from("case_entities")
+        .update(payload)
+        .eq("id", data.id);
       const { data: rows, error } = await (
-        data.expectedRevision ? query.eq("revision", data.expectedRevision) : query
+        data.expectedRevision
+          ? query.eq("revision", data.expectedRevision)
+          : query
       ).select("id");
       if (error) fail(error, "Subjekt sa nepodarilo uložiť.");
       assertUpdated(rows?.length ?? 0);
@@ -207,9 +225,14 @@ export const saveTransaction = createServerFn({ method: "POST" })
       description: data.description,
     };
     if (data.id) {
-      const query = context.supabase.from("case_transactions").update(payload).eq("id", data.id);
+      const query = context.supabase
+        .from("case_transactions")
+        .update(payload)
+        .eq("id", data.id);
       const { data: rows, error } = await (
-        data.expectedRevision ? query.eq("revision", data.expectedRevision) : query
+        data.expectedRevision
+          ? query.eq("revision", data.expectedRevision)
+          : query
       ).select("id");
       if (error) fail(error, "Transakciu sa nepodarilo uložiť.");
       assertUpdated(rows?.length ?? 0);
@@ -252,9 +275,14 @@ export const saveRelation = createServerFn({ method: "POST" })
       label: data.label,
     };
     if (data.id) {
-      const query = context.supabase.from("case_relations").update(payload).eq("id", data.id);
+      const query = context.supabase
+        .from("case_relations")
+        .update(payload)
+        .eq("id", data.id);
       const { data: rows, error } = await (
-        data.expectedRevision ? query.eq("revision", data.expectedRevision) : query
+        data.expectedRevision
+          ? query.eq("revision", data.expectedRevision)
+          : query
       ).select("id");
       if (error) fail(error, "Vzťah sa nepodarilo uložiť.");
       assertUpdated(rows?.length ?? 0);
@@ -301,9 +329,14 @@ export const saveWeapon = createServerFn({ method: "POST" })
       licence: data.licence || null,
     };
     if (data.id) {
-      const query = context.supabase.from("case_weapons").update(payload).eq("id", data.id);
+      const query = context.supabase
+        .from("case_weapons")
+        .update(payload)
+        .eq("id", data.id);
       const { data: rows, error } = await (
-        data.expectedRevision ? query.eq("revision", data.expectedRevision) : query
+        data.expectedRevision
+          ? query.eq("revision", data.expectedRevision)
+          : query
       ).select("id");
       if (error) fail(error, "Zbraň sa nepodarilo uložiť.");
       assertUpdated(rows?.length ?? 0);
@@ -344,9 +377,14 @@ export const saveEvent = createServerFn({ method: "POST" })
       severity: data.severity,
     };
     if (data.id) {
-      const query = context.supabase.from("case_events").update(payload).eq("id", data.id);
+      const query = context.supabase
+        .from("case_events")
+        .update(payload)
+        .eq("id", data.id);
       const { data: rows, error } = await (
-        data.expectedRevision ? query.eq("revision", data.expectedRevision) : query
+        data.expectedRevision
+          ? query.eq("revision", data.expectedRevision)
+          : query
       ).select("id");
       if (error) fail(error, "Udalosť sa nepodarilo uložiť.");
       assertUpdated(rows?.length ?? 0);
@@ -375,7 +413,14 @@ const RECORD_TABLES = {
 type RecordType = keyof typeof RECORD_TABLES;
 
 const deleteInput = z.object({
-  type: z.enum(["case", "entity", "transaction", "relation", "weapon", "event"]),
+  type: z.enum([
+    "case",
+    "entity",
+    "transaction",
+    "relation",
+    "weapon",
+    "event",
+  ]),
   id: uuid,
 });
 
@@ -392,7 +437,9 @@ export const getDeleteImpact = createServerFn({ method: "POST" })
         context.supabase
           .from("case_transactions")
           .select("id", { count: "exact", head: true })
-          .or(`from_id.eq.${data.id},to_id.eq.${data.id},payer_id.eq.${data.id}`),
+          .or(
+            `from_id.eq.${data.id},to_id.eq.${data.id},payer_id.eq.${data.id}`,
+          ),
         context.supabase
           .from("case_relations")
           .select("id", { count: "exact", head: true })
@@ -415,7 +462,13 @@ export const getDeleteImpact = createServerFn({ method: "POST" })
         "case_weapons",
         "case_events",
       ] as const;
-      const labels = ["subjektov", "transakcií", "vzťahov", "zbraní", "udalostí"];
+      const labels = [
+        "subjektov",
+        "transakcií",
+        "vzťahov",
+        "zbraní",
+        "udalostí",
+      ];
       const counts = await Promise.all(
         tables.map((table) =>
           context.supabase
@@ -424,7 +477,7 @@ export const getDeleteImpact = createServerFn({ method: "POST" })
             .eq("case_id", data.id),
         ),
       );
-      counts.forEach((result, index) => {
+      counts.forEach((result: { count: number | null }, index: number) => {
         if (result.count) cascades.push(`${result.count} ${labels[index]}`);
       });
     }
@@ -437,7 +490,10 @@ export const deleteRecord = createServerFn({ method: "POST" })
   .validator((input: unknown) => deleteInput.parse(input))
   .handler(async ({ data, context }) => {
     const table = RECORD_TABLES[data.type as RecordType];
-    const { error } = await context.supabase.from(table).delete().eq("id", data.id);
+    const { error } = await context.supabase
+      .from(table)
+      .delete()
+      .eq("id", data.id);
     if (error) {
       if (error.code === "23503") {
         throw new Error(
@@ -476,11 +532,19 @@ export const createDemoCase = createServerFn({ method: "POST" })
       })
       .select("id")
       .single();
-    if (caseError || !created) fail(caseError, "Ukážkový prípad sa nepodarilo vytvoriť.");
+    if (caseError || !created)
+      fail(caseError, "Ukážkový prípad sa nepodarilo vytvoriť.");
     const caseId = created.id;
 
     const entities = [
-      { name: "Subjekt A s.r.o.", kind: "company", role: "odberateľ", country: "SK", x: 20, y: 30 },
+      {
+        name: "Subjekt A s.r.o.",
+        kind: "company",
+        role: "odberateľ",
+        country: "SK",
+        x: 20,
+        y: 30,
+      },
       {
         name: "Subjekt B s.r.o.",
         kind: "company",
@@ -489,16 +553,33 @@ export const createDemoCase = createServerFn({ method: "POST" })
         x: 55,
         y: 20,
       },
-      { name: "Subjekt C Ltd.", kind: "company", role: "príjemca", country: "CY", x: 80, y: 60 },
-      { name: "Osoba D (fiktívna)", kind: "person", role: "konateľ", country: "SK", x: 35, y: 70 },
+      {
+        name: "Subjekt C Ltd.",
+        kind: "company",
+        role: "príjemca",
+        country: "CY",
+        x: 80,
+        y: 60,
+      },
+      {
+        name: "Osoba D (fiktívna)",
+        kind: "person",
+        role: "konateľ",
+        country: "SK",
+        x: 35,
+        y: 70,
+      },
     ];
     const { data: rows, error: entityError } = await supabase
       .from("case_entities")
       .insert(entities.map((e) => ({ ...e, case_id: caseId, user_id: userId })))
       .select("id, name");
-    if (entityError || !rows) fail(entityError, "Ukážkové subjekty sa nepodarilo vytvoriť.");
+    if (entityError || !rows)
+      fail(entityError, "Ukážkové subjekty sa nepodarilo vytvoriť.");
 
-    const byName = (needle: string) => rows.find((r) => r.name.startsWith(needle))?.id ?? null;
+    const byName = (needle: string) =>
+      rows.find((r: { id: string; name: string }) => r.name.startsWith(needle))
+        ?.id ?? null;
     const a = byName("Subjekt A");
     const b = byName("Subjekt B");
     const c = byName("Subjekt C");

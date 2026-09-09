@@ -6,8 +6,11 @@ import { PLANS, type PlanId } from "@/config/billing";
  */
 export async function getPlanId(userId: string): Promise<PlanId> {
   try {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin.rpc("current_plan", { _user: userId });
+    const { supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
+    const { data, error } = await supabaseAdmin.rpc("current_plan", {
+      _user: userId,
+    });
     if (error) return "free";
     return data === "pro" ? "pro" : "free";
   } catch {

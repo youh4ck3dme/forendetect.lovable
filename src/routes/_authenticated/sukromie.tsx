@@ -90,29 +90,35 @@ function PrivacyScreen() {
         <SectionTitle>Aké údaje spracúvame</SectionTitle>
         <Card className="space-y-2 text-[12px] leading-relaxed text-muted-foreground">
           <p>
-            Prihlasovacie údaje (e-mail, prípadne profil z Google), obsah vašich prípadov (subjekty,
-            transakcie, vzťahy, zbrane, udalosti), nahraté súbory importov, technické záznamy o
-            úkonoch a stav predplatného.
+            Prihlasovacie údaje (e-mail, prípadne profil z Google), obsah vašich
+            prípadov (subjekty, transakcie, vzťahy, zbrane, udalosti), nahraté
+            súbory importov, technické záznamy o úkonoch a stav predplatného.
           </p>
           <p>
-            Údaje sú viditeľné len pre váš účet — prístup je vynútený na úrovni databázy. Text
-            posielaný AI asistentovi je pred odoslaním pseudonymizovaný.
+            Údaje sú viditeľné len pre váš účet — prístup je vynútený na úrovni
+            databázy. Text posielaný AI asistentovi je pred odoslaním
+            pseudonymizovaný.
           </p>
           <p>{BRAND.disclaimer}</p>
         </Card>
 
         <SectionTitle>Doplniť pred spustením</SectionTitle>
         <Card className="space-y-1 text-[12px] text-muted-foreground">
-          <p>Tieto údaje zatiaľ nie sú známe a musia sa doplniť pred ostrým používaním:</p>
+          <p>
+            Tieto údaje zatiaľ nie sú známe a musia sa doplniť pred ostrým
+            používaním:
+          </p>
           <ul className="list-disc space-y-1 pl-4">
-            <li>Identita a kontakt prevádzkovateľa (obchodné meno, sídlo, e-mail).</li>
+            <li>
+              Identita a kontakt prevádzkovateľa (obchodné meno, sídlo, e-mail).
+            </li>
             <li>Doba uchovávania údajov po zrušení účtu.</li>
             <li>Zoznam sprostredkovateľov a zmluvné podmienky s nimi.</li>
             <li>Právny základ spracúvania pre konkrétne použitie.</li>
           </ul>
           <p className="pt-1">
-            Tento text je pracovný návrh, nie právne overený dokument. Pred zverejnením ho nechajte
-            posúdiť právnikovi.
+            Tento text je pracovný návrh, nie právne overený dokument. Pred
+            zverejnením ho nechajte posúdiť právnikovi.
           </p>
         </Card>
 
@@ -121,22 +127,28 @@ function PrivacyScreen() {
           <p className="text-[12px] text-muted-foreground">
             Stiahnite si všetky svoje údaje v strojovo čitateľnom formáte JSON.
           </p>
-          <Button variant="outline" className="w-full" onClick={handleExport} disabled={busy}>
-            <Download className="mr-1 h-4 w-4" aria-hidden /> Stiahnuť moje údaje (JSON)
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleExport}
+            disabled={busy}
+          >
+            <Download className="mr-1 h-4 w-4" aria-hidden /> Stiahnuť moje
+            údaje (JSON)
           </Button>
         </Card>
 
         <SectionTitle>Vymazanie účtu</SectionTitle>
         <Card className="space-y-3">
           <p className="text-[12px] text-muted-foreground">
-            Vymažú sa všetky prípady, importované súbory, AI výstupy, technické záznamy aj samotná
-            identita. Operácia je nevratná. Ak niektorý krok zlyhá, uvidíte chybu a mazanie môžete
-            bezpečne zopakovať.
+            Vymažú sa všetky prípady, importované súbory, AI výstupy, technické
+            záznamy aj samotná identita. Operácia je nevratná. Ak niektorý krok
+            zlyhá, uvidíte chybu a mazanie môžete bezpečne zopakovať.
           </p>
           <p className="text-[11px] text-muted-foreground">
-            Zálohy infraštruktúry a záznamy potrebné pre účtovníctvo alebo platobného poskytovateľa
-            môžu obsahovať údaje ešte určitý čas po vymazaní — nejde o okamžité úplné odstránenie zo
-            všetkých systémov.
+            Zálohy infraštruktúry a záznamy potrebné pre účtovníctvo alebo
+            platobného poskytovateľa môžu obsahovať údaje ešte určitý čas po
+            vymazaní — nejde o okamžité úplné odstránenie zo všetkých systémov.
           </p>
           <div className="space-y-1">
             <Label htmlFor="confirm-email" className="text-[11px]">
@@ -157,7 +169,8 @@ function PrivacyScreen() {
             disabled={busy || !confirmEmail}
             onClick={handleDeleteAccount}
           >
-            <ShieldAlert className="mr-1 h-4 w-4" aria-hidden /> Trvalo zmazať účet a všetky údaje
+            <ShieldAlert className="mr-1 h-4 w-4" aria-hidden /> Trvalo zmazať
+            účet a všetky údaje
           </Button>
         </Card>
       </Screen>

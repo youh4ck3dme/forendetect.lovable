@@ -10,7 +10,8 @@ import networkAnalysis from "./tools/network-analysis";
 
 // Direct auth host: the runtime SUPABASE_URL is a proxy on publish, which the
 // MCP verifier rejects (RFC 8414 issuer mismatch). The project ref is stable.
-const projectRef = import.meta.env["VITE_SUPABASE_PROJECT_ID"] ?? "project-ref-unset";
+const projectRef =
+  import.meta.env["VITE_SUPABASE_PROJECT_ID"] ?? "project-ref-unset";
 
 export default defineMcp({
   name: "pixel-polish",

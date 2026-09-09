@@ -11,7 +11,9 @@ export default defineTool({
     severity: z
       .enum(["critical", "high", "medium", "low"])
       .optional()
-      .describe("Minimum severity is not applied; filters to this exact level."),
+      .describe(
+        "Minimum severity is not applied; filters to this exact level.",
+      ),
     source: z
       .enum([
         "entita",
@@ -26,7 +28,11 @@ export default defineTool({
       .describe("Detector family the alert came from."),
     limit: z.number().int().min(1).max(100).default(20),
   },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  annotations: {
+    readOnlyHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async ({ severity, source, limit }, ctx) => {
     let items = (await caseAnalysis(ctx)).alerts;
     if (severity) items = items.filter((a) => a.severity === severity);

@@ -35,7 +35,9 @@ describe("cross-contradictions (Krížová konfrontačná matica rozporov § 125
       // Miera klamstva / účelovosti a závažnosť
       expect(item.deceitPercentage).toBeGreaterThanOrEqual(50);
       expect(item.deceitPercentage).toBeLessThanOrEqual(100);
-      expect(["critical", "high", "medium", "low"]).toContain(item.contradictionSeverity);
+      expect(["critical", "high", "medium", "low"]).toContain(
+        item.contradictionSeverity,
+      );
 
       // Procesný návrh podľa Trestného poriadku
       expect(item.proceduralResolution).toContain("TP");

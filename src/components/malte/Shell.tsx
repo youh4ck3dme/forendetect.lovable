@@ -4,7 +4,10 @@ import type React from "react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import malteMark from "@/assets/malte-mark.png";
-import { CommandPalette, CommandPaletteTrigger } from "@/components/malte/CommandPalette";
+import {
+  CommandPalette,
+  CommandPaletteTrigger,
+} from "@/components/malte/CommandPalette";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { NotificationsBell } from "@/components/malte/NotificationsBell";
 import { navItems, secondaryItems } from "@/components/malte/nav";
@@ -14,12 +17,21 @@ import { useActiveCase } from "@/hooks/useActiveCase";
 function DesktopSidebar() {
   const { activeCase, analysis } = useActiveCase();
   const shellAnalysis = analysis;
-  const criticalCount = analysis.alerts.filter((a) => a.severity === "critical").length;
+  const criticalCount = analysis.alerts.filter(
+    (a) => a.severity === "critical",
+  ).length;
 
   return (
     <aside className="sticky top-0 hidden h-screen w-[288px] shrink-0 flex-col border-r border-border bg-card px-4 py-6 lg:flex">
       <div className="flex items-center gap-2 px-2">
-        <img src={malteMark} alt="" width={30} height={30} className="h-7 w-7" aria-hidden />
+        <img
+          src={malteMark}
+          alt=""
+          width={30}
+          height={30}
+          className="h-7 w-7"
+          aria-hidden
+        />
         <span className="text-lg font-extrabold tracking-tight">Forendo</span>
         <span className="ml-auto flex items-center gap-1.5">
           <ThemeToggle />
@@ -28,7 +40,9 @@ function DesktopSidebar() {
       </div>
 
       <div className="mt-6 rounded-2xl gradient-brand p-4 text-foreground shadow-glow">
-        <p className="text-[10px] tracking-wide uppercase opacity-80">Prebiehajúci prípad</p>
+        <p className="text-[10px] tracking-wide uppercase opacity-80">
+          Prebiehajúci prípad
+        </p>
         <p className="mt-1 text-sm font-semibold">{activeCase.name}</p>
         <div className="mt-3 flex items-end justify-between">
           <span className="text-xs font-semibold">
@@ -57,7 +71,9 @@ function DesktopSidebar() {
             key={to}
             to={to}
             activeOptions={{ exact: to === "/" }}
-            activeProps={{ className: "bg-accent text-accent-foreground font-semibold" }}
+            activeProps={{
+              className: "bg-accent text-accent-foreground font-semibold",
+            }}
             className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
           >
             <Icon className="h-4 w-4" aria-hidden />
@@ -75,7 +91,9 @@ function DesktopSidebar() {
           <Link
             key={to}
             to={to}
-            activeProps={{ className: "bg-accent text-accent-foreground font-semibold" }}
+            activeProps={{
+              className: "bg-accent text-accent-foreground font-semibold",
+            }}
             className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
           >
             <Icon className="h-4 w-4" aria-hidden />
@@ -113,7 +131,12 @@ export function StatusBar() {
 
   useEffect(() => {
     const tick = () =>
-      setNow(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+      setNow(
+        new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      );
     tick();
     const id = window.setInterval(tick, 15000);
     return () => window.clearInterval(id);
@@ -173,7 +196,13 @@ export function AppHeader({
           </button>
         ) : null}
         {brand ? (
-          <img src={malteMark} alt="Forendo" width={28} height={28} className="h-7 w-7 lg:hidden" />
+          <img
+            src={malteMark}
+            alt="Forendo"
+            width={28}
+            height={28}
+            className="h-7 w-7 lg:hidden"
+          />
         ) : null}
         <h1
           className={cn(
@@ -193,7 +222,9 @@ export function AppHeader({
       <div
         className={cn(
           "origin-top transition-all duration-300",
-          scrolled ? "pointer-events-none max-h-0 scale-y-95 opacity-0" : "max-h-105 opacity-100",
+          scrolled
+            ? "pointer-events-none max-h-0 scale-y-95 opacity-0"
+            : "max-h-105 opacity-100",
         )}
       >
         {children}
@@ -204,7 +235,9 @@ export function AppHeader({
 
 export function BottomNav() {
   const { analysis } = useActiveCase();
-  const criticalCount = analysis.alerts.filter((a) => a.severity === "critical").length;
+  const criticalCount = analysis.alerts.filter(
+    (a) => a.severity === "critical",
+  ).length;
 
   return (
     <nav className="sticky bottom-0 z-10 mt-auto border-t border-border surface-glass px-2 pt-2 pb-5 lg:hidden">
@@ -215,7 +248,9 @@ export function BottomNav() {
               to={to}
               className="group relative flex flex-col items-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
               activeOptions={{ exact: to === "/" }}
-              activeProps={{ className: "text-primary [&_[data-ind]]:opacity-100" }}
+              activeProps={{
+                className: "text-primary [&_[data-ind]]:opacity-100",
+              }}
             >
               <span className="relative">
                 <Icon
@@ -287,10 +322,18 @@ export function Card({
   );
 }
 
-export function SectionTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {
+export function SectionTitle({
+  children,
+  action,
+}: {
+  children: ReactNode;
+  action?: ReactNode;
+}) {
   return (
     <div className="flex items-center justify-between px-1 pt-1">
-      <h2 className="text-sm font-semibold tracking-tight text-foreground">{children}</h2>
+      <h2 className="text-sm font-semibold tracking-tight text-foreground">
+        {children}
+      </h2>
       {action}
     </div>
   );

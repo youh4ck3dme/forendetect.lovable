@@ -11,13 +11,22 @@ export default defineTool({
     europolOnly: z
       .boolean()
       .default(false)
-      .describe("Return only weapons matching the case watchlist of serial numbers."),
+      .describe(
+        "Return only weapons matching the case watchlist of serial numbers.",
+      ),
   },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  annotations: {
+    readOnlyHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async ({ europolOnly }, ctx) => {
     const a = await caseAnalysis(ctx);
-    const nameOf = (id: string) => a.entities.find((e) => e.entity.id === id)?.entity.name ?? id;
-    const items = (europolOnly ? a.weapons.filter((w) => w.europolMatch) : a.weapons).map((w) => ({
+    const nameOf = (id: string) =>
+      a.entities.find((e) => e.entity.id === id)?.entity.name ?? id;
+    const items = (
+      europolOnly ? a.weapons.filter((w) => w.europolMatch) : a.weapons
+    ).map((w) => ({
       ...w.weapon,
       holder: nameOf(w.weapon.holderId),
       supplier: nameOf(w.weapon.supplierId),

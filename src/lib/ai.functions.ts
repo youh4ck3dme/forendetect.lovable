@@ -3,7 +3,12 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { analyzeCase } from "@/forensic";
 import { mapCaseRows } from "@/lib/case-mapper";
-import { buildAiPayload, buildPseudonyms, PROMPT_VERSION, type AiPayload } from "@/lib/ai/redact";
+import {
+  buildAiPayload,
+  buildPseudonyms,
+  PROMPT_VERSION,
+  type AiPayload,
+} from "@/lib/ai/redact";
 import type { ExtractedCaseEntity, ParsedCaseDocument } from "./types";
 
 /**
@@ -15,7 +20,13 @@ import type { ExtractedCaseEntity, ParsedCaseDocument } from "./types";
 /** Predvolený limit bez platného predplatného; plán ho môže zvýšiť. */
 export const AI_DAILY_LIMIT = 25;
 
-const taskEnum = z.enum(["explain_finding", "case_summary", "normalize_descriptions"]);
+const taskEnum = z.enum([
+  "explain_finding",
+  "case_summary",
+  "normalize_descriptions",
+  "alt_devil",
+  "admiss_audit",
+]);
 export type AiTask = z.infer<typeof taskEnum>;
 
 const SYSTEM_PROMPT = `Si forenzný analytický asistent. Odpovedáš po slovensky.
@@ -51,6 +62,43 @@ const schemas = {
       .default([]),
     unverified: z.array(z.string().max(400)).max(10).default([]),
   }),
+  alt_devil: z.object({
+    hypotheses: z
+      .array(
+        z.object({
+          id: z.string().max(20),
+          title: z.string().max(200),
+          scenario: z.string().max(4000),
+          explainedEvidence: z.array(z.string().max(200)).max(30).default([]),
+          requiredTracesIfTrue: z
+            .array(z.string().max(200))
+            .max(30)
+            .default([]),
+          rebuttalTest: z.string().max(2000),
+        }),
+      )
+      .min(2)
+      .max(5),
+    unverified: z.array(z.string().max(400)).max(10).default([]),
+    cited: z.array(z.string().max(12)).max(60).default([]),
+  }),
+  admiss_audit: z.object({
+    overallStatus: z.enum(["admissible", "at_risk", "inadmissible"]),
+    score: z.number().min(0).max(100),
+    defects: z
+      .array(
+        z.object({
+          severity: z.enum(["critical", "curable", "formal"]),
+          paragraph: z.string().max(60),
+          description: z.string().max(2000),
+          remedyAction: z.string().max(2000),
+        }),
+      )
+      .default([]),
+    courtReadySummary: z.string().max(4000),
+    unverified: z.array(z.string().max(400)).max(10).default([]),
+    cited: z.array(z.string().max(12)).max(60).default([]),
+  }),
 } as const;
 
 const instructions: Record<AiTask, string> = {
@@ -60,18 +108,24 @@ const instructions: Record<AiTask, string> = {
     'Priprav návrh zhrnutia prípadu: rozsah dát, hlavné pozorovania a čo treba overiť. Zhrnutie je návrh na kontrolu, nie záver. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
   normalize_descriptions:
     'Navrhni normalizovaný tvar popisov platieb a možné zhody protistrán na kontrolu používateľom. Nič nespájaj automaticky. Vráť JSON {"suggestions": [{"transaction": string, "normalized": string, "counterparty": string, "confidence": "low"|"medium"|"high"}], "unverified": string[]}.',
+  alt_devil:
+    'ROLE: Forenzný oponent ("Devil\'s Advocate"). Rozbi tunelové videnie vyšetrovania. Vygeneruj minimálne 2 plnohodnotné alternatívne (konkurenčné) hypotézy, ktoré legitímne vysvetľujú zaistené stopy/transakcie bez predpokladu trestnej činnosti. Pre každú uveď vysvetlené stopy, čo by v spise muselo existovať a konkrétny procesný test na jej overenie/vyvrátenie. Vráť JSON schému: {"hypotheses": [{"id": string, "title": string, "scenario": string, "explainedEvidence": string[], "requiredTracesIfTrue": string[], "rebuttalTest": string}], "unverified": string[], "cited": string[]}.',
+  admiss_audit:
+    'ROLE: Procesný audítor trestného konania (TP SR č. 301/2005 Z. z. § 119 a nasl.). Skontroluj zákonnosť a procesnú prípustnosť dôkazov a postupov. Identifikuj kritické vady (absolútna neprípustnosť), odstrániteľné vady a formálne vady s návrhom nápravy pre pojednávanie. Vráť JSON schému: {"overallStatus": "admissible"|"at_risk"|"inadmissible", "score": number, "defects": [{"severity": "critical"|"curable"|"formal", "paragraph": string, "description": string, "remedyAction": string}], "courtReadySummary": string, "unverified": string[], "cited": string[]}.',
 };
 
 async function loadAnalysis(supabase: SupabaseLike, caseId: string) {
-  const [caseRow, entities, transactions, weapons, relations, events] = await Promise.all([
-    supabase.from("cases").select("*").eq("id", caseId).maybeSingle(),
-    supabase.from("case_entities").select("*").eq("case_id", caseId),
-    supabase.from("case_transactions").select("*").eq("case_id", caseId),
-    supabase.from("case_weapons").select("*").eq("case_id", caseId),
-    supabase.from("case_relations").select("*").eq("case_id", caseId),
-    supabase.from("case_events").select("*").eq("case_id", caseId),
-  ]);
-  if (!caseRow.data) throw new Error("Prípad sa nenašiel alebo k nemu nemáte prístup.");
+  const [caseRow, entities, transactions, weapons, relations, events] =
+    await Promise.all([
+      supabase.from("cases").select("*").eq("id", caseId).maybeSingle(),
+      supabase.from("case_entities").select("*").eq("case_id", caseId),
+      supabase.from("case_transactions").select("*").eq("case_id", caseId),
+      supabase.from("case_weapons").select("*").eq("case_id", caseId),
+      supabase.from("case_relations").select("*").eq("case_id", caseId),
+      supabase.from("case_events").select("*").eq("case_id", caseId),
+    ]);
+  if (!caseRow.data)
+    throw new Error("Prípad sa nenašiel alebo k nemu nemáte prístup.");
   const forensicCase = mapCaseRows(
     caseRow.data,
     entities.data ?? [],
@@ -90,7 +144,8 @@ type SupabaseLike = any;
 export const getAiStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { mistralConfigured, mistralModel } = await import("@/lib/ai/mistral.server");
+    const { mistralConfigured, mistralModel } =
+      await import("@/lib/ai/mistral.server");
     const { getQuotas } = await import("@/lib/entitlements.server");
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
     const [{ count }, quotas] = await Promise.all([
@@ -134,7 +189,13 @@ export const previewAiPayload = createServerFn({ method: "POST" })
   });
 
 export type AiRunResult = {
-  status: "ok" | "not_configured" | "timeout" | "rate_limited" | "failed" | "limit_reached";
+  status:
+    | "ok"
+    | "not_configured"
+    | "timeout"
+    | "rate_limited"
+    | "failed"
+    | "limit_reached";
   message?: string;
   task: AiTask;
   model?: string;
@@ -154,6 +215,23 @@ export type AiRunResult = {
       counterparty?: string;
       confidence: string;
     }[];
+    hypotheses?: {
+      id: string;
+      title: string;
+      scenario: string;
+      explainedEvidence: string[];
+      requiredTracesIfTrue: string[];
+      rebuttalTest: string;
+    }[];
+    defects?: {
+      severity: "critical" | "curable" | "formal";
+      paragraph: string;
+      description: string;
+      remedyAction: string;
+    }[];
+    overallStatus?: "admissible" | "at_risk" | "inadmissible";
+    score?: number;
+    courtReadySummary?: string;
     idMap?: {
       entities: Record<string, string>;
       transactions: Record<string, string>;
@@ -198,12 +276,12 @@ export const runAiTask = createServerFn({ method: "POST" })
       };
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
     const { getQuotas } = await import("@/lib/entitlements.server");
     const quotas = await getQuotas(context.userId);
-    const { data: reservationId, error: reserveError } = await supabaseAdmin.rpc(
-      "reserve_ai_call",
-      {
+    const { data: reservationId, error: reserveError } =
+      await supabaseAdmin.rpc("reserve_ai_call", {
         _user: context.userId,
         _case: data.caseId,
         _task: data.task,
@@ -211,13 +289,13 @@ export const runAiTask = createServerFn({ method: "POST" })
         _prompt_version: PROMPT_VERSION,
         _input_revision: analysis.dataFingerprint,
         _daily_limit: quotas.aiPerDay,
-      },
-    );
+      });
     if (reserveError) {
       return {
         ...base,
         status: "limit_reached",
-        message: "Denný limit AI volaní bol vyčerpaný alebo rezervácia zlyhala.",
+        message:
+          "Denný limit AI volaní bol vyčerpaný alebo rezervácia zlyhala.",
       };
     }
 
@@ -306,12 +384,14 @@ export const runAiTask = createServerFn({ method: "POST" })
     ]);
     const output = parsed.data as Record<string, unknown>;
     if (Array.isArray(output["cited"])) {
-      output["cited"] = (output["cited"] as string[]).filter((id) => allowed.has(id));
+      output["cited"] = (output["cited"] as string[]).filter((id) =>
+        allowed.has(id),
+      );
     }
     if (Array.isArray(output["suggestions"])) {
-      output["suggestions"] = (output["suggestions"] as { transaction: string }[]).filter((s) =>
-        allowed.has(s.transaction),
-      );
+      output["suggestions"] = (
+        output["suggestions"] as { transaction: string }[]
+      ).filter((s) => allowed.has(s.transaction));
     }
 
     await finish("succeeded", undefined, result.usage);
@@ -420,14 +500,22 @@ export async function extractSingleBufferText(
   if (lower.endsWith(".pdf")) {
     let localText = "";
     try {
-      const pdfModule = (await import("pdf-parse")) as unknown as Record<string, unknown>;
+      const pdfModule = (await import("pdf-parse")) as unknown as Record<
+        string,
+        unknown
+      >;
       const pdfParse = (
-        typeof pdfModule === "function" ? pdfModule : (pdfModule["default"] ?? pdfModule)
+        typeof pdfModule === "function"
+          ? pdfModule
+          : (pdfModule["default"] ?? pdfModule)
       ) as (b: Buffer) => Promise<{ text: string }>;
       const pdfData = await pdfParse(buffer);
       localText = (pdfData.text || "").trim();
     } catch (err) {
-      console.warn("Lokálne pdf-parse zlyhalo, skúšam Mistral OCR fallback:", err);
+      console.warn(
+        "Lokálne pdf-parse zlyhalo, skúšam Mistral OCR fallback:",
+        err,
+      );
     }
 
     // Ak má PDF dostatočnú textovú vrstvu, vrátime lokálne extrahovaný text
@@ -474,7 +562,8 @@ export async function extractSingleBufferText(
       };
     } catch (ocrErr: unknown) {
       throw new Error(
-        (ocrErr instanceof Error ? ocrErr.message : null) || "OCR rozpoznávanie obrázku zlyhalo.",
+        (ocrErr instanceof Error ? ocrErr.message : null) ||
+          "OCR rozpoznávanie obrázku zlyhalo.",
       );
     }
   }
@@ -517,13 +606,23 @@ export async function extractSingleBufferText(
 }
 
 export const extractFileText = createServerFn({ method: "POST" })
-  .validator((d: { fileBase64?: string; textContent?: string; fileName: string }) => d)
+  .validator(
+    (d: { fileBase64?: string; textContent?: string; fileName: string }) => d,
+  )
   .handler(async ({ data }) => {
-    return extractSingleBufferText(data.fileName, data.fileBase64, data.textContent);
+    return extractSingleBufferText(
+      data.fileName,
+      data.fileBase64,
+      data.textContent,
+    );
   });
 
 export const extractBulkFilesText = createServerFn({ method: "POST" })
-  .validator((d: { files: { fileName: string; fileBase64?: string; textContent?: string }[] }) => d)
+  .validator(
+    (d: {
+      files: { fileName: string; fileBase64?: string; textContent?: string }[];
+    }) => d,
+  )
   .handler(async ({ data }) => {
     const { files } = data;
     if (!files || files.length === 0) {
@@ -541,7 +640,11 @@ export const extractBulkFilesText = createServerFn({ method: "POST" })
 
     for (const file of files) {
       try {
-        const res = await extractSingleBufferText(file.fileName, file.fileBase64, file.textContent);
+        const res = await extractSingleBufferText(
+          file.fileName,
+          file.fileBase64,
+          file.textContent,
+        );
         results.push({
           fileName: file.fileName,
           success: true,
@@ -555,7 +658,8 @@ export const extractBulkFilesText = createServerFn({ method: "POST" })
           success: false,
           text: "",
           charCount: 0,
-          error: err instanceof Error ? err.message : "Chyba spracovania súboru",
+          error:
+            err instanceof Error ? err.message : "Chyba spracovania súboru",
         });
       }
     }
@@ -588,19 +692,32 @@ export const extractBulkFilesText = createServerFn({ method: "POST" })
  */
 export function extractCaseEntities(text: string) {
   const caseIdMatch =
-    text.match(/PPZ[ -]?[0-9]+\/UBOK-[A-Z0-9/-]+/i) || text.match(/ČVS:[ \t]*([A-Z0-9/-]+)/i);
-  const caseId = caseIdMatch ? (caseIdMatch[1] || caseIdMatch[0]).replace(/\s+/g, "") : undefined;
+    text.match(/PPZ[ -]?[0-9]+\/UBOK-[A-Z0-9/-]+/i) ||
+    text.match(/ČVS:[ \t]*([A-Z0-9/-]+)/i);
+  const caseId = caseIdMatch
+    ? (caseIdMatch[1] || caseIdMatch[0]).replace(/\s+/g, "")
+    : undefined;
 
   let documentType = "Spisový materiál";
-  if (/ZÁPISNICA\s+O\s+VÝSLUCHU/i.test(text)) documentType = "Zápisnica o výsluchu";
-  else if (/PROTOKOL\s+O\s+PREHLIADKE/i.test(text)) documentType = "Protokol o prehliadke";
+  if (/ZÁPISNICA\s+O\s+VÝSLUCHU/i.test(text))
+    documentType = "Zápisnica o výsluchu";
+  else if (/PROTOKOL\s+O\s+PREHLIADKE/i.test(text))
+    documentType = "Protokol o prehliadke";
   else if (/UZNESENIE/i.test(text)) documentType = "Uznesenie";
 
-  const dateMatch = text.match(/\b([0-3]?[0-9]\.[0-1]?[0-9]\.[12][09][0-9]{2})\b/);
+  const dateMatch = text.match(
+    /\b([0-3]?[0-9]\.[0-1]?[0-9]\.[12][09][0-9]{2})\b/,
+  );
   const date = dateMatch ? dateMatch[1] : undefined;
 
   let location: string | undefined;
-  for (const city of ["Košice", "Banská Bystrica", "Žilina", "Bratislava", "Prešov"]) {
+  for (const city of [
+    "Košice",
+    "Banská Bystrica",
+    "Žilina",
+    "Bratislava",
+    "Prešov",
+  ]) {
     if (text.toLowerCase().includes(city.toLowerCase())) {
       location = city;
       break;
@@ -638,7 +755,10 @@ export function extractCaseEntities(text: string) {
     /(?:družka|manželka)[^:\n)]*[:)]\s*([A-ZÁ-Ž][a-zá-ž]+ [A-ZÁ-Ž][a-zá-ž]+)/i,
   );
   if (druzkaMatch && druzkaMatch[1]) {
-    personsMap.set(druzkaMatch[1], { name: druzkaMatch[1], role: "Družka / Partnerka" });
+    personsMap.set(druzkaMatch[1], {
+      name: druzkaMatch[1],
+      role: "Družka / Partnerka",
+    });
   }
 
   const dceraMatch = text.match(
@@ -661,7 +781,10 @@ export function extractCaseEntities(text: string) {
     "Barbora Minarovicová",
   ]) {
     if (text.includes(knownPerson) && !personsMap.has(knownPerson)) {
-      personsMap.set(knownPerson, { name: knownPerson, role: "Spoluobvinený / Svedok" });
+      personsMap.set(knownPerson, {
+        name: knownPerson,
+        role: "Spoluobvinený / Svedok",
+      });
     }
   }
 
@@ -674,7 +797,8 @@ export function extractCaseEntities(text: string) {
   if (/GP\s*K100|Grand\s*Power/i.test(text)) weapons.add("Grand Power K100");
   if (/beretta/i.test(text)) weapons.add("Beretta");
   if (/CGDV051/i.test(text)) weapons.add("Zbraň v. č. CGDV051");
-  if (/krátk[eé] paln[eé] zbran/i.test(text)) weapons.add("Krátke palné zbrane (kal. 9x19 mm)");
+  if (/krátk[eé] paln[eé] zbran/i.test(text))
+    weapons.add("Krátke palné zbrane (kal. 9x19 mm)");
 
   // Vozidlá
   const vehicles = new Set<string>();
@@ -688,7 +812,8 @@ export function extractCaseEntities(text: string) {
   if (/TATRAGEN/i.test(text)) companies.add("TATRAGEN s.r.o.");
   if (/PETRIS/i.test(text)) companies.add("PETRIS-SLOVAKIA s.r.o.");
   if (/Shadowarms/i.test(text)) companies.add("Shadowarms s.r.o.");
-  if (/Bark\s*Factory/i.test(text)) companies.add("Bark Factory Enterprise s.r.o.");
+  if (/Bark\s*Factory/i.test(text))
+    companies.add("Bark Factory Enterprise s.r.o.");
   if (/Tavira/i.test(text)) companies.add("Tavira s.r.o.");
   if (/Podtrubie/i.test(text)) companies.add("Podtrubie a.s.");
   if (/EB-EU/i.test(text)) companies.add("EB-EU s.r.o.");
@@ -724,7 +849,11 @@ export async function handleParseUploadedCaseDocument(
   fileBase64?: string,
   textContent?: string,
 ): Promise<ParsedCaseDocument> {
-  const extraction = await extractSingleBufferText(fileName, fileBase64, textContent);
+  const extraction = await extractSingleBufferText(
+    fileName,
+    fileBase64,
+    textContent,
+  );
   const { metadata, entities } = extractCaseEntities(extraction.text);
 
   return {
@@ -739,22 +868,32 @@ export async function handleParseUploadedCaseDocument(
 }
 
 export const parseUploadedCaseDocument = createServerFn({ method: "POST" })
-  .validator((d: { fileName: string; fileBase64?: string; textContent?: string }) => d)
+  .validator(
+    (d: { fileName: string; fileBase64?: string; textContent?: string }) => d,
+  )
   .handler(async ({ data }) =>
-    handleParseUploadedCaseDocument(data.fileName, data.fileBase64, data.textContent),
+    handleParseUploadedCaseDocument(
+      data.fileName,
+      data.fileBase64,
+      data.textContent,
+    ),
   );
 
 export const runForensicAutopilot = createServerFn({ method: "POST" })
-  .validator((d: { caseId: string; documentText: string; fileName?: string }) => d)
+  .validator(
+    (d: { caseId: string; documentText: string; fileName?: string }) => d,
+  )
   .handler(async ({ data }) => {
     const { caseId, documentText } = data;
     if (!documentText || documentText.trim().length < 30) {
       throw new Error("Dokument je príliš krátky (minimálne 30 znakov).");
     }
 
-    const { buildUserPrompt, FORENSIC_AUTOPILOT_SYSTEM_PROMPT } = await import("./ai-prompt");
+    const { buildUserPrompt, FORENSIC_AUTOPILOT_SYSTEM_PROMPT } =
+      await import("./ai-prompt");
     const { callMistral } = await import("./ai/mistral.server");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
     const typeImport = await import("./types");
     type ForensicDossier = import("./types").ForensicDossier;
 
@@ -794,7 +933,8 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
         await supabaseAdmin
           .from("cases")
           .update({
-            forensic_dossier: parsed as unknown as import("@/integrations/supabase/types").Json,
+            forensic_dossier:
+              parsed as unknown as import("@/integrations/supabase/types").Json,
             forensic_dossier_updated_at: new Date().toISOString(),
           })
           .eq("id", caseId);
@@ -807,7 +947,8 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
   });
 
 export async function handleGetForensicDossier(caseId: string) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { supabaseAdmin } =
+    await import("@/integrations/supabase/client.server");
   type ForensicDossier = import("./types").ForensicDossier;
 
   const { data: row, error } = await supabaseAdmin
@@ -829,11 +970,13 @@ export async function handleSaveCaseDossier(data: {
   caseId: string;
   dossier: import("./types").ForensicDossier;
 }) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { supabaseAdmin } =
+    await import("@/integrations/supabase/client.server");
   const { error } = await supabaseAdmin
     .from("cases")
     .update({
-      forensic_dossier: data.dossier as unknown as import("@/integrations/supabase/types").Json,
+      forensic_dossier:
+        data.dossier as unknown as import("@/integrations/supabase/types").Json,
       forensic_dossier_updated_at: new Date().toISOString(),
     })
     .eq("id", data.caseId);
@@ -851,5 +994,7 @@ export const getForensicDossier = createServerFn({ method: "GET" })
   .handler(async ({ data }) => handleGetForensicDossier(data.caseId));
 
 export const saveCaseDossier = createServerFn({ method: "POST" })
-  .validator((d: { caseId: string; dossier: import("./types").ForensicDossier }) => d)
+  .validator(
+    (d: { caseId: string; dossier: import("./types").ForensicDossier }) => d,
+  )
   .handler(async ({ data }) => handleSaveCaseDossier(data));

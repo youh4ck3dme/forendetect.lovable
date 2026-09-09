@@ -6,7 +6,11 @@ import malteMark from "@/assets/malte-mark.png";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import { isDevFreeEntryActive, isLocalDevEnvironment, setDevFreeEntryActive } from "@/lib/dev-auth";
+import {
+  isDevFreeEntryActive,
+  isLocalDevEnvironment,
+  setDevFreeEntryActive,
+} from "@/lib/dev-auth";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -44,11 +48,15 @@ function AuthScreen() {
       return;
     }
     void supabase.auth.getUser().then((res: { data: { user: unknown } }) => {
-      if (active && res.data.user) void navigate({ to: "/prehlad", replace: true });
+      if (active && res.data.user)
+        void navigate({ to: "/prehlad", replace: true });
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((event: string, session: unknown) => {
-      if (event === "SIGNED_IN" && session) void navigate({ to: "/prehlad", replace: true });
-    });
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      (event: string, session: unknown) => {
+        if (event === "SIGNED_IN" && session)
+          void navigate({ to: "/prehlad", replace: true });
+      },
+    );
     return () => {
       active = false;
       sub.subscription.unsubscribe();
@@ -62,7 +70,9 @@ function AuthScreen() {
         redirect_uri: window.location.origin,
       });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Prihlásenie zlyhalo.");
+      toast.error(
+        error instanceof Error ? error.message : "Prihlásenie zlyhalo.",
+      );
       setBusy(false);
     }
   }
@@ -108,7 +118,9 @@ function AuthScreen() {
         if (error) throw error;
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Niečo sa pokazilo.");
+      toast.error(
+        error instanceof Error ? error.message : "Niečo sa pokazilo.",
+      );
     } finally {
       setBusy(false);
     }
@@ -129,7 +141,9 @@ function AuthScreen() {
           <h1 className="text-2xl font-extrabold tracking-tight">
             {mode === "signin" ? "Prihlásenie do Forendo" : "Vytvorenie účtu"}
           </h1>
-          <p className="text-caption">Vaše prípady sú súkromné a viditeľné len pre vás.</p>
+          <p className="text-caption">
+            Vaše prípady sú súkromné a viditeľné len pre vás.
+          </p>
         </div>
 
         <div className="space-y-3">
@@ -140,7 +154,11 @@ function AuthScreen() {
             disabled={busy}
             onClick={handleGoogle}
           >
-            <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+            <svg
+              className="h-4 w-4 shrink-0"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -193,7 +211,10 @@ function AuthScreen() {
 
         <form className="space-y-3" onSubmit={handleSubmit}>
           <div className="space-y-1">
-            <label htmlFor="email" className="flex items-center gap-1.5 text-xs font-medium">
+            <label
+              htmlFor="email"
+              className="flex items-center gap-1.5 text-xs font-medium"
+            >
               <Mail className="h-3.5 w-3.5 text-muted-foreground" />
               E-mail
             </label>
@@ -208,7 +229,10 @@ function AuthScreen() {
             />
           </div>
           <div className="space-y-1">
-            <label htmlFor="password" className="flex items-center gap-1.5 text-xs font-medium">
+            <label
+              htmlFor="password"
+              className="flex items-center gap-1.5 text-xs font-medium"
+            >
               <Lock className="h-3.5 w-3.5 text-muted-foreground" />
               Heslo
             </label>
@@ -217,7 +241,9 @@ function AuthScreen() {
               type="password"
               required
               minLength={6}
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              autoComplete={
+                mode === "signin" ? "current-password" : "new-password"
+              }
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"

@@ -15,7 +15,12 @@ export type Delimiter = keyof typeof DELIMITERS;
 export const ENCODINGS = ["utf-8", "windows-1250", "iso-8859-2"] as const;
 export type Encoding = (typeof ENCODINGS)[number];
 
-export const DATE_FORMATS = ["YYYY-MM-DD", "DD.MM.YYYY", "DD/MM/YYYY", "MM/DD/YYYY"] as const;
+export const DATE_FORMATS = [
+  "YYYY-MM-DD",
+  "DD.MM.YYYY",
+  "DD/MM/YYYY",
+  "MM/DD/YYYY",
+] as const;
 export type DateFormat = (typeof DATE_FORMATS)[number];
 
 export type DecimalSeparator = "," | ".";
@@ -97,7 +102,9 @@ export function detectDelimiter(sample: string): Detection<Delimiter> {
 }
 
 /** Rozpozná desatinný oddeľovač zo vzorky súm. Pri nejednoznačnosti nehádame. */
-export function detectDecimalSeparator(samples: string[]): Detection<DecimalSeparator> {
+export function detectDecimalSeparator(
+  samples: string[],
+): Detection<DecimalSeparator> {
   let comma = 0;
   let dot = 0;
   for (const raw of samples) {
@@ -105,16 +112,26 @@ export function detectDecimalSeparator(samples: string[]): Detection<DecimalSepa
     if (/,\d{1,2}$/.test(s)) comma += 1;
     if (/\.\d{1,2}$/.test(s)) dot += 1;
   }
-  if (comma > 0 && dot === 0) return { value: ",", ambiguous: false, candidates: [","] };
-  if (dot > 0 && comma === 0) return { value: ".", ambiguous: false, candidates: ["."] };
-  if (comma === 0 && dot === 0) return { value: null, ambiguous: true, candidates: [",", "."] };
+  if (comma > 0 && dot === 0)
+    return { value: ",", ambiguous: false, candidates: [","] };
+  if (dot > 0 && comma === 0)
+    return { value: ".", ambiguous: false, candidates: ["."] };
+  if (comma === 0 && dot === 0)
+    return { value: null, ambiguous: true, candidates: [",", "."] };
   return { value: null, ambiguous: true, candidates: [",", "."] };
 }
 
 export function detectDateFormat(samples: string[]): Detection<DateFormat> {
-  const fits = DATE_FORMATS.filter((f) => samples.every((s) => parseDateValue(s, f) !== null));
-  if (fits.length === 1) return { value: fits[0]!, ambiguous: false, candidates: fits };
-  return { value: null, ambiguous: true, candidates: fits.length ? fits : [...DATE_FORMATS] };
+  const fits = DATE_FORMATS.filter((f) =>
+    samples.every((s) => parseDateValue(s, f) !== null),
+  );
+  if (fits.length === 1)
+    return { value: fits[0]!, ambiguous: false, candidates: fits };
+  return {
+    value: null,
+    ambiguous: true,
+    candidates: fits.length ? fits : [...DATE_FORMATS],
+  };
 }
 
 /** Vráti ISO dátum (RRRR-MM-DD) alebo null, ak hodnota formátu nezodpovedá. */
@@ -160,7 +177,10 @@ export function parseDateValue(raw: string, format: DateFormat): string | null {
  * Rešpektuje zvolený desatinný oddeľovač; oddeľovač tisícov odstráni.
  * Záporné sumy (mínus aj zátvorky) sú povolené — znamenajú opačný smer.
  */
-export function parseAmountValue(raw: string, decimal: DecimalSeparator): number | null {
+export function parseAmountValue(
+  raw: string,
+  decimal: DecimalSeparator,
+): number | null {
   let s = raw.trim().replace(/\s|\u00a0/g, "");
   if (!s) return null;
   let negative = false;
@@ -187,6 +207,11 @@ export function parseAmountValue(raw: string, decimal: DecimalSeparator): number
 export function parseCurrencyValue(raw: string): string | null {
   const s = raw.trim().toUpperCase();
   if (/^[A-Z]{3}$/.test(s)) return s;
-  const map: Record<string, string> = { "€": "EUR", $: "USD", "£": "GBP", KČ: "CZK" };
+  const map: Record<string, string> = {
+    "€": "EUR",
+    $: "USD",
+    "£": "GBP",
+    KČ: "CZK",
+  };
   return map[s] ?? null;
 }

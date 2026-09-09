@@ -7,7 +7,11 @@ export default defineTool({
   description:
     "Summary of the signed-in user's most recent forensic case: overall risk score, totals and the strongest red flags.",
   inputSchema: {},
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  annotations: {
+    readOnlyHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async (_args, ctx) => {
     const a = await caseAnalysis(ctx);
     return text({

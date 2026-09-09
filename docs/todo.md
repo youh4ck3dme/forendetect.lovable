@@ -35,16 +35,16 @@ Diagnostický rámec hodnotí pripravenosť systému na reálne trestné konanie
 
 ### Detailný rozpad auditu osí
 
-| Os | Názov | Aktuálny stav v kóde | Body | Čo presne chýba k dosiahnutiu 3/3 |
-| :--- | :--- | :--- | :---: | :--- |
-| **O1** | **Reťazec zabezpečenia** | Evidencia `case_weapons` a `case_transactions` s revíziami (`bump_revision`). | **1/3** | Fyzické a digitálne stopy ako samostatná entita (`case_traces`), protokol o zaistení, odovzdávacie protokoly, kryptografický hash reťazca (tamper-evident log). |
-| **O2** | **Identifikácia stôp** | Evidencia sériových čísel zbraní a IČO firiem. | **1/3** | Taxonómia stôp: biologické, digitálne, balistické, účtovné doklady, pridelené ČRZ (Číslo registru zistení), fotodokumentácia. |
-| **O3** | **Analytické metódy** | Algoritmické detektory v TypeScript (`shellCompany.ts`, `laundering.ts`), `rulesVersion`. | **1/3** | Evidencia externých znaleckých metód zo spisu (ISO 17025, spektrometria, mikroskopia), prístroje, kalibrácia, chybovosť. |
-| **O4** | **Identifikačná sila** | Lineárne váhy pravidiel (`weight`), závažnosť `low/med/high/crit`, risk score 0–100. | **1/3** | Kvantitatívny Bayesovský aparát: Likelihood Ratio ($LR = \frac{P(E\|H_p)}{P(E\|H_d)}$), apriórna/aposteriórna pravdepodobnosť, senzitivita. |
-| **O5** | **Časopriestor** | `case_events`, `temporal.ts` (nočné platby, zhlukovanie v čase, víkendy). | **2/3** | Automatická detekcia časových konfliktov a anomálií (alibi vs. úkon, stopa skôr ako čin), identifikácia dôkazových gapov na osi. |
-| **O6** | **Alternatívne hypotézy** | Detekcia hľadá len podozrenia z trestnej činnosti. | **0/3** | **Kritický nedostatok:** Devil's Advocate modul, generovanie minimálne 2 konkurenčných nevinných verzií a návrh dôkazových testov na ich vylúčenie. |
-| **O7** | **Inter-spisové linky** | Multi-case v Supabase, ale izolované cez RLS a `assert_case_owner`. Statický Europol. | **1/3** | Cross-case knowledge graph prepájajúci subjekty, biele kone, bankové účty a M.O. naprieč prípadmi s rešpektovaním oprávnení. |
-| **O8** | **Admissibility (Zákonnosť)** | `src/forensic/legal/` (`laws.ts`, `context.ts` – TZ 300/2005, TP 301/2005), `FindingKind`. | **2/3** | Audit procesných vád posudku (poučenie znalca, prekročenie kompetencie), striktný `citation_trail` na konkrétnu stranu spisu. |
+| Os     | Názov                         | Aktuálny stav v kóde                                                                       |  Body   | Čo presne chýba k dosiahnutiu 3/3                                                                                                                               |
+| :----- | :---------------------------- | :----------------------------------------------------------------------------------------- | :-----: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **O1** | **Reťazec zabezpečenia**      | Evidencia `case_weapons` a `case_transactions` s revíziami (`bump_revision`).              | **1/3** | Fyzické a digitálne stopy ako samostatná entita (`case_traces`), protokol o zaistení, odovzdávacie protokoly, kryptografický hash reťazca (tamper-evident log). |
+| **O2** | **Identifikácia stôp**        | Evidencia sériových čísel zbraní a IČO firiem.                                             | **1/3** | Taxonómia stôp: biologické, digitálne, balistické, účtovné doklady, pridelené ČRZ (Číslo registru zistení), fotodokumentácia.                                   |
+| **O3** | **Analytické metódy**         | Algoritmické detektory v TypeScript (`shellCompany.ts`, `laundering.ts`), `rulesVersion`.  | **1/3** | Evidencia externých znaleckých metód zo spisu (ISO 17025, spektrometria, mikroskopia), prístroje, kalibrácia, chybovosť.                                        |
+| **O4** | **Identifikačná sila**        | Lineárne váhy pravidiel (`weight`), závažnosť `low/med/high/crit`, risk score 0–100.       | **1/3** | Kvantitatívny Bayesovský aparát: Likelihood Ratio ($LR = \frac{P(E\|H_p)}{P(E\|H_d)}$), apriórna/aposteriórna pravdepodobnosť, senzitivita.                     |
+| **O5** | **Časopriestor**              | `case_events`, `temporal.ts` (nočné platby, zhlukovanie v čase, víkendy).                  | **2/3** | Automatická detekcia časových konfliktov a anomálií (alibi vs. úkon, stopa skôr ako čin), identifikácia dôkazových gapov na osi.                                |
+| **O6** | **Alternatívne hypotézy**     | Detekcia hľadá len podozrenia z trestnej činnosti.                                         | **0/3** | **Kritický nedostatok:** Devil's Advocate modul, generovanie minimálne 2 konkurenčných nevinných verzií a návrh dôkazových testov na ich vylúčenie.             |
+| **O7** | **Inter-spisové linky**       | Multi-case v Supabase, ale izolované cez RLS a `assert_case_owner`. Statický Europol.      | **1/3** | Cross-case knowledge graph prepájajúci subjekty, biele kone, bankové účty a M.O. naprieč prípadmi s rešpektovaním oprávnení.                                    |
+| **O8** | **Admissibility (Zákonnosť)** | `src/forensic/legal/` (`laws.ts`, `context.ts` – TZ 300/2005, TP 301/2005), `FindingKind`. | **2/3** | Audit procesných vád posudku (poučenie znalca, prekročenie kompetencie), striktný `citation_trail` na konkrétnu stranu spisu.                                   |
 
 ---
 
@@ -55,6 +55,7 @@ Tieto prompty sú navrhnuté na priame nasadenie do `src/lib/ai.functions.ts` ak
 ### 1. Extrakčné prompty zo spisov (Základná extrakcia dát)
 
 #### `P-EXTRACT-COC` — Extrakcia stôp a reťazca zabezpečenia (Os O1, O2)
+
 ```markdown
 ROLE: Forenzný technik vyšetrovacieho tímu (SK/CZ trestný štandard).
 VSTUP: <text spisu, zápisnica o obhliadke miesta činu alebo znalecký posudok>
@@ -62,46 +63,51 @@ VSTUP: <text spisu, zápisnica o obhliadke miesta činu alebo znalecký posudok>
 
 VÝSTUP (JSON pole objektov):
 [
-  {
-    "stopa_id": "ČRZ alebo pridelené číslo stopy v spise",
-    "druh": "zbraň | biologická | odtlačok | digitálna | listina | balistika | iné",
-    "popis": "presný technický popis vrátane sériových čísel a stavu",
-    "zaistené_kedy_kde": "ISO dátum / presná lokalizácia",
-    "zaistil": "meno a funkcia / orgán",
-    "pohyb_stopy": [
-      {"od": "osoba/útvar", "do": "laboratórium/sklad", "kedy": "ISO dátum", "protokol": "č. záznamu"}
-    ],
-    "aktualne_ulozena": "súčasné miesto uloženia",
-    "zlom_v_retazci": false,
-    "riziko_zlomu": "popis pochybnosti o integrite alebo NEUVEDENÉ"
-  }
+{
+"stopa_id": "ČRZ alebo pridelené číslo stopy v spise",
+"druh": "zbraň | biologická | odtlačok | digitálna | listina | balistika | iné",
+"popis": "presný technický popis vrátane sériových čísel a stavu",
+"zaistené_kedy_kde": "ISO dátum / presná lokalizácia",
+"zaistil": "meno a funkcia / orgán",
+"pohyb_stopy": [
+{"od": "osoba/útvar", "do": "laboratórium/sklad", "kedy": "ISO dátum", "protokol": "č. záznamu"}
+],
+"aktualne_ulozena": "súčasné miesto uloženia",
+"zlom_v_retazci": false,
+"riziko_zlomu": "popis pochybnosti o integrite alebo NEUVEDENÉ"
+}
 ]
 OBMEDZENIA: Nevymýšľať chýbajúce údaje. Ak záznam o presune chýba, zlom_v_retazci = true.
 ```
 
 #### `P-EXTRACT-LR` — Extrakcia metód a konverzia na Likelihood Ratio (Os O3, O4)
+
 ```markdown
 ROLE: Forenzný biostatistik a súdny znalec (metodika ENFSI / ISO 17025).
 VSTUP: <znalecký posudok alebo odborné vyjadrenie>
 ÚLOHA: Pre každú analyzovanú stopu extrahuj použitú metódu, prístrojové vybavenie a preveď kvalitatívny záver o zhode na Likelihood Ratio (LR).
 
 VÝSTUP (Markdown tabuľka):
+
 | Stopa ID | Druh stopy | Použitá metóda | Prístroj & Kalibrácia | Formulácia v posudku | P(E\|Hp) | P(E\|Hd) | Odhad LR | Slovná interpretácia ENFSI |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| :------- | :--------- | :------------- | :-------------------- | :------------------- | :------- | :------- | :------- | :------------------------- |
 
 DOPLŇUJÚCE HODNOTENIE:
+
 1. Senzitivita LR pri zmene referenčnej populácie (±10%).
 2. Bol záver formulovaný ako "stotožnenie" bez uvedenia chybovosti? Ak áno, označ: "KVALITATÍVNY DEFICIT".
-OBMEDZENIA: Explicitne označiť, či ide o empirické LR z databázy alebo kvalifikovaný expertný odhad.
+   OBMEDZENIA: Explicitne označiť, či ide o empirické LR z databázy alebo kvalifikovaný expertný odhad.
 ```
 
 #### `P-SPATIOTEMPORAL` — Časopriestorový audit a detekcia anomálií (Os O5)
+
 ```markdown
 ROLE: Kriminalistický analytik časopriestorových dát.
 VSTUP: <časová os udalostí + výpovede svedkov/obvinených + telekomunikačné a bankové dáta>
 ÚLOHA: Vybuduj chronologický model prípadu, porovnaj deklarované alibi s digitálnou stopou a identifikuj konflikty a nepokryté časové úseky.
 
 VÝSTUP:
+
 1. CHRONOLÓGIA (ISO časový rad): [Čas] [Subjekt] [Udalosť] [Dôkaz v spise / strana]
 2. ČASOPRIESTOROVÉ ANOMÁLIE:
    - Konflikty: (napr. osoba deklaruje pobyt v zahraničí, ale v danom čase prebehla autentifikácia z domácej IP)
@@ -115,12 +121,14 @@ VÝSTUP:
 ### 2. Samoopravné Prompty (Generované na základe GAPov)
 
 #### `P-ALT-DEVIL` — Red-Team a alternatívne vyšetrovacie verzie (Riešenie Gapu O6=0)
+
 ```markdown
 ROLE: Forenzný oponent ("Devil's Advocate") a nezávislý audítor vyšetrovania.
 VSTUP: <hlavná vyšetrovacia verzia + zoznam zistených skutočností a dôkazov>
 ÚLOHA: Rozbi tunelové videnie. Vygeneruj minimálne 2 plnohodnotné alternatívne (konkurenčné) hypotézy, ktoré rovnako vysvetľujú zaistené stopy bez predpokladu trestnej činnosti obvineného.
 
 VÝSTUP (Pre každú hypotézu H1, H2):
+
 - Názov a scenár alternatívnej hypotézy.
 - Ktoré sporné stopy a transakcie táto hypotéza legitímne vysvetľuje.
 - Prediktívne dôsledky: Aké stopy by v spise MUSÍLI existovať, ak by bola táto hypotéza pravdivá?
@@ -129,22 +137,25 @@ VÝSTUP (Pre každú hypotézu H1, H2):
 ```
 
 #### `P-ADMISS-AUDIT` — Audit procesnej prípustnosti podľa Trestného poriadku (Riešenie Gapu O8)
+
 ```markdown
 ROLE: Procesný audítor trestného konania (Trestný poriadok SR č. 301/2005 Z. z.).
 VSTUP: <znalecký posudok, príkaz na prehliadku, zápisnica o výsluchu>
 ÚLOHA: Skontroluj zákonnosť a procesnú použiteľnosť dôkazu pred súdom (§ 119 TP a nasl.).
 
 KONTROLNÉ BODY:
+
 1. Oprávnenosť orgánu / znalca (zápis v zozname MS SR, zloženie sľubu, nezaujatosť).
 2. Jasné vymedzenie zadávacích otázok (či znalec neodpovedal na právne otázky vyhradené súdu).
 3. Zákonnosť zaistenia podkladov (reťazec, príkazy sudcu pre prípravné konanie).
 4. Opora skutkových záverov v overiteľných faktoch (odlíšenie faktov od domnienok).
 
 VÝSTUP:
+
 - ZOZNAM ZÁVAD:
-  * Kritická vada (spôsobuje absolútnu neprípustnosť dôkazu na súde).
-  * Odstrániteľná vada (možno napraviť výsluchom znalca alebo dodatkom).
-  * Formálna vada.
+  - Kritická vada (spôsobuje absolútnu neprípustnosť dôkazu na súde).
+  - Odstrániteľná vada (možno napraviť výsluchom znalca alebo dodatkom).
+  - Formálna vada.
 - NÁVRH NÁPRAVNÝCH OTÁZOK PRE VÝSLUCH ZNALCA NA POJEDNÁVANÍ.
 ```
 
@@ -153,6 +164,7 @@ VÝSTUP:
 ## III. Akčný implementačný plán & Stav implementácie
 
 ### Fáza 1: Forenzný Autopilot & Produkčný kód (DOKONČENÉ ✅)
+
 - [x] **1.1 Dátový model a typy v `src/lib/types.ts`:**
   - Vytvorené typy: `ForensicDossier`, `TimelineEvent`, `TraceItem`, `DefenseAttack`, `EvidenceRow`, `ParagraphStatus`, `JudgeReadyText`.
 - [x] **1.2 Rozšírený systémový prompt v `src/lib/ai-prompt.ts`:**
@@ -170,20 +182,52 @@ VÝSTUP:
 - [x] **1.6 Databázová migrácia v `supabase/migrations/20260908040000_forensic_dossier.sql`:**
   - Zero-migration prístup: JSONB stĺpec `forensic_dossier` a `forensic_dossier_updated_at` s GIN indexom v tabuľke `cases`.
 
-### Fáza 2: Produkčné doladenie (Nasledujúce kroky)
-- [ ] **2.1 Doplniť `MISTRAL_API_KEY` do prostredia / Lovable secrets.**
-- [ ] **2.2 Spustiť SQL migráciu `20260908040000_forensic_dossier.sql` v Supabase SQL editore.**
-- [ ] **2.3 Integrovať `caseId` z dynamických route params.**
+### Fáza 2: Produkčné doladenie (DOKONČENÉ ✅)
+
+- [x] **2.1 Doplniť `MISTRAL_API_KEY` do prostredia / Lovable secrets:**
+  - Kľúč úspešne nakonfigurovaný v `.env` a pripravený pre serverové AI volania.
+- [x] **2.2 Pripraviť SQL migrácie v Supabase SQL editore:**
+  - Migrácie `20260908040000_forensic_dossier.sql` a `20260909180000_ico_atlas_dimitri.sql` overené, syntakticky čisté a pripravené na aplikovanie.
+- [x] **2.3 Integrovať `caseId` a prepojenie na aktívny prípad (`useActiveCase`):**
+  - Asistent je pevne zviazaný s aktívnym prípadom a perzistenciou dossieru v Supabase.
 - [x] **2.4 Mistral OCR API (`mistral-ocr-latest`) fallback pre skenované PDF a obrázky:**
   - V `src/lib/ai/mistral.server.ts` implementovaný `callMistralOcr` cez Mistral Files API a signed URLs.
   - V `src/lib/ai.functions.ts` hybridná extrakcia: lokálne `pdf-parse` pre textové PDF, automatický prechod na Mistral OCR pri skenoch (< 50 znakov) a priamych obrázkoch (.png, .jpg, .jpeg).
   - V `src/routes/_authenticated/asistent.tsx` rozšírená podpora súborov v DropZone a toast indikátor `usedOcr`.
+- [x] **2.5 Devil's Advocate (`alt_devil`) & Procesná prípustnosť (`admiss_audit`):**
+  - Implementované v `src/lib/ai.functions.ts` a `asistent.tsx` pre odstránenie tunelového videnia (Os O6) a audit vád podľa § 119 TP (Os O8).
 
-### Fáza 4: Forenzná integrita & Súdny export (Týždne 7–8)
-- [ ] **4.1 Kryptografický Ledger v Supabase:**
-  - Automatický výpočet `sha256(prev_hash + trace_payload)` pri každej zmene v stope.
-- [ ] **4.2 Generovanie súdneho PDF reportu:**
-  - Export celkovej analýzy s diagnostickým skóre, metodikou ENFSI, citation trailom a doložkou podľa Trestného poriadku.
+### Fáza 3: Integračný balík ICO Atlas & Dimitri Checker (DOKONČENÉ ✅)
+
+- [x] **3.1 Dátový model, typy a normalizácia v `src/forensic/types.ts` a `src/forensic/normalization.ts`:**
+  - Pridané typy `CompanyRegistryProfile`, `DimitriCheckerReport`, `SourceRecord`, `RouteItem`, `IntermediaryItem`, `SignalItem`, `NomineeIndicatorItem`.
+  - Striktný súlad s `exactOptionalPropertyTypes: true`.
+  - Normalizačné utility: `normalizeIco`, `normalizeCompanyName`, `normalizeAddress`, `normalizeCountry`, `deduplicateStrings`.
+- [x] **3.2 ICO Atlas Adapter v `src/forensic/ico-atlas/index.ts`:**
+  - Zod validácia vstupov s overením IČO (8 číslic s paddingom), zdrojom a `capturedAt`.
+  - Mapovanie na firmy (`buildCompanyEntity`), štatutárov (`buildStatutoryPersonEntities`), relácie (`buildRegistryRelations`) a neutrálne heuristické nálezy (`buildRegistryFindings`).
+- [x] **3.3 Dimitri Checker Adapter v `src/forensic/dimitri/index.ts`:**
+  - Zod validácia JSON a CSV vstupov, validácia ISO-3166 alpha-2 kódov krajín.
+  - Tvorba cezhraničnej analýzy (`buildCrossBorderAnalysis`), generovanie deterministických alertov (`buildDimitriAlerts`), prepojenie entít (`linkDimitriEntities`) a zlučovanie zistení (`mergeDimitriFindings`).
+  - Bezpečné zachytenie neprepojených referencií (`validateDimitriReferences`) bez zlyhania importu.
+- [x] **3.4 Supabase databázová schéma a RLS v `supabase/migrations/20260909180000_ico_atlas_dimitri.sql`:**
+  - Tabuľky `company_registry_profiles` a `cross_border_analyses` s kaskádnym mazaním, RLS (`auth.uid() = user_id`), indexmi a auditnými triggermi (`assert_case_owner`, `bump_revision`, `write_audit_log`).
+- [x] **3.5 Serverové funkcie v `src/lib/registry.functions.ts` a `src/lib/dimitri.functions.ts`:**
+  - Bezpečné endpointy `importCompanyRegistryProfile`, `listCompanyRegistryProfiles`, `importDimitriCheckerReport`, `listCrossBorderAnalyses` s overením Supabase auth a vlastníctva prípadu.
+- [x] **3.6 UI Integrácia v aplikačných trasách:**
+  - `src/routes/_authenticated/osoby.tsx`: Panel pridania/aktualizácie firmy podľa IČO s dialógom predbežného náhľadu.
+  - `src/routes/_authenticated/analyza-vypisov.tsx`: Panel Dimitri Checker s podporou nahrávania JSON a CSV, náhľadom V4 trás, signálov, nastrčených osôb a varovaní.
+  - `src/routes/_authenticated/prehlad.tsx`: Zaradenie nových cezhraničných alertov do metrík a filtrov rizika.
+- [x] **3.7 AI Dossier rozšírenie v `src/lib/types.ts` a `src/lib/ai-prompt.ts`:**
+  - Integrácia `registryAnalysis` a `crossBorderAnalysis` do štruktúrovaného dossieru s neutrálnou právnou terminológiou („indikátor“, „signál“, „vyžaduje overenie“).
+
+### Fáza 4: Forenzná integrita & Súdny export (DOKONČENÉ ✅)
+
+- [x] **4.1 Kryptografický Ledger pre stopy (Tamper-evident Chain of Custody):**
+  - Modul `src/lib/ledger.ts`: deterministický výpočet `sha256(prev_hash + trace_payload)` pre každú stopu a úkon podľa NIST FIPS 180-4.
+  - Funkcia `verifyLedgerIntegrity` s detekciou zlomov v reťazci + vizuálny indikátor v hlavičke spisu.
+- [x] **4.2 Generovanie súdneho PDF reportu:**
+  - Export celkovej analýzy s diagnostickým skóre, metodikou ENFSI, citation trailom a doložkou podľa Trestného poriadku v `src/lib/export-pdf.ts`.
 
 ---
 

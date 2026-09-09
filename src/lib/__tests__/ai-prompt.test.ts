@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { buildUserPrompt, FORENSIC_AUTOPILOT_SYSTEM_PROMPT } from "@/lib/ai-prompt";
+import {
+  buildUserPrompt,
+  FORENSIC_AUTOPILOT_SYSTEM_PROMPT,
+} from "@/lib/ai-prompt";
 
 describe("ai-prompt (Forenzný Autopilot System Prompt & User Builder)", () => {
   it("obsahuje kľúčové paragrafy Trestného poriadku SR", () => {

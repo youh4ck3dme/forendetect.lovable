@@ -26,12 +26,14 @@ const oauth = () => (supabase.auth as unknown as { oauth: OAuthApi }).oauth;
 export const Route = createFileRoute("/.lovable/oauth/consent")({
   ssr: false,
   validateSearch: (s: Record<string, unknown>) => ({
-    authorization_id: typeof s["authorization_id"] === "string" ? s["authorization_id"] : "",
+    authorization_id:
+      typeof s["authorization_id"] === "string" ? s["authorization_id"] : "",
   }),
   component: Consent,
   errorComponent: ({ error }) => (
     <main className="mx-auto max-w-md p-6 text-sm text-muted-foreground">
-      Autorizáciu sa nepodarilo načítať: {String((error as Error)?.message ?? error)}
+      Autorizáciu sa nepodarilo načítať:{" "}
+      {String((error as Error)?.message ?? error)}
     </main>
   ),
 });
@@ -50,7 +52,8 @@ function Consent() {
       const { data } = await supabase.auth.getSession();
       setSession(Boolean(data.session));
       if (!data.session || !authorizationId) return;
-      const { data: d, error: e } = await oauth().getAuthorizationDetails(authorizationId);
+      const { data: d, error: e } =
+        await oauth().getAuthorizationDetails(authorizationId);
       if (e) {
         setError(e.message);
         return;
@@ -92,7 +95,11 @@ function Consent() {
     const { error: e } =
       mode === "in"
         ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password, options: { emailRedirectTo: next } });
+        : await supabase.auth.signUp({
+            email,
+            password,
+            options: { emailRedirectTo: next },
+          });
     setBusy(false);
     if (e) {
       setError(e.message);
@@ -115,7 +122,9 @@ function Consent() {
   }
 
   if (!authorizationId) {
-    return <main className="mx-auto max-w-md p-6">Chýba parameter autorizácie.</main>;
+    return (
+      <main className="mx-auto max-w-md p-6">Chýba parameter autorizácie.</main>
+    );
   }
 
   return (
@@ -125,7 +134,9 @@ function Consent() {
           {error}
         </p>
       )}
-      {session === null && <p className="text-sm text-muted-foreground">Načítavam…</p>}
+      {session === null && (
+        <p className="text-sm text-muted-foreground">Načítavam…</p>
+      )}
 
       {session === false && (
         <div className="space-y-3 rounded-xl border p-5">
@@ -133,7 +144,11 @@ function Consent() {
           <p className="text-sm text-muted-foreground">
             Pre pripojenie AI klienta sa najprv prihlás.
           </p>
-          <Input placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <Input
             type="password"
             placeholder="Heslo"
@@ -144,7 +159,11 @@ function Consent() {
             <Button disabled={busy} onClick={() => void signIn("in")}>
               Prihlásiť sa
             </Button>
-            <Button variant="secondary" disabled={busy} onClick={() => void signIn("up")}>
+            <Button
+              variant="secondary"
+              disabled={busy}
+              onClick={() => void signIn("up")}
+            >
               Registrovať
             </Button>
           </div>
@@ -165,14 +184,18 @@ function Consent() {
             Pripojiť {details?.client?.name ?? "klienta"} k Forendo
           </h1>
           <p className="text-sm text-muted-foreground">
-            Klient bude môcť volať nástroje tejto aplikácie vo tvojom mene. Prístupové pravidlá
-            aplikácie zostávajú v platnosti.
+            Klient bude môcť volať nástroje tejto aplikácie vo tvojom mene.
+            Prístupové pravidlá aplikácie zostávajú v platnosti.
           </p>
           <div className="flex gap-2">
             <Button disabled={busy} onClick={() => void decide(true)}>
               Schváliť
             </Button>
-            <Button variant="secondary" disabled={busy} onClick={() => void decide(false)}>
+            <Button
+              variant="secondary"
+              disabled={busy}
+              onClick={() => void decide(false)}
+            >
               Zrušiť pripojenie
             </Button>
           </div>

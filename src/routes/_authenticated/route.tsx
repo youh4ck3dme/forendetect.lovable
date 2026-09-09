@@ -14,7 +14,9 @@ export const Route = createFileRoute("/_authenticated")({
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
       if (isDevFreeEntryActive()) {
-        return { user: DEV_MOCK_USER as unknown as NonNullable<typeof data.user> };
+        return {
+          user: DEV_MOCK_USER as unknown as NonNullable<typeof data.user>,
+        };
       }
       throw redirect({ to: SIGN_IN_ROUTE });
     }

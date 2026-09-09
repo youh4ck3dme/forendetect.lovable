@@ -23,7 +23,9 @@ async function unregisterExisting() {
   const registrations = await navigator.serviceWorker.getRegistrations();
   await Promise.allSettled(
     registrations
-      .filter((r) => (r.active?.scriptURL ?? r.installing?.scriptURL ?? "").endsWith(SW_URL))
+      .filter((r) =>
+        (r.active?.scriptURL ?? r.installing?.scriptURL ?? "").endsWith(SW_URL),
+      )
       .map((r) => r.unregister()),
   );
 }
@@ -72,7 +74,9 @@ export async function clearClientState(): Promise<void> {
     };
     const dbs = (await anyIdb.databases?.()) ?? [];
     await Promise.allSettled(
-      dbs.filter((d) => d.name).map((d) => indexedDB.deleteDatabase(d.name as string)),
+      dbs
+        .filter((d) => d.name)
+        .map((d) => indexedDB.deleteDatabase(d.name as string)),
     );
   } catch {
     /* prázdne */

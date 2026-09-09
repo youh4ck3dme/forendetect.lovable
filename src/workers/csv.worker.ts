@@ -40,7 +40,8 @@ self.onmessage = (event: MessageEvent<WorkerRequest>) => {
   } catch (error) {
     self.postMessage({
       kind: "error",
-      message: error instanceof Error ? error.message : "Spracovanie súboru zlyhalo.",
+      message:
+        error instanceof Error ? error.message : "Spracovanie súboru zlyhalo.",
     });
   }
 };

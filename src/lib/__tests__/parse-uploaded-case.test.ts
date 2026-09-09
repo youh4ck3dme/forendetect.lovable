@@ -24,7 +24,9 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     );
 
     expect(result.success).toBe(true);
-    expect(result.fileName).toBe("DOKAZ_07_Vysluch_Erik_Babcan_12-13.08.2026.md");
+    expect(result.fileName).toBe(
+      "DOKAZ_07_Vysluch_Erik_Babcan_12-13.08.2026.md",
+    );
     expect(result.charCount).toBeGreaterThan(30000);
     expect(result.usedOcr).toBe(false);
 
@@ -42,7 +44,9 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     expect(personNames).toContain("Dea Babčan");
     expect(personNames).toContain("Dimitri Cohen");
 
-    const babcan = result.entities.persons.find((p) => p.name === "Erik Babčan");
+    const babcan = result.entities.persons.find(
+      (p) => p.name === "Erik Babčan",
+    );
     expect(babcan?.role).toBe("Podozrivý / Vypočúvaný");
     expect(babcan?.birthDate).toBe("30.05.1989");
 
@@ -82,7 +86,9 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     expect(entities.weapons).toContain("Zbraň v. č. CGDV051");
     expect(entities.companies).toContain("TATRAGEN s.r.o.");
     expect(entities.companies).toContain("EB-EU s.r.o.");
-    expect(entities.legalParagraphs.some((p) => p.includes("§ 294"))).toBe(true);
+    expect(entities.legalParagraphs.some((p) => p.includes("§ 294"))).toBe(
+      true,
+    );
   });
 
   it("vráti informatívnu chybu pri pokuse o OCR obrázka, ak MISTRAL_API_KEY nie je nastavený", async () => {
@@ -90,7 +96,8 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     delete process.env["MISTRAL_API_KEY"];
 
     try {
-      const dummyImageBase64 = Buffer.from("dummy-image-data").toString("base64");
+      const dummyImageBase64 =
+        Buffer.from("dummy-image-data").toString("base64");
       await expect(
         handleParseUploadedCaseDocument("zapisnica_scan.png", dummyImageBase64),
       ).rejects.toThrow("MISTRAL_API_KEY nie je nastavený");
@@ -112,7 +119,8 @@ Ustanovenie: § 119 TP
     `);
 
     try {
-      const dummyImageBase64 = Buffer.from("dummy-scan-bytes").toString("base64");
+      const dummyImageBase64 =
+        Buffer.from("dummy-scan-bytes").toString("base64");
       const result = await handleParseUploadedCaseDocument(
         "vysluch_plch_scan.png",
         dummyImageBase64,

@@ -28,7 +28,9 @@ export function CommandPaletteTrigger() {
     >
       <Search className="h-3.5 w-3.5" aria-hidden />
       Hľadať v prípade…
-      <kbd className="ml-auto rounded border border-border px-1.5 py-0.5 text-[10px]">⌘K</kbd>
+      <kbd className="ml-auto rounded border border-border px-1.5 py-0.5 text-[10px]">
+        ⌘K
+      </kbd>
     </button>
   );
 }
@@ -66,26 +68,37 @@ export function CommandPalette() {
         <CommandEmpty>Nič sa nenašlo.</CommandEmpty>
 
         <CommandGroup heading="Obrazovky">
-          {[...navItems, { to: "/siet", label: "Sieť tokov", icon: Search }].map(
-            ({ to, label, icon: Icon }) => (
-              <CommandItem key={to} value={`obrazovka ${label}`} onSelect={() => go(to)}>
-                <Icon className="h-4 w-4" aria-hidden />
-                {label}
-              </CommandItem>
-            ),
-          )}
+          {[
+            ...navItems,
+            { to: "/siet", label: "Sieť tokov", icon: Search },
+          ].map(({ to, label, icon: Icon }) => (
+            <CommandItem
+              key={to}
+              value={`obrazovka ${label}`}
+              onSelect={() => go(to)}
+            >
+              <Icon className="h-4 w-4" aria-hidden />
+              {label}
+            </CommandItem>
+          ))}
         </CommandGroup>
 
         <CommandGroup heading="Subjekty">
           {activeCase.entities.map((e) => (
-            <CommandItem key={e.id} value={`${e.name} ${e.role}`} onSelect={() => go("/osoby")}>
+            <CommandItem
+              key={e.id}
+              value={`${e.name} ${e.role}`}
+              onSelect={() => go("/osoby")}
+            >
               {e.kind === "person" ? (
                 <User className="h-4 w-4" aria-hidden />
               ) : (
                 <Building2 className="h-4 w-4" aria-hidden />
               )}
               <span>{e.name}</span>
-              <span className="ml-auto text-[10px] text-muted-foreground">{e.role}</span>
+              <span className="ml-auto text-[10px] text-muted-foreground">
+                {e.role}
+              </span>
             </CommandItem>
           ))}
         </CommandGroup>
@@ -117,7 +130,9 @@ export function CommandPalette() {
               <span>
                 {w.brand} {w.model}
               </span>
-              <span className="ml-auto text-[10px] tnum text-muted-foreground">{w.serial}</span>
+              <span className="ml-auto text-[10px] tnum text-muted-foreground">
+                {w.serial}
+              </span>
             </CommandItem>
           ))}
         </CommandGroup>

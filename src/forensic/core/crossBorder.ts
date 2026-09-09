@@ -46,10 +46,16 @@ export const COUNTRY_LABEL: Record<string, string> = {
   DE: "Nemecko",
 };
 
-export function detectSuspiciousFlows(transactions: Transaction[]): CrossBorderAlert[] {
+export function detectSuspiciousFlows(
+  transactions: Transaction[],
+): CrossBorderAlert[] {
   return transactions
     .filter((t) => t.originCountry !== t.destinationCountry)
-    .filter((t) => HIGH_RISK_DESTINATIONS.has(t.destinationCountry) && t.amount >= AMOUNT_THRESHOLD)
+    .filter(
+      (t) =>
+        HIGH_RISK_DESTINATIONS.has(t.destinationCountry) &&
+        t.amount >= AMOUNT_THRESHOLD,
+    )
     .map((t) => ({
       transactionId: t.id,
       route: `${t.originCountry} → ${t.destinationCountry}`,

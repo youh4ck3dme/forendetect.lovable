@@ -69,7 +69,11 @@ export function mapCaseRows(
 
   const mappedRelations: Relation[] = (relations ?? [])
     .filter((r) => r.from_id && r.to_id)
-    .map((r) => ({ fromId: r.from_id as string, toId: r.to_id as string, label: r.label ?? "" }));
+    .map((r) => ({
+      fromId: r.from_id as string,
+      toId: r.to_id as string,
+      label: r.label ?? "",
+    }));
 
   const mappedEvents: CaseEvent[] = (events ?? []).map((ev) => ({
     date: ev.date,

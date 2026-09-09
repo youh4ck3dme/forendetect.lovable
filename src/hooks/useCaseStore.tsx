@@ -37,7 +37,8 @@ function getInitialTheme(): ThemeMode {
   if (typeof window === "undefined") return "system";
   try {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
-    if (saved === "light" || saved === "dark" || saved === "system") return saved;
+    if (saved === "light" || saved === "dark" || saved === "system")
+      return saved;
   } catch {
     // ignore
   }
@@ -107,7 +108,8 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
     const root = document.documentElement;
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const apply = () => {
-      const dark = state.theme === "dark" || (state.theme === "system" && media.matches);
+      const dark =
+        state.theme === "dark" || (state.theme === "system" && media.matches);
       root.classList.toggle("dark", dark);
       root.style.colorScheme = dark ? "dark" : "light";
     };
@@ -149,7 +151,8 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
             ...prev.runLog.filter((r) => r.id !== entry.id),
           ].slice(0, 30),
         })),
-      countExport: () => update((prev) => ({ ...prev, exports: prev.exports + 1 })),
+      countExport: () =>
+        update((prev) => ({ ...prev, exports: prev.exports + 1 })),
       setTheme: (theme) => {
         try {
           localStorage.setItem(THEME_STORAGE_KEY, theme);
@@ -166,12 +169,17 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
     [state, ready, update],
   );
 
-  return <CaseStoreContext.Provider value={value}>{children}</CaseStoreContext.Provider>;
+  return (
+    <CaseStoreContext.Provider value={value}>
+      {children}
+    </CaseStoreContext.Provider>
+  );
 }
 
 export function useCaseStore(): Ctx {
   const ctx = useContext(CaseStoreContext);
-  if (!ctx) throw new Error("useCaseStore musí byť použitý v CaseStoreProvider");
+  if (!ctx)
+    throw new Error("useCaseStore musí byť použitý v CaseStoreProvider");
   return ctx;
 }
 

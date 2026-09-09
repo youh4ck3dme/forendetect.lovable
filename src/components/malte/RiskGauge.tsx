@@ -74,7 +74,9 @@ export function RiskGauge({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-extrabold tnum">{shown}</span>
-        {label ? <span className="text-[10px] font-semibold opacity-80">{label}</span> : null}
+        {label ? (
+          <span className="text-[10px] font-semibold opacity-80">{label}</span>
+        ) : null}
       </div>
     </div>
   );

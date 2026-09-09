@@ -14,7 +14,10 @@ import {
   SectionTitle,
 } from "@/components/malte/Shell";
 import { Button } from "@/components/ui/button";
-import { DetectorSheet, type DetectorTarget } from "@/components/malte/DetectorSheet";
+import {
+  DetectorSheet,
+  type DetectorTarget,
+} from "@/components/malte/DetectorSheet";
 import { RiskFilter } from "@/components/malte/RiskFilter";
 import { useCaseStore, passesFilter } from "@/hooks/useCaseStore";
 import { cn } from "@/lib/utils";
@@ -32,7 +35,8 @@ export const Route = createFileRoute("/_authenticated/vztahy")({
       { property: "og:title", content: "Sieť vzťahov — Forendo" },
       {
         property: "og:description",
-        content: "Vizualizácia prepojení prípadu a reťazcov dodávateľ → schránka → odberateľ.",
+        content:
+          "Vizualizácia prepojení prípadu a reťazcov dodávateľ → schránka → odberateľ.",
       },
     ],
   }),
@@ -44,10 +48,14 @@ function Relations() {
   const byId = new Map(analysis.entities.map((e) => [e.entity.id, e]));
   const { state } = useCaseStore();
   const [target, setTarget] = useState<DetectorTarget | null>(null);
-  const [selectedId, setSelectedId] = useState<string>(analysis.entities[0]?.entity.id ?? "");
+  const [selectedId, setSelectedId] = useState<string>(
+    analysis.entities[0]?.entity.id ?? "",
+  );
   const [view, setView] = useState<"graph" | "list">("graph");
   const focus = byId.get(selectedId) ?? analysis.entities[0];
-  const visible = analysis.entities.filter((e) => passesFilter(state.riskFilter, e.level));
+  const visible = analysis.entities.filter((e) =>
+    passesFilter(state.riskFilter, e.level),
+  );
   const visibleIds = new Set(visible.map((e) => e.entity.id));
 
   if (!focus) {
@@ -80,7 +88,11 @@ function Relations() {
       <Screen>
         <div className="flex gap-2">
           <AddPanel label="Pridať vzťah">
-            <RelationForm caseId={activeCase.id} entities={activeCase.entities} onSaved={refresh} />
+            <RelationForm
+              caseId={activeCase.id}
+              entities={activeCase.entities}
+              onSaved={refresh}
+            />
           </AddPanel>
           {(["graph", "list"] as const).map((option) => (
             <button
@@ -104,12 +116,17 @@ function Relations() {
 
         {view === "graph" ? (
           <Card className="relative aspect-square overflow-hidden p-0">
-            <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden>
+            <svg
+              viewBox="0 0 100 100"
+              className="absolute inset-0 h-full w-full"
+              aria-hidden
+            >
               {activeCase.relations.map((rel) => {
                 const from = byId.get(rel.fromId)?.entity;
                 const to = byId.get(rel.toId)?.entity;
                 if (!from || !to) return null;
-                const risky = byId.get(rel.fromId)?.isShell || byId.get(rel.toId)?.isShell;
+                const risky =
+                  byId.get(rel.fromId)?.isShell || byId.get(rel.toId)?.isShell;
                 return (
                   <line
                     key={`${rel.fromId}-${rel.toId}-${rel.label}`}
@@ -152,8 +169,12 @@ function Relations() {
                     <Building2 className="h-4 w-4" aria-hidden />
                   )}
                 </span>
-                <p className="mt-1 w-24 truncate text-[10px] font-semibold">{item.entity.name}</p>
-                <p className="text-[9px] text-muted-foreground tnum">{item.score}/100</p>
+                <p className="mt-1 w-24 truncate text-[10px] font-semibold">
+                  {item.entity.name}
+                </p>
+                <p className="text-[9px] text-muted-foreground tnum">
+                  {item.score}/100
+                </p>
               </button>
             ))}
           </Card>
@@ -177,8 +198,12 @@ function Relations() {
                   )}
                 </span>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold">{item.entity.name}</p>
-                  <p className="truncate text-[11px] text-muted-foreground">{item.entity.role}</p>
+                  <p className="truncate text-sm font-semibold">
+                    {item.entity.name}
+                  </p>
+                  <p className="truncate text-[11px] text-muted-foreground">
+                    {item.entity.role}
+                  </p>
                 </div>
                 <span className="ml-auto">
                   <RiskChip level={item.level}>{item.score}/100</RiskChip>
@@ -197,7 +222,9 @@ function Relations() {
           <Link to="/siet">Otvoriť interaktívnu sieťovú analýzu</Link>
         </Button>
 
-        <SectionTitle>Detegované reťazce ({analysis.chains.length})</SectionTitle>
+        <SectionTitle>
+          Detegované reťazce ({analysis.chains.length})
+        </SectionTitle>
 
         <Card className="space-y-3">
           {analysis.chains.map((chain) => (
@@ -211,7 +238,9 @@ function Relations() {
               className="block w-full space-y-1 rounded-lg text-left transition-colors hover:bg-accent"
             >
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold">{byId.get(chain.shellId)?.entity.name}</p>
+                <p className="text-sm font-semibold">
+                  {byId.get(chain.shellId)?.entity.name}
+                </p>
                 <span className="ml-auto">
                   <RiskChip level={chain.severity}>
                     {chain.severity === "critical" ? "Kritické" : "Vysoké"}
@@ -219,9 +248,14 @@ function Relations() {
                 </span>
               </div>
               <p className="text-[11px] text-muted-foreground">
-                {chain.supplierIds.map((id) => byId.get(id)?.entity.name ?? id).join(", ")} →{" "}
-                <span className="font-semibold text-risk-high">schránka</span> →{" "}
-                {chain.buyerIds.map((id) => byId.get(id)?.entity.name ?? id).join(", ")}
+                {chain.supplierIds
+                  .map((id) => byId.get(id)?.entity.name ?? id)
+                  .join(", ")}{" "}
+                → <span className="font-semibold text-risk-high">schránka</span>{" "}
+                →{" "}
+                {chain.buyerIds
+                  .map((id) => byId.get(id)?.entity.name ?? id)
+                  .join(", ")}
               </p>
             </button>
           ))}
@@ -240,7 +274,9 @@ function Relations() {
             </span>
             <div>
               <p className="text-sm font-semibold">{focus.entity.name}</p>
-              <p className="text-[11px] text-muted-foreground">{focus.entity.role}</p>
+              <p className="text-[11px] text-muted-foreground">
+                {focus.entity.role}
+              </p>
             </div>
             <span className="ml-auto">
               <RiskChip level={focus.level}>{focus.score}/100</RiskChip>

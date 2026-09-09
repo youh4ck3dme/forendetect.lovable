@@ -7,8 +7,18 @@ export default defineTool({
   title: "Analyze entity",
   description:
     "Run the shell-company and risk detectors for one entity (by id or name) and return its flags, score and related transactions.",
-  inputSchema: { entity: z.string().trim().min(1).describe("Entity id or (part of) its name.") },
-  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+  inputSchema: {
+    entity: z
+      .string()
+      .trim()
+      .min(1)
+      .describe("Entity id or (part of) its name."),
+  },
+  annotations: {
+    readOnlyHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   handler: async ({ entity }, ctx) => {
     const a = await caseAnalysis(ctx);
     const q = entity.toLowerCase();

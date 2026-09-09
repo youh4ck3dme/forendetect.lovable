@@ -35,7 +35,8 @@ const dossier: ForensicDossier = {
         time: "2025-01-23",
         event:
           "1. nákup zbraní v TATRAGEN s.r.o. (Žilina) — 48 ks pištolí Glock 19 Gen 5 a GP K100.",
-        source: "Zápisnica o výsluchu svedka Mareka Plcha (č. l. 82) a zálohová faktúra",
+        source:
+          "Zápisnica o výsluchu svedka Mareka Plcha (č. l. 82) a zálohová faktúra",
         chainBreak: false,
         severity: "critical",
         paragraph: "§ 294 TZ",
@@ -53,7 +54,8 @@ const dossier: ForensicDossier = {
         time: "2025-12-08",
         event:
           "Zadržanie Dimitriho Cohena v Trenčíne, zaistenie pečiatok EB-EU a zoznamov kalibrov.",
-        source: "Protokol o osobnej prehliadke a prehliadke vozidla (č. l. 195)",
+        source:
+          "Protokol o osobnej prehliadke a prehliadke vozidla (č. l. 195)",
         chainBreak: false,
         severity: "critical",
         paragraph: "§ 95 ods. 1 TP",
@@ -82,7 +84,8 @@ const dossier: ForensicDossier = {
       {
         id: "TR-02",
         type: "balistická",
-        description: "2x Grand Power K100 mk12 (v. č. K055902, K055904) zaistené v Španielsku",
+        description:
+          "2x Grand Power K100 mk12 (v. č. K055902, K055904) zaistené v Španielsku",
         light: "green",
         chainComplete: true,
         lr: "> 500 000",
@@ -101,7 +104,8 @@ const dossier: ForensicDossier = {
       {
         id: "TR-04",
         type: "digitálna",
-        description: "Fonoskopický záznam a zoznamy marží zaistené vo vozidle BMW X6 (D. Marjov)",
+        description:
+          "Fonoskopický záznam a zoznamy marží zaistené vo vozidle BMW X6 (D. Marjov)",
         light: "yellow",
         chainComplete: true,
         lr: "—",
@@ -110,7 +114,8 @@ const dossier: ForensicDossier = {
       {
         id: "TR-05",
         type: "dokument",
-        description: "Evidenčná kniha zbraní EB-EU s.r.o. — účelovo zatajená/odcudzená obvinenými",
+        description:
+          "Evidenčná kniha zbraní EB-EU s.r.o. — účelovo zatajená/odcudzená obvinenými",
         light: "red",
         chainComplete: false,
         lr: "—",
@@ -123,7 +128,8 @@ const dossier: ForensicDossier = {
     attacks: [
       {
         id: "DA-01",
-        defenseClaim: "Erik Babčan: V TATRAGENe som nikdy nebol a zbrane som fyzicky neprevzal.",
+        defenseClaim:
+          "Erik Babčan: V TATRAGENe som nikdy nebol a zbrane som fyzicky neprevzal.",
         risk: "NÍZKE",
         counterStrike:
           "Vyvrátené svedectvom M. Plcha (3x overil OP), podpismi v knihe zbraní a kamerovým záznamom.",
@@ -201,7 +207,8 @@ const dossier: ForensicDossier = {
     paragraphs: [
       {
         para: "§ 294 ods. 2, ods. 4 písm. a) TZ",
-        title: "Nedovolené ozbrojovanie a obchodovanie so zbraňami (veľký rozsah)",
+        title:
+          "Nedovolené ozbrojovanie a obchodovanie so zbraňami (veľký rozsah)",
         status: "OK",
         note: "242 kusov zbraní kategórie B preukázateľne uvedených do nelegálnej distribúcie bez sprievodných listov.",
       },
@@ -252,7 +259,9 @@ const dossier: ForensicDossier = {
         "Trasovacia správa EUROPOL Španielsko",
         "Zaistené pečiatky firiem",
       ],
-      unverifiedHypotheses: ["Identita koncových zahraničných odberateľov v Španielsku"],
+      unverifiedHypotheses: [
+        "Identita koncových zahraničných odberateľov v Španielsku",
+      ],
       missingEvidence: ["Originál evidenčnej knihy EB-EU s.r.o."],
       confidenceLevel: 95,
     },
@@ -261,13 +270,20 @@ const dossier: ForensicDossier = {
       question: "Kto celý plán vymyslel, riadil alebo koordinoval?",
       answer:
         "Plán riadili Dimitri Cohen a doposiaľ presne nestotožnená osoba vystupujúca ako „Ľubo“ / „Marek“. Cohen zabezpečil schránkové spoločnosti (EB-EU, Bark Factory), advokátske plnomocenstvá a organizoval logistiku. „Ľubo“ určoval požiadavky na sortiment a financovanie.",
-      identifiedPersons: ["Dimitri Cohen", "„Ľubo“ / „Marek“", "Norbert Skyrčák", "Dmitrij Marjov"],
+      identifiedPersons: [
+        "Dimitri Cohen",
+        "„Ľubo“ / „Marek“",
+        "Norbert Skyrčák",
+        "Dmitrij Marjov",
+      ],
       directEvidence: [
         "Zaistené rukou písané poznámky vo vozidle BMW X6",
         "Zvukové nahrávky rozhovorov (svedok Marjov)",
         "Výpoveď svedka Michala Žembera",
       ],
-      unverifiedHypotheses: ["Plná totožnosť osoby „Ľubo“ (prebieha operatívne preverovanie)"],
+      unverifiedHypotheses: [
+        "Plná totožnosť osoby „Ľubo“ (prebieha operatívne preverovanie)",
+      ],
       missingEvidence: ["Výsluch sprostredkovateľa Skyrčáka"],
       confidenceLevel: 90,
     },
@@ -282,15 +298,20 @@ const dossier: ForensicDossier = {
         "Pokladničné potvrdenky o vkladoch hotovosti",
         "Faktúry TATRAGEN s.r.o.",
       ],
-      unverifiedHypotheses: ["Pôvod hotovostných prostriedkov vkladaných osobou Ľubo"],
-      missingEvidence: ["Výpisy z účtov zahraničných spoločností Tavira s.r.o."],
+      unverifiedHypotheses: [
+        "Pôvod hotovostných prostriedkov vkladaných osobou Ľubo",
+      ],
+      missingEvidence: [
+        "Výpisy z účtov zahraničných spoločností Tavira s.r.o.",
+      ],
       confidenceLevel: 88,
     },
   },
   testimonyContradictions: [
     {
       id: "TC-01",
-      topic: "Osobné objednanie, prevzatie a podpis 242 zbraní v TATRAGEN s.r.o.",
+      topic:
+        "Osobné objednanie, prevzatie a podpis 242 zbraní v TATRAGEN s.r.o.",
       personA: {
         name: "Erik Babčan",
         status: "obvinený",
@@ -385,7 +406,8 @@ const dossier: ForensicDossier = {
         amount: 25000,
         method: "cash_deposit",
         purpose: "Vklad na účet — nákup zbraní",
-        redFlag: "Vklad v hotovosti bez preukázania legálneho pôvodu finančných prostriedkov",
+        redFlag:
+          "Vklad v hotovosti bez preukázania legálneho pôvodu finančných prostriedkov",
       },
       {
         id: "SF-02",
@@ -405,7 +427,8 @@ const dossier: ForensicDossier = {
         amount: 35000,
         method: "cash_deposit",
         purpose: "Vklad na účet — 2. tranža zbraní",
-        redFlag: "Štiepenie platieb na viacerých pobočkách v Žiline a Banskej Bystrici",
+        redFlag:
+          "Štiepenie platieb na viacerých pobočkách v Žiline a Banskej Bystrici",
       },
       {
         id: "SF-04",
@@ -415,7 +438,8 @@ const dossier: ForensicDossier = {
         amount: 34200,
         method: "wire_transfer",
         purpose: "Faktúra č. 20250034 (Grand Power K100)",
-        redFlag: "Nákup zbraní na spoločnosť bez reálneho sídla a predajných priestorov",
+        redFlag:
+          "Nákup zbraní na spoločnosť bez reálneho sídla a predajných priestorov",
       },
       {
         id: "SF-05",
@@ -425,7 +449,8 @@ const dossier: ForensicDossier = {
         amount: 18500,
         method: "handover",
         purpose: "Priama hotovostná úhrada za zbrane",
-        redFlag: "Porušenie zákona č. 394/2012 Z. z. o obmedzení platieb v hotovosti (> 15 000 €)",
+        redFlag:
+          "Porušenie zákona č. 394/2012 Z. z. o obmedzení platieb v hotovosti (> 15 000 €)",
       },
     ],
   },
@@ -436,7 +461,10 @@ const computedSha256 = computeDossierSha256(dossier);
 
 // 2. Overenie voči Node.js crypto
 const canonicalDossier = JSON.stringify(dossier, Object.keys(dossier).sort());
-const expectedSha256 = crypto.createHash("sha256").update(canonicalDossier, "utf8").digest("hex");
+const expectedSha256 = crypto
+  .createHash("sha256")
+  .update(canonicalDossier, "utf8")
+  .digest("hex");
 const isHashValid = computedSha256 === expectedSha256;
 
 console.log("=== KRYPTOGRAFICKÉ OVERENIE SHA-256 ===");
@@ -449,20 +477,34 @@ console.log(
 
 // 3. Generovanie HTML súdneho posudku
 const html = buildReportHTML(dossier);
-const outHtmlPath = path.resolve("docs/forenz/VZOROVY_SUDNY_POSUDOK_PPZ-51-UBOK-PZ-ST-2025.html");
+const outHtmlPath = path.resolve(
+  "docs/forenz/VZOROVY_SUDNY_POSUDOK_PPZ-51-UBOK-PZ-ST-2025.html",
+);
 fs.writeFileSync(outHtmlPath, html, "utf8");
-console.log("Vzorový HTML posudok vygenerovaný do:   ", outHtmlPath, "(", html.length, "znakov )");
+console.log(
+  "Vzorový HTML posudok vygenerovaný do:   ",
+  outHtmlPath,
+  "(",
+  html.length,
+  "znakov )",
+);
 
 // 4. Konverzia na PDF cez Microsoft Edge Headless CLI
-const edgePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
-const outPdfPath = path.resolve("docs/forenz/VZOROVY_SUDNY_POSUDOK_PPZ-51-UBOK-PZ-ST-2025.pdf");
+const edgePath =
+  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
+const outPdfPath = path.resolve(
+  "docs/forenz/VZOROVY_SUDNY_POSUDOK_PPZ-51-UBOK-PZ-ST-2025.pdf",
+);
 
 if (fs.existsSync(edgePath)) {
   try {
     const fileUrl = "file:///" + outHtmlPath.replace(/\\/g, "/");
-    execSync(`"${edgePath}" --headless --disable-gpu --print-to-pdf="${outPdfPath}" "${fileUrl}"`, {
-      stdio: "pipe",
-    });
+    execSync(
+      `"${edgePath}" --headless --disable-gpu --print-to-pdf="${outPdfPath}" "${fileUrl}"`,
+      {
+        stdio: "pipe",
+      },
+    );
     const pdfStat = fs.statSync(outPdfPath);
     console.log(
       "Súdny PDF posudok úspešne vygenerovaný:",
@@ -480,10 +522,14 @@ if (fs.existsSync(edgePath)) {
 // 5. Audit formátovania podľa Trestného poriadku
 console.log("\n=== AUDIT FORMÁTOVANIA PODĽA TRESTNÉHO PORIADKU ===");
 const checks: [string, boolean][] = [
-  ["Spisová značka / ČVS v hlavičke (§ 142 TP)", html.includes("PPZ-51/UBOK-PZ-ST-2025")],
+  [
+    "Spisová značka / ČVS v hlavičke (§ 142 TP)",
+    html.includes("PPZ-51/UBOK-PZ-ST-2025"),
+  ],
   [
     "Kryptografická doložka integrity (§ 119 ods. 2 TP)",
-    html.includes(computedSha256) && html.includes("Doložka integrity a nemennosti"),
+    html.includes(computedSha256) &&
+      html.includes("Doložka integrity a nemennosti"),
   ],
   [
     "Oddiel I. Zistený skutkový stav (§ 119 ods. 1 TP)",
@@ -495,21 +541,27 @@ const checks: [string, boolean][] = [
   ],
   [
     "Oddiel III. Vedecké zhodnotenie stôp (LR & ENFSI)",
-    html.includes("III. Vedecké zhodnotenie stôp") && html.includes("> 1 000 000"),
+    html.includes("III. Vedecké zhodnotenie stôp") &&
+      html.includes("> 1 000 000"),
   ],
   [
     "Matica rozporov vo výpovediach (§ 125 TP — Konfrontácia)",
     html.includes("§ 125 TP — Konfrontácia") &&
       html.includes("Nariadiť konfrontáciu podľa § 125 TP"),
   ],
-  ["Kvantifikácia miery nepravdy v percentách", html.includes("95 %") && html.includes("90 %")],
+  [
+    "Kvantifikácia miery nepravdy v percentách",
+    html.includes("95 %") && html.includes("90 %"),
+  ],
   [
     "Forenzná analýza transakcií (§ 119 ods. 1 písm. f) TP)",
-    html.includes("§ 119 ods. 1 písm. f) TP") && html.includes("Podozrivé finančné toky"),
+    html.includes("§ 119 ods. 1 písm. f) TP") &&
+      html.includes("Podozrivé finančné toky"),
   ],
   [
     "Právna kvalifikácia trestných činov (§ 294 TZ, § 138 TZ)",
-    html.includes("§ 294 ods. 2, ods. 4 písm. a) TZ") && html.includes("§ 138 písm. h) TZ"),
+    html.includes("§ 294 ods. 2, ods. 4 písm. a) TZ") &&
+      html.includes("§ 138 písm. h) TZ"),
   ],
   [
     "Znalecké osvedčenie a podpisová doložka",
