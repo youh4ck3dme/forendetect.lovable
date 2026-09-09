@@ -1,8 +1,17 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "./harness";
 import { analyzeCase } from "@/forensic";
 import { EMPTY_CASE } from "@/forensic/data/empty";
-import { flagTransaction, cashRatio, netAmount } from "@/forensic/core/transactions";
-import { roundMoney, sumByCurrency, sumMoney, sumVolume } from "@/forensic/core/money";
+import {
+  flagTransaction,
+  cashRatio,
+  netAmount,
+} from "@/forensic/core/transactions";
+import {
+  roundMoney,
+  sumByCurrency,
+  sumMoney,
+  sumVolume,
+} from "@/forensic/core/money";
 import { RULES_VERSION } from "@/forensic/core/rules";
 import type { ForensicCase, Transaction } from "@/forensic";
 
@@ -29,7 +38,9 @@ describe("peňažná aritmetika", () => {
 
   it("objem používa absolútne hodnoty (záporná suma = opačný smer)", () => {
     expect(sumVolume([100, -40])).toBe(140);
-    expect(netAmount([tx({ amount: 100 }), tx({ id: "t2", amount: -40 })])).toBe(60);
+    expect(
+      netAmount([tx({ amount: 100 }), tx({ id: "t2", amount: -40 })]),
+    ).toBe(60);
   });
 
   it("nesčítava rôzne meny do jednej sumy", () => {
@@ -59,7 +70,9 @@ describe("pravidlá transakcií", () => {
 
   it("hranica prahu: 14 999,99 v hotovosti ešte nespúšťa pravidlo", () => {
     const one = tx({ amount: 14_999.99, method: "cash" });
-    expect(flagTransaction(one, [one]).some((f) => f.code === "CASH_HIGH_VALUE")).toBe(false);
+    expect(
+      flagTransaction(one, [one]).some((f) => f.code === "CASH_HIGH_VALUE"),
+    ).toBe(false);
   });
 
   it("pravidlo rovnakého dňa neporovnáva rôzne meny", () => {
@@ -78,12 +91,17 @@ describe("pravidlá transakcií", () => {
 
   it("platba tretej strany odkazuje na platiteľa", () => {
     const one = tx({ id: "x", payerId: "c" });
-    const flag = flagTransaction(one, [one]).find((f) => f.code === "THIRD_PARTY_PAYMENT");
+    const flag = flagTransaction(one, [one]).find(
+      (f) => f.code === "THIRD_PARTY_PAYMENT",
+    );
     expect(flag?.evidence).toContainEqual({ type: "entity", id: "c" });
   });
 
   it("podiel hotovosti počíta z absolútnych hodnôt", () => {
-    const list = [tx({ id: "1", amount: 100, method: "cash" }), tx({ id: "2", amount: -100 })];
+    const list = [
+      tx({ id: "1", amount: 100, method: "cash" }),
+      tx({ id: "2", amount: -100 }),
+    ];
     expect(cashRatio(list)).toBe(0.5);
   });
 });
@@ -102,8 +120,24 @@ describe("analýza prípadu", () => {
       id: "c1",
       baseCurrency: "EUR",
       entities: [
-        { id: "a", name: "A", kind: "person", role: "", country: "SK", x: 10, y: 10 },
-        { id: "b", name: "B", kind: "company", role: "", country: "SK", x: 20, y: 20 },
+        {
+          id: "a",
+          name: "A",
+          kind: "person",
+          role: "",
+          country: "SK",
+          x: 10,
+          y: 10,
+        },
+        {
+          id: "b",
+          name: "B",
+          kind: "company",
+          role: "",
+          country: "SK",
+          x: 20,
+          y: 20,
+        },
       ],
       transactions: [
         tx({ id: "1", amount: 1000, currency: "EUR" }),

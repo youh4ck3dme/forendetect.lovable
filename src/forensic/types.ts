@@ -9,8 +9,39 @@ export type Severity = "critical" | "high" | "medium" | "low";
 export type FindingKind = "fakt" | "heuristika" | "hypotéza";
 
 export type EvidenceRef = {
-  type: "entity" | "transaction" | "weapon" | "relation" | "event";
+  type:
+    | "entity"
+    | "transaction"
+    | "weapon"
+    | "relation"
+    | "event"
+    | "import"
+    | "document"
+    | "registry"
+    | "cross-border-analysis"
+    | "company-profile";
   id: string;
+};
+
+export type DataSource =
+  | "manual"
+  | "csv-import"
+  | "document"
+  | "ico-atlas"
+  | "orsr"
+  | "dimitri-checker"
+  | "ai";
+
+export type SourceRecord = {
+  id: string;
+  source: DataSource;
+  sourceVersion?: string | undefined;
+  sourceUrl?: string | undefined;
+  capturedAt: string;
+  sourceHash?: string | undefined;
+  /** Confidence je číslo od 0 do 100 */
+  confidence?: number | undefined;
+  rawReference?: string | undefined;
 };
 
 export type Flag = {
@@ -217,7 +248,13 @@ export type Alert = {
   severity: Severity;
   score: number;
   source:
-    "entita" | "transakcia" | "zbraň" | "sieť" | "cezhraničné" | "pranie peňazí" | "časový vzor";
+    | "entita"
+    | "transakcia"
+    | "zbraň"
+    | "sieť"
+    | "cezhraničné"
+    | "pranie peňazí"
+    | "časový vzor";
   date?: string;
 };
 
