@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useRef } from "react";
+import { useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -32,6 +32,7 @@ import {
   X,
   FileSpreadsheet,
   ArrowRightLeft,
+  Save,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -56,6 +57,8 @@ import {
   runForensicAutopilot,
   extractFileText,
   extractBulkFilesText,
+  saveCaseDossier,
+  getForensicDossier,
   type AiRunResult,
   type AiTask,
 } from "@/lib/ai.functions";
@@ -642,6 +645,37 @@ export function Assistant() {
   const runAutopilotFn = useServerFn(runForensicAutopilot);
   const extractTextFn = useServerFn(extractFileText);
   const extractBulkTextFn = useServerFn(extractBulkFilesText);
+  const saveCaseDossierFn = useServerFn(saveCaseDossier);
+  const getForensicDossierFn = useServerFn(getForensicDossier);
+
+  const [isSavingDossier, setIsSavingDossier] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+
+  // Automatické načítanie uloženého dossieru pri otvorení prípadu (ak ešte nie je načítaný v pamäti)
+  useEffect(() => {
+    let active = true;
+    if (!activeCase.id) return;
+
+    async function checkExistingDossier() {
+      try {
+        const res = await getForensicDossierFn({ data: { caseId: activeCase.id } });
+        if (active && res && res.success && res.dossier) {
+          setDossier(res.dossier);
+          toast.info(
+            `Načítaný uložený forenzný dossier pre prípad „${activeCase.name || activeCase.id}“.`,
+          );
+        }
+      } catch (err) {
+        // Tichý fallback: databáza zatiaľ nemá stĺpec alebo prípad nemá uložený dossier
+        console.debug("checkExistingDossier fallback:", err);
+      }
+    }
+
+    void checkExistingDossier();
+    return () => {
+      active = false;
+    };
+  }, [activeCase.id, activeCase.name, getForensicDossierFn]);
 
   const handleQueueFiles = useCallback((files: FileList | File[]) => {
     const arr = Array.from(files);
@@ -842,8 +876,58 @@ export function Assistant() {
   const handleExportPDF = useCallback(() => {
     if (!dossier) return;
     exportDossierToPDF(dossier);
-    toast.success("Forenzný report pripravený na tlač/PDF");
+    toast.success("Súdny posudok (A4) so SHA-256 pečaťou bol pripravený na tlač/stiahnutie.");
   }, [dossier]);
+
+  const handleSaveDossier = useCallback(async () => {
+    if (!dossier) {
+      toast.error("Žiadny vygenerovaný dossier na uloženie.");
+      return;
+    }
+    const caseId = activeCase.id;
+    if (!caseId) {
+      toast.error("Nie je vybratý aktívny prípad pre uloženie dossieru.");
+      return;
+    }
+
+    setIsSavingDossier(true);
+    try {
+      const res = await saveCaseDossierFn({
+        data: {
+          caseId,
+          dossier,
+        },
+      });
+      if (res && res.success) {
+        const timeStr = new Date().toLocaleTimeString("sk-SK", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+        setLastSavedAt(timeStr);
+        toast.success(`Forenzný dossier bol úspešne uložený do prípadu (${timeStr}).`);
+      } else {
+        toast.error("Uloženie dossieru do databázy zlyhalo.");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (
+        msg.includes("42703") ||
+        msg.includes("forensic_dossier") ||
+        msg.toLowerCase().includes("column")
+      ) {
+        console.warn("Supabase column forensic_dossier missing:", msg);
+        toast.warning(
+          "Databázová schéma ešte neobsahuje stĺpec forensic_dossier (migrácia čaká na vykonanie v Supabase). Spis je bezpečne uchovaný v lokálnom stave.",
+          { duration: 6000 },
+        );
+      } else {
+        toast.error(`Chyba pri ukladaní: ${msg}`);
+      }
+    } finally {
+      setIsSavingDossier(false);
+    }
+  }, [activeCase.id, dossier, saveCaseDossierFn]);
 
   // Quick tasks run
   async function runQuickTask() {
@@ -1271,6 +1355,46 @@ ${dossier.judgeReadyText.vedecke}`;
             ) : (
               /* Zobrazenie Dossieru (5 Kariet + Export) */
               <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-card/60 p-2.5 rounded-xl border border-border/60">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Badge
+                      variant="outline"
+                      className="border-primary/40 text-primary font-mono text-xs shrink-0"
+                    >
+                      {dossier.caseId}
+                    </Badge>
+                    <span className="text-xs font-semibold text-foreground truncate">
+                      {dossier.caseTitle}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSaveDossier}
+                      disabled={isSavingDossier}
+                      className="h-8 text-xs gap-1.5 cursor-pointer border-primary/30 hover:bg-primary/10"
+                      title="Uložiť dossier do databázy prípadu"
+                    >
+                      {isSavingDossier ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                      ) : (
+                        <Save className="h-3.5 w-3.5 text-primary" />
+                      )}
+                      <span>{lastSavedAt ? `Uložené (${lastSavedAt})` : "Uložiť do prípadu"}</span>
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleExportPDF}
+                      className="h-8 text-xs gap-1.5 cursor-pointer font-medium"
+                      title="Stiahnuť / vytlačiť súdny posudok podľa Trestného poriadku"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      <span>Súdny posudok (PDF)</span>
+                    </Button>
+                  </div>
+                </div>
+
                 <Progress value={idx} className={`h-2 ${idxBar}`} />
 
                 <Tabs value={autopilotTab} onValueChange={setAutopilotTab} className="space-y-3">
@@ -1952,10 +2076,10 @@ ${dossier.judgeReadyText.vedecke}`;
                         Rozsudkový formát § 168 TP
                       </h4>
                       <p className="text-[11px] text-muted-foreground">
-                        Odôvodnenie rozsudku a obžaloba pripravená pre súd
+                        Odôvodnenie rozsudku, forenzný posudok a perzistencia spisu
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <Button
                         variant="outline"
                         size="sm"
@@ -1975,12 +2099,33 @@ ${dossier.judgeReadyText.vedecke}`;
                         )}
                       </Button>
                       <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSaveDossier}
+                        disabled={isSavingDossier}
+                        className="gap-1.5 text-xs h-8 cursor-pointer border-primary/40 hover:bg-primary/10"
+                        title="Uložiť vygenerovanú analýzu priamo do prípadu"
+                      >
+                        {isSavingDossier ? (
+                          <>
+                            <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                            Ukladám...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="h-3.5 w-3.5 text-primary" />
+                            {lastSavedAt ? `Uložené (${lastSavedAt})` : "Uložiť do prípadu"}
+                          </>
+                        )}
+                      </Button>
+                      <Button
                         size="sm"
                         onClick={handleExportPDF}
-                        className="gap-1.5 h-8 cursor-pointer"
+                        className="gap-1.5 h-8 cursor-pointer font-semibold shadow-xs"
+                        title="Vygenerovať A4 súdny formát so SHA-256 kontrolnou doložkou"
                       >
                         <Download className="h-3.5 w-3.5" />
-                        PDF report
+                        Stiahnuť súdny posudok (PDF)
                       </Button>
                     </div>
                   </div>
