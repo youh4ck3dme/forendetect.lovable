@@ -65,6 +65,7 @@ import {
 import type { ForensicDossier, BulkFileItem } from "@/lib/types";
 import { exportDossierToPDF } from "@/lib/export-pdf";
 import { upsertTransaction } from "@/lib/case-data";
+import { TATRAGEN_CROSS_CONTRADICTIONS } from "@/lib/cross-contradictions";
 
 export const Route = createFileRoute("/_authenticated/asistent")({
   head: () => ({
@@ -423,7 +424,7 @@ const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
       identifiedPersons: [
         "Dimitri Cohen (organizátor a disponent)",
         "Erik Babčan (štatutárny zástupca)",
-        "Dušan Marjov (sprostredkovateľ kontaktov)",
+        "Dmitrij Marjov (sprostredkovateľ / Shadowarms s.r.o.)",
       ],
       directEvidence: [
         "Zmluvná dokumentácia k prevodu obchodného podielu EB-EU s.r.o. cez Tavira s.r.o.",
@@ -466,96 +467,7 @@ const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
       confidenceLevel: 98,
     },
   },
-  testimonyContradictions: [
-    {
-      id: "TC-01",
-      topic: "Osobná prítomnosť a odber zbraní v Žiline",
-      personA: {
-        name: "Erik Babčan",
-        status: "obvinený",
-        claim:
-          "V predajni TATRAGEN v Žiline som nikdy nebol, zbrane som nepreberal a Mareka Plcha v živote nevidel.",
-      },
-      personB: {
-        name: "Marek Plch",
-        status: "konateľ TATRAGEN (svedok)",
-        claim:
-          "Babčan bol u mňa v predajni minimálne trikrát osobne, preukázal sa občianskym a zbrojným preukazom a podpísal odber.",
-      },
-      factualRecord:
-        "Svedok Plch jednoznačne stotožnil Babčana pri rekognícii in natura. V evidenčných hárkoch predajne figurujú podpisy v mene Babčana a číslo jeho platného ZP. Fyzická prítomnosť potvrdená aj lokalizáciou mobilného telefónu v Žiline.",
-      deceitPercentage: 95,
-      contradictionSeverity: "critical",
-      proceduralResolution:
-        "Vykonať konfrontáciu podľa § 125 TP medzi Babčanom a Plchom; nariadiť znalecké dokazovanie z odboru písmoznalectva (§ 142 TP) na podpisy na preberacích protokoloch.",
-    },
-    {
-      id: "TC-02",
-      topic: "Rola Dmitriho Cohena a vedomosť o zbraniach",
-      personA: {
-        name: "Dimitri Cohen",
-        status: "obvinený",
-        claim:
-          "Bol som len radový najatý šofér za 300 € na jazdu. Netušil som, čo je v taškách v kufri auta.",
-      },
-      personB: {
-        name: "Materiálne dôkazy v BMW & Dušan Marjov",
-        status: "vecné dôkazy a svedok",
-        claim:
-          "Cohen vlastnoručne evidoval marže 10-20 €/ks, riadil nakládku a držal pečiatky oboch firiem.",
-      },
-      factualRecord:
-        "Prehliadka motorového vozidla BMW odhalila firemné pečiatky EB-EU s.r.o. a Bark Factory s.r.o., rukou písané poznámky s modelmi zbraní a maržami a splnomocnenia na zastupovanie. Nahrávky dokazujú vyjednávanie ziskov.",
-      deceitPercentage: 90,
-      contradictionSeverity: "critical",
-      proceduralResolution:
-        "Vypočuť notára a advokátov k plnomocenstvám; predložiť Cohenove rukopisné poznámky na písmoznalecký posudok a konfrontovať ho s vecnými stopami.",
-    },
-    {
-      id: "TC-03",
-      topic: "Osud evidenčných kníh zbraní a streliva LA 002318",
-      personA: {
-        name: "Erik Babčan & Dimitri Cohen",
-        status: "obvinení",
-        claim:
-          "Evidenčné knihy zbraní sa nešťastnou náhodou stratili pri sťahovaní sídla spoločnosti.",
-      },
-      personB: {
-        name: "KR PZ Žilina — oddelenie zbraní a streliva",
-        status: "kontrolný orgán",
-        claim:
-          "Trezory boli z prevádzky odvezené hneď po kontrole licencie; evidencia sa na adrese nikdy neviedla.",
-      },
-      factualRecord:
-        "Spoločnosť EB-EU s.r.o. nikdy neviedla riadnu evidenciu zbraní podľa zákona č. 190/2003 Z. z. 'Strata' kníh bola vopred pripraveným manévrom na zakrytie toku 242 zbraní smerujúcich na čierny trh.",
-      deceitPercentage: 85,
-      contradictionSeverity: "high",
-      proceduralResolution:
-        "Kvalifikovať ako úmyselné marenie spravodlivosti a priťažujúcu okolnosť; preniesť dôkazné bremeno držiteľa zbrojnej licencie podľa § 98 TP.",
-    },
-    {
-      id: "TC-04",
-      topic: "Motivácia svedeckej výpovede a audio nahrávok Dušana Marjova",
-      personA: {
-        name: "Dimitri Cohen",
-        status: "obvinený",
-        claim:
-          "Marjov klame a nahrávky sfalšoval z pomsty, pretože sme sa pohádali o autá BMW X6 a X5.",
-      },
-      personB: {
-        name: "Dušan Marjov",
-        status: "svedok",
-        claim:
-          "Nahrávky som urobil pre vlastnú ochranu, keď som pochopil, že ide o nelegálny medzinárodný obchod so zbraňami.",
-      },
-      factualRecord:
-        "Hlasové spektrum na nahrávkach zodpovedá Cohenovi. Časové pečiatky zvukových záznamov korelujú s BTS lokalizáciami telefónov na diaľničných odpočívadlách a s dátumami výberov hotovosti.",
-      deceitPercentage: 75,
-      contradictionSeverity: "medium",
-      proceduralResolution:
-        "Zabezpečiť forenznú verifikáciu hashov nahrávok (SHA-256) a predložiť súdu v súlade s judikatúrou k § 119 ods. 2 TP ako zákonný dôkaz vyhotovený súkromnou osobou.",
-    },
-  ],
+  testimonyContradictions: TATRAGEN_CROSS_CONTRADICTIONS,
   financialAnalysis: {
     totalVolume: 148500,
     cashVolume: 106000,

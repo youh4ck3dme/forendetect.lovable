@@ -656,6 +656,9 @@ export function extractCaseEntities(text: string) {
     "Dmitrij Marjov",
     "Michal Žember",
     "Kada Dakaj",
+    "Filip Flat",
+    "Norbert Skyrčák",
+    "Barbora Minarovicová",
   ]) {
     if (text.includes(knownPerson) && !personsMap.has(knownPerson)) {
       personsMap.set(knownPerson, { name: knownPerson, role: "Spoluobvinený / Svedok" });
@@ -665,17 +668,28 @@ export function extractCaseEntities(text: string) {
   // Zbrane
   const weapons = new Set<string>();
   if (/glock\s*19/i.test(text)) weapons.add("Glock 19 Gen 5");
+  if (/glock\s*17/i.test(text)) weapons.add("Glock 17");
+  if (/glock\s*43x/i.test(text)) weapons.add("Glock 43x");
+  if (/glock\s*45/i.test(text)) weapons.add("Glock 45");
   if (/GP\s*K100|Grand\s*Power/i.test(text)) weapons.add("Grand Power K100");
+  if (/beretta/i.test(text)) weapons.add("Beretta");
   if (/CGDV051/i.test(text)) weapons.add("Zbraň v. č. CGDV051");
   if (/krátk[eé] paln[eé] zbran/i.test(text)) weapons.add("Krátke palné zbrane (kal. 9x19 mm)");
 
   // Vozidlá
   const vehicles = new Set<string>();
   if (/BMW\s*X6/i.test(text)) vehicles.add("BMW X6");
+  if (/BMW\s*X5/i.test(text)) vehicles.add("BMW X5");
+  if (/BMW\s*(?:radu\s*7|7)/i.test(text)) vehicles.add("BMW radu 7");
+  if (/Audi/i.test(text)) vehicles.add("Audi");
 
   // Spoločnosti
   const companies = new Set<string>();
   if (/TATRAGEN/i.test(text)) companies.add("TATRAGEN s.r.o.");
+  if (/PETRIS/i.test(text)) companies.add("PETRIS-SLOVAKIA s.r.o.");
+  if (/Shadowarms/i.test(text)) companies.add("Shadowarms s.r.o.");
+  if (/Bark\s*Factory/i.test(text)) companies.add("Bark Factory Enterprise s.r.o.");
+  if (/Tavira/i.test(text)) companies.add("Tavira s.r.o.");
   if (/Podtrubie/i.test(text)) companies.add("Podtrubie a.s.");
   if (/EB-EU/i.test(text)) companies.add("EB-EU s.r.o.");
 
