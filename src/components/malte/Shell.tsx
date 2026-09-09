@@ -253,13 +253,16 @@ export function Card({
   children,
   className,
   onClick,
+  id,
 }: {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
+  id?: string;
 }) {
   return (
     <section
+      id={id}
       className={cn(
         "rounded-2xl border border-border gradient-surface p-4 shadow-card transition-shadow duration-200",
         onClick && "cursor-pointer hover:shadow-elevated",
