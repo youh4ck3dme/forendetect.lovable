@@ -1007,13 +1007,13 @@ ${dossier.judgeReadyText.vedecke}`;
                               setDossier(ARMIVEX_CASE_DOSSIER);
                               setAutopilotTab("timestory");
                               toast.success(
-                                "Načítaný autentický spis: Kauza Armivex & Novák",
+                                "Načítaná syntetická ukážka: Kauza ARMIVEX (fiktívne údaje)",
                               );
                             }}
                             className="h-9 gap-1.5 border border-primary/40 bg-primary/15 font-semibold text-primary shadow-xs transition-all hover:border-primary/60 hover:bg-primary/25 cursor-pointer"
                           >
                             <Zap className="h-4 w-4 text-primary" />
-                            <span>⚡ Načítať demo: Kauza Armivex (UBOK)</span>
+                            <span>⚡ Načítať syntetickú ukážku (fiktívne údaje)</span>
                           </Button>
                         </div>
                       </>
