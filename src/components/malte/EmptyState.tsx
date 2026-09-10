@@ -18,7 +18,9 @@ export function EmptyState({
       <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
         <Icon className="h-5 w-5" aria-hidden />
       </span>
-      <p className="text-sm font-semibold text-foreground tracking-tight">{title}</p>
+      <p className="text-sm font-semibold text-foreground tracking-tight">
+        {title}
+      </p>
       {detail ? (
         <p className="max-w-[42ch] text-xs text-muted-foreground leading-relaxed">
           {detail}

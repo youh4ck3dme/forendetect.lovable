@@ -67,7 +67,7 @@ export function GlobalCommandPalette() {
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Zadajte meno, firmu, zbraň, paragraf alebo príkaz..." />
-        <CommandList className="max-h-[350px] overflow-y-auto p-1">
+        <CommandList className="max-h-80 overflow-y-auto p-1">
           <CommandEmpty>Žiadne výsledky pre vyhľadávaný výraz.</CommandEmpty>
 
           {/* Sekcia: Osoby a Aktéri spisu */}

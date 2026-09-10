@@ -35,6 +35,12 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
+const DEV_CLAIMS = {
+  sub: "dev-user-id",
+  role: "authenticated",
+  email: "dev@forendo.local",
+} as unknown as import("@supabase/supabase-js").JwtPayload;
+
 export const requireSupabaseAuth = createMiddleware({
   type: "function",
 }).server(async ({ next }) => {
@@ -65,12 +71,7 @@ export const requireSupabaseAuth = createMiddleware({
         context: {
           supabase,
           userId: "dev-user-id",
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          claims: {
-            sub: "dev-user-id",
-            role: "authenticated",
-            email: "dev@forendo.local",
-          } as any,
+          claims: DEV_CLAIMS,
         },
       });
     }
@@ -95,7 +96,7 @@ export const requireSupabaseAuth = createMiddleware({
       context: {
         supabase,
         userId: "dev-user-id",
-        claims: { sub: "dev-user-id", role: "authenticated", email: "dev@forendo.local" },
+        claims: DEV_CLAIMS,
       },
     });
   }
@@ -123,12 +124,7 @@ export const requireSupabaseAuth = createMiddleware({
         context: {
           supabase,
           userId: "dev-user-id",
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          claims: {
-            sub: "dev-user-id",
-            role: "authenticated",
-            email: "dev@forendo.local",
-          } as any,
+          claims: DEV_CLAIMS,
         },
       });
     }
