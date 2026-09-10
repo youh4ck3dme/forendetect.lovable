@@ -144,7 +144,7 @@ type SupabaseLike = any;
 export const getAiStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { llmConfigured, preferredLlmModel } =
+    const { llmConfigured, preferredLlmModel, activeProvider, providerDisplayName } =
       await import("@/lib/ai/llm.server");
     const { getQuotas } = await import("@/lib/entitlements.server");
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
@@ -156,14 +156,18 @@ export const getAiStatus = createServerFn({ method: "POST" })
         .neq("status", "failed"),
       getQuotas(context.userId),
     ]);
+    const provider = activeProvider();
     return {
       configured: llmConfigured(),
       model: llmConfigured() ? preferredLlmModel() : null,
+      provider,
+      providerName: provider ? providerDisplayName(provider) : null,
       promptVersion: PROMPT_VERSION,
       plan: quotas.plan,
       dailyLimit: quotas.aiPerDay,
       used: count ?? 0,
     };
+
   });
 
 /** Náhľad presných dát, ktoré by odišli poskytovateľovi (bez volania AI). */
