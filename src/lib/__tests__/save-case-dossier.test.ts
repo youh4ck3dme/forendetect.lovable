@@ -82,7 +82,7 @@ import {
   getForensicDossier,
 } from "@/lib/ai.functions";
 
-describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan / Tatragen)", () => {
+describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Novák / Armivex)", () => {
   beforeEach(() => {
     dbCases = {};
   });
@@ -90,7 +90,7 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
   const sampleBabcanDossier: ForensicDossier = {
     caseId: "PPZ-51/UBOK-PZ-ST-2025",
     caseTitle:
-      "Kauza Tatragen & Babčan (Nedovolené ozbrojovanie & Legalizácia príjmov)",
+      "Kauza Armivex & Novák (Nedovolené ozbrojovanie & Legalizácia príjmov)",
     defendabilityIndex: 42,
     generatedAt: "2026-09-09T10:00:00.000Z",
     facts: {
@@ -98,8 +98,8 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
         {
           time: "2024-10-15 08:30",
           event:
-            "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Tatragen v Žiline.",
-          source: "Zápisnica o výsluchu svedka M. Plcha (č. l. 42)",
+            "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Armivex v Žiline.",
+          source: "Zápisnica o výsluchu svedka M. Hrušku (č. l. 42)",
           chainBreak: false,
           severity: "info",
           paragraph: "§ 119 TP",
@@ -107,7 +107,7 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
         {
           time: "2024-10-18 14:00",
           event:
-            "Zaistenie vozidla BMW X6 (D. Marjov) — nájdené kúpne zmluvy a pečiatky.",
+            "Zaistenie vozidla BMW X6 (D. Malina) — nájdené kúpne zmluvy a pečiatky.",
           source: "Protokol o prehliadke iných priestorov (č. l. 88)",
           chainBreak: true,
           severity: "critical",
@@ -127,7 +127,7 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
         {
           id: "TR-05",
           type: "dokument",
-          description: "Evidenčná kniha zbraní Tatragen s.r.o. — nezabezpečená",
+          description: "Evidenčná kniha zbraní Armivex s.r.o. — nezabezpečená",
           light: "red",
           chainComplete: false,
           lr: "—",
@@ -140,10 +140,10 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
       attacks: [
         {
           id: "DA-1",
-          defenseClaim: "Cohen: 'V aute som sa len viezol ako tlmočník.'",
+          defenseClaim: "Koval: 'V aute som sa len viezol ako tlmočník.'",
           risk: "VYSOKÉ",
           counterStrike:
-            "Vozidlo malo pečiatky EB-EU a rukou písané zoznamy kalibrov.",
+            "Vozidlo malo pečiatky VELTRA a rukou písané zoznamy kalibrov.",
           evidenceGap: "Chýba grafologická expertíza rukou písaných zoznamov.",
           paragraph: "§ 142 TP",
         },
@@ -171,13 +171,13 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
           para: "§ 233 TZ",
           title: "Legalizácia výnosu z trestnej činnosti",
           status: "Narušené",
-          note: "Finančný tok 120 000 EUR cez účet Cohen v Tatrabanke nie je spárovaný s fiktívnou faktúrou.",
+          note: "Finančný tok 120 000 EUR cez účet Koval v Tatrabanke nie je spárovaný s fiktívnou faktúrou.",
         },
       ],
     },
     judgeReadyText: {
       skutkovyStav:
-        "Obvinený Erik Babčan v presne nezistenom čase od septembra 2024 do októbra 2024 v Žiline a inde po predchádzajúcej dohode s Dimitrim Cohenom organizoval nelegálny nákup a transport 48 kusov krátkych palných zbraní.",
+        "Obvinený Peter Novák v presne nezistenom čase od septembra 2024 do októbra 2024 v Žiline a inde po predchádzajúcej dohode s Dimitrim Kovalom organizoval nelegálny nákup a transport 48 kusov krátkych palných zbraní.",
       vyporiadanie:
         "K námietke obhajoby, že vozidlo BMW X6 bolo prehľadané bez príkazu sudcu pre prípravné konanie: Súd konštatuje, že išlo o neodkladný úkon podľa § 95 ods. 1 TP.",
       vedecke:
@@ -192,7 +192,7 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
     expect(typeof getForensicDossier).toBe("function");
   });
 
-  it("saveCaseDossier uloží modelový spis Tatragen a vráti stav 200", async () => {
+  it("saveCaseDossier uloží modelový spis Armivex a vráti stav 200", async () => {
     const result = await handleSaveCaseDossier(
       {
         caseId: "PPZ-51/UBOK-PZ-ST-2025",
@@ -233,13 +233,13 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
 
     // 4. Exaktné overenie kľúčových forenzných atribútov
     expect(retrieved.caseId).toBe("PPZ-51/UBOK-PZ-ST-2025");
-    expect(retrieved.caseTitle).toContain("Kauza Tatragen & Babčan");
+    expect(retrieved.caseTitle).toContain("Kauza Armivex & Novák");
     expect(retrieved.defendabilityIndex).toBe(42);
 
     // Časová os a stopy (Os O1, O2, O5)
     expect(retrieved.facts.timeline).toHaveLength(2);
     expect(retrieved.facts.timeline[0]?.source).toBe(
-      "Zápisnica o výsluchu svedka M. Plcha (č. l. 42)",
+      "Zápisnica o výsluchu svedka M. Hrušku (č. l. 42)",
     );
     expect(retrieved.facts.timeline[1]?.chainBreak).toBe(true);
     expect(retrieved.facts.traces[0]?.lr).toBe("> 1 000 000");
@@ -261,7 +261,7 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
     expect(retrieved.evidenceStrength.paragraphs[1]?.status).toBe("Narušené");
 
     // Text podľa § 168 TP pripravený pre sudcu
-    expect(retrieved.judgeReadyText.skutkovyStav).toContain("Erik Babčan");
+    expect(retrieved.judgeReadyText.skutkovyStav).toContain("Peter Novák");
     expect(retrieved.judgeReadyText.vyporiadanie).toContain("§ 95 ods. 1 TP");
     expect(retrieved.judgeReadyText.vedecke).toContain("LR > 1 000 000");
   });

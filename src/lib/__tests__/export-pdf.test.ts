@@ -4,7 +4,7 @@ import type { ForensicDossier } from "@/lib/types";
 
 const mockDossier: ForensicDossier = {
   caseId: "PPZ-51/UBOK-PZ-ST-2025",
-  caseTitle: "Kauza Tatragen & Babčan",
+  caseTitle: "Kauza Armivex & Novák",
   defendabilityIndex: 42,
   generatedAt: "2026-09-08T04:00:00.000Z",
   facts: {
@@ -64,7 +64,7 @@ const mockDossier: ForensicDossier = {
     ],
   },
   judgeReadyText: {
-    skutkovyStav: "Obvinený Babčan zabezpečil financovanie nákupu zbraní.",
+    skutkovyStav: "Obvinený Novák zabezpečil financovanie nákupu zbraní.",
     vyporiadanie:
       "Tvrdenie obhajoby o nevedomosti je vyvrátené svedeckými výpoveďami.",
     vedecke:
@@ -77,7 +77,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
     const html = buildReportHTML(mockDossier);
 
     expect(html).toContain("<!DOCTYPE html>");
-    expect(html).toContain("FORENZNÝ REPORT — Kauza Tatragen & Babčan");
+    expect(html).toContain("FORENZNÝ REPORT — Kauza Armivex & Novák");
     expect(html).toContain("PPZ-51/UBOK-PZ-ST-2025");
     expect(html).toContain("@page { margin: 2cm; }");
     expect(html).toContain("42/100");
@@ -88,7 +88,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
 
     expect(html).toContain("I. Zistený skutkový stav");
     expect(html).toContain(
-      "Obvinený Babčan zabezpečil financovanie nákupu zbraní.",
+      "Obvinený Novák zabezpečil financovanie nákupu zbraní.",
     );
 
     expect(html).toContain(
@@ -118,7 +118,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
 
     // 2. Overenie voči natívnemu Node crypto
     const sampleText =
-      "Kauza Tatragen PPZ-51/UBOK-PZ-ST-2025 s diakritikou Žilina a Erik Babčan";
+      "Kauza Armivex PPZ-51/UBOK-PZ-ST-2025 s diakritikou Žilina a Peter Novák";
     const expectedHash = nodeCrypto
       .createHash("sha256")
       .update(sampleText, "utf8")
@@ -155,8 +155,8 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
         q1_buyer_seller: {
           questionNumber: 1,
           question: "Kto nakupoval zbrane a kto ich odovzdával?",
-          answer: "Erik Babčan a Marek Plch nakupovali v Tatragene.",
-          identifiedPersons: ["Erik Babčan", "Marek Plch"],
+          answer: "Peter Novák a Marek Hruška nakupovali v Armivexe.",
+          identifiedPersons: ["Peter Novák", "Marek Hruška"],
           directEvidence: ["Kniha zbraní", "Zálohové faktúry"],
           unverifiedHypotheses: [],
           missingEvidence: ["Originál licencie"],
@@ -165,9 +165,9 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
         q2_planner_coordinator: {
           questionNumber: 2,
           question: "Kto plán vymyslel a koordinoval?",
-          answer: "Dimitri Cohen a osoba Ľubo.",
-          identifiedPersons: ["Dimitri Cohen", "Ľubo"],
-          directEvidence: ["Výsluch Marjov", "Nájdené pečiatky"],
+          answer: "Denis Koval a osoba Ľubo.",
+          identifiedPersons: ["Denis Koval", "Ľubo"],
+          directEvidence: ["Výsluch Malina", "Nájdené pečiatky"],
           unverifiedHypotheses: [],
           missingEvidence: [],
           confidenceLevel: 90,
@@ -176,8 +176,8 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
           questionNumber: 3,
           question: "Kto plán financoval?",
           answer: "Hotovostné vklady v Tatrabanke a pôžičky.",
-          identifiedPersons: ["Ľubo", "Erik Babčan"],
-          directEvidence: ["Výpisy z účtu Tatrabanka"],
+          identifiedPersons: ["Ľubo", "Peter Novák"],
+          directEvidence: ["Výpisy z účtu Dunajská banka"],
           unverifiedHypotheses: [],
           missingEvidence: [],
           confidenceLevel: 85,
@@ -186,18 +186,18 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
       testimonyContradictions: [
         {
           id: "TC-01",
-          topic: "Osobné prevzatie 242 zbraní v TATRAGEN s.r.o.",
+          topic: "Osobné prevzatie 242 zbraní v ARMIVEX s.r.o.",
           personA: {
-            name: "Erik Babčan",
+            name: "Peter Novák",
             status: "obvinený",
-            claim: "V TATRAGENe som v živote nebol a Plcha nepoznám.",
+            claim: "V ARMIVEXe som v živote nebol a Hrušku nepoznám.",
           },
           factualRecord:
-            "Svedok Plch potvrdil 3 osobné stretnutia, predloženie OP a podpisy v knihe.",
+            "Svedok Hruška potvrdil 3 osobné stretnutia, predloženie OP a podpisy v knihe.",
           deceitPercentage: 95,
           contradictionSeverity: "critical",
           proceduralResolution:
-            "Nariadiť konfrontáciu podľa § 125 TP medzi Babčanom a Plchom.",
+            "Nariadiť konfrontáciu podľa § 125 TP medzi Novákom a Hruškom.",
         },
       ],
       financialAnalysis: {
@@ -212,7 +212,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
             id: "SF-01",
             date: "2025-01-23",
             payer: "Hotovosť (Ľubo)",
-            recipient: "EB-EU s.r.o.",
+            recipient: "VELTRA s.r.o.",
             amount: 25000,
             method: "cash_deposit",
             purpose: "Vklad konateľa na nákup tovaru",
@@ -228,12 +228,12 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
     expect(html).toContain(
       "Rozpory vo výpovediach & Matica pravdovravnosti (§ 125 TP — Konfrontácia)",
     );
-    expect(html).toContain("Osobné prevzatie 242 zbraní v TATRAGEN s.r.o.");
-    expect(html).toContain("V TATRAGENe som v živote nebol a Plcha nepoznám.");
-    expect(html).toContain("Svedok Plch potvrdil 3 osobné stretnutia");
+    expect(html).toContain("Osobné prevzatie 242 zbraní v ARMIVEX s.r.o.");
+    expect(html).toContain("V ARMIVEXe som v živote nebol a Hrušku nepoznám.");
+    expect(html).toContain("Svedok Hruška potvrdil 3 osobné stretnutia");
     expect(html).toContain("95 %");
     expect(html).toContain(
-      "Nariadiť konfrontáciu podľa § 125 TP medzi Babčanom a Plchom.",
+      "Nariadiť konfrontáciu podľa § 125 TP medzi Novákom a Hruškom.",
     );
 
     // Overenie finančných tokov (§ 119 ods. 1 písm. f) TP)
@@ -242,7 +242,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
     );
     expect(html).toContain("128 400 €");
     expect(html).toContain("74.8 %");
-    expect(html).toContain("Hotovosť (Ľubo) ➔ EB-EU s.r.o.");
+    expect(html).toContain("Hotovosť (Ľubo) ➔ VELTRA s.r.o.");
 
     // Overenie dôkazovej matice stôp (ENFSI & § 119 ods. 2 TP)
     expect(html).toContain(

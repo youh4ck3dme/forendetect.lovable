@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { TATRAGEN_CASE_DOSSIER } from "@/lib/tatragen-dossier";
+import { ARMIVEX_CASE_DOSSIER } from "@/lib/demo-dossier";
 
 describe("Forenzný Switcher pre obhajobu (3 perspektívy spisu)", () => {
-  const dossier = TATRAGEN_CASE_DOSSIER;
+  const dossier = ARMIVEX_CASE_DOSSIER;
 
   it("Pohľad 1 (facts): poskytuje kompletné dáta pre časovú os a reťazec stôp", () => {
     expect(dossier.facts).toBeDefined();
@@ -50,16 +50,14 @@ describe("Forenzný Switcher pre obhajobu (3 perspektívy spisu)", () => {
     const contradictions = dossier.testimonyContradictions!;
     expect(contradictions.length).toBeGreaterThanOrEqual(4);
 
-    // Kritický rozpor: Babčan vs Plch
-    const babcanPlch = contradictions.find(
-      (c) =>
-        c.personA.name.includes("Babčan") ||
-        (c.personB && c.personB.name.includes("Plch")),
+    // Kritický rozpor: Novák vs Hruška
+    const novakHruška = contradictions.find(
+      (c) => c.personA.name.includes("Novák") || (c.personB && c.personB.name.includes("Hruška")),
     );
-    expect(babcanPlch).toBeDefined();
-    expect(babcanPlch!.deceitPercentage).toBeGreaterThanOrEqual(80);
-    expect(babcanPlch!.contradictionSeverity).toBe("critical");
-    expect(babcanPlch!.proceduralResolution).toContain("§ 125 TP");
+    expect(novakHruška).toBeDefined();
+    expect(novakHruška!.deceitPercentage).toBeGreaterThanOrEqual(80);
+    expect(novakHruška!.contradictionSeverity).toBe("critical");
+    expect(novakHruška!.proceduralResolution).toContain("§ 125 TP");
 
     // Všetky rozpory majú vyčíslenú nepravdivosť a procesný postup
     for (const item of contradictions) {

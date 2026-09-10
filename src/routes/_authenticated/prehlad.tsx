@@ -113,19 +113,13 @@ function Index() {
             <p className="text-[10px] tracking-wide uppercase font-semibold text-blue-200">
               Prebiehajúci prípad
             </p>
-            <p className="mt-1 text-base font-extrabold text-white">
-              {activeCase.name}
-            </p>
-            <p className="text-[11px] text-blue-100/90">
-              {activeCase.subtitle}
-            </p>
+            <p className="mt-1 text-base font-extrabold text-white">{activeCase.name}</p>
+            <p className="text-[11px] text-blue-100/90">{activeCase.subtitle}</p>
 
             <div className="mt-4 flex items-center gap-4">
               <RiskGauge score={caseScore} level={caseLevel} label="/100" />
               <div className="min-w-0 space-y-2">
-                <p className="text-[10px] font-medium text-blue-200">
-                  Celková rizikovosť
-                </p>
+                <p className="text-[10px] font-medium text-blue-200">Celková rizikovosť</p>
                 <p className="text-display text-white drop-shadow-xs">
                   {severityLabel[caseLevel].toUpperCase()}
                 </p>

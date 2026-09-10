@@ -119,7 +119,7 @@ export function CommandPalette() {
           ))}
         </CommandGroup>
 
-        <CommandGroup heading="Dôkazy a Spis Tatragen">
+        <CommandGroup heading="Dôkazy a Spis Armivex">
           <CommandItem
             value="Glock 19 Gen 5 CGDV051 Europol Španielsko LR 1000000"
             onSelect={() => go("/asistent")}

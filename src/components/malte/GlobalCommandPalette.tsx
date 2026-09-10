@@ -25,7 +25,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { useCaseStore } from "@/hooks/useCaseStore";
-import { TATRAGEN_CASE_DOSSIER } from "@/lib/tatragen-dossier";
+import { ARMIVEX_CASE_DOSSIER } from "@/lib/demo-dossier";
 
 export function GlobalCommandPalette() {
   const [open, setOpen] = React.useState(false);
@@ -71,7 +71,7 @@ export function GlobalCommandPalette() {
           <CommandEmpty>Žiadne výsledky pre vyhľadávaný výraz.</CommandEmpty>
 
           {/* Sekcia: Osoby a Aktéri spisu */}
-          <CommandGroup heading="Osoby a aktéri (Kauza Tatragen)">
+          <CommandGroup heading="Osoby a aktéri (Kauza Armivex)">
             <CommandItem
               onSelect={() =>
                 runCommand(() =>
@@ -84,10 +84,10 @@ export function GlobalCommandPalette() {
             >
               <Users className="h-4 w-4 text-amber-500" />
               <div>
-                <div className="font-semibold text-xs">Erik Babčan</div>
+                <div className="font-semibold text-xs">Peter Novák</div>
                 <div className="text-[10px] text-muted-foreground">
-                  Konateľ EB-EU s.r.o. · Zbrojná licencia LA 002318 · Vkladateľ
-                  v Tatra banke
+                  Konateľ VELTRA s.r.o. · Zbrojná licencia LA 002318 · Vkladateľ
+                  v Dunajskej banke
                 </div>
               </div>
             </CommandItem>
@@ -104,7 +104,7 @@ export function GlobalCommandPalette() {
             >
               <Users className="h-4 w-4 text-blue-500" />
               <div>
-                <div className="font-semibold text-xs">Dimitri Cohen</div>
+                <div className="font-semibold text-xs">Denis Koval</div>
                 <div className="text-[10px] text-muted-foreground">
                   Sprostredkovateľ · Tavira s.r.o. · Odpočívadlá D1 · BMW 7
                   (BA-733-CM)
@@ -124,9 +124,9 @@ export function GlobalCommandPalette() {
             >
               <Building2 className="h-4 w-4 text-emerald-500" />
               <div>
-                <div className="font-semibold text-xs">Marek Plch</div>
+                <div className="font-semibold text-xs">Marek Hruška</div>
                 <div className="text-[10px] text-muted-foreground">
-                  Konateľ TATRAGEN s.r.o. · Žilina · Svedok predaja 242 zbraní
+                  Konateľ ARMIVEX s.r.o. · Žilina · Svedok predaja 242 zbraní
                 </div>
               </div>
             </CommandItem>
@@ -216,7 +216,7 @@ export function GlobalCommandPalette() {
               className="flex items-center gap-2 cursor-pointer"
             >
               <Sparkles className="h-4 w-4 text-purple-500" />
-              <span>Forenzný Autopilot &amp; Spis Tatragen</span>
+              <span>Forenzný Autopilot &amp; Spis Armivex</span>
             </CommandItem>
 
             <CommandItem
