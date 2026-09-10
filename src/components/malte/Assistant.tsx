@@ -2090,21 +2090,41 @@ ${dossier.judgeReadyText.vedecke}`;
                 variant="outline"
                 onClick={() => void showPreview()}
                 disabled={!hasCase}
+                className="gap-1.5"
               >
                 <Eye className="h-4 w-4" />
+                <span className="hidden sm:inline">Náhľad údajov</span>
               </Button>
             </div>
 
             {preview ? (
               <>
-                <SectionTitle>Náhľad payloadu</SectionTitle>
-                <Card className="space-y-2 p-3 text-xs">
+                <SectionTitle
+                  action={
+                    <button
+                      type="button"
+                      onClick={() => setPreview(null)}
+                      className="text-[11px] text-muted-foreground hover:text-foreground"
+                    >
+                      Skryť
+                    </button>
+                  }
+                >
+                  Údaje odosielané modelu
+                </SectionTitle>
+                <Card className="space-y-2 p-3 text-xs animate-fade-in">
+                  <p className="text-caption">
+                    Presne toto sa odošle poskytovateľovi (
+                    {status.data?.providerName ?? "AI"}). Mená a identifikátory
+                    sú nahradené pseudonymami; preklad späť prebieha na serveri.
+                  </p>
                   <pre className="max-h-64 overflow-auto whitespace-pre-wrap font-mono text-[11px] text-muted-foreground">
                     {preview}
                   </pre>
                 </Card>
               </>
             ) : null}
+
 
             {result?.status === "ok" &&
             (text ||
