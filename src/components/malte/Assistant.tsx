@@ -83,7 +83,7 @@ function isArmivexDossier(d: ForensicDossier | null): boolean {
   if (!d) return false;
   return (
     d.caseId === ARMIVEX_CASE_DOSSIER.caseId ||
-    /tatragen/i.test(d.caseTitle ?? "")
+    /armivex/i.test(d.caseTitle ?? "")
   );
 }
 

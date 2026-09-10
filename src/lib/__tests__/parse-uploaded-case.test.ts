@@ -44,11 +44,11 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     expect(personNames).toContain("Dea Novák");
     expect(personNames).toContain("Denis Koval");
 
-    const babcan = result.entities.persons.find(
+    const novak = result.entities.persons.find(
       (p) => p.name === "Peter Novák",
     );
-    expect(babcan?.role).toBe("Podozrivý / Vypočúvaný");
-    expect(babcan?.birthDate).toBe("30.05.1989");
+    expect(novak?.role).toBe("Podozrivý / Vypočúvaný");
+    expect(novak?.birthDate).toBe("30.05.1989");
 
     const otec = result.entities.persons.find((p) => p.name === "Milan Novák");
     expect(otec?.role).toBe("Otec");
@@ -127,7 +127,7 @@ Ustanovenie: § 119 TP
       const dummyImageBase64 =
         Buffer.from("dummy-scan-bytes").toString("base64");
       const result = await handleParseUploadedCaseDocument(
-        "vysluch_plch_scan.png",
+        "vysluch_hruska_scan.png",
         dummyImageBase64,
       );
 

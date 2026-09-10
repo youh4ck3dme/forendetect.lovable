@@ -10,7 +10,7 @@ function sampleCase(): ForensicCase {
     name: "Kauza Peter Novák",
     entities: [
       {
-        id: "ent-cohen",
+        id: "ent-koval",
         name: "Denis Koval",
         kind: "person",
         role: "šofér",
@@ -38,7 +38,7 @@ function sampleCase(): ForensicCase {
         amount: 32000,
         currency: "EUR",
         method: "cash",
-        fromId: "ent-cohen",
+        fromId: "ent-koval",
         toId: "ent-firm",
         originCountry: "SK",
         destinationCountry: "SK",
@@ -66,7 +66,7 @@ describe("Privacy / PII redakcia pred odoslaním do AI", () => {
     expect(identityDump).not.toContain("Denis Koval");
     expect(identityDump).not.toContain("VELTRA");
     expect(identityDump).not.toContain("11111111-2222-3333-4444-555555555555");
-    expect(identityDump).not.toContain("ent-cohen");
+    expect(identityDump).not.toContain("ent-koval");
     expect(identityDump).not.toContain("tx-cash-1");
     expect(identityDump).not.toContain("51234567");
     expect(payload.entities[0]).not.toHaveProperty("name");
@@ -76,7 +76,7 @@ describe("Privacy / PII redakcia pred odoslaním do AI", () => {
     expect(payload.transactions.map((t) => t.id)).toEqual(["T1"]);
     expect(payload.transactions[0]?.from).toBe("S1");
     expect(payload.transactions[0]?.to).toBe("S2");
-    expect(pseudonyms.entityBack["S1"]).toBe("ent-cohen");
+    expect(pseudonyms.entityBack["S1"]).toBe("ent-koval");
     expect(pseudonyms.transactionBack["T1"]).toBe("tx-cash-1");
   });
 

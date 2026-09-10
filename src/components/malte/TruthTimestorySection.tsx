@@ -172,7 +172,7 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
     caption:
       "Pobočka Dunajskej banky. 'Ľubo' nosí hotovosť 15 000 – 30 000 € v balíkoch a čaká vonku v aute. Novák robí mechanické vklady a prevod záloh na ARMIVEX.",
     narratorBox:
-      "TATRA BANKA. PAPIEROVÉ TAŠKY PLNE NEPOCHOPITEĽNÝCH PEŇAZÍ. BABČAN VKLADÁ 106 000 € ZA PÁR DNÍ, ZATIAĽ ČO ČIERNE AUDI VONKU NIKDY NEVYPÍNA MOTOR...",
+      "DUNAJSKÁ BANKA. PAPIEROVÉ TAŠKY PLNE NEPOCHOPITEĽNÝCH PEŇAZÍ. NOVÁK VKLADÁ 106 000 € ZA PÁR DNÍ, ZATIAĽ ČO ČIERNE AUDI VONKU NIKDY NEVYPÍNA MOTOR...",
     soundEffect: "*ŠUCHOT... CH-CHING!*",
     dialogues: [
       {
@@ -304,7 +304,7 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
     caption:
       "Španielska Guardia Civil a EUROPOL zaisťujú Glock 19 (CGDV051) a Grand Power K100 v kriminálnom podsvetí. Trasovanie vedie na Slovensko.",
     narratorBox:
-      "MADRID – BANSKÁ BYSTRICA. FORENZNÉ LABORATÓRIUM. POLÍCIA ZOBRAZUJE MAPU KLANU. BABČAN JE LEN MŔTVYM BODOM NA KONCI REŤAZCA...",
+      "MADRID – BANSKÁ BYSTRICA. FORENZNÉ LABORATÓRIUM. POLÍCIA ZOBRAZUJE MAPU KLANU. NOVÁK JE LEN MŔTVYM BODOM NA KONCI REŤAZCA...",
     soundEffect: "*POLICAJNÉ SIRÉNY // VZÁJOMNÉ ZAISTENIE!*",
     dialogues: [
       {
@@ -1481,7 +1481,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
 
         {/* 2-stĺpcové porovnanie trás */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* ĽAVÁ TRASA: ERIK BABČAN (PASÍVNY ŠTÍT / DOMÁCA IZOLÁCIA) */}
+          {/* ĽAVÁ TRASA: PETER NOVÁK (PASÍVNY ŠTÍT / DOMÁCA IZOLÁCIA) */}
           <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-3">
             <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
               <div className="flex items-center gap-2">
@@ -1565,7 +1565,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
             </div>
           </div>
 
-          {/* PRAVÁ TRASA: DIMITRI COHEN & TOMČÍK (MEDZINÁRODNÝ TRANZITNÝ KORIDOR) */}
+          {/* PRAVÁ TRASA: DENIS KOVAL & TKÁČ (MEDZINÁRODNÝ TRANZITNÝ KORIDOR) */}
           <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-4 space-y-3">
             <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
               <div className="flex items-center gap-2">

@@ -51,13 +51,13 @@ describe("Forenzný Switcher pre obhajobu (3 perspektívy spisu)", () => {
     expect(contradictions.length).toBeGreaterThanOrEqual(4);
 
     // Kritický rozpor: Novák vs Hruška
-    const babcanHruška = contradictions.find(
+    const novakHruška = contradictions.find(
       (c) => c.personA.name.includes("Novák") || (c.personB && c.personB.name.includes("Hruška")),
     );
-    expect(babcanHruška).toBeDefined();
-    expect(babcanHruška!.deceitPercentage).toBeGreaterThanOrEqual(80);
-    expect(babcanHruška!.contradictionSeverity).toBe("critical");
-    expect(babcanHruška!.proceduralResolution).toContain("§ 125 TP");
+    expect(novakHruška).toBeDefined();
+    expect(novakHruška!.deceitPercentage).toBeGreaterThanOrEqual(80);
+    expect(novakHruška!.contradictionSeverity).toBe("critical");
+    expect(novakHruška!.proceduralResolution).toContain("§ 125 TP");
 
     // Všetky rozpory majú vyčíslenú nepravdivosť a procesný postup
     for (const item of contradictions) {
