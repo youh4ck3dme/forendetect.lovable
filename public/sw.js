@@ -24,7 +24,10 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   // Pass through navigate and API requests directly to the network
-  if (event.request.mode === "navigate" || event.request.url.includes("/api/")) {
+  if (
+    event.request.mode === "navigate" ||
+    event.request.url.includes("/api/")
+  ) {
     return;
   }
 });
