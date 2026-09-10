@@ -15,29 +15,62 @@ export const lovable = {
       provider: "google" | "apple" | "microsoft" | "lovable",
       opts?: SignInOptions,
     ) => {
-      const result = await lovableAuth.signInWithOAuth(provider, {
-        ...opts,
-        extraParams: {
-          ...opts?.extraParams,
-        },
-      });
+      const host = typeof window !== "undefined" ? window.location.hostname : "";
+      const onLovablePreview =
+        host.endsWith(".lovable.app") ||
+        host.endsWith(".lovableproject.com") ||
+        host.endsWith(".lovableproject-dev.com");
 
-      if (result.redirected) {
-        return result;
-      }
-
-      if (result.error) {
-        throw result.error instanceof Error
-          ? result.error
-          : new Error(String(result.error));
+      if (!onLovablePreview && (provider === "google" || provider === "apple" || provider === "microsoft")) {
+        const supabaseProvider = provider === "microsoft" ? "azure" : provider;
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: supabaseProvider,
+          options: {
+            redirectTo: opts?.redirect_uri || `${window.location.origin}/prehlad`,
+          },
+        });
+        if (error) return { error };
+        return { redirected: true, data };
       }
 
       try {
-        await supabase.auth.setSession(result.tokens);
-      } catch (e) {
-        return { error: e instanceof Error ? e : new Error(String(e)) };
+        const result = await lovableAuth.signInWithOAuth(provider, {
+          ...opts,
+          extraParams: {
+            ...opts?.extraParams,
+          },
+        });
+
+        if (result.redirected) {
+          return result;
+        }
+
+        if (result.error) {
+          throw result.error instanceof Error
+            ? result.error
+            : new Error(String(result.error));
+        }
+
+        try {
+          await supabase.auth.setSession(result.tokens);
+        } catch (e) {
+          return { error: e instanceof Error ? e : new Error(String(e)) };
+        }
+        return result;
+      } catch (err) {
+        if (provider === "google" || provider === "apple" || provider === "microsoft") {
+          const supabaseProvider = provider === "microsoft" ? "azure" : provider;
+          const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: supabaseProvider,
+            options: {
+              redirectTo: opts?.redirect_uri || `${window.location.origin}/prehlad`,
+            },
+          });
+          if (error) return { error };
+          return { redirected: true, data };
+        }
+        throw err;
       }
-      return result;
     },
   },
 };

@@ -110,15 +110,30 @@ function Consent() {
 
   async function signInGoogle() {
     setError(null);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.href,
-    });
-    if (result.error) {
-      setError(String(result.error));
+    const host = window.location.hostname;
+    const onLovablePreview =
+      host.endsWith(".lovable.app") ||
+      host.endsWith(".lovableproject.com") ||
+      host.endsWith(".lovableproject-dev.com");
+
+    if (onLovablePreview) {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.href,
+      });
+      if (result.error) {
+        setError(String(result.error));
+        return;
+      }
+      if (result.redirected) return;
+      window.location.reload();
       return;
     }
-    if (result.redirected) return;
-    window.location.reload();
+
+    const { error: e } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.href },
+    });
+    if (e) setError(e.message);
   }
 
   if (!authorizationId) {
