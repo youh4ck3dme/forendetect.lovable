@@ -7,7 +7,7 @@ import {
 
 describe("Bulk Media Sandbox & File Extraction", () => {
   it("extrahuje čistý text z TXT súboru", async () => {
-    const textContent = "Zápisnica o výsluchu svedka Mareka Plcha.";
+    const textContent = "Zápisnica o výsluchu svedka Mareka Hrušku.";
     const res = await extractSingleBufferText(
       "vyslech.txt",
       undefined,
@@ -20,7 +20,7 @@ describe("Bulk Media Sandbox & File Extraction", () => {
 
   it("extrahuje a očistí CSV a JSON súbory", async () => {
     const csvContent =
-      "datum,suma,platitel,prijemca\n2025-01-22,32000,vklad,EB-EU";
+      "datum,suma,platitel,prijemca\n2025-01-22,32000,vklad,VELTRA";
     const resCsv = await extractSingleBufferText(
       "transakcie.csv",
       undefined,
@@ -29,24 +29,24 @@ describe("Bulk Media Sandbox & File Extraction", () => {
     expect(resCsv.success).toBe(true);
     expect(resCsv.text).toContain("32000");
 
-    const jsonContent = JSON.stringify({ kauza: "Tatragen", zbrane: 242 });
+    const jsonContent = JSON.stringify({ kauza: "Armivex", zbrane: 242 });
     const resJson = await extractSingleBufferText(
       "data.json",
       undefined,
       jsonContent,
     );
     expect(resJson.success).toBe(true);
-    expect(resJson.text).toContain("Tatragen");
+    expect(resJson.text).toContain("Armivex");
   });
 
   it("extrahuje a zbaví HTML značiek", async () => {
     const htmlContent =
-      "<html><body><h1>Zápisnica</h1><p>Erik Babčan bol prítomný.</p></body></html>";
+      "<html><body><h1>Zápisnica</h1><p>Peter Novák bol prítomný.</p></body></html>";
     const base64 = Buffer.from(htmlContent, "utf-8").toString("base64");
     const res = await extractSingleBufferText("zapisnica.html", base64);
     expect(res.success).toBe(true);
     expect(res.text).toContain("Zápisnica");
-    expect(res.text).toContain("Erik Babčan bol prítomný.");
+    expect(res.text).toContain("Peter Novák bol prítomný.");
     expect(res.text).not.toContain("<html>");
     expect(res.text).not.toContain("<h1>");
   });
@@ -83,7 +83,7 @@ describe("Bulk Media Sandbox & File Extraction", () => {
     expect(short.text).toBe("");
 
     const ok = classifyExtractResult("vyslech.txt", {
-      text: "Zápisnica o výsluchu svedka Mareka Plcha v kauze Tatragen.",
+      text: "Zápisnica o výsluchu svedka Mareka Hrušku v kauze Armivex.",
       charCount: 58,
       usedOcr: true,
     });

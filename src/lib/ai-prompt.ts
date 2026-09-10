@@ -129,7 +129,7 @@ ZÁVÄZNÝ ANALYTICKÝ RÁMEC ÚBOK — 3 VYŠETROVACIE OTÁZKY & ROZPORY
 - Urči: pôvod peňazí, hotovostné vklady na účet, platiteľa faktúr, prevody, refundácie, provízie a neoprávnený majetkový prospech.
 
 4. ROZPORY VO VÝPOVEDIACH & PERCENTUÁLNA MIERA NEPRAVDIVOSTI:
-- Porovnaj výpovede svedkov a obvinených (napr. Babčan tvrdí 'v Tatragene som nebol' vs. Plch dokazuje 3x osobný odber).
+- Porovnaj výpovede svedkov a obvinených (napr. Novák tvrdí 'v Armivexe som nebol' vs. Hruška dokazuje 3x osobný odber).
 - Urči percento nepravdy (0–100 %) a procesné riešenie podľa TP (konfrontácia § 125 TP, grafológia podpisov § 142 TP).
 
 5. ANALÝZA TRANSAKCIÍ:

@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { TATRAGEN_CASE_DOSSIER } from "@/lib/tatragen-dossier";
+import { ARMIVEX_CASE_DOSSIER } from "@/lib/demo-dossier";
 import {
-  TATRAGEN_CROSS_CONTRADICTIONS,
+  ARMIVEX_CROSS_CONTRADICTIONS,
   getCrossContradictionStats,
 } from "@/lib/cross-contradictions";
 import { LAWYER_TOUR_STEPS } from "@/lib/lawyer-tour-steps";
 
 describe("Lawyer Workflow E2E — Kompletný proces obhajoby od spisu po rozsudok", () => {
-  const dossier = TATRAGEN_CASE_DOSSIER;
+  const dossier = ARMIVEX_CASE_DOSSIER;
 
   // ─────────────────────────────────────────────────────────────
   // 1. KROK: NAHRATIE A SPRACOVANIE SPISU V SANDBOXE (§ 119 TP)
@@ -15,7 +15,7 @@ describe("Lawyer Workflow E2E — Kompletný proces obhajoby od spisu po rozsudo
   describe("Fáza 1: Ingescia a procesné spracovanie spisu", () => {
     it("spis obsahuje identifikačné znaky trestného konania PPZ ÚBOK", () => {
       expect(dossier.caseId).toContain("UBOK");
-      expect(dossier.caseTitle).toContain("Tatragen");
+      expect(dossier.caseTitle).toContain("Armivex");
     });
 
     it("tri hlavné vyšetrovacie otázky majú vyčíslenú mieru istoty a priame dôkazy", () => {
@@ -48,7 +48,7 @@ describe("Lawyer Workflow E2E — Kompletný proces obhajoby od spisu po rozsudo
       expect(breakEvent).toBeDefined();
       expect(breakEvent!.paragraph).toBe("§ 98 TP");
       expect(breakEvent!.event).toContain("BMW 7");
-      expect(breakEvent!.source).toContain("Marjov");
+      expect(breakEvent!.source).toContain("Malina");
     });
 
     it("verifikuje balistické stopy zaistené v Španielsku (Europol)", () => {
@@ -93,25 +93,25 @@ describe("Lawyer Workflow E2E — Kompletný proces obhajoby od spisu po rozsudo
   // ─────────────────────────────────────────────────────────────
   describe("Fáza 4: Krížový výsluch a matica nepravdivosti svedkov", () => {
     it("obsahuje 6 detailných rozporov s priamou konfrontáciou", () => {
-      expect(TATRAGEN_CROSS_CONTRADICTIONS).toHaveLength(6);
-      const stats = getCrossContradictionStats(TATRAGEN_CROSS_CONTRADICTIONS);
+      expect(ARMIVEX_CROSS_CONTRADICTIONS).toHaveLength(6);
+      const stats = getCrossContradictionStats(ARMIVEX_CROSS_CONTRADICTIONS);
       expect(stats.total).toBe(6);
       expect(stats.critical).toBeGreaterThanOrEqual(2);
       expect(stats.avgDeceitPercentage).toBeGreaterThanOrEqual(75);
     });
 
-    it("poskytuje právne návrhy pre obhajobu Erika Babčana voči Marekovi Plchovi", () => {
-      const tc01 = TATRAGEN_CROSS_CONTRADICTIONS.find((c) => c.id === "TC-01");
+    it("poskytuje právne návrhy pre obhajobu Petra Nováka voči Marekovi Hruškovi", () => {
+      const tc01 = ARMIVEX_CROSS_CONTRADICTIONS.find((c) => c.id === "TC-01");
       expect(tc01).toBeDefined();
-      expect(tc01!.personA.name).toContain("Erik Babčan");
-      expect(tc01!.personB?.name).toContain("Marek Plch");
+      expect(tc01!.personA.name).toContain("Peter Novák");
+      expect(tc01!.personB?.name).toContain("Marek Hruška");
       expect(tc01!.deceitPercentage).toBe(95);
       expect(tc01!.proceduralResolution).toContain("§ 125 TP");
       expect(tc01!.proceduralResolution).toContain("písmoznalectva");
     });
 
     it("identifikuje zlyhanie pri rekognícii z fotografií (§ 126 TP)", () => {
-      const tc02 = TATRAGEN_CROSS_CONTRADICTIONS.find((c) => c.id === "TC-02");
+      const tc02 = ARMIVEX_CROSS_CONTRADICTIONS.find((c) => c.id === "TC-02");
       expect(tc02).toBeDefined();
       expect(tc02!.proceduralResolution).toContain("§ 126 TP");
       expect(tc02!.proceduralResolution).toContain("rekogníci");

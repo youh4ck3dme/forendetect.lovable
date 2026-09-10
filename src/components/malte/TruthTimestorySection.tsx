@@ -54,7 +54,7 @@ interface AnomalyItem {
 
 interface ComicDialogue {
   speaker: string;
-  role: "Babčan" | "Cohen" | "Ľubo" | "OČTK" | "Plch" | "Vyšetrovateľ";
+  role: "Novák" | "Koval" | "Ľubo" | "OČTK" | "Hruška" | "Vyšetrovateľ";
   text: string;
 }
 
@@ -90,34 +90,34 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
     title: "Dohoda na zbraňový e-shop & Nastavenie konateľa",
     comicImage: "/timestory/scene1_deal.jpg",
     caption:
-      "Bratislava noc. Dimitri Cohen v kaviarni presviedča programátora Erika Babčana na tvorbu e-shopu pre zbrane a prepis firmy EB-EU s.r.o. za 3 000 € mesačne.",
+      "Bratislava noc. Denis Koval v kaviarni presviedča programátora Petra Nováka na tvorbu e-shopu pre zbrane a prepis firmy VELTRA s.r.o. za 3 000 € mesačne.",
     narratorBox:
       "BRATISLAVA, POLNOC. DYMOM ZAHALENÁ KAVIAREŇ. PROGRAMÁTOR VERÍ, ŽE BUDE IBA KÓDIŤ WEBOVÚ STRÁNKU. NETUŠÍ, ŽE JE NASTAVOVANÝ AKO ŽIVÝ TERČ...",
     soundEffect: "*CVAK-ŤUK... KÓDOVANIE!*",
     dialogues: [
       {
-        speaker: "Dimitri Cohen",
-        role: "Cohen",
-        text: "Máš čistý register a zbrojný preukaz. Prepíšeme firmu EB-EU, spravíš moderný e-shop a dám ti 3 000 € mesačne.",
+        speaker: "Denis Koval",
+        role: "Koval",
+        text: "Máš čistý register a zbrojný preukaz. Prepíšeme firmu VELTRA, spravíš moderný e-shop a dám ti 3 000 € mesačne.",
       },
       {
-        speaker: "Erik Babčan",
-        role: "Babčan",
+        speaker: "Peter Novák",
+        role: "Novák",
         text: "Len web a legálna licencia. Do žiadnej manipulácie so zbraňami ani do terénu nevstúpim.",
       },
     ],
     comicPrompt:
-      "Graphic novel comic panel in Frank Miller Sin City style, high contrast noir, deep black inks and dramatic white highlights with vivid amber neon accents. Scene: A dimly lit smoky cafe booth in Bratislava at midnight. Dimitri Cohen, a sharp-dressed Russian-Israeli fixer with slicked-back hair and a sharp leather jacket, leans across the marble table sliding a contract towards Erik Babčan, an exhausted young tech developer in a hoodie with a laptop open. Tense expressions, sharp angular shadows, cinematic Dutch angle camera, speech bubble caption space. Masterpiece comic illustration, heavy chiaroscuro line art, 8k resolution --ar 16:9 --style raw",
+      "Graphic novel comic panel in Frank Miller Sin City style, high contrast noir, deep black inks and dramatic white highlights with vivid amber neon accents. Scene: A dimly lit smoky cafe booth in Bratislava at midnight. Denis Koval, a sharp-dressed Russian-Israeli fixer with slicked-back hair and a sharp leather jacket, leans across the marble table sliding a contract towards Peter Novák, an exhausted young tech developer in a hoodie with a laptop open. Tense expressions, sharp angular shadows, cinematic Dutch angle camera, speech bubble caption space. Masterpiece comic illustration, heavy chiaroscuro line art, 8k resolution --ar 16:9 --style raw",
     negativePrompt:
       "photorealistic, 3d render, blurry, low contrast, oversaturated, messy lines, bad anatomy",
     cameraAngle: "Cinematic Dutch angle, medium two-shot across table",
     forensicAnalysis:
-      "Babčan ako IT vývojár súhlasil s tvorbou webu a poskytnutím zbrojného preukazu pre licenciu. Skutočnú kontrolu, financovanie a účtovníctvo firmy EB-EU si cez materskú firmu Tavira s.r.o. a sprostredkovateľov ponechal Dimitri Cohen.",
+      "Novák ako IT vývojár súhlasil s tvorbou webu a poskytnutím zbrojného preukazu pre licenciu. Skutočnú kontrolu, financovanie a účtovníctvo firmy VELTRA si cez materskú firmu Tavira s.r.o. a sprostredkovateľov ponechal Denis Koval.",
     debunkedLie:
-      "Obžaloba tvrdí, že Babčan bol hlavným organizátorom. V skutočnosti bol nastavený ako technický správca a štít (biely kôň), zatiaľ čo reálne pokyny dával Cohen a neskôr 'Ľubo' z Banskej Bystrice.",
+      "Obžaloba tvrdí, že Novák bol hlavným organizátorom. V skutočnosti bol nastavený ako technický správca a štít (biely kôň), zatiaľ čo reálne pokyny dával Koval a neskôr 'Ľubo' z Banskej Bystrice.",
     involvedActors: [
-      "Erik Babčan (web/konateľ)",
-      "Dimitri Cohen (Tavira s.r.o.)",
+      "Peter Novák (web/konateľ)",
+      "Denis Koval (Tavira s.r.o.)",
       "JUDr. Barč / Kostovčíková",
     ],
     location: "Bratislava / Senec",
@@ -141,8 +141,8 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
         text: "Licencia LA 002318 a knihy sú doma. Trezory zo Žiliny odvezte do hodiny. Odteraz sa žiadna zbraň do skladu nedostane.",
       },
       {
-        speaker: "Erik Babčan",
-        role: "Babčan",
+        speaker: "Peter Novák",
+        role: "Novák",
         text: "Knihy zbraní a licenciu som ti odovzdal v Banskej Bystrici pred Europou. Kde je tovar?",
       },
     ],
@@ -152,12 +152,12 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
       "color clutter, cartoonish, lowres, flat colors, washed out",
     cameraAngle: "Wide establishing shot with deep linear perspective",
     forensicAnalysis:
-      "Babčan v Žiline na predajni nikdy nebol ani ju nevybavoval. Prenájom a trezory platil 'Ľubo' z BB. Všetky evidenčné knihy a originál licencie Babčan hneď v decembri 2024 odovzdal Ľubošovi pred nákupným centrom Europa v Banskej Bystrici.",
+      "Novák v Žiline na predajni nikdy nebol ani ju nevybavoval. Prenájom a trezory platil 'Ľubo' z BB. Všetky evidenčné knihy a originál licencie Novák hneď v decembri 2024 odovzdal Ľubošovi pred nákupným centrom Europa v Banskej Bystrici.",
     debunkedLie:
-      "Polícia tvrdí, že Babčan zatajil sklad a ukradol knihy zbraní. Babčan knihami fyzicky nedisponoval od decembra 2024 a keď sa dozvedel o problémoch, sám šiel na políciu požiadať o zrušenie licencie!",
+      "Polícia tvrdí, že Novák zatajil sklad a ukradol knihy zbraní. Novák knihami fyzicky nedisponoval od decembra 2024 a keď sa dozvedel o problémoch, sám šiel na políciu požiadať o zrušenie licencie!",
     involvedActors: [
       "'Ľubo' z Banskej Bystrice",
-      "Erik Babčan",
+      "Peter Novák",
       "KR PZ Banská Bystrica / Žilina",
     ],
     location: "Žilina (Vysokoškolákov 6) / Banská Bystrica",
@@ -167,10 +167,10 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
     chapterLetter: "C",
     date: "Január – Marec 2025",
     badge: "KAPITOLA C // HOTOVOSŤ & SMURFING",
-    title: "Tatra banka, vklady v igelitkách a nákupy v TATRAGENe",
+    title: "Dunajská banka, vklady v igelitkách a nákupy v ARMIVEXe",
     comicImage: "/timestory/scene3_bank.jpg",
     caption:
-      "Pobočka Tatra banky. 'Ľubo' nosí hotovosť 15 000 – 30 000 € v balíkoch a čaká vonku v aute. Babčan robí mechanické vklady a prevod záloh na TATRAGEN.",
+      "Pobočka Dunajskej banky. 'Ľubo' nosí hotovosť 15 000 – 30 000 € v balíkoch a čaká vonku v aute. Novák robí mechanické vklady a prevod záloh na ARMIVEX.",
     narratorBox:
       "TATRA BANKA. PAPIEROVÉ TAŠKY PLNE NEPOCHOPITEĽNÝCH PEŇAZÍ. BABČAN VKLADÁ 106 000 € ZA PÁR DNÍ, ZATIAĽ ČO ČIERNE AUDI VONKU NIKDY NEVYPÍNA MOTOR...",
     soundEffect: "*ŠUCHOT... CH-CHING!*",
@@ -178,11 +178,11 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
       {
         speaker: "'Ľubo' z BB",
         role: "Ľubo",
-        text: "Tu máš 25-tisíc v hotovosti. Vlož to na účet EB-EU a ihneď pošli zálohu do TATRAGENu na tie Glocky. Ja čakám v Audi.",
+        text: "Tu máš 25-tisíc v hotovosti. Vlož to na účet VELTRA a ihneď pošli zálohu do ARMIVEXu na tie Glocky. Ja čakám v Audi.",
       },
       {
-        speaker: "Erik Babčan",
-        role: "Babčan",
+        speaker: "Peter Novák",
+        role: "Novák",
         text: "Odkiaľ sú tie peniaze? Ja o tých zbraniach nič neviem, ani aká je marža!",
       },
       {
@@ -192,18 +192,18 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
       },
     ],
     comicPrompt:
-      "Noir graphic novel style comic strip panel, Frank Miller style, heavy black shadows, emerald green and gold accents. Scene: Inside a modern Tatra bank branch counter. A nervous young man (Erik Babčan) standing at the teller counter depositing thick stacks of 100-euro banknotes out of an ordinary plastic shopping bag. Through the large glass window in the dark rainy background, a sinister man ('Ľubo') wearing a dark hood and aviator shades watches him while sitting behind the steering wheel of an idling dark Audi. High contrast, atmospheric noir lighting, tense comic book storytelling, crisp ink line work --ar 16:9",
+      "Noir graphic novel style comic strip panel, Frank Miller style, heavy black shadows, emerald green and gold accents. Scene: Inside a modern Tatra bank branch counter. A nervous young man (Peter Novák) standing at the teller counter depositing thick stacks of 100-euro banknotes out of an ordinary plastic shopping bag. Through the large glass window in the dark rainy background, a sinister man ('Ľubo') wearing a dark hood and aviator shades watches him while sitting behind the steering wheel of an idling dark Audi. High contrast, atmospheric noir lighting, tense comic book storytelling, crisp ink line work --ar 16:9",
     negativePrompt: "bright day, cheerful, blurry, watercolor, anime",
     cameraAngle:
       "Over-the-shoulder medium shot inside bank looking through window",
     forensicAnalysis:
-      "Babčan nepoznal marže, dodacie listy ani koncové ceny. Zálohové faktúry TATRAGENu platil z peňazí dodaných Ľubošom. Zbrane v Žiline osobne nepreberal — odberateľom bol neznámy muž v Audi disponujúci Babčanovými prefotenými dokladmi a zbrojnou licenciou.",
+      "Novák nepoznal marže, dodacie listy ani koncové ceny. Zálohové faktúry ARMIVEXu platil z peňazí dodaných Ľubošom. Zbrane v Žiline osobne nepreberal — odberateľom bol neznámy muž v Audi disponujúci Novákovými prefotenými dokladmi a zbrojnou licenciou.",
     debunkedLie:
-      "Plchovo tvrdenie, že Babčan prišiel 3x osobne po 242 zbraní, je rozporné: Plch si sám nepamätá miesto odovzdania (na sklade vs v meste), chýba grafologický posudok podpisov a chýbajú kamerové záznamy.",
+      "Hruškovo tvrdenie, že Novák prišiel 3x osobne po 242 zbraní, je rozporné: Hruška si sám nepamätá miesto odovzdania (na sklade vs v meste), chýba grafologický posudok podpisov a chýbajú kamerové záznamy.",
     involvedActors: [
       "'Ľubo' z BB (zdroj hotovosti)",
-      "Erik Babčan (vkladateľ)",
-      "Marek Plch (TATRAGEN s.r.o.)",
+      "Peter Novák (vkladateľ)",
+      "Marek Hruška (ARMIVEX s.r.o.)",
     ],
     location: "Košice / Žilina (Kvačalova)",
   },
@@ -215,36 +215,36 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
     title: "Zadržanie peňazí za prácu & Vypnutie telefónu",
     comicImage: "/timestory/scene4_cutoff.jpg",
     caption:
-      "Babčan zisťuje, že z neho robia štít a neplatia dohodnutú odmenu. Z prijatých peňazí si strhne 6 000 – 9 000 € a vypína telefón. Ľubo zúri a odchádza do Thajska.",
+      "Novák zisťuje, že z neho robia štít a neplatia dohodnutú odmenu. Z prijatých peňazí si strhne 6 000 – 9 000 € a vypína telefón. Ľubo zúri a odchádza do Thajska.",
     narratorBox:
       "KOŠICE, 03:00 RÁNO. STUDENÝ NOČNÝ DÁŽĎ. ZÚFALSTVO PREMÁHA STRACH. ZLOMENÁ SIM KARTA LETÍ DO KANÁLA...",
     soundEffect: "*CVAK... CRACK!*",
     dialogues: [
       {
-        speaker: "Erik Babčan",
-        role: "Babčan",
+        speaker: "Peter Novák",
+        role: "Novák",
         text: "Dlhujete mi 9 000 € za tri mesiace. Nevyplatili ste ma, hádžete na mňa svoje kšefty. Beriem svoje peniaze a končím. Nikdy viac mi nevolajte!",
       },
       {
-        speaker: "Dimitri Cohen",
-        role: "Cohen",
+        speaker: "Denis Koval",
+        role: "Koval",
         text: "Si mŕtvy muž, Erik! Nevieš, komu si skrížil cestu. Zničím ťa!",
       },
     ],
     comicPrompt:
-      "Gritty graphic novel comic panel, intense noir comic art with vivid crimson red splash color and pitch black shadows. Scene: A rainy, desolate street corner in Košice at 3:00 AM under a single flickering sodium streetlamp. Erik Babčan, drenched in rain with eyes wide with panic and fear, is snapping a cheap prepaid burner smartphone in half, popping out the SIM card and throwing it into a sewer grate. In his other hand he tightly clutches a soaked backpack containing 6,000 euros. Rain streaks cutting through the gloom, dramatic close-up side angle, comic sound effect *SNAP!*, heavy ink hatching --ar 16:9",
+      "Gritty graphic novel comic panel, intense noir comic art with vivid crimson red splash color and pitch black shadows. Scene: A rainy, desolate street corner in Košice at 3:00 AM under a single flickering sodium streetlamp. Peter Novák, drenched in rain with eyes wide with panic and fear, is snapping a cheap prepaid burner smartphone in half, popping out the SIM card and throwing it into a sewer grate. In his other hand he tightly clutches a soaked backpack containing 6,000 euros. Rain streaks cutting through the gloom, dramatic close-up side angle, comic sound effect *SNAP!*, heavy ink hatching --ar 16:9",
     negativePrompt:
       "sunny, happy, soft digital painting, flat lighting, low contrast",
     cameraAngle:
       "Low-angle dramatic close-up on hands breaking phone with rain splashes",
     forensicAnalysis:
-      "Tento kľúčový moment jednoznačne dokazuje, že Babčan nebol spolupáchateľom v deľbe ziskov. Člen organizovaného gangu nekradne vlastnej skupine peniaze a nevypína si mobil. Zúfalý krok znamenal totálny kolaps kontaktu s Ľubošom a Cohenom.",
+      "Tento kľúčový moment jednoznačne dokazuje, že Novák nebol spolupáchateľom v deľbe ziskov. Člen organizovaného gangu nekradne vlastnej skupine peniaze a nevypína si mobil. Zúfalý krok znamenal totálny kolaps kontaktu s Ľubošom a Kovalom.",
     debunkedLie:
-      "OČTK interpretuje zadržané peniaze ako 'zisk z trestnej činnosti'. V skutočnosti išlo o jednostranné započítanie nevyplatenej mzdy a definitívny útek Babčana zo spolupráce.",
+      "OČTK interpretuje zadržané peniaze ako 'zisk z trestnej činnosti'. V skutočnosti išlo o jednostranné započítanie nevyplatenej mzdy a definitívny útek Nováka zo spolupráce.",
     involvedActors: [
-      "Erik Babčan",
+      "Peter Novák",
       "'Ľubo' (odlet do Thajska)",
-      "Dimitri Cohen",
+      "Denis Koval",
     ],
     location: "Košice / Banská Bystrica",
   },
@@ -253,18 +253,18 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
     chapterLetter: "E",
     date: "Leto – Jeseň 2025",
     badge: "KAPITOLA E // NOČNÁ LOGISTIKA",
-    title: "Dimitri Cohen, PETRIS Nitra a nočné odpočívadlo Livinské Opatovce",
+    title: "Denis Koval, PETRIS Nitra a nočné odpočívadlo Livinské Opatovce",
     comicImage: "/timestory/scene5_transit.jpg",
     caption:
-      "Nočné odpočívadlo D1 Livinské Opatovce o 02:00. Dimitri Cohen otvára zvnútra kufor BMW 7, neznámy muž preberá čiernu tašku s desiatkami pištolí Glock.",
+      "Nočné odpočívadlo D1 Livinské Opatovce o 02:00. Denis Koval otvára zvnútra kufor BMW 7, neznámy muž preberá čiernu tašku s desiatkami pištolí Glock.",
     narratorBox:
       "DIAĽNICA D1, ODPOČÍVADLO LIVINSKÉ OPATOVCE. 02:15. HMLISTÁ TMA. KUFOR LUXUSNÉHO BMW SA OTVÁRA ZVNÚTRA. PREVZATIE BEZ JEDINÉHO SLOVA...",
     soundEffect: "*ŠKRÍÍÍP-CVAK!*",
     dialogues: [
       {
-        speaker: "Dimitri Cohen",
-        role: "Cohen",
-        text: "Tu je 40 kusov. Čisté, vymazané čísla z Tatragenu a Bark Factory. Hneď to presuňte cez hranice.",
+        speaker: "Denis Koval",
+        role: "Koval",
+        text: "Tu je 40 kusov. Čisté, vymazané čísla z Armivexu a Bark Factory. Hneď to presuňte cez hranice.",
       },
       {
         speaker: "Kuriér siete",
@@ -272,25 +272,25 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
         text: "A čo ten IT chalan z Košíc? Nebude hovoriť?",
       },
       {
-        speaker: "Dimitri Cohen",
-        role: "Cohen",
+        speaker: "Denis Koval",
+        role: "Koval",
         text: "Ten ani nevie, čo je D1. Všetky papiere sú na jeho meno, on ponesie následky.",
       },
     ],
     comicPrompt:
-      "High contrast noir comic book panel, Frank Miller Sin City graphic novel art, midnight blue and bright halogen headlight beams. Scene: An abandoned highway rest stop along the Slovak D1 highway at 2:00 AM. Dimitri Cohen in a dark trench coat standing by the popped open trunk of a sleek luxury BMW 7 series, passing heavy black tactical duffel bags filled with Glock handguns to a mysterious shadowy contact in a leather jacket. Fog rising from the asphalt, dramatic silhouette lighting, deep shadows, cinematic comic composition, comic caption box overlay --ar 16:9",
+      "High contrast noir comic book panel, Frank Miller Sin City graphic novel art, midnight blue and bright halogen headlight beams. Scene: An abandoned highway rest stop along the Slovak D1 highway at 2:00 AM. Denis Koval in a dark trench coat standing by the popped open trunk of a sleek luxury BMW 7 series, passing heavy black tactical duffel bags filled with Glock handguns to a mysterious shadowy contact in a leather jacket. Fog rising from the asphalt, dramatic silhouette lighting, deep shadows, cinematic comic composition, comic caption box overlay --ar 16:9",
     negativePrompt: "daytime, colorful cartoon, flat digital, overexposed",
     cameraAngle:
       "Cinematic wide shot with piercing car headlights slicing through darkness",
     forensicAnalysis:
-      "Skutočnú distribúciu a odovzdávanie zbraní mimo evidenciu riadil Dimitri Cohen podľa inštrukcií Miroslava Tomčíka. Keď EB-EU odmietli, Cohen zapojil firmu Bark Factory Enterprise cez Norberta Skyrčáka. Babčan o týchto prevozoch nemal žiadnu vedomosť.",
+      "Skutočnú distribúciu a odovzdávanie zbraní mimo evidenciu riadil Denis Koval podľa inštrukcií Miroslava Tkáča. Keď VELTRA odmietli, Koval zapojil firmu Bark Factory Enterprise cez Norberta Slezáka. Novák o týchto prevozoch nemal žiadnu vedomosť.",
     debunkedLie:
-      "Tvrdenie, že Babčan bol v PETRIS Nitra v šiltovke, vyvracia sám Cohen — do Nitry chodil s Dmitrijom Marjovom a Skyrčákom. Babčan bol v tom čase preukázateľne v Košiciach.",
+      "Tvrdenie, že Novák bol v PETRIS Nitra v šiltovke, vyvracia sám Koval — do Nitry chodil s Dmitrijom Malinaom a Slezákom. Novák bol v tom čase preukázateľne v Košiciach.",
     involvedActors: [
-      "Dimitri Cohen (šofér/prevozy)",
-      "Miroslav Tomčík",
-      "Norbert Skyrčák",
-      "Michal Žember",
+      "Denis Koval (šofér/prevozy)",
+      "Miroslav Tkáč",
+      "Norbert Slezák",
+      "Michal Ondruš",
     ],
     location: "Odpočívadlo D1 Livinské Opatovce / Trenčín",
   },
@@ -310,27 +310,27 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
       {
         speaker: "Španielska Guardia Civil",
         role: "OČTK",
-        text: "Zbrane zadržané v Španielsku majú sériové čísla z dodávky pre EB-EU s.r.o. Kto organizoval transport?",
+        text: "Zbrane zadržané v Španielsku majú sériové čísla z dodávky pre VELTRA s.r.o. Kto organizoval transport?",
       },
       {
         speaker: "Vyšetrovateľ ÚBOK",
         role: "Vyšetrovateľ",
-        text: "Na papieri je konateľ Babčan. V realite nemáme žiadne jeho hovory do zahraničia, žiadny roaming, žiadne peniaze. Iba Cohena a Tomčíka na diaľniciach.",
+        text: "Na papieri je konateľ Novák. V realite nemáme žiadne jeho hovory do zahraničia, žiadny roaming, žiadne peniaze. Iba Kovala a Tkáča na diaľniciach.",
       },
     ],
     comicPrompt:
-      "Dramatic noir graphic novel comic panel, stark monochrome ink with flashing police red and blue emergency beacon lighting. Scene: A forensic police crime lab in Spain / Europol evidence room. Heavy evidence tables displaying dozens of seized Glock 19 and Grand Power pistols with forensic evidence tags. In the background, a large bulletin board shows crime network connection lines tracing from Cohen and Tomčík across Europe, while Erik Babčan's photo is at the dead-end bottom as an exploited shell. Dramatic high angle perspective, gritty comic book inks, stark shadows, cinematic finale panel --ar 16:9",
+      "Dramatic noir graphic novel comic panel, stark monochrome ink with flashing police red and blue emergency beacon lighting. Scene: A forensic police crime lab in Spain / Europol evidence room. Heavy evidence tables displaying dozens of seized Glock 19 and Grand Power pistols with forensic evidence tags. In the background, a large bulletin board shows crime network connection lines tracing from Koval and Tkáč across Europe, while Peter Novák's photo is at the dead-end bottom as an exploited shell. Dramatic high angle perspective, gritty comic book inks, stark shadows, cinematic finale panel --ar 16:9",
     negativePrompt: "blurry, low quality, sketch, amateur drawing, anime",
     cameraAngle:
       "High-angle panoramic view over evidence table into background network map",
     forensicAnalysis:
-      "Balistická zhoda potvrdzuje pôvod zbraní, no Babčan nemá žiadne zahraničné kontakty, jazykové schopnosti ani väzby na Balkánsku trasu. Medzinárodný odbyt organizovala sieť okolo Tomčíka a Cohena, ktorí disponovali vozidlami s rakúskymi a zahraničnými prepojeniami.",
+      "Balistická zhoda potvrdzuje pôvod zbraní, no Novák nemá žiadne zahraničné kontakty, jazykové schopnosti ani väzby na Balkánsku trasu. Medzinárodný odbyt organizovala sieť okolo Tkáča a Kovala, ktorí disponovali vozidlami s rakúskymi a zahraničnými prepojeniami.",
     debunkedLie:
-      "Obžaloba pripisuje vývoz do Španielska Babčanovi len na základe licencie. V spise neexistuje jediný dôkaz (hovor, SMS, roaming, svedok), ktorý by Babčana spájal so zahraničnou distribúciou.",
+      "Obžaloba pripisuje vývoz do Španielska Novákovi len na základe licencie. V spise neexistuje jediný dôkaz (hovor, SMS, roaming, svedok), ktorý by Nováka spájal so zahraničnou distribúciou.",
     involvedActors: [
       "Guardia Civil / EUROPOL",
       "Kriminalistický ústav PZ",
-      "Dimitri Cohen / M. Tomčík",
+      "Denis Koval / M. Tkáč",
     ],
     location: "Španielske kráľovstvo / Banská Bystrica (ÚBOK)",
   },
@@ -339,88 +339,88 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
 const ANOMALIES_DATA: AnomalyItem[] = [
   {
     id: 1,
-    title: "Osobný odber 242 zbraní v TATRAGENe Žilina",
+    title: "Osobný odber 242 zbraní v ARMIVEXe Žilina",
     prosecutionClaim:
-      "Svedok Marek Plch (DOKAZ_09) tvrdí, že Erik Babčan chodil po zbrane v Audi, 3x ukázal OP a licenciu a zbrane podpísal v knihe.",
-    sourceOfClaim: "Zápisnica o výsluchu svedka M. Plcha (TATRAGEN s.r.o.)",
+      "Svedok Marek Hruška (DOKAZ_09) tvrdí, že Peter Novák chodil po zbrane v Audi, 3x ukázal OP a licenciu a zbrane podpísal v knihe.",
+    sourceOfClaim: "Zápisnica o výsluchu svedka M. Hrušku (ARMIVEX s.r.o.)",
     forensicTruth:
-      "Klamstvo svedka Plcha snažiaceho sa získať štatút chráneného oznamovateľa. Dokladmi (licencia, prefotený OP) fyzicky disponoval Cohen a Ľubo. Plch si sám nepamätá miesto odovzdania (na sklade vs v meste!). Babčan v Žiline nikdy nebol.",
+      "Klamstvo svedka Hrušku snažiaceho sa získať štatút chráneného oznamovateľa. Dokladmi (licencia, prefotený OP) fyzicky disponoval Koval a Ľubo. Hruška si sám nepamätá miesto odovzdania (na sklade vs v meste!). Novák v Žiline nikdy nebol.",
     keyEvidence: [
-      "Plch si nepamätá miesto odovzdania (DOKAZ_09, s. 7)",
-      "Zbrojnú licenciu aj knihy mal od 12/2024 Ľubo a Cohen",
+      "Hruška si nepamätá miesto odovzdania (DOKAZ_09, s. 7)",
+      "Zbrojnú licenciu aj knihy mal od 12/2024 Ľubo a Koval",
       "Kamerové záznamy predajne neexistujú",
     ],
     proceduralAction:
-      "Nariadiť písmoznalecký posudok podpisov a BTS lokalizáciu mobilu Babčana v dňoch nákupov.",
+      "Nariadiť písmoznalecký posudok podpisov a BTS lokalizáciu mobilu Nováka v dňoch nákupov.",
     proceduralParagraph: "§ 142 TP (Písmoznalectvo) & § 125 TP (Konfrontácia)",
     motionText: `NÁVRH NA VYKONANIE DÔKAZU (§ 142 A § 125 TRESTNÉHO PORIADKU)
-Vec: ČVS: PPZ-51/ÚBOK-PZ-ST-2025 (KAUZA TATRAGEN / EB-EU)
-Obvinený: Erik Babčan
+Vec: ČVS: PPZ-51/ÚBOK-PZ-ST-2025 (KAUZA ARMIVEX / VELTRA)
+Obvinený: Peter Novák
 Adresát: Úrad boja proti organizovanej kriminalite Prezídia PZ / Špecializovaný trestný súd
 
 V zmysle § 119 a nasl. Trestného poriadku navrhujem vykonať nasledovné dokazovanie:
-1. Nariadiť znalecké dokazovanie z odboru písmoznalectva (§ 142 TP) za účelom preskúmania pravosti podpisov v evidenčných knihách zbraní spoločnosti TATRAGEN s.r.o. a na výdajových dokladoch oproti porovnávacím vzorkám podpisu obvineného Erika Babčana.
-2. Nariadiť a vykonať konfrontáciu podľa § 125 TP medzi obv. Erikom Babčanom a svedkom Marekom Plchom k rozporom v mieste, čase a spôsobe údajného odovzdania 242 zbraní (Plch uvádza odber v sklade, v meste aj mimo neho).
+1. Nariadiť znalecké dokazovanie z odboru písmoznalectva (§ 142 TP) za účelom preskúmania pravosti podpisov v evidenčných knihách zbraní spoločnosti ARMIVEX s.r.o. a na výdajových dokladoch oproti porovnávacím vzorkám podpisu obvineného Petra Nováka.
+2. Nariadiť a vykonať konfrontáciu podľa § 125 TP medzi obv. Petrom Novákom a svedkom Marekom Hruškom k rozporom v mieste, čase a spôsobe údajného odovzdania 242 zbraní (Hruška uvádza odber v sklade, v meste aj mimo neho).
 3. Vyžiadať BTS lokalizačné údaje k telefónnemu číslu obvineného v dňoch údajných nákupov na vylúčenie jeho fyzickej prítomnosti v Žiline.
 
-Odôvodnenie: Svedok Plch si zabezpečuje vlastnú beztrestnosť a jeho tvrdenia sú v priamom rozpore s technickými dôkazmi a výpoveďami spoluobvinených.`,
+Odôvodnenie: Svedok Hruška si zabezpečuje vlastnú beztrestnosť a jeho tvrdenia sú v priamom rozpore s technickými dôkazmi a výpoveďami spoluobvinených.`,
     strength: "Rozhodujúci rozpor",
   },
   {
     id: 2,
-    title: "Návšteva PETRIS Nitra ('Babčan v šiltovke') a telefonát",
+    title: "Návšteva PETRIS Nitra ('Novák v šiltovke') a telefonát",
     prosecutionClaim:
-      "Svedok Michal Žember tvrdí, že v 08/2025 prišiel Cohen s Babčanom v šiltovke a Babčan mu telefonicky potvrdil prevzatie.",
-    sourceOfClaim: "Výpoveď svedka Michala Žembera (PETRIS-SLOVAKIA s.r.o.)",
+      "Svedok Michal Ondruš tvrdí, že v 08/2025 prišiel Koval s Novákom v šiltovke a Novák mu telefonicky potvrdil prevzatie.",
+    sourceOfClaim: "Výpoveď svedka Michala Ondruša (PETRIS-SLOVAKIA s.r.o.)",
     forensicTruth:
-      "Cohen v DOKAZ_08 výslovne potvrdzuje, že v Nitre bol s Dmitrijom Marjovom a neskôr cez Norberta Skyrčáka. Babčan v tom čase žil v Košiciach a o nákupoch v PETRIS nevedel. Žemberovi priniesol prefotené doklady Cohen.",
+      "Koval v DOKAZ_08 výslovne potvrdzuje, že v Nitre bol s Dmitrijom Malinaom a neskôr cez Norberta Slezáka. Novák v tom čase žil v Košiciach a o nákupoch v PETRIS nevedel. Ondrušovi priniesol prefotené doklady Koval.",
     keyEvidence: [
-      "Cohen potvrdzuje, že v Nitre bol s Marjovom a Skyrčákom (DOKAZ_08, s. 8-10)",
+      "Koval potvrdzuje, že v Nitre bol s Malinaom a Slezákom (DOKAZ_08, s. 8-10)",
       "Neuskutočnila sa žiadna zákonná rekognícia (§ 126 TP)",
-      "Babčan v inkriminovanom čase preukázateľne býval v Košiciach",
+      "Novák v inkriminovanom čase preukázateľne býval v Košiciach",
     ],
     proceduralAction:
-      "Vyžiadať telekomunikačné záznamy hovorov medzi číslami Žembera a Babčana.",
+      "Vyžiadať telekomunikačné záznamy hovorov medzi číslami Ondruša a Nováka.",
     proceduralParagraph: "§ 116 TP (Dáta z telekomunikačnej prevádzky)",
     motionText: `NÁVRH NA VYKONANIE DÔKAZU (§ 116 A § 126 TRESTNÉHO PORIADKU)
 Vec: ČVS: PPZ-51/ÚBOK-PZ-ST-2025 (KAUZA PETRIS NITRA)
-Obvinený: Erik Babčan
+Obvinený: Peter Novák
 Adresát: Úrad boja proti organizovanej kriminalite Prezídia PZ
 
 Navrhujem vykonať nasledovné dokazovanie:
-1. Zabezpečiť prevádzkové telekomunikačné údaje (§ 116 TP) – zoznam prichádzajúcich a odchádzajúcich hovorov a SMS medzi číslom svedka Michala Žembera a číslom obv. Babčana za august 2025 na vyvrátenie tvrdenia o telefonickom potvrdení odberu tovaru.
-2. Vykonať zákonnú rekogníciu podľa § 126 TP za účasti svedka Michala Žembera in natura s figurantmi podobného veku a postavy.
-3. Konfrontovať svedka Žembera s výpoveďou Dimitriho Cohena (DOKAZ_08, s. 8-10), ktorý potvrdil, že do PETRIS chodil s Marjovom a Skyrčákom a nie s Babčanom.
+1. Zabezpečiť prevádzkové telekomunikačné údaje (§ 116 TP) – zoznam prichádzajúcich a odchádzajúcich hovorov a SMS medzi číslom svedka Michala Ondruša a číslom obv. Nováka za august 2025 na vyvrátenie tvrdenia o telefonickom potvrdení odberu tovaru.
+2. Vykonať zákonnú rekogníciu podľa § 126 TP za účasti svedka Michala Ondruša in natura s figurantmi podobného veku a postavy.
+3. Konfrontovať svedka Ondruša s výpoveďou Denisa Kovala (DOKAZ_08, s. 8-10), ktorý potvrdil, že do PETRIS chodil s Malinaom a Slezákom a nie s Novákom.
 
 Odôvodnenie: Tvrdenie o „mužovi v šiltovke“ je nepodloženou domnienkou. Obvinený v inkriminovanom čase žil v Košiciach a nákupy v PETRIS neorganizoval.`,
     strength: "Kritické pre OČTK",
   },
   {
     id: 3,
-    title: "Vklady hotovosti 106 000 € na účet EB-EU s.r.o. v Tatra banke",
+    title: "Vklady hotovosti 106 000 € na účet VELTRA s.r.o. v Dunajskej banke",
     prosecutionClaim:
-      "Babčan ako jediný štatutár vkladal státisíce eur v hotovosti a autorizoval platby za zbrane.",
-    sourceOfClaim: "Bankové výpisy z Tatra banky a.s. a pokladničné lístky",
+      "Novák ako jediný štatutár vkladal státisíce eur v hotovosti a autorizoval platby za zbrane.",
+    sourceOfClaim: "Bankové výpisy z Dunajskej banky a.s. a pokladničné lístky",
     forensicTruth:
-      "Klasický model bieleho koňa a smurfingu: hotovosť fyzicky prinášal koordinátor 'Ľubo' z BB, ktorý čakal pred bankou a diktoval sumy. Babčan nepoznal zmluvné marže, dodacie listy ani špecifikácie zbraní.",
+      "Klasický model bieleho koňa a smurfingu: hotovosť fyzicky prinášal koordinátor 'Ľubo' z BB, ktorý čakal pred bankou a diktoval sumy. Novák nepoznal zmluvné marže, dodacie listy ani špecifikácie zbraní.",
     keyEvidence: [
-      "Babčan presne popísal vkladové schôdzky s Ľubošom (DOKAZ_07, s. 7-8)",
+      "Novák presne popísal vkladové schôdzky s Ľubošom (DOKAZ_07, s. 7-8)",
       "Vklady boli vykonávané len pár hodín pred splatnosťou zálohových faktúr",
-      "Babčan nemal prístup k ziskom z predaja zbraní",
+      "Novák nemal prístup k ziskom z predaja zbraní",
     ],
     proceduralAction:
-      "Zaistiť kamerové záznamy pobočiek Tatra banky dokumentujúce prítomnosť osoby 'Ľubo'.",
+      "Zaistiť kamerové záznamy pobočiek Dunajskej banky dokumentujúce prítomnosť osoby 'Ľubo'.",
     proceduralParagraph:
       "§ 119 ods. 1 písm. f) TP (Preukázanie pôvodu a tokov)",
     motionText: `NÁVRH NA VYKONANIE DÔKAZU (§ 119 ODS. 1 PÍSM. F) TRESTNÉHO PORIADKU)
 Vec: ČVS: PPZ-51/ÚBOK-PZ-ST-2025 (VKLADY V TATRA BANKE)
-Obvinený: Erik Babčan
+Obvinený: Peter Novák
 Adresát: ÚBOK Prezídia PZ / Dozorujúci prokurátor ÚŠP
 
 Navrhujem vykonať nasledovné dokazovanie:
-1. Zaistiť a vyhodnotiť kamerové záznamy z vonkajších priestorov pobočiek Tatra banky (Košice / Banská Bystrica) v dňoch a časoch vykonania vkladov hotovosti na účet EB-EU s.r.o.
+1. Zaistiť a vyhodnotiť kamerové záznamy z vonkajších priestorov pobočiek Dunajskej banky (Košice / Banská Bystrica) v dňoch a časoch vykonania vkladov hotovosti na účet VELTRA s.r.o.
 2. Zabezpečiť identifikáciu motorového vozidla značky Audi a osoby „Ľubo“ z Banskej Bystrice, ktorá pred bankou čakala s bežiacim motorom a hotovosť obvinenému fyzicky odovzdávala.
-3. Vyžiadať auditné logy bankových prevodov a zálohových faktúr preukazujúce, že Babčan disponoval iba sumami určenými na okamžitý prevod pre dodávateľa bez dispozície so ziskom.
+3. Vyžiadať auditné logy bankových prevodov a zálohových faktúr preukazujúce, že Novák disponoval iba sumami určenými na okamžitý prevod pre dodávateľa bez dispozície so ziskom.
 
 Odôvodnenie: Tieto dôkazy preukážu klasickú rolu nastrčeného technického administrátora (bieleho koňa) a vylúčia organizátorskú rolu obvineného.`,
     strength: "Nepriestrelné",
@@ -429,26 +429,26 @@ Odôvodnenie: Tieto dôkazy preukážu klasickú rolu nastrčeného technického
     id: 4,
     title: "Ponechanie si peňazí (6 000 – 9 000 €) a 'vypnutie sa'",
     prosecutionClaim:
-      "Babčan čerpal zisk z kriminálnej činnosti, keď si ponechal časť peňazí z firemného účtu.",
-    sourceOfClaim: "Výpoveď Erika Babčana (DOKAZ_07, s. 8)",
+      "Novák čerpal zisk z kriminálnej činnosti, keď si ponechal časť peňazí z firemného účtu.",
+    sourceOfClaim: "Výpoveď Petra Nováka (DOKAZ_07, s. 8)",
     forensicTruth:
-      "Dôkaz rozpadu vzťahu a absencie organizovanej skupiny: Babčanovi neplatili sľúbenú odmenu 3 000 €/mes., preto si v zúfalstve započítal 3 mesačné odmeny a vypol telefón. Člen gangu nekradne vlastným šéfom.",
+      "Dôkaz rozpadu vzťahu a absencie organizovanej skupiny: Novákovi neplatili sľúbenú odmenu 3 000 €/mes., preto si v zúfalstve započítal 3 mesačné odmeny a vypol telefón. Člen gangu nekradne vlastným šéfom.",
     keyEvidence: [
       "Po zadržaní peňazí 'Ľubo' odletel do Thajska a komunikácia skončila",
-      "Babčan zablokoval ďalšie prevody a odstrihol sa od skupiny",
-      "Cohen sa mu vyhrážal tvrdými dôsledkami (DOKAZ_07, s. 8)",
+      "Novák zablokoval ďalšie prevody a odstrihol sa od skupiny",
+      "Koval sa mu vyhrážal tvrdými dôsledkami (DOKAZ_07, s. 8)",
     ],
     proceduralAction:
       "Doložiť výpisy súkromných účtov a komunikáciu potvrdzujúcu ukončenie stykov na jar 2025.",
     proceduralParagraph: "§ 119 TP (Subjektívna stránka a motív)",
     motionText: `NÁVRH NA VYKONANIE DÔKAZU (§ 119 TRESTNÉHO PORIADKU – SUBJEKTÍVNA STRÁNKA)
 Vec: ČVS: PPZ-51/ÚBOK-PZ-ST-2025 (ROZPAD DÔVERY A ÚTEK OBVINENÉHO)
-Obvinený: Erik Babčan
+Obvinený: Peter Novák
 Adresát: Špecializovaný trestný súd / ÚBOK PZ
 
 Navrhujem vykonať nasledovné dokazovanie:
-1. Vyhodnotiť elektronickú komunikáciu (aplikácie WhatsApp, Signal) z jari 2025 preukazujúcu vyhrážky Dimitriho Cohena voči obvinenému po tom, čo si jednostranne započítal nevyplatenú odmenu a vypol telefón.
-2. Preveriť cestovné a letové záznamy osoby „Ľubo“ dokumentujúce jeho odlet do Thajska bezprostredne po kolapse komunikácie s Babčanom.
+1. Vyhodnotiť elektronickú komunikáciu (aplikácie WhatsApp, Signal) z jari 2025 preukazujúcu vyhrážky Denisa Kovala voči obvinenému po tom, čo si jednostranne započítal nevyplatenú odmenu a vypol telefón.
+2. Preveriť cestovné a letové záznamy osoby „Ľubo“ dokumentujúce jeho odlet do Thajska bezprostredne po kolapse komunikácie s Novákom.
 3. Založiť výpisy zo súkromných účtov obvineného dokumentujúce, že od jari 2025 nedisponoval žiadnymi financiami zo zbraňových obchodov.
 
 Odôvodnenie: Konanie obvineného preukazuje totálny rozpad vzťahu so skupinou. Člen organizovanej skupiny si jednostranne nezapočítava peniaze, nevypína komunikáciu a neuteká pred vlastnými partnermi.`,
@@ -458,13 +458,13 @@ Odôvodnenie: Konanie obvineného preukazuje totálny rozpad vzťahu so skupinou
     id: 5,
     title: "Zmiznutie evidenčnej knihy zbraní a fiktívny sklad v Žiline",
     prosecutionClaim:
-      "Babčan maril policajnú kontrolu tým, že neodovzdal knihu zbraní a demontoval trezory na Vysokoškolákov.",
+      "Novák maril policajnú kontrolu tým, že neodovzdal knihu zbraní a demontoval trezory na Vysokoškolákov.",
     sourceOfClaim: "Zistenie oddelenia dokladov KR PZ Žilina / Banská Bystrica",
     forensicTruth:
-      "Fyzická nemožnosť plnenia: Babčan knihu nemal, odovzdal ju hneď v 12/2024 Ľubošovi. Nájom v Žiline platil Ľubo. Kľúčové: Akonáhle Babčan zistil nezrovnalosti, sám šiel na políciu požiadať o zrušenie licencie!",
+      "Fyzická nemožnosť plnenia: Novák knihu nemal, odovzdal ju hneď v 12/2024 Ľubošovi. Nájom v Žiline platil Ľubo. Kľúčové: Akonáhle Novák zistil nezrovnalosti, sám šiel na políciu požiadať o zrušenie licencie!",
     keyEvidence: [
-      "Žiadosť o zrušenie licencie podaná samotným Babčanom",
-      "Vrátenie osobného zbrojného preukazu Babčanom",
+      "Žiadosť o zrušenie licencie podaná samotným Novákom",
+      "Vrátenie osobného zbrojného preukazu Novákom",
       "Trezory zabezpečovala a demontovala tretia osoba ('Ľubo')",
     ],
     proceduralAction:
@@ -472,7 +472,7 @@ Odôvodnenie: Konanie obvineného preukazuje totálny rozpad vzťahu so skupinou
     proceduralParagraph: "§ 131 TP (Výsluch svedka — prenajímateľ priestorov)",
     motionText: `NÁVRH NA VYKONANIE DÔKAZU (§ 131 TRESTNÉHO PORIADKU)
 Vec: ČVS: PPZ-51/ÚBOK-PZ-ST-2025 (SKLAD VYSOKOŠKOLÁKOV 6, ŽILINA)
-Obvinený: Erik Babčan
+Obvinený: Peter Novák
 Adresát: ÚBOK Prezídia PZ
 
 Navrhujem vykonať nasledovné dokazovanie:
@@ -487,14 +487,14 @@ Odôvodnenie: Obvinený v Žiline po vydaní licencie nikdy nebol, kľúče ani 
     id: 6,
     title: "Zbrane zaistené v Španielsku (Europol)",
     prosecutionClaim:
-      "Babčan ako konateľ zodpovedá za medzinárodný nelegálny transfer zbraní do kriminálneho prostredia.",
+      "Novák ako konateľ zodpovedá za medzinárodný nelegálny transfer zbraní do kriminálneho prostredia.",
     sourceOfClaim: "Správa národnej ústredne EUROPOL zo dňa 06.02.2026",
     forensicTruth:
-      "Absolútna absencia medzinárodného prvku u Babčana: nemá jazykové znalosti, kontakty ani vozidlá. Zbrane z kufrov áut na odpočívadlách D1 fyzicky odovzdával Dimitri Cohen napojený na Miroslava Tomčíka.",
+      "Absolútna absencia medzinárodného prvku u Nováka: nemá jazykové znalosti, kontakty ani vozidlá. Zbrane z kufrov áut na odpočívadlách D1 fyzicky odovzdával Denis Koval napojený na Miroslava Tkáča.",
     keyEvidence: [
       "Žiadna cezhraničná komunikácia (SMS, roaming, hovory)",
-      "Babčan nikdy nevlastnil ani neviedol motorové vozidlá skupiny",
-      "Výpovede Cohena o preberaní tovaru cez rakúske a španielske kontakty",
+      "Novák nikdy nevlastnil ani neviedol motorové vozidlá skupiny",
+      "Výpovede Kovala o preberaní tovaru cez rakúske a španielske kontakty",
     ],
     proceduralAction:
       "Dožiadať kompletné dáta o medzinárodnom sledovaní od EUROPOLu k identifikácii šoférov.",
@@ -502,12 +502,12 @@ Odôvodnenie: Obvinený v Žiline po vydaní licencie nikdy nebol, kľúče ani 
       "§ 115 TP (Záznam o telekomunikačnej a dopravnej prevádzke)",
     motionText: `NÁVRH NA MEDZINÁRODNÉ JUSTIČNÉ DOŽIADANIE (§ 115 TP & ZÁK. Č. 650/2005 Z. Z.)
 Vec: ČVS: PPZ-51/ÚBOK-PZ-ST-2025 (ZÁSAH EUROPOL V ŠPANIELSKU)
-Obvinený: Erik Babčan
+Obvinený: Peter Novák
 Adresát: Špecializovaný trestný súd / Generálna prokuratúra SR
 
 Navrhujem vykonať nasledovné dokazovanie:
 1. Formou Európskeho vyšetrovacieho príkazu (EIO) dožiadať od španielskej Guardia Civil a EUROPOLu zoznam zadržaných vozidiel, vodičov a kuriérov na trase do Španielska.
-2. Vyžiadať lokalizačné a mýtne záznamy vozidiel BMW 7 a Audi používaných Dimitrim Cohenom a Miroslavom Tomčíkom k identifikácii nočných prekládok na diaľnici D1.
+2. Vyžiadať lokalizačné a mýtne záznamy vozidiel BMW 7 a Audi používaných Dimitrim Kovalom a Miroslavom Tkáčom k identifikácii nočných prekládok na diaľnici D1.
 3. Vykonať analýzu roamingových dát obvineného preukazujúcu, že obvinený nemal žiadne medzinárodné spojenie, roamingové hovory ani kontakt so zahraničnými subjektmi.
 
 Odôvodnenie: Pripisovanie medzinárodného obchodu obvinenému bez jediného zahraničného kontaktu je právne neudržateľné a odporuje zásade in dubio pro reo (§ 2 ods. 10 TP).`,
@@ -690,7 +690,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               </Badge>
             </div>
             <h3 className="text-lg sm:text-2xl font-black text-foreground tracking-tight flex items-center gap-2">
-              <span>Kauza Tatragen & Erik Babčan: Priebeh od A po Z</span>
+              <span>Kauza Armivex & Peter Novák: Priebeh od A po Z</span>
             </h3>
             <p className="text-xs text-muted-foreground max-w-3xl leading-relaxed">
               Autentická rekonštrukcia vyšetrovacieho spisu{" "}
@@ -698,7 +698,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                 PPZ-51/UBOK-PZ-ST-2025
               </strong>{" "}
               zostavená formou surového grafického komiksu. Úplná dekonštrukcia
-              policajnej tézy o „organizátorovi Babčanovi“ podložená dôkazmi,
+              policajnej tézy o „organizátorovi Novákovi“ podložená dôkazmi,
               zvukovými efektmi a promptami pre generovanie scén.
             </p>
           </div>
@@ -754,20 +754,20 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               1. Žiadny osobný odber v Žiline
             </div>
             <p className="text-[11px] text-foreground/80 leading-snug">
-              Dokladmi fyzicky disponovala skupina (Cohen, Budaj, Ľubo). K
-              podpisom v knihe chýba grafológia (§ 142 TP) a Babčanov mobil v
+              Dokladmi fyzicky disponovala skupina (Koval, Bahna, Ľubo). K
+              podpisom v knihe chýba grafológia (§ 142 TP) a Novákov mobil v
               Žiline nikdy nebol.
             </p>
           </div>
           <div className="rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-3 space-y-1">
             <div className="flex items-center gap-1.5 text-cyan-400 font-bold text-xs">
               <Car className="h-3.5 w-3.5 shrink-0" />
-              2. Nočná logistika Dimitriho Cohena
+              2. Nočná logistika Denisa Kovala
             </div>
             <p className="text-[11px] text-foreground/80 leading-snug">
               Fyzické prevozy zbraní z kufrov BMW 7 bez dokladov na nočných
               odpočívadlách D1 (Livinské Opatovce) vykonával výhradne Dimitri
-              Cohen s Tomčíkom.
+              Koval s Tkáčom.
             </p>
           </div>
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-3 space-y-1">
@@ -776,7 +776,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               3. Dôkaz rozpadu dôvery (Jar 2025)
             </div>
             <p className="text-[11px] text-foreground/80 leading-snug">
-              Babčan si strhol nezaplatenú mzdu a vypol telefón. Člen gangu
+              Novák si strhol nezaplatenú mzdu a vypol telefón. Člen gangu
               neodpája kontakt a nekradne vlastným šéfom — išlo o útek pred
               nátlakom skupiny.
             </p>
@@ -1040,7 +1040,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
 
               <div className="space-y-2 pt-1">
                 {currentEpisode.dialogues.map((dlg, dIdx) => {
-                  const isBabcan = dlg.role === "Babčan";
+                  const isBabcan = dlg.role === "Novák";
                   return (
                     <div
                       key={dIdx}
@@ -1337,7 +1337,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                       <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 p-2.5 space-y-1">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1">
                           <AlertTriangle className="h-3 w-3" /> Tvrdenie OČTK
-                          proti Babčanovi:
+                          proti Novákovi:
                         </span>
                         <p className="text-xs text-foreground/90 font-medium">
                           {anomaly.prosecutionClaim}
@@ -1467,7 +1467,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               </span>
             </div>
             <h4 className="text-sm sm:text-base font-black text-foreground">
-              Geografické rozdelenie rolí: Kde bol reálne Babčan vs kde mizli
+              Geografické rozdelenie rolí: Kde bol reálne Novák vs kde mizli
               zbrane
             </h4>
           </div>
@@ -1487,7 +1487,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               <div className="flex items-center gap-2">
                 <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
                 <h5 className="font-bold text-xs sm:text-sm text-emerald-400">
-                  Erik Babčan: Lokálny IT správca (Košice & BB)
+                  Peter Novák: Lokálny IT správca (Košice & BB)
                 </h5>
               </div>
               <Badge className="bg-emerald-500/15 text-emerald-300 border-emerald-500/30 text-[9px] font-mono">
@@ -1512,7 +1512,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                   </strong>
                   <p className="text-[11px] text-muted-foreground">
                     Tvorba webstránok, občasné vklady hotovosti dodanej Ľubošom
-                    v Tatra banke, vypnutie telefónu na jar 2025.
+                    v Dunajskej banke, vypnutie telefónu na jar 2025.
                   </p>
                 </div>
               </div>
@@ -1543,7 +1543,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                   </strong>
                   <p className="text-[11px] text-muted-foreground">
                     Nulová fyzická prítomnosť pri nákupoch. Žiadne BTS dáta
-                    nepotvrdzujú jeho prítomnosť v predajni TATRAGEN.
+                    nepotvrdzujú jeho prítomnosť v predajni ARMIVEX.
                   </p>
                 </div>
               </div>
@@ -1571,7 +1571,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               <div className="flex items-center gap-2">
                 <div className="h-2.5 w-2.5 rounded-full bg-rose-400 animate-pulse" />
                 <h5 className="font-bold text-xs sm:text-sm text-rose-400">
-                  Dimitri Cohen & Sieť: Cezhraničný tranzit (D1 ➔ Španielsko)
+                  Denis Koval & Sieť: Cezhraničný tranzit (D1 ➔ Španielsko)
                 </h5>
               </div>
               <Badge className="bg-rose-500/15 text-rose-300 border-rose-500/30 text-[9px] font-mono">
@@ -1581,7 +1581,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
 
             <p className="text-[11px] text-foreground/80 leading-relaxed">
               Skutočné nákupy, manipuláciu s tovarom a distribúciu vykonával
-              Dimitri Cohen s Miroslavom Tomčíkom cez vozidlá BMW 7 a prekládky
+              Denis Koval s Miroslavom Tkáčom cez vozidlá BMW 7 a prekládky
               na nočných diaľničných odpočívadlách.
             </p>
 
@@ -1595,7 +1595,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                     Bratislava (Nočná kaviareň):
                   </strong>
                   <p className="text-[11px] text-muted-foreground">
-                    Naverbovanie IT vývojára Babčana pod zámienkou programovania
+                    Naverbovanie IT vývojára Nováka pod zámienkou programovania
                     legálneho zbraňového e-shopu.
                   </p>
                 </div>
@@ -1610,8 +1610,8 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                     Žilina & PETRIS Nitra:
                   </strong>
                   <p className="text-[11px] text-muted-foreground">
-                    Odber zbraní vykonával Cohen osobne s Dmitrijom Marjovom a
-                    Norbertom Skyrčákom (Bark Factory Enterprise).
+                    Odber zbraní vykonával Koval osobne s Dmitrijom Malinaom a
+                    Norbertom Slezákom (Bark Factory Enterprise).
                   </p>
                 </div>
               </div>
@@ -1641,7 +1641,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                   </strong>
                   <p className="text-[11px] text-muted-foreground">
                     Záchyt 242 zbraní Guardia Civil v kriminálnom prostredí.
-                    Trasovanie potvrdzuje zahraničných kuriérov mimo Babčana.
+                    Trasovanie potvrdzuje zahraničných kuriérov mimo Nováka.
                   </p>
                 </div>
               </div>
@@ -1661,9 +1661,9 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               <thead>
                 <tr className="border-b border-border/60 text-[10px] font-mono uppercase text-muted-foreground">
                   <th className="py-1.5 px-2">Forenzné Kritérium</th>
-                  <th className="py-1.5 px-2 text-emerald-400">Erik Babčan</th>
+                  <th className="py-1.5 px-2 text-emerald-400">Peter Novák</th>
                   <th className="py-1.5 px-2 text-rose-400">
-                    Dimitri Cohen & Sieť
+                    Denis Koval & Sieť
                   </th>
                   <th className="py-1.5 px-2 text-amber-300">
                     Procesný dôsledok pre súd
@@ -1682,7 +1682,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                     Pravidelné nočné jazdy BMW 7
                   </td>
                   <td className="py-1.5 px-2 text-foreground/80">
-                    Babčan sa fyzicky nenachádzal na miestach odovzdávania
+                    Novák sa fyzicky nenachádzal na miestach odovzdávania
                   </td>
                 </tr>
                 <tr>
@@ -1696,7 +1696,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                     Celé územie SR, tranzit D1, zahraničie
                   </td>
                   <td className="py-1.5 px-2 text-foreground/80">
-                    Vylučuje prítomnosť Babčana v Žiline v dňoch odberov
+                    Vylučuje prítomnosť Nováka v Žiline v dňoch odberov
                   </td>
                 </tr>
                 <tr>
@@ -1781,12 +1781,12 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                   PORIADKU)
                 </span>
                 <h2 className="text-xl font-black uppercase tracking-tight">
-                  Kauza TATRAGEN & Erik Babčan: Priebeh od A po Z
+                  Kauza ARMIVEX & Peter Novák: Priebeh od A po Z
                 </h2>
                 <p className="text-xs text-muted-foreground max-w-2xl mx-auto">
                   Rekonštrukcia vyšetrovacieho spisu vyvracajúca tvrdenie o
-                  organizátorskej úlohe obv. Erika Babčana a preukazujúca reálnu
-                  trasu zbraní organizovanú Dimitrim Cohenom.
+                  organizátorskej úlohe obv. Petra Nováka a preukazujúca reálnu
+                  trasu zbraní organizovanú Dimitrim Kovalom.
                 </p>
               </div>
 

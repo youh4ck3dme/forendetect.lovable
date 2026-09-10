@@ -68,8 +68,8 @@ import {
 import type { ForensicDossier, BulkFileItem } from "@/lib/types";
 import { exportDossierToPDF } from "@/lib/export-pdf";
 import { upsertTransaction } from "@/lib/case-data";
-import { TATRAGEN_CROSS_CONTRADICTIONS } from "@/lib/cross-contradictions";
-import { TATRAGEN_CASE_DOSSIER } from "@/lib/tatragen-dossier";
+import { ARMIVEX_CROSS_CONTRADICTIONS } from "@/lib/cross-contradictions";
+import { ARMIVEX_CASE_DOSSIER } from "@/lib/demo-dossier";
 
 const TASK_LABELS: Record<AiTask, string> = {
   explain_finding: "Vysvetliť vybraný nález",
@@ -79,10 +79,10 @@ const TASK_LABELS: Record<AiTask, string> = {
   admiss_audit: "Audit procesnej prípustnosti dôkazov",
 };
 
-function isTatragenDossier(d: ForensicDossier | null): boolean {
+function isArmivexDossier(d: ForensicDossier | null): boolean {
   if (!d) return false;
   return (
-    d.caseId === TATRAGEN_CASE_DOSSIER.caseId ||
+    d.caseId === ARMIVEX_CASE_DOSSIER.caseId ||
     /tatragen/i.test(d.caseTitle ?? "")
   );
 }
@@ -218,7 +218,7 @@ export function Assistant() {
     };
   }, [activeCase.id, getForensicDossierFn]);
 
-  const showTimestory = isTatragenDossier(dossier);
+  const showTimestory = isArmivexDossier(dossier);
 
   useEffect(() => {
     if (!showTimestory && autopilotTab === "timestory") {
@@ -492,33 +492,33 @@ export function Assistant() {
       switch (stepId) {
         case 1:
           if (!dossier) {
-            setDossier(TATRAGEN_CASE_DOSSIER);
+            setDossier(ARMIVEX_CASE_DOSSIER);
             setAutopilotTab("timestory");
-            toast.success("Načítaný autentický spis: Kauza Tatragen & Babčan.");
+            toast.success("Načítaný autentický spis: Kauza Armivex & Novák.");
           }
           break;
         case 2:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("facts");
           break;
         case 3:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("transakcie");
           break;
         case 4:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("rozpory");
           break;
         case 5:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("defense");
           break;
         case 6:
           if (dossier) {
             handleExportPDF();
           } else {
-            setDossier(TATRAGEN_CASE_DOSSIER);
-            exportDossierToPDF(TATRAGEN_CASE_DOSSIER);
+            setDossier(ARMIVEX_CASE_DOSSIER);
+            exportDossierToPDF(ARMIVEX_CASE_DOSSIER);
             toast.success(
               "Vzorový súdny posudok (A4) so SHA-256 pečaťou vygenerovaný.",
             );
@@ -1004,16 +1004,16 @@ ${dossier.judgeReadyText.vedecke}`;
                             variant="secondary"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setDossier(TATRAGEN_CASE_DOSSIER);
+                              setDossier(ARMIVEX_CASE_DOSSIER);
                               setAutopilotTab("timestory");
                               toast.success(
-                                "Načítaný autentický spis: Kauza Tatragen & Babčan",
+                                "Načítaný autentický spis: Kauza Armivex & Novák",
                               );
                             }}
                             className="h-9 gap-1.5 border border-primary/40 bg-primary/15 font-semibold text-primary shadow-xs transition-all hover:border-primary/60 hover:bg-primary/25 cursor-pointer"
                           >
                             <Zap className="h-4 w-4 text-primary" />
-                            <span>⚡ Načítať demo: Kauza Tatragen (UBOK)</span>
+                            <span>⚡ Načítať demo: Kauza Armivex (UBOK)</span>
                           </Button>
                         </div>
                       </>

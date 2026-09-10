@@ -11,9 +11,9 @@ describe("Testimony & Financial Analysis Models", () => {
       questionNumber: 1,
       question: "1. Kto zbrane nakupoval a odovzdával?",
       answer:
-        "Erik Babčan nakupoval, Dimitri Cohen distribuoval z BMW na odpočívadlách D1.",
-      identifiedPersons: ["Erik Babčan", "Dimitri Cohen", "Marek Plch"],
-      directEvidence: ["Výpoveď Plcha", "Kúpne zmluvy", "Pečiatky v BMW"],
+        "Peter Novák nakupoval, Denis Koval distribuoval z BMW na odpočívadlách D1.",
+      identifiedPersons: ["Peter Novák", "Denis Koval", "Marek Hruška"],
+      directEvidence: ["Výpoveď Hrušku", "Kúpne zmluvy", "Pečiatky v BMW"],
       unverifiedHypotheses: ["Odberatelia na D1"],
       missingEvidence: ["Grafologický posudok podpisov"],
       confidenceLevel: 95,
@@ -21,26 +21,26 @@ describe("Testimony & Financial Analysis Models", () => {
 
     expect(q1.questionNumber).toBe(1);
     expect(q1.confidenceLevel).toBeGreaterThanOrEqual(90);
-    expect(q1.identifiedPersons).toContain("Erik Babčan");
+    expect(q1.identifiedPersons).toContain("Peter Novák");
     expect(q1.directEvidence.length).toBeGreaterThan(0);
   });
 
   it("overuje výpočet a prahy miery nepravdivosti v rozporoch výpovedí", () => {
     const contradiction: TestimonyContradiction = {
       id: "TC-01",
-      topic: "Osobná prítomnosť v predajni TATRAGEN Žilina",
+      topic: "Osobná prítomnosť v predajni ARMIVEX Žilina",
       personA: {
-        name: "Erik Babčan",
+        name: "Peter Novák",
         status: "obvinený",
-        claim: "V predajni v Žiline som nikdy nebol a Plcha nepoznám.",
+        claim: "V predajni v Žiline som nikdy nebol a Hrušku nepoznám.",
       },
       personB: {
-        name: "Marek Plch",
-        status: "konateľ TATRAGEN",
-        claim: "Babčan bol 3x osobne v predajni, predložil OP a ZP.",
+        name: "Marek Hruška",
+        status: "konateľ ARMIVEX",
+        claim: "Novák bol 3x osobne v predajni, predložil OP a ZP.",
       },
       factualRecord:
-        "Plch stotožnil Babčana, v hárkoch sú podpisy a ZP Babčana.",
+        "Hruška stotožnil Nováka, v hárkoch sú podpisy a ZP Nováka.",
       deceitPercentage: 95,
       contradictionSeverity: "critical",
       proceduralResolution: "Konfrontácia § 125 TP a grafológia § 142 TP.",
@@ -63,7 +63,7 @@ describe("Testimony & Financial Analysis Models", () => {
           id: "SF-01",
           date: "2025-01-22",
           payer: "Anonym",
-          recipient: "EB-EU",
+          recipient: "VELTRA",
           amount: 32000,
           method: "cash_deposit",
           purpose: "Hotovosť pred 1. odberom",
@@ -73,7 +73,7 @@ describe("Testimony & Financial Analysis Models", () => {
           id: "SF-03",
           date: "2025-04-10",
           payer: "Smurfing",
-          recipient: "EB-EU",
+          recipient: "VELTRA",
           amount: 44000,
           method: "cash_deposit",
           purpose: "Štiepené vklady",

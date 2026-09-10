@@ -798,14 +798,14 @@ export function extractCaseEntities(text: string) {
 
   // Ďalšie osoby v spise
   for (const knownPerson of [
-    "Dimitri Cohen",
-    "Erik Babčan",
-    "Marek Plch",
-    "Dmitrij Marjov",
-    "Michal Žember",
+    "Denis Koval",
+    "Peter Novák",
+    "Marek Hruška",
+    "Igor Malina",
+    "Michal Ondruš",
     "Kada Dakaj",
     "Filip Flat",
-    "Norbert Skyrčák",
+    "Norbert Slezák",
     "Barbora Minarovicová",
   ]) {
     if (text.includes(knownPerson) && !personsMap.has(knownPerson)) {
@@ -837,14 +837,14 @@ export function extractCaseEntities(text: string) {
 
   // Spoločnosti
   const companies = new Set<string>();
-  if (/TATRAGEN/i.test(text)) companies.add("TATRAGEN s.r.o.");
+  if (/ARMIVEX/i.test(text)) companies.add("ARMIVEX s.r.o.");
   if (/PETRIS/i.test(text)) companies.add("PETRIS-SLOVAKIA s.r.o.");
   if (/Shadowarms/i.test(text)) companies.add("Shadowarms s.r.o.");
   if (/Bark\s*Factory/i.test(text))
     companies.add("Bark Factory Enterprise s.r.o.");
   if (/Tavira/i.test(text)) companies.add("Tavira s.r.o.");
   if (/Podtrubie/i.test(text)) companies.add("Podtrubie a.s.");
-  if (/EB-EU/i.test(text)) companies.add("EB-EU s.r.o.");
+  if (/VELTRA/i.test(text)) companies.add("VELTRA s.r.o.");
 
   // Právne paragrafy (podpora § aj OCR artefaktu $)
   const legalParagraphs = new Set<string>();
