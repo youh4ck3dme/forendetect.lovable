@@ -52,7 +52,9 @@ describe("Forenzný Switcher pre obhajobu (3 perspektívy spisu)", () => {
 
     // Kritický rozpor: Babčan vs Plch
     const babcanPlch = contradictions.find(
-      (c) => c.personA.name.includes("Babčan") || (c.personB && c.personB.name.includes("Plch")),
+      (c) =>
+        c.personA.name.includes("Babčan") ||
+        (c.personB && c.personB.name.includes("Plch")),
     );
     expect(babcanPlch).toBeDefined();
     expect(babcanPlch!.deceitPercentage).toBeGreaterThanOrEqual(80);

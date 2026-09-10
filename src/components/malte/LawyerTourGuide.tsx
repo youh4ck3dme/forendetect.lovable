@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { X, ChevronLeft, ChevronRight, Sparkles, CheckCircle2 } from "lucide-react";
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LAWYER_TOUR_STEPS, type TourStep } from "@/lib/lawyer-tour-steps";
@@ -10,7 +16,11 @@ export interface LawyerTourGuideProps {
   onSelectStepAction?: (stepId: number) => void;
 }
 
-export function LawyerTourGuide({ isOpen, onClose, onSelectStepAction }: LawyerTourGuideProps) {
+export function LawyerTourGuide({
+  isOpen,
+  onClose,
+  onSelectStepAction,
+}: LawyerTourGuideProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const step = LAWYER_TOUR_STEPS[currentStepIndex] || LAWYER_TOUR_STEPS[0]!;
@@ -25,7 +35,9 @@ export function LawyerTourGuide({ isOpen, onClose, onSelectStepAction }: LawyerT
       }
       onClose();
     } else {
-      setCurrentStepIndex((prev) => Math.min(prev + 1, LAWYER_TOUR_STEPS.length - 1));
+      setCurrentStepIndex((prev) =>
+        Math.min(prev + 1, LAWYER_TOUR_STEPS.length - 1),
+      );
     }
   }, [isLast, onClose]);
 
@@ -111,17 +123,24 @@ export function LawyerTourGuide({ isOpen, onClose, onSelectStepAction }: LawyerT
                 >
                   {step.badge}
                 </Badge>
-                <h3 className="text-base font-bold text-foreground mt-0.5">{step.title}</h3>
+                <h3 className="text-base font-bold text-foreground mt-0.5">
+                  {step.title}
+                </h3>
               </div>
             </div>
             {step.proceduralParagraph && (
-              <Badge variant="secondary" className="text-[11px] font-mono shrink-0">
+              <Badge
+                variant="secondary"
+                className="text-[11px] font-mono shrink-0"
+              >
                 {step.proceduralParagraph}
               </Badge>
             )}
           </div>
 
-          <p className="text-sm text-foreground/90 leading-relaxed">{step.summary}</p>
+          <p className="text-sm text-foreground/90 leading-relaxed">
+            {step.summary}
+          </p>
 
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300">
             <span className="font-semibold block mb-0.5 text-amber-200">
@@ -176,10 +195,16 @@ export function LawyerTourGuide({ isOpen, onClose, onSelectStepAction }: LawyerT
             >
               <ChevronLeft className="h-4 w-4 mr-0.5" /> Späť
             </Button>
-            <Button type="button" size="sm" onClick={handleNext} className="text-xs font-semibold">
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleNext}
+              className="text-xs font-semibold"
+            >
               {isLast ? (
                 <>
-                  <CheckCircle2 className="h-4 w-4 mr-1 text-emerald-400" /> Dokončiť
+                  <CheckCircle2 className="h-4 w-4 mr-1 text-emerald-400" />{" "}
+                  Dokončiť
                 </>
               ) : (
                 <>

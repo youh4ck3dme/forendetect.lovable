@@ -24,16 +24,26 @@ describe("Lawyer Workflow E2E — Kompletný proces obhajoby od spisu po rozsudo
       if (!answers) throw new Error("answers missing");
 
       // Q1: Kupujúci vs predávajúci
-      expect(answers.q1_buyer_seller.confidenceLevel).toBeGreaterThanOrEqual(90);
-      expect(answers.q1_buyer_seller.directEvidence.length).toBeGreaterThanOrEqual(1);
+      expect(answers.q1_buyer_seller.confidenceLevel).toBeGreaterThanOrEqual(
+        90,
+      );
+      expect(
+        answers.q1_buyer_seller.directEvidence.length,
+      ).toBeGreaterThanOrEqual(1);
 
       // Q2: Plánovač a koordinátor
-      expect(answers.q2_planner_coordinator.confidenceLevel).toBeGreaterThanOrEqual(80);
-      expect(answers.q2_planner_coordinator.identifiedPersons.length).toBeGreaterThanOrEqual(1);
+      expect(
+        answers.q2_planner_coordinator.confidenceLevel,
+      ).toBeGreaterThanOrEqual(80);
+      expect(
+        answers.q2_planner_coordinator.identifiedPersons.length,
+      ).toBeGreaterThanOrEqual(1);
 
       // Q3: Financovanie a hotovostné toky
       expect(answers.q3_financier.confidenceLevel).toBeGreaterThanOrEqual(85);
-      expect(answers.q3_financier.directEvidence.length).toBeGreaterThanOrEqual(1);
+      expect(answers.q3_financier.directEvidence.length).toBeGreaterThanOrEqual(
+        1,
+      );
     });
   });
 
@@ -80,7 +90,9 @@ describe("Lawyer Workflow E2E — Kompletný proces obhajoby od spisu po rozsudo
     });
 
     it("identifikuje techniku štiepenia (smurfing) pod limit 15 000 €", () => {
-      const smurfing = dossier.financialAnalysis?.suspiciousFlows.find((f) => f.id === "SF-03");
+      const smurfing = dossier.financialAnalysis?.suspiciousFlows.find(
+        (f) => f.id === "SF-03",
+      );
       expect(smurfing).toBeDefined();
       expect(smurfing!.amount).toBe(44000);
       expect(smurfing!.purpose).toContain("14 500 €");
