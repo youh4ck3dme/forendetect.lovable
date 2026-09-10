@@ -2004,7 +2004,35 @@ ${dossier.judgeReadyText.vedecke}`;
         {/* ═══ REŽIM 2: RÝCHLE TRIÁŽNE ÚLOHY (Pôvodná logika) ═══ */}
         {mainMode === "quick_tasks" && (
           <>
+            <SectionTitle>Model</SectionTitle>
+            <Card className="flex flex-wrap items-center gap-2 p-3 text-xs animate-fade-in">
+              {status.isLoading ? (
+                <span className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Zisťujem stav
+                  AI…
+                </span>
+              ) : status.data?.configured ? (
+                <>
+                  <Badge className="bg-primary/15 text-primary">
+                    {status.data.providerName ?? "AI"}
+                  </Badge>
+                  <span className="font-mono text-muted-foreground">
+                    {status.data.model}
+                  </span>
+                  <span className="ml-auto text-muted-foreground tnum">
+                    {status.data.used}/{status.data.dailyLimit} volaní dnes
+                  </span>
+                </>
+              ) : (
+                <span className="text-risk-medium">
+                  AI nie je nakonfigurovaná — chýba serverový kľúč (Grok je
+                  predvolený, Mistral je záloha).
+                </span>
+              )}
+            </Card>
+
             <SectionTitle>Výber úlohy</SectionTitle>
+
             <div className="space-y-2">
               {(Object.keys(TASK_LABELS) as AiTask[]).map((t) => (
                 <button
