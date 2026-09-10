@@ -230,7 +230,7 @@ function Index() {
           Zistenia ({visible.length})
         </SectionTitle>
 
-        <div className="sticky top-[68px] z-10 -mx-1 rounded-xl px-1 py-1 surface-glass">
+        <div className="sticky top-17 z-10 -mx-1 rounded-xl px-1 py-1 surface-glass">
           <RiskFilter counts={counts} />
         </div>
 
