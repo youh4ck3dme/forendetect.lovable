@@ -10,7 +10,7 @@ function jsonResponse(status: number, body: unknown) {
   };
 }
 
-describe("LLM failover Mistral → xAI", () => {
+describe("LLM failover Grok (xAI) → Mistral", () => {
   const originalMistral = process.env["MISTRAL_API_KEY"];
   const originalXai = process.env["XAI_API_KEY"];
 
@@ -36,7 +36,7 @@ describe("LLM failover Mistral → xAI", () => {
     expect(result.status).toBe("not_configured");
   });
 
-  it("pri úspešnom Mistral nevolá xAI", async () => {
+  it("pri úspešnom Grok nevolá Mistral", async () => {
     process.env["MISTRAL_API_KEY"] = "mistral-key";
     process.env["XAI_API_KEY"] = "xai-key";
     const fetchImpl = vi.fn().mockResolvedValue(
@@ -52,14 +52,14 @@ describe("LLM failover Mistral → xAI", () => {
     });
     expect(result.status).toBe("ok");
     if (result.status === "ok") {
-      expect(result.provider).toBe("mistral");
+      expect(result.provider).toBe("xai");
       expect(result.content).toBe('{"ok":true}');
     }
     expect(fetchImpl).toHaveBeenCalledTimes(1);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("mistral.ai");
+    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.x.ai");
   });
 
-  it("keď Mistral vráti 500, prejde na xAI", async () => {
+  it("keď Grok vráti 500, prejde na Mistral", async () => {
     process.env["MISTRAL_API_KEY"] = "mistral-key";
     process.env["XAI_API_KEY"] = "xai-key";
     const fetchImpl = vi
@@ -77,16 +77,15 @@ describe("LLM failover Mistral → xAI", () => {
     });
     expect(result.status).toBe("ok");
     if (result.status === "ok") {
-      expect(result.provider).toBe("xai");
+      expect(result.provider).toBe("mistral");
       expect(result.content).toBe('{"fallback":true}');
-      expect(result.model).toBe("grok-4.6");
     }
     expect(fetchImpl).toHaveBeenCalledTimes(2);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("mistral.ai");
-    expect(String(fetchImpl.mock.calls[1]?.[0])).toContain("api.x.ai");
+    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.x.ai");
+    expect(String(fetchImpl.mock.calls[1]?.[0])).toContain("mistral.ai");
   });
 
-  it("pri Mistral timeout nevolá xAI (požiadavka už mohla byť účtovaná)", async () => {
+  it("pri Grok timeout nevolá Mistral (požiadavka už mohla byť účtovaná)", async () => {
     process.env["MISTRAL_API_KEY"] = "mistral-key";
     process.env["XAI_API_KEY"] = "xai-key";
     const fetchImpl = vi.fn().mockImplementation(() => {
@@ -101,26 +100,26 @@ describe("LLM failover Mistral → xAI", () => {
     });
     expect(result.status).toBe("timeout");
     expect(fetchImpl).toHaveBeenCalledTimes(1);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("mistral.ai");
+    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.x.ai");
   });
 
-  it("keď chýba Mistral kľúč, ide priamo na xAI", async () => {
-    delete process.env["MISTRAL_API_KEY"];
-    process.env["XAI_API_KEY"] = "xai-key";
+  it("keď chýba kľúč pre Grok, ide priamo na Mistral", async () => {
+    process.env["MISTRAL_API_KEY"] = "mistral-key";
+    delete process.env["XAI_API_KEY"];
     const fetchImpl = vi.fn().mockResolvedValue(
       jsonResponse(200, {
         choices: [{ message: { content: '{"direct":true}' } }],
       }),
     );
     const { callLlm, preferredLlmModel } = await import("@/lib/ai/llm.server");
-    expect(preferredLlmModel()).toBe("grok-4.6");
+    expect(preferredLlmModel()).toBe("mistral-large-latest");
     const result = await callLlm({
       messages: [{ role: "user", content: "hi" }],
       fetchImpl,
     });
     expect(result.status).toBe("ok");
-    if (result.status === "ok") expect(result.provider).toBe("xai");
+    if (result.status === "ok") expect(result.provider).toBe("mistral");
     expect(fetchImpl).toHaveBeenCalledTimes(1);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.x.ai");
+    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("mistral.ai");
   });
 });
