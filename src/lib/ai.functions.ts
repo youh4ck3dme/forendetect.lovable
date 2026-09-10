@@ -1005,7 +1005,7 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
             forensic_dossier:
               parsed as unknown as import("@/integrations/supabase/types").Json,
             forensic_dossier_updated_at: new Date().toISOString(),
-          } as Record<string, unknown>)
+          })
           .eq("id", caseId);
         if (saveError) {
           console.warn("Nepodarilo sa uložiť dossier do cases:", saveError);

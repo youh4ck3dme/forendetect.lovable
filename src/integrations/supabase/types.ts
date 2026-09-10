@@ -584,6 +584,8 @@ export type Database = {
           base_currency: string
           created_at: string
           europol_serials: string[]
+          forensic_dossier: Json | null
+          forensic_dossier_updated_at: string | null
           id: string
           is_demo: boolean
           name: string
@@ -599,6 +601,8 @@ export type Database = {
           base_currency?: string
           created_at?: string
           europol_serials?: string[]
+          forensic_dossier?: Json | null
+          forensic_dossier_updated_at?: string | null
           id?: string
           is_demo?: boolean
           name: string
@@ -614,6 +618,8 @@ export type Database = {
           base_currency?: string
           created_at?: string
           europol_serials?: string[]
+          forensic_dossier?: Json | null
+          forensic_dossier_updated_at?: string | null
           id?: string
           is_demo?: boolean
           name?: string
