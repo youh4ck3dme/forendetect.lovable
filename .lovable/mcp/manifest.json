@@ -5,7 +5,9 @@
   "auth": {
     "type": "oauth",
     "issuer": "https://rtkfstyndmrwuztsmppm.supabase.co/auth/v1",
-    "accepted_audiences": ["authenticated"]
+    "accepted_audiences": [
+      "authenticated"
+    ]
   },
   "mcp": {
     "server": {
@@ -46,7 +48,12 @@
             "severity": {
               "description": "Minimum severity is not applied; filters to this exact level.",
               "type": "string",
-              "enum": ["critical", "high", "medium", "low"]
+              "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+              ]
             },
             "source": {
               "description": "Detector family the alert came from.",
@@ -86,7 +93,10 @@
           "properties": {
             "kind": {
               "type": "string",
-              "enum": ["person", "company"]
+              "enum": [
+                "person",
+                "company"
+              ]
             },
             "shellOnly": {
               "default": false,
@@ -116,7 +126,9 @@
               "description": "Entity id or (part of) its name."
             }
           },
-          "required": ["entity"]
+          "required": [
+            "entity"
+          ]
         },
         "outputSchema": null
       },
@@ -138,7 +150,9 @@
               "minLength": 1
             }
           },
-          "required": ["transactionId"]
+          "required": [
+            "transactionId"
+          ]
         },
         "outputSchema": null
       },
