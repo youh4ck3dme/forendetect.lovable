@@ -91,22 +91,27 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     );
   });
 
-  it("vráti informatívnu chybu pri pokuse o OCR obrázka, ak MISTRAL_API_KEY nie je nastavený", async () => {
-    const originalKey = process.env["MISTRAL_API_KEY"];
+  it("vráti informatívnu chybu pri pokuse o OCR obrázka, ak chýbajú API kľúče", async () => {
+    const originalMistral = process.env["MISTRAL_API_KEY"];
+    const originalXai = process.env["XAI_API_KEY"];
     delete process.env["MISTRAL_API_KEY"];
+    delete process.env["XAI_API_KEY"];
 
     try {
       const dummyImageBase64 =
         Buffer.from("dummy-image-data").toString("base64");
       await expect(
         handleParseUploadedCaseDocument("zapisnica_scan.png", dummyImageBase64),
-      ).rejects.toThrow("MISTRAL_API_KEY nie je nastavený");
+      ).rejects.toThrow(/OCR nie je nakonfigurované/);
     } finally {
-      if (originalKey) process.env["MISTRAL_API_KEY"] = originalKey;
+      if (originalMistral) process.env["MISTRAL_API_KEY"] = originalMistral;
+      if (originalXai) process.env["XAI_API_KEY"] = originalXai;
     }
   });
 
   it("správne simuluje Mistral OCR fallback pri mockovanom API volaní", async () => {
+    process.env["MISTRAL_API_KEY"] =
+      process.env["MISTRAL_API_KEY"] || "test-key";
     const mistralServer = await import("@/lib/ai/mistral.server");
     const ocrSpy = vi.spyOn(mistralServer, "callMistralOcr").mockResolvedValue(`
 # ZÁPISNICA O VÝSLUCHU SVIEDKA

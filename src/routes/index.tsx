@@ -3,7 +3,9 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Network, Scale, ShieldCheck } from "lucide-react";
 import malteMark from "@/assets/malte-mark.png";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
+import { isDevFreeEntryActive } from "@/lib/dev-auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -55,6 +57,10 @@ function Landing() {
 
   useEffect(() => {
     let active = true;
+    if (isDevFreeEntryActive()) {
+      void navigate({ to: "/prehlad", replace: true });
+      return;
+    }
     supabase.auth
       .getUser()
       .then(({ data }) => {
@@ -69,8 +75,8 @@ function Landing() {
   }, [navigate]);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-background">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-5 py-14">
+    <main className="flex min-h-dvh flex-col overflow-x-hidden bg-background lg:h-dvh">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-between px-5 pt-3 sm:pt-5 pb-5 sm:pb-6 gap-5 sm:gap-6">
         <header className="flex items-center gap-2">
           <img
             src={malteMark}
@@ -81,25 +87,26 @@ function Landing() {
             aria-hidden
           />
           <span className="text-lg font-extrabold tracking-tight">Forendo</span>
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle />
             <Button asChild variant="ghost" size="sm">
               <Link to="/auth">Prihlásiť sa</Link>
             </Button>
           </div>
         </header>
 
-        <section className="max-w-2xl space-y-5">
+        <section className="max-w-2xl space-y-3 sm:space-y-4 my-auto">
           <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
             Forenzná analýza
           </p>
-          <h1 className="text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
+          <h1 className="text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
             Analýza. Dôkazy. Rozhodnutia.
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground">
             Forendo spája finančné toky, subjekty a zbrane do jedného prípadu a
             upozorní na to, čo si zaslúži pozornosť vyšetrovateľa.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 pt-1">
             <Button asChild size="lg">
               <Link to="/auth">
                 Začať zadarmo{" "}
@@ -112,17 +119,19 @@ function Landing() {
           ) : null}
         </section>
 
-        <section className="grid gap-4 sm:grid-cols-3">
+        <section className="grid gap-3 sm:grid-cols-3">
           {features.map(({ icon: Icon, title, detail }) => (
             <div
               key={title}
-              className="rounded-2xl border border-border bg-card p-5"
+              className="rounded-2xl border border-border bg-card p-4 sm:p-5"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary text-muted-foreground">
-                <Icon className="h-5 w-5" aria-hidden />
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary text-muted-foreground">
+                <Icon className="h-4.5 w-4.5" aria-hidden />
               </span>
-              <h2 className="mt-3 text-sm font-semibold">{title}</h2>
-              <p className="mt-1 text-caption">{detail}</p>
+              <h2 className="mt-2.5 text-sm font-semibold">{title}</h2>
+              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                {detail}
+              </p>
             </div>
           ))}
         </section>

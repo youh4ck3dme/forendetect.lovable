@@ -22,21 +22,31 @@ vi.mock("@/integrations/supabase/client.server", () => {
             return {
               eq: (col: string, val: string) => {
                 if (col !== "id") throw new Error(`Unexpected column: ${col}`);
-                if (val === "error-trigger") {
-                  return Promise.resolve({
-                    error: { message: "Database connection failed" },
-                    data: null,
-                  });
-                }
-                if (!dbCases[val]) {
-                  dbCases[val] = {
-                    id: val,
-                    forensic_dossier: null,
-                    forensic_dossier_updated_at: null,
-                  };
-                }
-                Object.assign(dbCases[val], fields);
-                return Promise.resolve({ error: null, data: dbCases[val] });
+                return {
+                  select: () => {
+                    if (val === "error-trigger") {
+                      return Promise.resolve({
+                        error: { message: "Database connection failed" },
+                        data: null,
+                      });
+                    }
+                    if (val === "missing-case") {
+                      return Promise.resolve({ error: null, data: [] });
+                    }
+                    if (!dbCases[val]) {
+                      dbCases[val] = {
+                        id: val,
+                        forensic_dossier: null,
+                        forensic_dossier_updated_at: null,
+                      };
+                    }
+                    Object.assign(dbCases[val], fields);
+                    return Promise.resolve({
+                      error: null,
+                      data: [{ id: val }],
+                    });
+                  },
+                };
               },
             };
           },
@@ -64,6 +74,7 @@ vi.mock("@/integrations/supabase/client.server", () => {
 });
 
 // Import the handlers and server functions under test
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import {
   handleSaveCaseDossier,
   handleGetForensicDossier,
@@ -182,10 +193,13 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
   });
 
   it("saveCaseDossier uloží modelový spis Tatragen a vráti stav 200", async () => {
-    const result = await handleSaveCaseDossier({
-      caseId: "PPZ-51/UBOK-PZ-ST-2025",
-      dossier: sampleBabcanDossier,
-    });
+    const result = await handleSaveCaseDossier(
+      {
+        caseId: "PPZ-51/UBOK-PZ-ST-2025",
+        dossier: sampleBabcanDossier,
+      },
+      supabaseAdmin,
+    );
 
     expect(result).toBeDefined();
     expect(result.success).toBe(true);
@@ -195,14 +209,18 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
 
   it("dáta sa z databázy dajú znova prečítať cez getForensicDossier bez straty štruktúry", async () => {
     // 1. Uložíme dossier
-    await handleSaveCaseDossier({
-      caseId: "PPZ-51/UBOK-PZ-ST-2025",
-      dossier: sampleBabcanDossier,
-    });
+    await handleSaveCaseDossier(
+      {
+        caseId: "PPZ-51/UBOK-PZ-ST-2025",
+        dossier: sampleBabcanDossier,
+      },
+      supabaseAdmin,
+    );
 
-    // 2. Prečítame dossier z databázy
+    // 2. Prečítame dossier z databázy (user-scoped klient, RLS)
     const fetchResult = await handleGetForensicDossier(
       "PPZ-51/UBOK-PZ-ST-2025",
+      supabaseAdmin,
     );
 
     expect(fetchResult.success).toBe(true);
@@ -250,10 +268,29 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Babčan
 
   it("vyhodí chybu pri zlyhaní databázového zápisu", async () => {
     await expect(
-      handleSaveCaseDossier({
-        caseId: "error-trigger",
-        dossier: sampleBabcanDossier,
-      }),
+      handleSaveCaseDossier(
+        {
+          caseId: "error-trigger",
+          dossier: sampleBabcanDossier,
+        },
+        supabaseAdmin,
+      ),
     ).rejects.toThrow("Supabase: Database connection failed");
+  });
+
+  it("odmietne zápis aj čítanie, keď RLS vráti 0 riadkov", async () => {
+    await expect(
+      handleSaveCaseDossier(
+        {
+          caseId: "missing-case",
+          dossier: sampleBabcanDossier,
+        },
+        supabaseAdmin,
+      ),
+    ).rejects.toThrow("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+
+    await expect(
+      handleGetForensicDossier("case-does-not-exist", supabaseAdmin),
+    ).rejects.toThrow("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
   });
 });

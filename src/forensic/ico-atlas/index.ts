@@ -10,29 +10,29 @@ import {
 
 export type StatutoryPerson = {
   name: string;
-  role?: string;
-  validFrom?: string;
-  validTo?: string;
+  role?: string | undefined;
+  validFrom?: string | undefined;
+  validTo?: string | undefined;
 };
 
 export type AddressHistoryItem = {
   address: string;
-  validFrom?: string;
-  validTo?: string;
+  validFrom?: string | undefined;
+  validTo?: string | undefined;
 };
 
 export type CompanyRegistryProfile = {
   ico: string;
   legalName: string;
-  legalForm?: string;
-  registeredAddress?: string;
+  legalForm?: string | undefined;
+  registeredAddress?: string | undefined;
   country: string;
-  status?: string;
-  incorporatedAt?: string;
-  dissolvedAt?: string;
+  status?: string | undefined;
+  incorporatedAt?: string | undefined;
+  dissolvedAt?: string | undefined;
   statutoryPersons: StatutoryPerson[];
   businessActivities: string[];
-  addressHistory?: AddressHistoryItem[];
+  addressHistory?: AddressHistoryItem[] | undefined;
   source: SourceRecord;
 };
 
@@ -113,35 +113,41 @@ export function parseCompanyRegistryProfile(
     throw new Error("Názov firmy je povinný.");
   }
 
-  // Deduplikácia štatutárov
+  // Deduplikácia štatutárov — voliteľné polia vynechaj, keď chýbajú
+  // (exactOptionalPropertyTypes: prítomný kľúč nesmie byť undefined).
   const personSeen = new Set<string>();
   const statutoryPersons: StatutoryPerson[] = [];
   for (const person of raw.statutoryPersons) {
     const key = `${person.name.trim().toLowerCase()}|${(person.role || "").trim().toLowerCase()}`;
     if (!personSeen.has(key)) {
       personSeen.add(key);
-      statutoryPersons.push({
-        ...person,
-        name: person.name.trim(),
-        role: person.role ? person.role.trim() : undefined,
-      });
+      const item: StatutoryPerson = { name: person.name.trim() };
+      if (person.role) item.role = person.role.trim();
+      if (person.validFrom) item.validFrom = person.validFrom;
+      if (person.validTo) item.validTo = person.validTo;
+      statutoryPersons.push(item);
     }
   }
 
-  // Deduplikácia činností
   const businessActivities = deduplicateStrings(raw.businessActivities);
 
-  return {
-    ...raw,
+  const profile: CompanyRegistryProfile = {
     ico: normalizedIco,
     legalName: normalizedLegalName,
     country: normalizeCountry(raw.country),
-    registeredAddress: raw.registeredAddress
-      ? normalizeAddress(raw.registeredAddress)
-      : undefined,
     statutoryPersons,
     businessActivities,
+    source: raw.source,
   };
+  if (raw.legalForm) profile.legalForm = raw.legalForm;
+  if (raw.registeredAddress) {
+    profile.registeredAddress = normalizeAddress(raw.registeredAddress);
+  }
+  if (raw.status) profile.status = raw.status;
+  if (raw.incorporatedAt) profile.incorporatedAt = raw.incorporatedAt;
+  if (raw.dissolvedAt) profile.dissolvedAt = raw.dissolvedAt;
+  if (raw.addressHistory) profile.addressHistory = raw.addressHistory;
+  return profile;
 }
 
 /**
@@ -169,21 +175,24 @@ export function buildCompanyEntity(
   const id =
     existingEntityId ||
     `ent-company-${profile.ico.toLowerCase()}-${Date.now()}`;
-  return {
+  const entity: Entity = {
     id,
     name: profile.legalName,
     kind: "company",
     role: profile.legalForm || "spoločnosť",
     ico: profile.ico,
-    address: profile.registeredAddress,
-    registeredAddress: profile.registeredAddress,
     country: profile.country,
-    incorporatedAt: profile.incorporatedAt,
     responsive: profile.status?.toLowerCase() === "active",
     x: 100,
     y: 100,
     note: `Zdroj: ICO Atlas (${profile.source.capturedAt})`,
   };
+  if (profile.registeredAddress) {
+    entity.address = profile.registeredAddress;
+    entity.registeredAddress = profile.registeredAddress;
+  }
+  if (profile.incorporatedAt) entity.incorporatedAt = profile.incorporatedAt;
+  return entity;
 }
 
 /**

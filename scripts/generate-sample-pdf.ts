@@ -245,24 +245,31 @@ const dossier: ForensicDossier = {
       questionNumber: 1,
       question: "Kto zbrane nakupoval a následne predával alebo odovzdával?",
       answer:
-        "Nákup v TATRAGEN s.r.o. (242 ks) realizoval osobne Erik Babčan (konateľ EB-EU s.r.o.). Preberanie, prepravu v nočných hodinách a následné odovzdávanie zbraní neznámym odberateľom realizoval Dimitri Cohen osobnými motorovými vozidlami (Audi, BMW, Nissan).",
+        "Otázka odberu 242 zbraní v TATRAGEN s.r.o. je predmetom zásadného rozporu vo výpovediach (§ 125 TP): Svedok Marek Plch (TATRAGEN) tvrdí, že zbrane odovzdával Babčanovi, čo však Erik Babčan kategoricky popiera ako klamstvo — v Žiline nikdy nebol, zbrane nevidel, Plcha nepozná a licenciu s knihami odovzdal skupine (Ľuboš / Cohen). K podpisom v knihe zbraní chýba písmoznalecký posudok (§ 142 TP). Fyzickú prepravu, prevozy a nočné odovzdávanie zbraní neznámym odberateľom operatívne vykonával Dimitri Cohen s ďalšími osobami.",
       identifiedPersons: [
-        "Erik Babčan",
-        "Marek Plch",
-        "Dimitri Cohen",
-        "Dmitrij Marjov",
-        "Michal Žember",
+        "Erik Babčan (popiera osobný odber)",
+        "Marek Plch (neoverené tvrdenie bez písmoznalectva)",
+        "Dimitri Cohen (logistika a nočné odovzdávanie)",
+        "„Ľubo“ z BB & Miroslav Tomčík (riadenie)",
+        "Norbert Skyrčák & Otto Budaj",
       ],
       directEvidence: [
+        "Zápisnica o výsluchu Erika Babčana (kategorické popretie odberu)",
+        "Zápisnica o výsluchu Mareka Plcha (tvrdenie bez písmoznaleckého overenia)",
         "Evidenčná kniha zbraní TATRAGEN s.r.o.",
         "Faktúry a bankové prevody",
         "Trasovacia správa EUROPOL Španielsko",
         "Zaistené pečiatky firiem",
       ],
       unverifiedHypotheses: [
+        "Skutočná identita osoby preberajúcej zbrane v TATRAGENe",
         "Identita koncových zahraničných odberateľov v Španielsku",
       ],
-      missingEvidence: ["Originál evidenčnej knihy EB-EU s.r.o."],
+      missingEvidence: [
+        "Písmoznalecký posudok (§ 142 TP) podpisov v knihe zbraní TATRAGEN",
+        "Konfrontácia podľa § 125 TP (Babčan vs. Plch)",
+        "Originál evidenčnej knihy EB-EU s.r.o.",
+      ],
       confidenceLevel: 95,
     },
     q2_planner_coordinator: {

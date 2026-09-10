@@ -170,9 +170,22 @@ export async function callMistralOcr(
     );
   }
 
+  const mimeByExt: Record<string, string> = {
+    pdf: "application/pdf",
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    webp: "image/webp",
+    tif: "image/tiff",
+    tiff: "image/tiff",
+    bmp: "image/bmp",
+  };
+  const ext = fileName.split(".").pop()?.toLowerCase() ?? "";
+  const mime = mimeByExt[ext] ?? "application/octet-stream";
+
   // 1. Upload do /v1/files
   const formData = new FormData();
-  const blob = new Blob([new Uint8Array(fileBuffer)]);
+  const blob = new Blob([new Uint8Array(fileBuffer)], { type: mime });
   formData.append("file", blob, fileName);
   formData.append("purpose", "ocr");
 
@@ -191,8 +204,11 @@ export async function callMistralOcr(
     );
   }
 
-  const uploadData = (await uploadRes.json()) as { id: string };
+  const uploadData = (await uploadRes.json()) as { id?: string };
   const fileId = uploadData.id;
+  if (!fileId) {
+    throw new Error("Mistral File Upload nevrátil ID súboru.");
+  }
 
   try {
     // 2. Získaj signed URL
@@ -262,10 +278,12 @@ export async function callMistralOcr(
     }
   } finally {
     // 4. Cleanup: zmaž súbor z Mistral storage na pozadí
-    fetch(`https://api.mistral.ai/v1/files/${fileId}`, {
-      method: "DELETE",
-      headers: { authorization: `Bearer ${apiKey}` },
-    }).catch((err) => {
+    Promise.resolve(
+      fetch(`https://api.mistral.ai/v1/files/${fileId}`, {
+        method: "DELETE",
+        headers: { authorization: `Bearer ${apiKey}` },
+      }),
+    ).catch((err) => {
       console.warn(
         "Nepodarilo sa vymazať dočasný súbor z Mistral storage:",
         err,

@@ -249,7 +249,8 @@ export function BottomNav() {
               className="group relative flex flex-col items-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
               activeOptions={{ exact: to === "/" }}
               activeProps={{
-                className: "text-primary [&_[data-ind]]:opacity-100",
+                className:
+                  "!text-foreground font-semibold [&_[data-ind]]:opacity-100",
               }}
             >
               <span className="relative">
@@ -266,7 +267,7 @@ export function BottomNav() {
               {label}
               <span
                 data-ind
-                className="absolute -top-2 h-1 w-8 rounded-full bg-primary opacity-0 transition-opacity duration-300"
+                className="absolute -top-2 h-1 w-8 rounded-full bg-foreground opacity-0 transition-opacity duration-300"
               />
             </Link>
           </li>

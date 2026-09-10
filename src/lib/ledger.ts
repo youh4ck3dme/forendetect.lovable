@@ -96,6 +96,16 @@ export function appendLedgerEntry(
   }
 
   const lastEntry = chain[chain.length - 1];
+  if (!lastEntry) {
+    return createGenesisEntry(
+      params.traceId,
+      params.actor,
+      params.location,
+      params.data,
+      params.customTimestamp,
+    );
+  }
+
   const nextIndex = lastEntry.index + 1;
   const timestamp = params.customTimestamp ?? new Date().toISOString();
   const payloadHash = computePayloadHash(params.data);
@@ -112,7 +122,7 @@ export function appendLedgerEntry(
     prevHash,
   );
 
-  return {
+  const entry: CustodyLedgerEntry = {
     index: nextIndex,
     id: `cle-${nextIndex}-${Date.now()}`,
     traceId: params.traceId,
@@ -120,11 +130,12 @@ export function appendLedgerEntry(
     actor: params.actor,
     action: params.action,
     location: params.location,
-    notes: params.notes,
     payloadHash,
     prevHash,
     hash,
   };
+  if (params.notes !== undefined) entry.notes = params.notes;
+  return entry;
 }
 
 /**
@@ -140,6 +151,14 @@ export function verifyLedgerIntegrity(
 
   for (let i = 0; i < chain.length; i++) {
     const entry = chain[i];
+    if (!entry) {
+      return {
+        valid: false,
+        totalEntries: chain.length,
+        brokenIndex: i,
+        reason: `Chýbajúci záznam na pozícii #${i}.`,
+      };
+    }
 
     // 1. Kontrola indexovania
     if (entry.index !== i) {
@@ -163,7 +182,7 @@ export function verifyLedgerIntegrity(
       }
     } else {
       const prevEntry = chain[i - 1];
-      if (entry.prevHash !== prevEntry.hash) {
+      if (!prevEntry || entry.prevHash !== prevEntry.hash) {
         return {
           valid: false,
           totalEntries: chain.length,
@@ -195,10 +214,13 @@ export function verifyLedgerIntegrity(
     }
   }
 
+  const first = chain[0];
+  const last = chain[chain.length - 1];
+
   return {
     valid: true,
     totalEntries: chain.length,
-    genesisHash: chain[0].hash,
-    latestHash: chain[chain.length - 1].hash,
+    ...(first ? { genesisHash: first.hash } : {}),
+    ...(last ? { latestHash: last.hash } : {}),
   };
 }

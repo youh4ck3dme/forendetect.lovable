@@ -144,8 +144,8 @@ type SupabaseLike = any;
 export const getAiStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { mistralConfigured, mistralModel } =
-      await import("@/lib/ai/mistral.server");
+    const { llmConfigured, preferredLlmModel } =
+      await import("@/lib/ai/llm.server");
     const { getQuotas } = await import("@/lib/entitlements.server");
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
     const [{ count }, quotas] = await Promise.all([
@@ -157,8 +157,8 @@ export const getAiStatus = createServerFn({ method: "POST" })
       getQuotas(context.userId),
     ]);
     return {
-      configured: mistralConfigured(),
-      model: mistralConfigured() ? mistralModel() : null,
+      configured: llmConfigured(),
+      model: llmConfigured() ? preferredLlmModel() : null,
       promptVersion: PROMPT_VERSION,
       plan: quotas.plan,
       dailyLimit: quotas.aiPerDay,
@@ -251,8 +251,8 @@ export const runAiTask = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }): Promise<AiRunResult> => {
-    const { callMistral, mistralConfigured, mistralModel } =
-      await import("@/lib/ai/mistral.server");
+    const { callLlm, llmConfigured, preferredLlmModel } =
+      await import("@/lib/ai/llm.server");
     const analysis = await loadAnalysis(context.supabase, data.caseId);
     const pseudonyms = buildPseudonyms(analysis);
     const scope =
@@ -268,7 +268,7 @@ export const runAiTask = createServerFn({ method: "POST" })
       payload,
     };
 
-    if (!mistralConfigured()) {
+    if (!llmConfigured()) {
       return {
         ...base,
         status: "not_configured",
@@ -285,7 +285,7 @@ export const runAiTask = createServerFn({ method: "POST" })
         _user: context.userId,
         _case: data.caseId,
         _task: data.task,
-        _model: mistralModel(),
+        _model: preferredLlmModel(),
         _prompt_version: PROMPT_VERSION,
         _input_revision: analysis.dataFingerprint,
         _daily_limit: quotas.aiPerDay,
@@ -316,7 +316,7 @@ export const runAiTask = createServerFn({ method: "POST" })
       };
     }
 
-    const result = await callMistral({
+    const result = await callLlm({
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         {
@@ -414,6 +414,38 @@ export const runAiTask = createServerFn({ method: "POST" })
 // ═════════════════════════════════════════════════════════════════
 // FORENZNÝ AUTOPILOT — ENDPOINTY
 // ═════════════════════════════════════════════════════════════════
+
+export const MIN_EXTRACT_CHARS = 30;
+
+export function classifyExtractResult(
+  fileName: string,
+  res: { text: string; charCount: number; usedOcr?: boolean },
+): {
+  fileName: string;
+  success: boolean;
+  text: string;
+  charCount: number;
+  usedOcr?: boolean | undefined;
+  error?: string | undefined;
+} {
+  if (!res.text || res.text.trim().length < MIN_EXTRACT_CHARS) {
+    return {
+      fileName,
+      success: false,
+      text: "",
+      charCount: res.charCount,
+      ...(res.usedOcr ? { usedOcr: true } : {}),
+      error: "Dokument je príliš krátky alebo prázdny (minimálne 30 znakov).",
+    };
+  }
+  return {
+    fileName,
+    success: true,
+    text: res.text,
+    charCount: res.charCount,
+    ...(res.usedOcr ? { usedOcr: true } : {}),
+  };
+}
 
 export async function extractSingleBufferText(
   fileName: string,
@@ -529,10 +561,9 @@ export async function extractSingleBufferText(
       };
     }
 
-    // Fallback pre skenované PDF: zavolaj Mistral OCR
     try {
-      const { callMistralOcr } = await import("./ai/mistral.server");
-      const ocrText = await callMistralOcr(buffer, fileName);
+      const { extractWithOcrFallback } = await import("./ai/llm.server");
+      const ocrText = await extractWithOcrFallback(buffer, fileName);
       return {
         success: true,
         text: ocrText,
@@ -543,7 +574,7 @@ export async function extractSingleBufferText(
     } catch (ocrErr: unknown) {
       throw new Error(
         (ocrErr instanceof Error ? ocrErr.message : null) ||
-          "PDF neobsahuje textovú vrstvu a OCR rozpoznávanie cez Mistral zlyhalo. Skontrolujte MISTRAL_API_KEY.",
+          "PDF neobsahuje textovú vrstvu a OCR zlyhalo. Skontrolujte MISTRAL_API_KEY alebo XAI_API_KEY.",
       );
     }
   }
@@ -551,8 +582,8 @@ export async function extractSingleBufferText(
   // 5. Obrázky (skeny, fotodokumentácia, zápisnice) cez OCR
   if (/\.(png|jpe?g|webp|tiff?|bmp)$/i.test(lower)) {
     try {
-      const { callMistralOcr } = await import("./ai/mistral.server");
-      const ocrText = await callMistralOcr(buffer, fileName);
+      const { extractWithOcrFallback } = await import("./ai/llm.server");
+      const ocrText = await extractWithOcrFallback(buffer, fileName);
       return {
         success: true,
         text: ocrText,
@@ -606,6 +637,7 @@ export async function extractSingleBufferText(
 }
 
 export const extractFileText = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator(
     (d: { fileBase64?: string; textContent?: string; fileName: string }) => d,
   )
@@ -618,6 +650,7 @@ export const extractFileText = createServerFn({ method: "POST" })
   });
 
 export const extractBulkFilesText = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator(
     (d: {
       files: { fileName: string; fileBase64?: string; textContent?: string }[];
@@ -645,13 +678,7 @@ export const extractBulkFilesText = createServerFn({ method: "POST" })
           file.fileBase64,
           file.textContent,
         );
-        results.push({
-          fileName: file.fileName,
-          success: true,
-          text: res.text,
-          charCount: res.charCount,
-          usedOcr: res.usedOcr,
-        });
+        results.push(classifyExtractResult(file.fileName, res));
       } catch (err: unknown) {
         results.push({
           fileName: file.fileName,
@@ -677,10 +704,11 @@ export const extractBulkFilesText = createServerFn({ method: "POST" })
     }
 
     const aggregatedText = aggregatedParts.join("\n\n\n");
+    const successfulFiles = results.filter((r) => r.success).length;
     return {
-      success: true,
+      success: successfulFiles > 0,
       totalFiles: files.length,
-      successfulFiles: results.filter((r) => r.success).length,
+      successfulFiles,
       results,
       aggregatedText,
       totalCharCount: aggregatedText.length,
@@ -868,6 +896,7 @@ export async function handleParseUploadedCaseDocument(
 }
 
 export const parseUploadedCaseDocument = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator(
     (d: { fileName: string; fileBase64?: string; textContent?: string }) => d,
   )
@@ -879,26 +908,45 @@ export const parseUploadedCaseDocument = createServerFn({ method: "POST" })
     ),
   );
 
+async function assertCaseOwned(supabase: SupabaseLike, caseId: string) {
+  if (
+    !caseId ||
+    caseId === "current" ||
+    caseId === "demo" ||
+    caseId === "case-autopilot"
+  ) {
+    return;
+  }
+  const { data, error } = await supabase
+    .from("cases")
+    .select("id")
+    .eq("id", caseId)
+    .maybeSingle();
+  if (error) throw new Error(`Supabase: ${error.message}`);
+  if (!data) throw new Error("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+}
+
 export const runForensicAutopilot = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator(
     (d: { caseId: string; documentText: string; fileName?: string }) => d,
   )
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const { caseId, documentText } = data;
-    if (!documentText || documentText.trim().length < 30) {
-      throw new Error("Dokument je príliš krátky (minimálne 30 znakov).");
+    if (!documentText || documentText.trim().length < MIN_EXTRACT_CHARS) {
+      throw new Error(
+        `Dokument je príliš krátky (minimálne ${MIN_EXTRACT_CHARS} znakov).`,
+      );
     }
+    await assertCaseOwned(context.supabase, caseId);
 
     const { buildUserPrompt, FORENSIC_AUTOPILOT_SYSTEM_PROMPT } =
       await import("./ai-prompt");
-    const { callMistral } = await import("./ai/mistral.server");
-    const { supabaseAdmin } =
-      await import("@/integrations/supabase/client.server");
-    const typeImport = await import("./types");
+    const { callLlm } = await import("./ai/llm.server");
     type ForensicDossier = import("./types").ForensicDossier;
 
     const userPrompt = buildUserPrompt(documentText);
-    const result = await callMistral({
+    const result = await callLlm({
       messages: [
         {
           role: "system",
@@ -925,12 +973,30 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
       parsed = JSON.parse(match[0]);
     }
 
+    if (
+      !parsed.facts ||
+      !Array.isArray(parsed.facts.timeline) ||
+      !parsed.defenseAttack ||
+      !parsed.evidenceStrength ||
+      !parsed.judgeReadyText
+    ) {
+      throw new Error(
+        "AI nevrátila kompletnú forenznú štruktúru (fakty, obhajoba, sila dôkazov).",
+      );
+    }
+    parsed.facts.timeline = parsed.facts.timeline ?? [];
+    parsed.facts.traces = parsed.facts.traces ?? [];
+    parsed.defenseAttack.attacks = parsed.defenseAttack.attacks ?? [];
+    parsed.evidenceStrength.traces = parsed.evidenceStrength.traces ?? [];
+    parsed.evidenceStrength.paragraphs =
+      parsed.evidenceStrength.paragraphs ?? [];
+
     parsed.caseId = caseId || "case-autopilot";
     parsed.generatedAt = new Date().toISOString();
 
     if (caseId && caseId !== "current" && caseId !== "demo") {
       try {
-        await supabaseAdmin
+        const { error: saveError } = await context.supabase
           .from("cases")
           .update({
             forensic_dossier:
@@ -938,6 +1004,9 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
             forensic_dossier_updated_at: new Date().toISOString(),
           })
           .eq("id", caseId);
+        if (saveError) {
+          console.warn("Nepodarilo sa uložiť dossier do cases:", saveError);
+        }
       } catch (e) {
         console.warn("Nepodarilo sa uložiť dossier do cases:", e);
       }
@@ -946,18 +1015,22 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
     return { success: true, dossier: parsed };
   });
 
-export async function handleGetForensicDossier(caseId: string) {
-  const { supabaseAdmin } =
-    await import("@/integrations/supabase/client.server");
+export async function handleGetForensicDossier(
+  caseId: string,
+  supabase: SupabaseLike,
+) {
   type ForensicDossier = import("./types").ForensicDossier;
 
-  const { data: row, error } = await supabaseAdmin
+  const { data: row, error } = await supabase
     .from("cases")
     .select("forensic_dossier")
     .eq("id", caseId)
     .maybeSingle();
 
   if (error) throw new Error(`Supabase: ${error.message}`);
+  if (!row) {
+    throw new Error("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+  }
   return {
     success: true,
     dossier:
@@ -966,22 +1039,27 @@ export async function handleGetForensicDossier(caseId: string) {
   };
 }
 
-export async function handleSaveCaseDossier(data: {
-  caseId: string;
-  dossier: import("./types").ForensicDossier;
-}) {
-  const { supabaseAdmin } =
-    await import("@/integrations/supabase/client.server");
-  const { error } = await supabaseAdmin
+export async function handleSaveCaseDossier(
+  data: {
+    caseId: string;
+    dossier: import("./types").ForensicDossier;
+  },
+  supabase: SupabaseLike,
+) {
+  const { data: updated, error } = await supabase
     .from("cases")
     .update({
       forensic_dossier:
         data.dossier as unknown as import("@/integrations/supabase/types").Json,
       forensic_dossier_updated_at: new Date().toISOString(),
     })
-    .eq("id", data.caseId);
+    .eq("id", data.caseId)
+    .select("id");
 
   if (error) throw new Error(`Supabase: ${error.message}`);
+  if (!updated || (Array.isArray(updated) && updated.length === 0)) {
+    throw new Error("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+  }
   return {
     success: true,
     status: 200,
@@ -990,11 +1068,17 @@ export async function handleSaveCaseDossier(data: {
 }
 
 export const getForensicDossier = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
   .validator((d: { caseId: string }) => d)
-  .handler(async ({ data }) => handleGetForensicDossier(data.caseId));
+  .handler(async ({ data, context }) =>
+    handleGetForensicDossier(data.caseId, context.supabase),
+  );
 
 export const saveCaseDossier = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .validator(
     (d: { caseId: string; dossier: import("./types").ForensicDossier }) => d,
   )
-  .handler(async ({ data }) => handleSaveCaseDossier(data));
+  .handler(async ({ data, context }) =>
+    handleSaveCaseDossier(data, context.supabase),
+  );

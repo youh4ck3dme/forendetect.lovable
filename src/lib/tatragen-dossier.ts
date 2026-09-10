@@ -10,13 +10,15 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
     timeline: [
       {
         time: "2024-05-21 10:00",
-        event: "Odkúpenie EB-EU s.r.o.; kúpu sprostredkoval D. Cohen, spoločníkom Tavira s.r.o.",
+        event:
+          "Odkúpenie EB-EU s.r.o.; kúpu sprostredkoval D. Cohen, spoločníkom Tavira s.r.o.",
         source: "ORSR, Dôkaz 06",
         chainBreak: false,
       },
       {
         time: "2024-12-27 11:30",
-        event: "Vydanie zbrojnej licencie LA 002318; trezory z predajne hneď demontované",
+        event:
+          "Vydanie zbrojnej licencie LA 002318; trezory z predajne hneď demontované",
         source: "Úradný záznam KR PZ Žilina",
         chainBreak: true,
         severity: "warning",
@@ -24,13 +26,17 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
       },
       {
         time: "2025-01-23 14:15",
-        event: "1. nákup v TATRAGEN s.r.o. — 242 zbraní celkovo; osobný odber v Žiline",
-        source: "Dôkaz 09 (Výsluch M. Plch)",
-        chainBreak: false,
+        event:
+          "1. nákup v TATRAGEN s.r.o. — 242 zbraní celkovo; osobný odber spochybnený obhajobou (chýba písmoznalectvo)",
+        source: "Dôkaz 09 (Výsluch M. Plch vs. Výsluch E. Babčan)",
+        chainBreak: true,
+        severity: "warning",
+        paragraph: "§ 125 TP a § 142 TP",
       },
       {
         time: "2025-09-15 22:40",
-        event: "Nočné odovzdávanie zbraní na odpočívadlách D1 Trenčín z kufra BMW 7",
+        event:
+          "Nočné odovzdávanie zbraní na odpočívadlách D1 Trenčín z kufra BMW 7",
         source: "Dôkaz 08, 10 (Marjov)",
         chainBreak: true,
         severity: "critical",
@@ -64,7 +70,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
       {
         id: "TR-02",
         type: "balistická",
-        description: "Grand Power K100 (K055902, K055904) — dodávka EB-EU z Tatragenu",
+        description:
+          "Grand Power K100 (K055902, K055904) — dodávka EB-EU z Tatragenu",
         light: "green",
         chainComplete: true,
         lr: "1 : 25 000",
@@ -73,7 +80,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
       {
         id: "TR-03",
         type: "dokument",
-        description: "Kniha evidencie zbraní a streliva LA 002318 — úmyselne stratená/nedodaná",
+        description:
+          "Kniha evidencie zbraní a streliva LA 002318 — úmyselne stratená/nedodaná",
         light: "red",
         chainComplete: false,
         lr: "—",
@@ -92,7 +100,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
       {
         id: "TR-05",
         type: "digitálna",
-        description: "Zvukové nahrávky od D. Marjova v BMW X6 — dokumentujú marže 10-20 €/ks",
+        description:
+          "Zvukové nahrávky od D. Marjova v BMW X6 — dokumentujú marže 10-20 €/ks",
         light: "yellow",
         chainComplete: false,
         lr: "—",
@@ -110,7 +119,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
         risk: "VYSOKÉ",
         counterStrike:
           "Vozidlo BMW malo pečiatky firiem EB-EU aj Bark Factory, Cohen mal rukou písané zoznamy kalibrov a zabezpečoval plnomocenstvá. Navrhnúť znalecké posúdenie písma a výsluch advokátov k plnomocenstvám.",
-        evidenceGap: "Chýba grafologická expertíza rukou písaných zoznamov modelov v aute.",
+        evidenceGap:
+          "Chýba grafologická expertíza rukou písaných zoznamov modelov v aute.",
         paragraph: "§ 142 TP",
       },
       {
@@ -119,10 +129,10 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
           "Babčan: 'V Tatragene som v živote nebol, zbrane som neprevzal a Mareka Plcha nepoznám. Moja rola bola len kliknúť platbu.'",
         risk: "KRITICKÉ",
         counterStrike:
-          "Svedok Marek Plch (konateľ Tatragen) 3x overil totožnosť Babčana z OP a zbrojného preukazu a Babčan osobne podpisoval evidenciu. Vykonať konfrontáciu podľa § 125 TP a porovnať podpisy na preberacích protokoloch.",
+          "Tvrdenie svedka Mareka Plcha o osobnom odbere v Žiline je sporné a v procesnom rozpore (§ 125 TP). V predajni chýbajú kamerové záznamy a BTS lokalizácia mobilu Babčana nesedí so Žilinou. Vykonať konfrontáciu podľa § 125 TP a nariadiť písmoznalecký posudok podpisov v knihe zbraní podľa § 142 TP.",
         evidenceGap:
-          "Protokoly o prevzatí zbraní z predajne v Žiline neboli podrobené porovnaniu podpisového vzoru.",
-        paragraph: "§ 125 TP",
+          "Protokoly o prevzatí zbraní z predajne v Žiline a knihy zbraní neboli podrobené porovnaniu podpisového vzoru (§ 142 TP).",
+        paragraph: "§ 125 TP a § 142 TP",
       },
       {
         id: "DA-3",
@@ -131,7 +141,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
         risk: "STREDNÉ",
         counterStrike:
           "Nahrávka súkromnej osoby nie je odposluchom podľa § 115 TP a je procesne použiteľná, ak zachytáva páchanie závažného zločinu. Podporiť lokalizačnými dátami BTS z odpočívadla D1 Livinské Opatovce.",
-        evidenceGap: "Chýba verifikácia metadát a zariadenia, na ktoré bola nahrávka zaznamenaná.",
+        evidenceGap:
+          "Chýba verifikácia metadát a zariadenia, na ktoré bola nahrávka zaznamenaná.",
         paragraph: "§ 115 TP a § 119 TP",
       },
     ],
@@ -216,7 +227,7 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
     skutkovyStav:
       "V období od mája 2024 do augusta 2026 obvinení Erik Babčan a Dimitri Cohen po vzájomnej dohode a s presne rozdelenými úlohami založili a využili spoločnosť EB-EU s.r.o. na získanie zbrojnej licencie LA 002318. Následne od dodávateľa TATRAGEN s.r.o. odobrali 242 kusov krátkych palných zbraní, ktoré neboli riadne zaevidované v zmysle zákona o zbraniach a strelive a boli neoprávnene prevedené na neznáme osoby a do zahraničia, pričom minimálne 3 zbrane (Glock 19 v.č. CGDV051 a Grand Power K100 v.č. K055902, K055904) boli následne zaistené v kriminálnom prostredí v Španielsku.",
     vyporiadanie:
-      "Tvrdenie obvineného Babčana, že zbrane nikdy neprebral a Mareka Plcha nepozná, je jednoznačne vyvrátené svedeckou výpoveďou Mareka Plcha, ktorý potvrdil opakované osobné predloženie dokladov a podpisy v evidenčných hárkoch. Tvrdenie obvineného Cohena o postavení 'nevedomého šoféra za 300 €' je vyvrátené zaistenou dokumentáciou, pečiatkami firiem, rukou písanými zoznamami kalibrov a výpoveďami svedkov Marjova a Skyrčáka.",
+      "K otázke osobného odberu zbraní v TATRAGEN s.r.o.: Tvrdenie svedka Mareka Plcha, že zbrane v počte 242 kusov osobne preberal Erik Babčan, je v priamom procesnom rozpore (§ 125 TP) s výpoveďou Erika Babčana, ktorý toto kategoricky popiera ako klamstvo a uvádza, že v predajni v Žiline nikdy nebol, zbrane nevidel a licenciu s knihami odovzdal hneď po vydaní tretej osobe ('Ľuboš' z BB / Dimitri Cohen). Bez písmoznaleckého posudku podpisov v knihe zbraní (§ 142 TP), bez kamerových záznamov a bez BTS lokalizácie nemožno tvrdenie svedka Plcha považovať za preukázané. Naopak, reťazec distribúcie, prevozy a nočné odovzdávanie zbraní z kufrov vozidiel operatívne vykonával Dimitri Cohen s ďalšími osobami (Tomčík, Skyrčák, Budaj), čo dokazujú zaistené pečiatky firiem, zoznamy kalibrov a výpovede svedkov Marjova a Skyrčáka.",
     vedecke:
       "Identifikácia zbraní zaistených v Španielsku bola potvrdená prostredníctvom národnej ústredne EUROPOL a porovnávacej balistiky Kriminalistického a expertízneho ústavu PZ s identifikačnou silou LR > 1 000 000 (pre Glock 19) a LR 1:25 000 (pre Grand Power K100), čo predstavuje mimoriadne silný vedecký dôkaz o totožnosti zbraní pochádzajúcich z dodávok spoločnosti TATRAGEN s.r.o.",
   },
@@ -225,25 +236,31 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
       questionNumber: 1,
       question: "1. Kto zbrane nakupoval a odovzdával?",
       answer:
-        "Zbrane v počte 242 kusov osobne preberal v prevádzke TATRAGEN s.r.o. v Žiline obvinený Erik Babčan (konateľ EB-EU s.r.o.). Následnú distribúciu, prevozy vozidlami BMW a nočné odovzdávanie neznámym osobám na odpočívadlách D1 (Livinské Opatovce, Trenčín) operatívne vykonával Dimitri Cohen.",
+        "Tvrdenie, že zbrane v počte 242 kusov osobne preberal v TATRAGEN s.r.o. Erik Babčan, je sporné a v priamom rozpore so spisom (§ 125 TP): Svedok Marek Plch (konateľ TATRAGEN) síce tvrdí, že zbrane odovzdával Babčanovi na aute Audi, avšak obvinený Erik Babčan toto kategoricky popiera ako klamstvo — v predajni v Žiline nikdy v živote nebol, zbrane nevidel ani nepreberal, Plcha nepozná a zbrojnú licenciu s knihami zbraní odovzdal hneď v decembri 2024 tretej osobe ('Ľuboš' z BB / Dimitri Cohen). K podpisom v evidenčnej knihe zbraní chýba písmoznalecký posudok (§ 142 TP), chýbajú kamerové záznamy a BTS lokalizácia mobilu. Reálnu logistiku, prevozy a nočné odovzdávanie zbraní neznámym odberateľom z kufrov áut (odpočívadlá Livinské Opatovce, Trenčín) operatívne vykonával Dimitri Cohen s ďalšími členmi distribučnej siete (Miroslav Tomčík, Ľuboš, Norbert Skyrčák, Otto Budaj).",
       identifiedPersons: [
-        "Erik Babčan (konateľ EB-EU s.r.o.)",
-        "Dimitri Cohen (logistika a distribúcia)",
-        "Marek Plch (konateľ TATRAGEN s.r.o.)",
+        "Erik Babčan (konateľ EB-EU s.r.o. — kategoricky popiera osobný odber)",
+        "Marek Plch (konateľ TATRAGEN s.r.o. — neoverené tvrdenie o odbere bez písmoznalectva)",
+        "Dimitri Cohen (logistika, prevozy a fyzické odovzdávanie zbraní)",
+        "Miroslav Tomčík & 'Ľuboš' z BB (inštruktáž, financovanie a koordinácia odberov)",
+        "Norbert Skyrčák & Otto Budaj (disponovanie pečiatkami, zmluvami a licenciami)",
       ],
       directEvidence: [
-        "Výpoveď svedka Mareka Plcha potvrdzujúca opakovaný osobný odber Babčanom",
-        "Predložený zbrojný preukaz a občiansky preukaz Erika Babčana pri prevzatí",
+        "Zápisnica o výsluchu Erika Babčana (kategorické popretie prítomnosti v Žiline a prevzatia zbraní)",
+        "Zápisnica o výsluchu Mareka Plcha (tvrdenie o odbere, avšak bez písmoznaleckého overenia podpisov)",
+        "Zápisnica o výsluchu Dimitriho Cohena (potvrdenie reťazca: Tomčík, Ľubo, Budaj a odovzdávanie zbraní z kufra)",
         "Kúpne zmluvy, dodacie listy a evidenčné knihy TATRAGEN s.r.o.",
         "Zaistené pečiatky EB-EU a Bark Factory vo vozidle BMW riadenom Cohenom",
       ],
       unverifiedHypotheses: [
-        "Identita koncových odberateľov zbraní z kufra BMW na odpočívadle Livinské Opatovce",
+        "Skutočná identita osoby, ktorá s dokladmi Erika Babčana fyzicky preberala zbrane v TATRAGENe (podozrenie na zneužitie identity alebo krytie skutočného odberateľa)",
+        "Identita koncových odberateľov zbraní z kufra BMW na odpočívadle Livinské Opatovce a v Trenčíne",
         "Trasa a spôsob prevozu zaistených zbraní Glock a GP K100 do Španielska",
       ],
       missingEvidence: [
-        "Grafologický posudok k podpisom na preberacích protokoloch EB-EU s.r.o.",
-        "Kamerové záznamy z čerpacej stanice Slovnaft pri odpočívadle D1",
+        "Písmoznalecký posudok (§ 142 TP) k pravosti podpisov v evidenčnej knihe zbraní a na preberacích protokoloch TATRAGEN s.r.o.",
+        "Procesná konfrontácia podľa § 125 TP medzi Erikom Babčanom a Marekom Plchom",
+        "BTS lokalizácia mobilného telefónu Erika Babčana v dňoch deklarovaných nákupov v Žiline",
+        "Kamerové záznamy z predajne TATRAGEN s.r.o. a čerpacej stanice Slovnaft pri odpočívadle D1",
       ],
       confidenceLevel: 95,
     },
@@ -313,7 +330,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
         amount: 32000,
         method: "cash_deposit",
         purpose: "Vklad v hotovosti na účet pred 1. tranžou",
-        redFlag: "Vklad 32 000 € bez dokladovania pôvodu 24 hodín pred odberom v Tatragene",
+        redFlag:
+          "Vklad 32 000 € bez dokladovania pôvodu 24 hodín pred odberom v Tatragene",
       },
       {
         id: "SF-02",
@@ -333,7 +351,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
         amount: 44000,
         method: "cash_deposit",
         purpose: "Štiepené vklady v hotovosti (14 500 € + 14 500 € + 15 000 €)",
-        redFlag: "Štiepenie transakcií pod 15 000 € limit AML identifikácie (§ 297/2008 Z.z.)",
+        redFlag:
+          "Štiepenie transakcií pod 15 000 € limit AML identifikácie (§ 297/2008 Z.z.)",
       },
       {
         id: "SF-04",
@@ -343,7 +362,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
         amount: 43200,
         method: "wire_transfer",
         purpose: "Úhrada za 80 ks pištolí Glock a Grand Power",
-        redFlag: "Zbrane po prevzatí okamžite odvezené do nočnej distribúcie na D1",
+        redFlag:
+          "Zbrane po prevzatí okamžite odvezené do nočnej distribúcie na D1",
       },
       {
         id: "SF-05",
@@ -353,7 +373,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
         amount: 30000,
         method: "cash_deposit",
         purpose: "Vkladomatový vklad pred 3. nákupom zbraní",
-        redFlag: "Vklad hotovosti cez bankomat bez osobného kontaktu so zamestnancom banky",
+        redFlag:
+          "Vklad hotovosti cez bankomat bez osobného kontaktu so zamestnancom banky",
       },
       {
         id: "SF-06",
@@ -363,7 +384,8 @@ export const TATRAGEN_CASE_DOSSIER: ForensicDossier = {
         amount: 42500,
         method: "wire_transfer",
         purpose: "Fiktívna zmluva o krátkodobej pôžičke spoločníka",
-        redFlag: "Kreditovanie účtu cez prepojenú firmu bez zmluvného krytia a bonity",
+        redFlag:
+          "Kreditovanie účtu cez prepojenú firmu bez zmluvného krytia a bonity",
       },
     ],
     financingConclusion:

@@ -112,8 +112,8 @@ export const importCompanyRegistryProfile = createServerFn({ method: "POST" })
           .from("case_entities")
           .update({
             name: targetCompanyEntity.name,
-            address: targetCompanyEntity.address,
-            registered_address: targetCompanyEntity.registeredAddress,
+            address: targetCompanyEntity.address ?? null,
+            registered_address: targetCompanyEntity.registeredAddress ?? null,
             country: targetCompanyEntity.country,
             incorporated_at: targetCompanyEntity.incorporatedAt ?? null,
           })
@@ -131,12 +131,12 @@ export const importCompanyRegistryProfile = createServerFn({ method: "POST" })
             name: targetCompanyEntity.name,
             kind: "company",
             role: targetCompanyEntity.role,
-            ico: targetCompanyEntity.ico,
-            address: targetCompanyEntity.address,
-            registered_address: targetCompanyEntity.registeredAddress,
+            ico: targetCompanyEntity.ico ?? null,
+            address: targetCompanyEntity.address ?? null,
+            registered_address: targetCompanyEntity.registeredAddress ?? null,
             country: targetCompanyEntity.country,
             incorporated_at: targetCompanyEntity.incorporatedAt ?? null,
-            note: targetCompanyEntity.note,
+            note: targetCompanyEntity.note ?? null,
           })
           .select("id")
           .single();
@@ -161,7 +161,7 @@ export const importCompanyRegistryProfile = createServerFn({ method: "POST" })
               kind: "person",
               role: p.role,
               country: p.country,
-              note: p.note,
+              note: p.note ?? null,
             })
             .select("id")
             .single();

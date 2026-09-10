@@ -3,7 +3,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -31,10 +31,10 @@ export type CaseState = {
   theme: ThemeMode;
 };
 
-const THEME_STORAGE_KEY = "malte:theme";
+export const THEME_STORAGE_KEY = "malte:theme";
 
-function getInitialTheme(): ThemeMode {
-  if (typeof window === "undefined") return "system";
+export function readStoredTheme(): ThemeMode | null {
+  if (typeof window === "undefined") return null;
   try {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
     if (saved === "light" || saved === "dark" || saved === "system")
@@ -42,7 +42,24 @@ function getInitialTheme(): ThemeMode {
   } catch {
     // ignore
   }
-  return "system";
+  return null;
+}
+
+export function applyDocumentTheme(theme: ThemeMode) {
+  if (typeof document === "undefined") return;
+  let systemDark = false;
+  try {
+    systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  } catch {
+    // ignore
+  }
+  const dark = theme === "dark" || (theme === "system" && systemDark);
+  document.documentElement.classList.toggle("dark", dark);
+  document.documentElement.style.colorScheme = dark ? "dark" : "light";
+}
+
+function getInitialTheme(): ThemeMode {
+  return readStoredTheme() ?? "system";
 }
 
 const EMPTY: CaseState = {
@@ -74,17 +91,22 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<CaseState>(EMPTY);
   const [ready, setReady] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let active = true;
     idbGet<CaseState>(KEY)
       .then((stored) => {
-        if (active && stored) {
-          const resolvedTheme =
-            (typeof window !== "undefined" &&
-              (localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode)) ||
-            stored.theme ||
-            "system";
-          setState({ ...EMPTY, ...stored, theme: resolvedTheme });
+        if (!active) return;
+        const lsTheme = readStoredTheme();
+        if (stored) {
+          const theme = lsTheme ?? stored.theme ?? "system";
+          if (!lsTheme && stored.theme) {
+            try {
+              localStorage.setItem(THEME_STORAGE_KEY, stored.theme);
+            } catch {
+              // ignore
+            }
+          }
+          setState({ ...EMPTY, ...stored, theme });
         }
       })
       .catch(() => undefined)
@@ -104,18 +126,12 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  useEffect(() => {
-    const root = document.documentElement;
+  useLayoutEffect(() => {
+    applyDocumentTheme(state.theme);
     const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const apply = () => {
-      const dark =
-        state.theme === "dark" || (state.theme === "system" && media.matches);
-      root.classList.toggle("dark", dark);
-      root.style.colorScheme = dark ? "dark" : "light";
-    };
-    apply();
-    media.addEventListener("change", apply);
-    return () => media.removeEventListener("change", apply);
+    const onChange = () => applyDocumentTheme(state.theme);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
   }, [state.theme]);
 
   const value = useMemo<Ctx>(

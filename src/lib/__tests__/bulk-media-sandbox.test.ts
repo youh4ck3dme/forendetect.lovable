@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
 import * as XLSX from "xlsx";
-import { extractSingleBufferText } from "../ai.functions";
+import {
+  classifyExtractResult,
+  extractSingleBufferText,
+} from "../ai.functions";
 
 describe("Bulk Media Sandbox & File Extraction", () => {
   it("extrahuje čistý text z TXT súboru", async () => {
@@ -68,6 +71,25 @@ describe("Bulk Media Sandbox & File Extraction", () => {
     expect(res.text).toContain("SF-01");
     expect(res.text).toContain("32000");
     expect(res.text).toContain("Platby");
+  });
+
+  it("označí príliš krátky text ako zlyhanie súboru, nie tichý úspech", () => {
+    const short = classifyExtractResult("prazdny.txt", {
+      text: "ok",
+      charCount: 2,
+    });
+    expect(short.success).toBe(false);
+    expect(short.error).toMatch(/30 znakov/);
+    expect(short.text).toBe("");
+
+    const ok = classifyExtractResult("vyslech.txt", {
+      text: "Zápisnica o výsluchu svedka Mareka Plcha v kauze Tatragen.",
+      charCount: 58,
+      usedOcr: true,
+    });
+    expect(ok.success).toBe(true);
+    expect(ok.usedOcr).toBe(true);
+    expect(ok.error).toBeUndefined();
   });
 
   it("odmietne nepodporovaný formát s jasným chybovým hlásením", async () => {

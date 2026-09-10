@@ -222,7 +222,7 @@ export interface CustodyLedgerEntry {
   actor: string; // Meno / ID vyšetrovateľa / znalca
   action: "SEIZURE" | "TRANSFER" | "ANALYSIS" | "STORAGE" | "COURT_SUBMISSION";
   location: string;
-  notes?: string;
+  notes?: string | undefined;
   payloadHash: string; // SHA-256 dát stopy
   prevHash: string; // SHA-256 predchádzajúceho bloku
   hash: string; // SHA-256 celého bloku

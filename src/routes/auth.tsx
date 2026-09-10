@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Loader2, Lock, Mail, Zap } from "lucide-react";
+import { ArrowLeft, Loader2, Lock, Mail, Zap } from "lucide-react";
 import malteMark from "@/assets/malte-mark.png";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import {
@@ -127,7 +128,15 @@ function AuthScreen() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center overflow-x-hidden bg-background px-5 py-12">
+    <main className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-background px-5 py-12">
+      <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/">
+            <ArrowLeft className="mr-1.5 h-4 w-4" /> Späť
+          </Link>
+        </Button>
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-2 text-center">
           <img

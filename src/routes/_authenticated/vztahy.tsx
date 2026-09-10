@@ -160,7 +160,7 @@ function Relations() {
                   className={`mx-auto flex h-11 w-11 items-center justify-center rounded-full border-2 shadow-card ${
                     item.isShell
                       ? "border-risk-high bg-risk-high/15 text-risk-high"
-                      : "border-border bg-card text-primary"
+                      : "border-border bg-card text-foreground"
                   }`}
                 >
                   {item.entity.kind === "person" ? (

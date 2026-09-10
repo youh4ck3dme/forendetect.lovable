@@ -51,15 +51,15 @@ export type Flag = {
   detail: string;
   weight: number;
   severity: Severity;
-  ruleId?: string;
-  ruleVersion?: string;
-  kind?: FindingKind;
+  ruleId?: string | undefined;
+  ruleVersion?: string | undefined;
+  kind?: FindingKind | undefined;
   /** Konkrétne zdrojové záznamy, ktoré pravidlo spustili. */
-  evidence?: EvidenceRef[];
+  evidence?: EvidenceRef[] | undefined;
   /** Spúšťacia podmienka vrátane prahu. */
-  condition?: string;
+  condition?: string | undefined;
   /** Použité hodnoty, z ktorých podmienka vyšla. */
-  values?: Record<string, string | number>;
+  values?: Record<string, string | number> | undefined;
 };
 
 export type EntityKind = "person" | "company";
@@ -69,18 +69,18 @@ export type Entity = {
   name: string;
   kind: EntityKind;
   role: string;
-  ico?: string;
-  address?: string;
+  ico?: string | undefined;
+  address?: string | undefined;
   /** Adresa evidovaná v ORSR (mock referenčná databáza). */
-  registeredAddress?: string;
-  licence?: string;
-  incorporatedAt?: string;
-  physicalInventory?: boolean;
-  responsive?: boolean;
+  registeredAddress?: string | undefined;
+  licence?: string | undefined;
+  incorporatedAt?: string | undefined;
+  physicalInventory?: boolean | undefined;
+  responsive?: boolean | undefined;
   country: string;
   x: number;
   y: number;
-  note?: string;
+  note?: string | undefined;
 };
 
 export type PaymentMethod = "cash" | "transfer";
@@ -96,14 +96,14 @@ export type Transaction = {
   fromId: string;
   toId: string;
   /** Skutočný platiteľ, ak sa líši od zmluvnej strany (platba tretej strany). */
-  payerId?: string;
+  payerId?: string | undefined;
   originCountry: string;
   destinationCountry: string;
   description: string;
   /** Import, z ktorého transakcia vznikla (ak nebola zadaná ručne). */
-  importId?: string;
+  importId?: string | undefined;
   /** Číslo riadka v pôvodnom súbore — dohľadateľnosť zdroja. */
-  sourceRow?: number;
+  sourceRow?: number | undefined;
 };
 
 export type Weapon = {
@@ -114,7 +114,7 @@ export type Weapon = {
   holderId: string;
   supplierId: string;
   acquiredAt: string;
-  licence?: string;
+  licence?: string | undefined;
 };
 
 export type Relation = {
