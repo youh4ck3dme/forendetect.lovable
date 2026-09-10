@@ -1,11 +1,11 @@
 /* Forendo PWA Service Worker */
 const CACHE_NAME = "forendo-cache-v1";
 
-self.addEventListener("install", (event: any) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
 });
 
-self.addEventListener("activate", (event: any) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
@@ -22,7 +22,7 @@ self.addEventListener("activate", (event: any) => {
   );
 });
 
-self.addEventListener("fetch", (event: any) => {
+self.addEventListener("fetch", (event) => {
   // Pass through navigate and API requests directly to the network
   if (event.request.mode === "navigate" || event.request.url.includes("/api/")) {
     return;
