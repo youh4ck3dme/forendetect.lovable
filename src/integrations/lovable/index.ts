@@ -27,7 +27,9 @@ export const lovable = {
       }
 
       if (result.error) {
-        return result;
+        throw result.error instanceof Error
+          ? result.error
+          : new Error(String(result.error));
       }
 
       try {

@@ -46,8 +46,9 @@ export async function registerServiceWorker(): Promise<void> {
 
   try {
     await navigator.serviceWorker.register(SW_URL, { scope: "/" });
-  } catch {
-    // Registrácia je doplnková; jej zlyhanie nesmie ovplyvniť aplikáciu.
+  } catch (err) {
+    console.warn("[PWA] Registrácia Service Workera bola preskočená:", err);
+    await unregisterExisting();
   }
 }
 
