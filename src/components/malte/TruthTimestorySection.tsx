@@ -688,12 +688,15 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               <Badge className="bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[9px] font-black uppercase">
                 FRANK MILLER NOIR STÝL
               </Badge>
+              <Badge className="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-black uppercase animate-pulse">
+                SYNTETICKÁ UKÁŽKA — FIKTÍVNE ÚDAJE
+              </Badge>
             </div>
             <h3 className="text-lg sm:text-2xl font-black text-foreground tracking-tight flex items-center gap-2">
               <span>Kauza Armivex & Peter Novák: Priebeh od A po Z</span>
             </h3>
             <p className="text-xs text-muted-foreground max-w-3xl leading-relaxed">
-              Autentická rekonštrukcia vyšetrovacieho spisu{" "}
+              Syntetická ukážka — vymyslené osoby, firmy a sumy. Rekonštrukcia modelového spisu{" "}
               <strong className="text-foreground">
                 PPZ-51/UBOK-PZ-ST-2025
               </strong>{" "}
@@ -1777,8 +1780,8 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               {/* Formálna hlavička podania */}
               <div className="border-b-2 border-foreground/20 pb-4 text-center space-y-1">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground block">
-                  DÔKAZNÝ DEMONŠTRATÍVNY STORYBOARD OBHAJOBY (§ 119 TRESTNÉHO
-                  PORIADKU)
+                  SYNTETICKÁ UKÁŽKA — FIKTÍVNE ÚDAJE • DEMONŠTRATÍVNY
+                  STORYBOARD
                 </span>
                 <h2 className="text-xl font-black uppercase tracking-tight">
                   Kauza ARMIVEX & Peter Novák: Priebeh od A po Z
