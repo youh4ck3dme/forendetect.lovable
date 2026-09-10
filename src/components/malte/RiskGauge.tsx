@@ -54,7 +54,7 @@ export function RiskGauge({
             r={r}
             fill="none"
             stroke="currentColor"
-            className="text-foreground/20"
+            className="opacity-25"
             strokeWidth={stroke}
             strokeLinecap="round"
             strokeDasharray={`${c * arc} ${c}`}
@@ -72,10 +72,10 @@ export function RiskGauge({
           />
         </g>
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-current">
         <span className="text-2xl font-extrabold tnum">{shown}</span>
         {label ? (
-          <span className="text-[10px] font-semibold opacity-80">{label}</span>
+          <span className="text-[10px] font-semibold opacity-90">{label}</span>
         ) : null}
       </div>
     </div>

@@ -279,8 +279,52 @@
 }
 
 @utility surface-glass {
-  background-color: color-mix(in oklab, var(--color-card) 78%, transparent);
-  backdrop-filter: blur(14px);
+  background-color: color-mix(in oklab, var(--color-card) 70%, transparent);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+}
+
+@utility liquid-glass {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-card) 85%, transparent),
+    color-mix(in oklab, var(--color-surface) 60%, transparent)
+  );
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid color-mix(in oklab, var(--color-border) 70%, transparent);
+  box-shadow:
+    0 8px 32px 0 rgba(0, 0, 0, 0.06),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+@utility liquid-glass-card {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-card) 90%, transparent),
+    color-mix(in oklab, var(--color-accent) 40%, transparent)
+  );
+  backdrop-filter: blur(20px) saturate(175%);
+  -webkit-backdrop-filter: blur(20px) saturate(175%);
+  border: 1px solid color-mix(in oklab, var(--color-border) 80%, transparent);
+  box-shadow:
+    0 10px 30px -10px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+@utility liquid-glass-header {
+  background: linear-gradient(
+    135deg,
+    oklch(0.24 0.06 260 / 0.96),
+    oklch(0.16 0.05 260 / 0.94)
+  );
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 12px 36px -10px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+  color: #ffffff;
 }
 
 @utility shadow-card {

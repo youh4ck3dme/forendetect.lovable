@@ -39,23 +39,23 @@ function DesktopSidebar() {
         </span>
       </div>
 
-      <div className="mt-6 rounded-2xl gradient-brand p-4 text-foreground shadow-glow">
-        <p className="text-[10px] tracking-wide uppercase opacity-80">
+      <div className="mt-6 rounded-2xl liquid-glass-header p-4 text-white shadow-glow">
+        <p className="text-[10px] tracking-wide uppercase font-semibold text-blue-200">
           Prebiehajúci prípad
         </p>
-        <p className="mt-1 text-sm font-semibold">{activeCase.name}</p>
+        <p className="mt-1 text-sm font-bold text-white">{activeCase.name}</p>
         <div className="mt-3 flex items-end justify-between">
-          <span className="text-xs font-semibold">
+          <span className="text-xs font-semibold text-blue-100">
             {severityLabel[shellAnalysis.caseLevel].toUpperCase()}
           </span>
-          <span className="text-sm font-bold tnum">
+          <span className="text-sm font-bold tnum text-white">
             {shellAnalysis.caseScore}
-            <span className="opacity-70">/100</span>
+            <span className="text-blue-200">/100</span>
           </span>
         </div>
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-foreground/20">
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
           <div
-            className="h-full rounded-full bg-risk-high transition-[width] duration-700"
+            className="h-full rounded-full bg-amber-400 shadow-xs transition-[width] duration-700"
             style={{ width: `${shellAnalysis.caseScore}%` }}
           />
         </div>
@@ -179,7 +179,7 @@ export function AppHeader({
   return (
     <header
       className={cn(
-        "gradient-brand sticky top-0 z-20 rounded-b-[1.75rem] text-foreground transition-[padding,box-shadow] duration-300",
+        "liquid-glass-header sticky top-0 z-20 rounded-b-[1.75rem] text-white transition-[padding,box-shadow] duration-300",
         scrolled ? "pb-3 shadow-elevated" : "pb-5",
       )}
     >
@@ -190,7 +190,7 @@ export function AppHeader({
             type="button"
             onClick={() => window.history.back()}
             aria-label="Späť"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-foreground/80 hover:text-foreground hover:bg-surface-2/80 active:scale-90 transition-all"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-white/90 hover:text-white hover:bg-white/15 active:scale-90 transition-all"
           >
             <ChevronLeft className="h-5 w-5 opacity-90" aria-hidden />
           </button>
@@ -206,7 +206,7 @@ export function AppHeader({
         ) : null}
         <h1
           className={cn(
-            "font-semibold tracking-tight transition-all duration-300",
+            "font-semibold tracking-tight text-white transition-all duration-300",
             scrolled ? "text-base" : "text-lg lg:text-xl",
           )}
         >
@@ -300,8 +300,8 @@ export function Card({
     <section
       id={id}
       className={cn(
-        "rounded-2xl border border-border gradient-surface p-4 shadow-card transition-shadow duration-200",
-        onClick && "cursor-pointer hover:shadow-elevated",
+        "rounded-2xl border border-border/80 liquid-glass-card p-4 shadow-card transition-all duration-200",
+        onClick && "cursor-pointer hover:shadow-elevated hover:border-primary/40",
         className,
       )}
       {...(onClick
