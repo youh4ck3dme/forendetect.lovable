@@ -300,8 +300,8 @@ export function Card({
     <section
       id={id}
       className={cn(
-        "rounded-2xl border border-border/80 liquid-glass-card p-4 shadow-card transition-all duration-200",
-        onClick && "cursor-pointer hover:shadow-elevated hover:border-primary/40",
+        "rounded-2xl border border-border gradient-surface p-4 shadow-card transition-shadow duration-200",
+        onClick && "cursor-pointer hover:shadow-elevated",
         className,
       )}
       {...(onClick
