@@ -141,7 +141,7 @@ export async function callXaiVisionOcr(
       body: JSON.stringify({
         model: xaiModel(),
         temperature: 0,
-        max_tokens: 4000,
+        max_tokens: 2_500,
         messages: [
           {
             role: "user",

@@ -52,12 +52,53 @@ export const requireSupabaseAuth = createMiddleware({
   }
 
   const request = getRequest();
+  const isDev = process.env["NODE_ENV"] !== "production";
+  const devHeader = request?.headers?.get("x-dev-free-entry");
 
   if (!request?.headers) {
+    if (isDev) {
+      const supabase = createClient<Database>(
+        SUPABASE_URL!,
+        SUPABASE_PUBLISHABLE_KEY!,
+      );
+      return next({
+        context: {
+          supabase,
+          userId: "dev-user-id",
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          claims: {
+            sub: "dev-user-id",
+            role: "authenticated",
+            email: "dev@forendo.local",
+          } as any,
+        },
+      });
+    }
     throw new Error("Unauthorized: No request headers available");
   }
 
   const authHeader = request.headers.get("authorization");
+
+  // Dev Free Entry / Local Dev Bypass (Non-Production Only)
+  if (
+    isDev &&
+    (!authHeader ||
+      authHeader.includes("dev-free-entry") ||
+      devHeader === "true" ||
+      !authHeader.startsWith("Bearer "))
+  ) {
+    const supabase = createClient<Database>(
+      SUPABASE_URL!,
+      SUPABASE_PUBLISHABLE_KEY!,
+    );
+    return next({
+      context: {
+        supabase,
+        userId: "dev-user-id",
+        claims: { sub: "dev-user-id", role: "authenticated", email: "dev@forendo.local" },
+      },
+    });
+  }
 
   if (!authHeader) {
     throw new Error("Unauthorized: No authorization header provided");
@@ -73,6 +114,24 @@ export const requireSupabaseAuth = createMiddleware({
   }
 
   if (token.split(".").length !== 3) {
+    if (isDev) {
+      const supabase = createClient<Database>(
+        SUPABASE_URL!,
+        SUPABASE_PUBLISHABLE_KEY!,
+      );
+      return next({
+        context: {
+          supabase,
+          userId: "dev-user-id",
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          claims: {
+            sub: "dev-user-id",
+            role: "authenticated",
+            email: "dev@forendo.local",
+          } as any,
+        },
+      });
+    }
     throw new Error("Unauthorized: Invalid token");
   }
 

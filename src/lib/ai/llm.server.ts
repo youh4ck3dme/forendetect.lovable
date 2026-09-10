@@ -1,6 +1,6 @@
 /**
- * LLM router: Mistral je primárny. Ak nie je nakonfigurovaný alebo volanie
- * zlyhá (timeout, 5xx, 429, prázdna odpoveď, sieť), skúsi sa xAI/Grok.
+ * LLM router: Mistral je primárny. Pri chybe/429/prázdnej odpovedi skúsi xAI.
+ * Timeout sa NEfallbackuje — požiadavka už mohla byť u Mistral účtovaná.
  */
 
 import {
@@ -47,6 +47,9 @@ export async function callLlm(options: {
     const primary = await callMistral(options);
     if (primary.status === "ok") {
       return { ...primary, provider: "mistral" };
+    }
+    if (primary.status === "timeout") {
+      return primary;
     }
     if (xaiOn) {
       console.warn(

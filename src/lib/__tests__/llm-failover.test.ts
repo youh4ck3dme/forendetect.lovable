@@ -86,6 +86,24 @@ describe("LLM failover Mistral → xAI", () => {
     expect(String(fetchImpl.mock.calls[1]?.[0])).toContain("api.x.ai");
   });
 
+  it("pri Mistral timeout nevolá xAI (požiadavka už mohla byť účtovaná)", async () => {
+    process.env["MISTRAL_API_KEY"] = "mistral-key";
+    process.env["XAI_API_KEY"] = "xai-key";
+    const fetchImpl = vi.fn().mockImplementation(() => {
+      const err = new Error("aborted");
+      err.name = "AbortError";
+      return Promise.reject(err);
+    });
+    const { callLlm } = await import("@/lib/ai/llm.server");
+    const result = await callLlm({
+      messages: [{ role: "user", content: "hi" }],
+      fetchImpl,
+    });
+    expect(result.status).toBe("timeout");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("mistral.ai");
+  });
+
   it("keď chýba Mistral kľúč, ide priamo na xAI", async () => {
     delete process.env["MISTRAL_API_KEY"];
     process.env["XAI_API_KEY"] = "xai-key";

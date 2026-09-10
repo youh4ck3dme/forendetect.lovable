@@ -119,6 +119,39 @@ export function CommandPalette() {
           ))}
         </CommandGroup>
 
+        <CommandGroup heading="Dôkazy a Spis Tatragen">
+          <CommandItem
+            value="Glock 19 Gen 5 CGDV051 Europol Španielsko LR 1000000"
+            onSelect={() => go("/asistent")}
+          >
+            <Crosshair className="h-4 w-4 text-rose-500" aria-hidden />
+            <span>Glock 19 Gen 5 (v.č. CGDV051)</span>
+            <span className="ml-auto text-[10px] text-muted-foreground">
+              Europol Španielsko (Dôkaz 01)
+            </span>
+          </CommandItem>
+          <CommandItem
+            value="Grand Power K100 K055902 K055904 KEÚ PZ"
+            onSelect={() => go("/asistent")}
+          >
+            <Crosshair className="h-4 w-4 text-amber-500" aria-hidden />
+            <span>Grand Power K100 (v.č. K055902, K055904)</span>
+            <span className="ml-auto text-[10px] text-muted-foreground">
+              Balistika KEÚ PZ (Dôkaz 02)
+            </span>
+          </CommandItem>
+          <CommandItem
+            value="Kniha zbraní LA 002318 stratená písmoznalectvo 142 TP"
+            onSelect={() => go("/asistent")}
+          >
+            <Receipt className="h-4 w-4 text-rose-400" aria-hidden />
+            <span>Kniha LA 002318 (Procesná mína)</span>
+            <span className="ml-auto text-[10px] text-muted-foreground">
+              Chýba písmoznalectvo (§ 142 TP)
+            </span>
+          </CommandItem>
+        </CommandGroup>
+
         <CommandGroup heading="Zbrane">
           {activeCase.weapons.map((w) => (
             <CommandItem

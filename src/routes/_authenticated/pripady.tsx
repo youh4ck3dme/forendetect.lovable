@@ -174,7 +174,7 @@ function Cases() {
               <Card key={item.id} className="flex items-center gap-3">
                 <button
                   type="button"
-                  className="flex-1 text-left"
+                  className="flex-1 text-left cursor-pointer"
                   onClick={() => setActiveCaseId(item.id)}
                 >
                   <p className="text-sm font-semibold">{item.name}</p>
@@ -184,10 +184,37 @@ function Cases() {
                 </button>
                 {activeCaseId === item.id ? (
                   <CheckCircle2
-                    className="h-4 w-4 text-primary"
+                    className="h-4 w-4 text-primary shrink-0"
                     aria-label="Aktívny prípad"
                   />
                 ) : null}
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  title="Duplikovať prípad"
+                  aria-label={`Duplikovať prípad ${item.name}`}
+                  className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
+                  onClick={async () => {
+                    setBusy(true);
+                    try {
+                      const newId = await createCase({
+                        name: `${item.name} (Kópia)`,
+                        subtitle: item.subtitle
+                          ? `${item.subtitle} (Duplikát)`
+                          : "Duplikát prípadu",
+                      });
+                      refresh();
+                      setActiveCaseId(newId);
+                      toast.success(`Prípad "${item.name}" bol duplikovaný.`);
+                    } catch (e) {
+                      toast.error("Duplikovanie prípadu zlyhalo.");
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                >
+                  <FolderPlus className="h-3.5 w-3.5" />
+                </Button>
                 <DeleteRecordButton
                   type="case"
                   id={item.id}

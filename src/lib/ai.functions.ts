@@ -300,7 +300,7 @@ export const runAiTask = createServerFn({ method: "POST" })
     }
 
     const serialized = JSON.stringify(payload);
-    if (serialized.length > 120_000) {
+    if (serialized.length > 60_000) {
       await supabaseAdmin
         .from("ai_usage")
         .update({
@@ -940,8 +940,11 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
     }
     await assertCaseOwned(context.supabase, caseId);
 
-    const { buildUserPrompt, FORENSIC_AUTOPILOT_SYSTEM_PROMPT } =
-      await import("./ai-prompt");
+    const {
+      buildUserPrompt,
+      FORENSIC_AUTOPILOT_SYSTEM_PROMPT,
+      AUTOPILOT_MAX_TOKENS,
+    } = await import("./ai-prompt");
     const { callLlm } = await import("./ai/llm.server");
     type ForensicDossier = import("./types").ForensicDossier;
 
@@ -957,7 +960,7 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
           content: userPrompt,
         },
       ],
-      maxTokens: 8000,
+      maxTokens: AUTOPILOT_MAX_TOKENS,
     });
 
     if (result.status !== "ok") {

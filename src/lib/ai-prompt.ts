@@ -273,12 +273,26 @@ ZÁVÄZNÝ ANALYTICKÝ RÁMEC ÚBOK — 3 VYŠETROVACIE OTÁZKY & ROZPORY
 
 VRÁŤ LEN JSON. ŽIADNY OSTATNÝ TEXT.`;
 
-export function buildUserPrompt(documentText: string): string {
-  return `${FORENSIC_AUTOPILOT_SYSTEM_PROMPT}
+/** Max. znakov spisu v user prompt-e. Systémový prompt sa posiela zvlášť, nie znova tu. */
+export const AUTOPILOT_DOCUMENT_CHAR_LIMIT = 80_000;
+export const AUTOPILOT_MAX_TOKENS = 4_500;
 
-VSTUPNÝ TEXT SPISU:
+export function compactDocumentText(text: string): string {
+  return text
+    .replace(/\r\n/g, "\n")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+export function buildUserPrompt(documentText: string): string {
+  const body = compactDocumentText(documentText).slice(
+    0,
+    AUTOPILOT_DOCUMENT_CHAR_LIMIT,
+  );
+  return `VSTUPNÝ TEXT SPISU:
 ---
-${documentText.slice(0, 120_000)}
+${body}
 ---
 
 VRÁŤ LEN ČISTÝ JSON.`;

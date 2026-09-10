@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  AUTOPILOT_DOCUMENT_CHAR_LIMIT,
   buildUserPrompt,
+  compactDocumentText,
   FORENSIC_AUTOPILOT_SYSTEM_PROMPT,
 } from "@/lib/ai-prompt";
 
@@ -35,13 +37,17 @@ describe("ai-prompt (Forenzný Autopilot System Prompt & User Builder)", () => {
     expect(FORENSIC_AUTOPILOT_SYSTEM_PROMPT).toContain('"judgeReadyText"');
   });
 
-  it("buildUserPrompt bezpečne obmedzí extrémne dlhý text a pripojí inštrukciu", () => {
+  it("buildUserPrompt neopakuje systémový prompt a oreže dlhý spis", () => {
     const longText = "A".repeat(150_000);
     const prompt = buildUserPrompt(longText);
 
     expect(prompt).toContain("VSTUPNÝ TEXT SPISU");
     expect(prompt).toContain("VRÁŤ LEN ČISTÝ JSON");
-    // Text nesmie presiahnuť limit 120k + dĺžku šablóny
-    expect(prompt.length).toBeLessThan(140_000);
+    expect(prompt).not.toContain("FORENZNÝ AUTOPILOT");
+    expect(prompt.length).toBeLessThan(AUTOPILOT_DOCUMENT_CHAR_LIMIT + 200);
+  });
+
+  it("compactDocumentText zmaže prázdne riadky navyše", () => {
+    expect(compactDocumentText("a\n\n\n\nb  \n")).toBe("a\n\nb");
   });
 });
