@@ -10,7 +10,12 @@
     "preview": "vite preview --port 5656",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:watch": "vitest --coverage",
+    "test:security": "vitest run src/lib/__tests__/secrets-boundary.test.ts src/lib/__tests__/webhook-security.test.ts src/lib/__tests__/privacy-redact.test.ts",
+    "test:e2e": "playwright test",
+    "test:all": "npm run test:e2e && npm run test && npm run test:security"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

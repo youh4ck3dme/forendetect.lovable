@@ -51,82 +51,87 @@ function People() {
   const [target, setTarget] = useState<DetectorTarget | null>(null);
   const [kind, setKind] = useState<KindFilter>("all");
   const [icoInput, setIcoInput] = useState("");
-  const [previewProfile, setPreviewProfile] = useState<
-    import("@/forensic").CompanyRegistryProfile | null
-  >(null);
+  const [isSearchingIco, setIsSearchingIco] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [previewSnapshot, setPreviewSnapshot] = useState<{
+    snapshotId: string;
+    profile: import("@/forensic").CompanyRegistryProfile;
+  } | null>(null);
 
-  const handleIcoSearch = () => {
-    if (!icoInput.trim()) {
-      import("sonner").then(({ toast }) => toast.error("Zadajte platné IČO"));
+  const handleIcoSearch = async () => {
+    const trimmed = icoInput.trim();
+    if (!trimmed) {
+      const { toast } = await import("sonner");
+      toast.error("Zadajte platné IČO.");
       return;
     }
+    if (!activeCase?.id) {
+      const { toast } = await import("sonner");
+      toast.error("Nie je vybratý aktívny prípad.");
+      return;
+    }
+    setIsSearchingIco(true);
     try {
-      const parsed = import("@/forensic")
-        .then(({ parseCompanyRegistryProfile }) => {
-          const dummyPayload = {
-            ico: icoInput,
-            legalName: `Spoločnosť ${icoInput} s.r.o.`,
-            legalForm: "s.r.o.",
-            registeredAddress: "Bratislava, Hlavná ulica 12",
-            country: "SK",
-            status: "active",
-            incorporatedAt: "2021-05-15",
-            statutoryPersons: [
-              {
-                name: "Ing. Peter Kováč",
-                role: "konateľ",
-                validFrom: "2021-05-15",
-              },
-            ],
-            businessActivities: [
-              "kúpa tovaru na účely jeho predaja",
-              "sprostredkovateľská činnosť",
-            ],
-            source: {
-              source: "ico-atlas",
-              capturedAt: new Date().toISOString(),
-              confidence: 98,
-            },
-          };
-          const profile = parseCompanyRegistryProfile(dummyPayload);
-          setPreviewProfile(profile);
-        })
-        .catch((err) => {
-          import("sonner").then(({ toast }) =>
-            toast.error(`Import zlyhal: ${err.message}`),
-          );
+      const { lookupCompanyRegistryByIco } =
+        await import("@/lib/registry.functions");
+      const res = await lookupCompanyRegistryByIco({
+        data: { caseId: activeCase.id, ico: trimmed, country: "SK" },
+      });
+      if (res.ok && res.profile && res.snapshotId) {
+        setPreviewSnapshot({
+          snapshotId: res.snapshotId,
+          profile: res.profile,
         });
-    } catch (err) {
-      import("sonner").then(({ toast }) =>
-        toast.error("Chyba spracovania vstupu"),
-      );
+        const { toast } = await import("sonner");
+        toast.success(
+          "Profil subjektu bol overený a načítaný ako nemenný snapshot.",
+        );
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "neznáma chyba";
+      const { toast } = await import("sonner");
+      toast.error(`Vyhľadanie zlyhalo: ${message}`);
+    } finally {
+      setIsSearchingIco(false);
     }
   };
 
   const confirmImport = async (mode: "new" | "update") => {
-    if (!previewProfile) return;
+    if (!previewSnapshot || !activeCase?.id) return;
+    setIsImporting(true);
     try {
-      const { importCompanyRegistryProfile } =
+      const { confirmCompanyRegistryImport } =
         await import("@/lib/registry.functions");
-      await importCompanyRegistryProfile({
+      const { findEntityByIco } = await import("@/forensic");
+      const existingComp = findEntityByIco(
+        analysis.entities.map((e) => e.entity),
+        previewSnapshot.profile.ico,
+      );
+
+      await confirmCompanyRegistryImport({
         data: {
           caseId: activeCase.id,
-          profile: previewProfile,
-          createEntity: true,
+          snapshotId: previewSnapshot.snapshotId,
+          mode,
+          existingEntityId:
+            mode === "update" && existingComp ? existingComp.id : undefined,
         },
       });
       const { toast } = await import("sonner");
       toast.success(
         mode === "new"
-          ? "Nová firma bola úspešne pridaná z ICO Atlas"
-          : "Firma bola aktualizovaná dátami z ICO Atlas",
+          ? "Nová firma bola úspešne pridaná z registra"
+          : "Firma bola aktualizovaná dátami z registra",
       );
-      setPreviewProfile(null);
+      setPreviewSnapshot(null);
       setIcoInput("");
       refresh();
-    } catch (err) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "neznáma chyba";
       const { toast } = await import("sonner");
-      toast.error(`Zápis zlyhal: ${(err as Error).message}`);
+      toast.error(`Zápis zlyhal: ${message}`);
+    } finally {
+      setIsImporting(false);
     }
   };
 
@@ -185,7 +190,7 @@ function People() {
               className={cn(
                 "h-8 rounded-full border px-3 text-xs font-medium transition-colors",
                 kind === option.id
-                  ? "gradient-brand border-transparent text-foreground"
+                  ? "gradient-brand border-transparent text-white"
                   : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground",
               )}
             >
@@ -212,62 +217,80 @@ function People() {
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Zadajte IČO (napr. 51234567)"
+                placeholder="Zadajte IČO (napr. 31322832)"
                 value={icoInput}
+                disabled={isSearchingIco}
                 onChange={(e) => setIcoInput(e.target.value)}
-                className="h-9 flex-1 rounded-md border border-input bg-background px-3 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleIcoSearch();
+                  }
+                }}
+                className="h-9 flex-1 rounded-md border border-input bg-background px-3 text-xs focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-50"
               />
               <button
                 type="button"
+                disabled={isSearchingIco}
                 onClick={handleIcoSearch}
-                className="h-9 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+                className="h-9 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-opacity"
               >
-                Importovať z ICO Atlas
+                {isSearchingIco ? "Vyhľadávam..." : "Importovať z ICO Atlas"}
               </button>
             </div>
             <p className="text-[11px] text-muted-foreground">
-              Zadajte IČO a importujte autorizovaný profil z registra s
-              preverením štatutárov.
+              Zadajte IČO a importujte overený profil z registra cez Laravel ICO
+              Atlas API s preverením štatutárov.
             </p>
           </div>
         </Card>
 
         {/* Modal Náhľadu ICO Atlas Profilu */}
-        {previewProfile && (
+        {previewSnapshot && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
             <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4">
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <div>
                   <h4 className="text-base font-bold">
-                    {previewProfile.legalName}
+                    {previewSnapshot.profile.legalName}
                   </h4>
                   <p className="text-xs text-muted-foreground">
-                    IČO: {previewProfile.ico} •{" "}
-                    {previewProfile.legalForm || "s.r.o."}
+                    IČO: {previewSnapshot.profile.ico} •{" "}
+                    {previewSnapshot.profile.legalForm || "s.r.o."}
                   </p>
                 </div>
-                <RiskChip level="low">Náhľad profilu</RiskChip>
+                <RiskChip level="low">Overený profil</RiskChip>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div>
                   <span className="font-semibold text-muted-foreground">
+                    Snapshot ID:{" "}
+                  </span>
+                  <span className="font-mono text-[10px] text-muted-foreground break-all">
+                    {previewSnapshot.snapshotId}
+                  </span>
+                </div>
+                <div>
+                  <span className="font-semibold text-muted-foreground">
                     Adresa:{" "}
                   </span>
-                  <span>{previewProfile.registeredAddress || "Neuvedená"}</span>
+                  <span>
+                    {previewSnapshot.profile.registeredAddress || "Neuvedená"}
+                  </span>
                 </div>
                 <div>
                   <span className="font-semibold text-muted-foreground">
                     Krajina:{" "}
                   </span>
-                  <span>{previewProfile.country}</span>
+                  <span>{previewSnapshot.profile.country}</span>
                 </div>
                 <div>
                   <span className="font-semibold text-muted-foreground">
                     Status:{" "}
                   </span>
                   <span className="font-medium text-primary">
-                    {previewProfile.status || "Aktívny"}
+                    {previewSnapshot.profile.status || "Aktívny"}
                   </span>
                 </div>
                 <div>
@@ -275,9 +298,9 @@ function People() {
                     Čas získania:{" "}
                   </span>
                   <span>
-                    {new Date(previewProfile.source.capturedAt).toLocaleString(
-                      "sk-SK",
-                    )}
+                    {new Date(
+                      previewSnapshot.profile.source.capturedAt,
+                    ).toLocaleString("sk-SK")}
                   </span>
                 </div>
                 <div>
@@ -285,19 +308,39 @@ function People() {
                     Zdroj:{" "}
                   </span>
                   <span>
-                    {previewProfile.source.source} (Confidence:{" "}
-                    {previewProfile.source.confidence ?? 100}%)
+                    {previewSnapshot.profile.source.source.toUpperCase()}{" "}
+                    {previewSnapshot.profile.source.sourceUrl ? (
+                      <a
+                        href={previewSnapshot.profile.source.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline text-primary ml-1"
+                      >
+                        (zobraziť originál)
+                      </a>
+                    ) : null}
                   </span>
                 </div>
+                {previewSnapshot.profile.source.sourceHash && (
+                  <div>
+                    <span className="font-semibold text-muted-foreground">
+                      Hash obsahu (SHA-256):{" "}
+                    </span>
+                    <span className="font-mono text-[10px] text-muted-foreground break-all">
+                      {previewSnapshot.profile.source.sourceHash}
+                    </span>
+                  </div>
+                )}
 
                 <div className="pt-2 border-t border-border">
                   <p className="font-semibold mb-1">
-                    Štatutárne orgány ({previewProfile.statutoryPersons.length}
+                    Štatutárne orgány (
+                    {previewSnapshot.profile.statutoryPersons.length}
                     ):
                   </p>
                   <ul className="list-disc pl-4 space-y-0.5 text-muted-foreground">
-                    {previewProfile.statutoryPersons.map((sp, idx) => (
-                      <li key={idx}>
+                    {previewSnapshot.profile.statutoryPersons.map((sp, idx) => (
+                      <li key={sp.sourcePersonId || `${sp.name}-${idx}`}>
                         <strong className="text-foreground">{sp.name}</strong> (
                         {sp.role || "konateľ"})
                       </li>
@@ -308,11 +351,15 @@ function People() {
                 <div className="pt-2 border-t border-border">
                   <p className="font-semibold mb-1">
                     Predmety činnosti (
-                    {previewProfile.businessActivities.length}):
+                    {previewSnapshot.profile.businessActivities.length}):
                   </p>
                   <p className="text-muted-foreground">
-                    {previewProfile.businessActivities.slice(0, 3).join(", ")}
-                    {previewProfile.businessActivities.length > 3 ? "..." : ""}
+                    {previewSnapshot.profile.businessActivities
+                      .slice(0, 3)
+                      .join(", ")}
+                    {previewSnapshot.profile.businessActivities.length > 3
+                      ? "..."
+                      : ""}
                   </p>
                 </div>
               </div>
@@ -323,22 +370,25 @@ function People() {
                 </p>
                 <button
                   type="button"
+                  disabled={isImporting}
                   onClick={() => confirmImport("new")}
-                  className="h-9 w-full rounded-md gradient-brand font-medium text-foreground text-xs"
+                  className="h-9 w-full rounded-md gradient-brand font-medium text-foreground text-xs disabled:opacity-50"
                 >
-                  Vytvoriť novú firmu v prípade
+                  {isImporting ? "Ukladám..." : "Vytvoriť novú firmu v prípade"}
                 </button>
                 <button
                   type="button"
+                  disabled={isImporting}
                   onClick={() => confirmImport("update")}
-                  className="h-9 w-full rounded-md border border-border bg-secondary font-medium text-secondary-foreground text-xs hover:bg-secondary/80"
+                  className="h-9 w-full rounded-md border border-border bg-secondary font-medium text-secondary-foreground text-xs hover:bg-secondary/80 disabled:opacity-50"
                 >
-                  Aktualizovať existujúcu firmu
+                  {isImporting ? "Ukladám..." : "Aktualizovať existujúcu firmu"}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setPreviewProfile(null)}
-                  className="h-9 w-full rounded-md text-xs font-medium text-muted-foreground hover:text-foreground"
+                  disabled={isImporting}
+                  onClick={() => setPreviewSnapshot(null)}
+                  className="h-9 w-full rounded-md text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-50"
                 >
                   Zrušiť import
                 </button>

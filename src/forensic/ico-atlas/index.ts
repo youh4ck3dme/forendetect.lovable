@@ -13,6 +13,7 @@ export type StatutoryPerson = {
   role?: string | undefined;
   validFrom?: string | undefined;
   validTo?: string | undefined;
+  sourcePersonId?: string | undefined;
 };
 
 export type AddressHistoryItem = {
@@ -36,6 +37,28 @@ export type CompanyRegistryProfile = {
   source: SourceRecord;
 };
 
+/**
+ * Deterministická kanonická serializácia JSON objektu pre výpočet integritného hashu.
+ * Rekurzívne zoraďuje kľúče objektov abecedne a ignoruje undefined hodnoty,
+ * čím zaručuje rovnaký hash bez ohľadu na poradie kľúčov v payloadoch.
+ */
+export function canonicalJsonStringify(value: unknown): string {
+  if (value === null || typeof value !== "object") {
+    return JSON.stringify(value);
+  }
+  if (Array.isArray(value)) {
+    return (
+      "[" + value.map((item) => canonicalJsonStringify(item)).join(",") + "]"
+    );
+  }
+  const obj = value as Record<string, unknown>;
+  const sortedKeys = Object.keys(obj).sort();
+  const pairs = sortedKeys
+    .filter((k) => obj[k] !== undefined)
+    .map((k) => `${JSON.stringify(k)}:${canonicalJsonStringify(obj[k])}`);
+  return "{" + pairs.join(",") + "}";
+}
+
 const SourceRecordSchema = z.object({
   id: z.string().default(() => `src-${Date.now()}`),
   source: z.enum([
@@ -47,43 +70,45 @@ const SourceRecordSchema = z.object({
     "dimitri-checker",
     "ai",
   ]),
-  sourceVersion: z.string().optional(),
-  sourceUrl: z.string().optional(),
+  sourceVersion: z.string().nullable().optional(),
+  sourceUrl: z.string().nullable().optional(),
   capturedAt: z.string().min(1, "Chýba čas získania (capturedAt)"),
-  sourceHash: z.string().optional(),
+  sourceHash: z.string().nullable().optional(),
   confidence: z
     .number()
     .min(0, "Confidence musí byť minimálne 0")
     .max(100, "Confidence musí byť maximálne 100")
+    .nullable()
     .optional(),
-  rawReference: z.string().optional(),
+  rawReference: z.string().nullable().optional(),
 });
 
 const StatutoryPersonSchema = z.object({
   name: z.string().min(1, "Meno štatutára je povinné"),
-  role: z.string().optional(),
-  validFrom: z.string().optional(),
-  validTo: z.string().optional(),
+  role: z.string().nullable().optional(),
+  validFrom: z.string().nullable().optional(),
+  validTo: z.string().nullable().optional(),
+  sourcePersonId: z.string().nullable().optional(),
 });
 
 const AddressHistorySchema = z.object({
   address: z.string().min(1, "Adresa v histórii nesmie byť prázdna"),
-  validFrom: z.string().optional(),
-  validTo: z.string().optional(),
+  validFrom: z.string().nullable().optional(),
+  validTo: z.string().nullable().optional(),
 });
 
 export const CompanyRegistryProfileSchema = z.object({
   ico: z.string().min(1, "Chýba IČO"),
   legalName: z.string().min(1, "Chýba názov firmy (legalName)"),
-  legalForm: z.string().optional(),
-  registeredAddress: z.string().optional(),
+  legalForm: z.string().nullable().optional(),
+  registeredAddress: z.string().nullable().optional(),
   country: z.string().default("SK"),
-  status: z.string().optional(),
-  incorporatedAt: z.string().optional(),
-  dissolvedAt: z.string().optional(),
+  status: z.string().nullable().optional(),
+  incorporatedAt: z.string().nullable().optional(),
+  dissolvedAt: z.string().nullable().optional(),
   statutoryPersons: z.array(StatutoryPersonSchema).default([]),
   businessActivities: z.array(z.string()).default([]),
-  addressHistory: z.array(AddressHistorySchema).optional(),
+  addressHistory: z.array(AddressHistorySchema).nullable().optional(),
   source: SourceRecordSchema,
 });
 
@@ -115,21 +140,38 @@ export function parseCompanyRegistryProfile(
 
   // Deduplikácia štatutárov — voliteľné polia vynechaj, keď chýbajú
   // (exactOptionalPropertyTypes: prítomný kľúč nesmie byť undefined).
+  // Zachovávame rôzne osoby so zhodným menom aj viacnásobné roly s rôznou platnosťou.
   const personSeen = new Set<string>();
   const statutoryPersons: StatutoryPerson[] = [];
   for (const person of raw.statutoryPersons) {
-    const key = `${person.name.trim().toLowerCase()}|${(person.role || "").trim().toLowerCase()}`;
+    const key = `${person.sourcePersonId || ""}|${person.name.trim().toLowerCase()}|${(person.role || "").trim().toLowerCase()}|${person.validFrom || ""}|${person.validTo || ""}`;
     if (!personSeen.has(key)) {
       personSeen.add(key);
       const item: StatutoryPerson = { name: person.name.trim() };
       if (person.role) item.role = person.role.trim();
       if (person.validFrom) item.validFrom = person.validFrom;
       if (person.validTo) item.validTo = person.validTo;
+      if (person.sourcePersonId) item.sourcePersonId = person.sourcePersonId;
       statutoryPersons.push(item);
     }
   }
 
   const businessActivities = deduplicateStrings(raw.businessActivities);
+
+  const cleanSource: SourceRecord = {
+    id: raw.source.id,
+    source: raw.source.source,
+    capturedAt: raw.source.capturedAt,
+  };
+  if (raw.source.sourceVersion)
+    cleanSource.sourceVersion = raw.source.sourceVersion;
+  if (raw.source.sourceUrl) cleanSource.sourceUrl = raw.source.sourceUrl;
+  if (raw.source.sourceHash) cleanSource.sourceHash = raw.source.sourceHash;
+  if (raw.source.confidence !== undefined && raw.source.confidence !== null) {
+    cleanSource.confidence = raw.source.confidence;
+  }
+  if (raw.source.rawReference)
+    cleanSource.rawReference = raw.source.rawReference;
 
   const profile: CompanyRegistryProfile = {
     ico: normalizedIco,
@@ -137,7 +179,7 @@ export function parseCompanyRegistryProfile(
     country: normalizeCountry(raw.country),
     statutoryPersons,
     businessActivities,
-    source: raw.source,
+    source: cleanSource,
   };
   if (raw.legalForm) profile.legalForm = raw.legalForm;
   if (raw.registeredAddress) {
@@ -146,7 +188,14 @@ export function parseCompanyRegistryProfile(
   if (raw.status) profile.status = raw.status;
   if (raw.incorporatedAt) profile.incorporatedAt = raw.incorporatedAt;
   if (raw.dissolvedAt) profile.dissolvedAt = raw.dissolvedAt;
-  if (raw.addressHistory) profile.addressHistory = raw.addressHistory;
+  if (raw.addressHistory) {
+    profile.addressHistory = raw.addressHistory.map((h) => {
+      const item: AddressHistoryItem = { address: h.address };
+      if (h.validFrom) item.validFrom = h.validFrom;
+      if (h.validTo) item.validTo = h.validTo;
+      return item;
+    });
+  }
   return profile;
 }
 
@@ -221,15 +270,58 @@ export function buildStatutoryPersonEntities(
   });
 }
 
+export type StatutoryPersonEntityMapping = {
+  personName: string;
+  entityId: string;
+  role?: string | undefined;
+};
+
+/**
+ * Vyhľadá existujúcu entitu osoby podľa mena v rámci existujúcich entít prípadu.
+ */
+export function findPersonByName(
+  entities: Entity[],
+  name: string,
+): Entity | undefined {
+  if (!name || !entities) return undefined;
+  const target = name.trim().toLowerCase();
+  return entities.find(
+    (e) => e.kind === "person" && e.name.trim().toLowerCase() === target,
+  );
+}
+
 /**
  * Vytvorí relácie medzi štatutármi a firmou.
+ * Podporuje buď pole identifikátorov (pre spätnú kompatibilitu), alebo explicitné párovanie
+ * StatutoryPersonEntityMapping, ktoré je odolné voči zmene poradia či vynechaniu niektorej osoby.
  */
 export function buildRegistryRelations(
   profile: CompanyRegistryProfile,
   companyEntityId: string,
-  personEntityIds: string[],
+  personEntityIdsOrMapping: string[] | StatutoryPersonEntityMapping[],
 ): Relation[] {
-  return personEntityIds.map((personId, index) => {
+  if (personEntityIdsOrMapping.length === 0) return [];
+
+  // Ak je dodané explicitné mapovanie s menom osoby
+  if (typeof personEntityIdsOrMapping[0] === "object") {
+    const mappings = personEntityIdsOrMapping as StatutoryPersonEntityMapping[];
+    return mappings.map((m) => {
+      const matched = profile.statutoryPersons.find(
+        (sp) =>
+          sp.name.trim().toLowerCase() === m.personName.trim().toLowerCase(),
+      );
+      const label = m.role || matched?.role || "štatutárny orgán";
+      return {
+        fromId: m.entityId,
+        toId: companyEntityId,
+        label,
+      };
+    });
+  }
+
+  // Ak je dodané pole ID stringov (fallback / pôvodné testy)
+  const ids = personEntityIdsOrMapping as string[];
+  return ids.map((personId, index) => {
     const person = profile.statutoryPersons[index];
     const label = person?.role || "štatutárny orgán";
     return {

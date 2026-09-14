@@ -12,17 +12,27 @@ export function normalizeIco(value: string): string {
   const cleaned = value.trim().replace(/\s+/g, "");
   const digitsOnly = cleaned.replace(/\D/g, "");
 
-  if (digitsOnly.length > 0 && digitsOnly.length <= 8) {
+  if (digitsOnly.length === 0) {
+    return "";
+  }
+
+  if (digitsOnly.length <= 8) {
     return digitsOnly.padStart(8, "0");
   }
-  if (digitsOnly.length > 8) {
-    const trimmedZeros = digitsOnly.replace(/^0+/, "");
-    if (trimmedZeros.length > 0 && trimmedZeros.length <= 8) {
-      return trimmedZeros.padStart(8, "0");
-    }
-    return trimmedZeros;
+  const trimmedZeros = digitsOnly.replace(/^0+/, "");
+  if (trimmedZeros.length > 0 && trimmedZeros.length <= 8) {
+    return trimmedZeros.padStart(8, "0");
   }
-  return cleaned;
+  return trimmedZeros;
+}
+
+/**
+ * Overí, či je zadaná hodnota platné IČO (6 až 10 číslic, štandardne 8).
+ */
+export function isValidIco(value: string): boolean {
+  if (!value) return false;
+  const digits = value.trim().replace(/\s+/g, "");
+  return /^\d{6,10}$/.test(digits);
 }
 
 /**
@@ -68,8 +78,9 @@ export function normalizeCountry(value: string): string {
     UKRAINE: "UA",
   };
 
-  if (countryMap[trimmed]) {
-    return countryMap[trimmed];
+  const mapped = countryMap[trimmed];
+  if (mapped) {
+    return mapped;
   }
   return trimmed;
 }
