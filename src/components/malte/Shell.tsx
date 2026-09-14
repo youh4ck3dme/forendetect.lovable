@@ -111,8 +111,31 @@ function DesktopSidebar() {
 
 /** Responzívny shell: telefónny rám na mobile, pracovná plocha na desktope. */
 export function PhoneFrame({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  const isFirstRender = useRef(true);
+
+  /**
+   * Po zmene stránky presunie fokus na hlavný obsah (nie do sticky menu),
+   * aby tabulátor pokračoval od obsahu a nezacyklil sa v navigácii.
+   * Pri prvom načítaní fokus nemení — necháme ho na dokumente.
+   */
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const main = document.getElementById("main-content");
+    main?.focus({ preventScroll: true });
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-100 focus:rounded-xl focus:bg-primary focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-primary-foreground focus:shadow-elevated focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+      >
+        Preskočiť na hlavný obsah
+      </a>
       <DesktopSidebar />
       <div className="flex min-w-0 flex-1 justify-center py-0 sm:px-4 sm:py-10 lg:px-6 lg:py-8">
         <div className="w-full min-w-0 max-w-[min(100%,560px)] sm:overflow-hidden sm:rounded-[2.5rem] sm:border sm:border-border sm:bg-card sm:shadow-elevated lg:max-w-[min(100%,1180px)] lg:rounded-3xl xl:max-w-[min(100%,1320px)] 2xl:max-w-[min(100%,1480px)]">
