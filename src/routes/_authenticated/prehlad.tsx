@@ -215,7 +215,7 @@ function Index() {
           action={
             <Link
               to="/analyza-vypisov"
-              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+              className="inline-flex min-h-11 items-center gap-1 px-2 text-xs font-medium text-primary hover:underline"
             >
               Všetko <ArrowRight className="h-3 w-3" aria-hidden />
             </Link>
