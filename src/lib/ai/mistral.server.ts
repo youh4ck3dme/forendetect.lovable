@@ -53,6 +53,12 @@ function retryDelay(response: Response, attempt: number): number {
   const raw = response.headers.get("retry-after");
   const seconds = raw ? Number(raw) : Number.NaN;
   if (Number.isFinite(seconds) && seconds >= 0) return Math.min(seconds, 30) * 1000;
+  if (raw) {
+    const retryAt = Date.parse(raw);
+    if (Number.isFinite(retryAt)) {
+      return Math.min(Math.max(retryAt - Date.now(), 0), 30_000);
+    }
+  }
   return Math.min(1000 * 2 ** attempt, 8000) + Math.floor(Math.random() * 250);
 }
 
