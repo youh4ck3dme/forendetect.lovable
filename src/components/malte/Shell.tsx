@@ -269,6 +269,7 @@ function MobileMoreSheet({
 
   useEffect(() => {
     if (!open) return;
+    const trigger = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -278,6 +279,8 @@ function MobileMoreSheet({
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      // Návrat fokusu na tlačidlo „Viac“, nie do stredu tabovacieho poradia.
+      trigger?.focus({ preventScroll: true });
     };
   }, [open, onClose]);
 
