@@ -3,7 +3,7 @@ import { ChevronLeft, X } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import malteMark from "@/assets/forendo-mark.png";
+import forendoPegasus from "@/assets/forendo-pegasus.png.asset.json";
 import {
   CommandPalette,
   CommandPaletteTrigger,
@@ -25,11 +25,11 @@ function DesktopSidebar() {
     <aside className="sticky top-0 hidden h-screen w-[288px] shrink-0 flex-col border-r border-border bg-card px-4 py-6 lg:flex">
       <div className="flex items-center gap-2 px-2">
         <img
-          src={malteMark}
+          src={forendoPegasus.url}
           alt=""
           width={30}
           height={30}
-          className="h-7 w-7"
+          className="h-7 w-7 object-contain"
           aria-hidden
         />
         <span className="text-lg font-extrabold tracking-tight">Forendo</span>
