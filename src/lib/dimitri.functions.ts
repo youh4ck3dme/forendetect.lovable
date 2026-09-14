@@ -8,6 +8,9 @@ import {
 } from "@/forensic/dimitri";
 import type { ForensicCase } from "@/forensic/types";
 
+/* Supabase tables without generated schema types are isolated to this module. */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const uuid = z.string().uuid();
 
 function fail(
@@ -54,9 +57,7 @@ export const importDimitriCheckerReport = createServerFn({ method: "POST" })
       subtitle: owned.subtitle ?? "",
       referenceDate: owned.reference_date,
       baseCurrency: owned.base_currency ?? "EUR",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       entities: (owned.case_entities as any[]) || [],
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       transactions: (owned.case_transactions as any[]) || [],
       weapons: [],
       relations: [],
@@ -73,7 +74,6 @@ export const importDimitriCheckerReport = createServerFn({ method: "POST" })
     const { report, warnings } = validateDimitriReferences(rawReport, caseData);
 
     // 4. Uloženie do databázy cross_border_analyses
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: inserted, error: insertError } = await (
       supabase.from("cross_border_analyses" as any) as any
     )
@@ -119,7 +119,6 @@ export const listCrossBorderAnalyses = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: analyses, error } = await (
       supabase.from("cross_border_analyses" as any) as any
     )

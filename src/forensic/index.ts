@@ -43,7 +43,7 @@ export {
 } from "./core/transactions";
 export { detectShellCompany, isShell } from "./core/shellCompany";
 export { analyzeWeapon, detectVolumeSurge } from "./core/weapons";
-export { detectChains } from "./core/network";
+export { detectChains, detectIsolatedCompanies } from "./core/network";
 export { detectSuspiciousFlows } from "./core/crossBorder";
 export { HIGH_RISK_DESTINATIONS } from "./core/crossBorder";
 export {

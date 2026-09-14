@@ -27,8 +27,7 @@ MINISTERSTVO VNÚTRA SLOVENSKEJ REPUBLIKY PREZÍDIUM POLICAJNÉHO ZBORU úrad bo
 
 Podľa § 129 ods. 2 Trestného poriadku nesmiete byť vypočúvaný ani s&dy, keby ste svojou výpoveďou porušil zákonom alebo medzinárodnou zmluvou uloženú alebo uznanú povinností mlčanlivosti okrem pripadu, by ste bol od tejto povinnosti oslobodený prislušným orgánom alebo tým. v ktotŕho záujme máte túto povinnosť. Podľa 129 ods. 3 Trvstného poriadku sa zákaz výsluchu podľa odseku 2 nevzťahuje na svedeckú povinnosť týkajúcu sa trestného činu, ktoĺý máte ako svedok povinnosť prekaziť podľa Trestného zákona. Podľa 130 ods. I Trestného poriadku máte právo odoprieť sýpoveď ako svedok. ak ste prbuzný obvineného v priamom rade,jeho súrodenec, osvojiteľ, osvojenec, manžel alebo druh. Ak je viac obvinených a ste v uvedenom pomere len k niektoĺŕmu z nich, máte právo odoprieť výpoveď ohľadne iných obvinených
 
-===== PÔVODNÁ STRANA 2 Z 7 =====
-2. strana zápisniceo 'sluchu svedka Marek Plch zo dňa 12.01.2025 len vtedy, keď nemožno oddeliť výpoveď, ktorá sa ich týka, od výpovede týkajúcej sa obvineného, s ktorým ste v tomto pomere.
+===== PÔVODNÁ STRANA 2 Z 7 ===== 2. strana zápisniceo 'sluchu svedka Marek Plch zo dňa 12.01.2025 len vtedy, keď nemožno oddeliť výpoveď, ktorá sa ich týka, od výpovede týkajúcej sa obvineného, s ktorým ste v tomto pomere.
 
 podľa § 130 ods. 2 Trestného poriadku ste oprávnený odoprieť vypovedať, ak by ste svojou výpoveďou spôsobili nebezpečenstvo trestného stíhania sebe, svojmu príbuznému v priamom rade, svojmu súrodencovi, osvojiteľovi, osvojencovi, manželovi alebo druhovi alebo iným osobám v rodinnom alebo obdobnom pomere, ktorých ujmu by ste právom pociťovali ako vlastnú ujmu.
 
@@ -48,8 +47,7 @@ Taktiež je trestné v zmysle § 346 Trestného zákona, ak ako svedok pred vyš
 
 Podľa § 136 ods. 1 Trestného poriadku, ak máte dôvodnú obavu, že VY alebo Vám blízka osoba je ohrozená v dôsledku uvedenia Vášho bydliska, môžete uviesť namiesto bydliska svoje pracovisko alebo inú adresu, na ktorú Vám môže byť doručené predvolanie. Ak sa ako svedok vypočúva zástupca orgánu sociálnoprávnej ochrany detí a sociálnej kurately o skutočnostiach, ktoré sa dozvedel v súvislosti s vykonávaním opatrení sociálnoprávnej ochrany detí a sociálnej kurately, orgán činný v trestnom konaní a súd uvedie do zápisnice adresu sídla orgánu sociálnoprávnej ochrany detí a sociálnej kurately. Podľa 136 ods. 2 Trestného poriadku, ak je dôvodná obava, že oznámením Vašej totožnosti' bydliska, prípadne miesta pobytu je ohrozený Váš život, zdravie, telesná integrita alebo ak také nebezpečenstvo hrozí Vašej blízkej osobe, môže sa Vám povoliť, aby ste neuvádzali údaje o svojej osobe.
 
-===== PÔVODNÁ STRANA 3 Z 7 =====
-3. strana zápisnice o výsluchu svedka Marek Plch zo dňa 12.01.2025 Súhlas na postup podľa § 136 ods. 2 Trestného poriadku dáva predseda senátu v prípravnom konaní prokurátor.
+===== PÔVODNÁ STRANA 3 Z 7 ===== 3. strana zápisnice o výsluchu svedka Marek Plch zo dňa 12.01.2025 Súhlas na postup podľa § 136 ods. 2 Trestného poriadku dáva predseda senátu v prípravnom konaní prokurátor.
 
 Pri výsluchu treba mať na pamäti i § 134 Trestného poriadku.
 
@@ -61,8 +59,7 @@ Bez žiadosti svedka orgán činný v trestnom konaní alebo súd poskytne svedk
 
 Ak svedok vyhlási že nerozumie jazyku, v ktorom sa konanie vedie alebo nehovorí týmto jazykom, priberie sa do konania tlmočník (§ 28 ods. I Trestného poriadku). Pri spísaní zápisnice treba brať do úvahy § 58 ods. 3 Trestného poriadku. Podľa 140 ods. 1 Trestného poriadku má svedok nárok na náhradu nevyhnutných výdavkov a ušlej mzdy za prácu. Nárok zaniká, ak ho neuplatníte do troch dní po svojom výsluchu, alebo po tom, ako Vám bolo oznámené, že k výsluchu nedôjde, alebo ak ho nevyčíslite do pätnástich dní od uplatnenia nároku. na náhradu nevyhnutných výdavkov a ušlej mzdy za prácu (svedočné)' Na tento nárok treba svedka v predvolaní upozorniť. Ak bol svedok k výsluchu predvolaný iným spôsobom ako písomne (ústne, telefonicky, faxom) alebo predvedený, postupuje sa pri určovaní svedočného obdobne, ako by bol predvolaný na výsluch písomne.
 
-===== PÔVODNÁ STRANA 4 Z 7 =====
-4. strana zápisnice o v 'sluchu svedka Marek Plch zo dňa Ako svedka Vás ďalej poučujem o tom, že táto zápisnica alebo jej podstatná časť môže byť podľa 263 ods. I Trestného poriadku prečítaná na hlavnom pojednávaní, ak stým súhlasí prokurátor a obžalovaný a súd nepovažuje osobný výsluch za potrebný.
+===== PÔVODNÁ STRANA 4 Z 7 ===== 4. strana zápisnice o v 'sluchu svedka Marek Plch zo dňa Ako svedka Vás ďalej poučujem o tom, že táto zápisnica alebo jej podstatná časť môže byť podľa 263 ods. I Trestného poriadku prečítaná na hlavnom pojednávaní, ak stým súhlasí prokurátor a obžalovaný a súd nepovažuje osobný výsluch za potrebný.
 
 podľa § 263 ods. 3 poriadku sa zápisnica o výpovedi svedka môže prečítať aj vtedy, ak taká osoba zonłrela alebo sa stala nezvestnou, pre dlhodobý pobyt v cudzine alebo na neznámom mieste nedosiahnuteľnou, alebo na chorobu, ktorá natrvalo alebo na dlhší čas znemožňuje jej výsluch alebo ak sa taká osoba ani na opätovné predvolanie súdu k výsluchu bez dôvodného ospravedlnenia nedostaví a jej predvedenie bolo neúspešné, ak ide o výpoveď svedka, u ktorého bol v čase jeho výpovede v prípravnom konaní, ktorá sa má prečítať, dôvodný predpoklad, že na hlavnom pojednávaní ho nebude možné vypočuť, možno jeho výpoveď prečítať len vtedy, ak bol o úkone riadne upovedomený obvinený, a ak má obhajcu, jeho obhajca, ak išlo o neodkladný úkon alebo neopakovateľný úkon alebo svedok na hlavnom pojednávaní bez oprávnenia odoprel vypovedať. podľa 263 ods. 4 Trestného poriadku zápisnicu o výpovedi svedka, ktorý na hlavnom pojednávaní \ľužil svoje právo odoprieť vypovedať podľa SS 130 možno prečítať za predpokladu, že bol pred výsluchom, ktorého sa zápisnica týka o svojom práve odoprieť vypovedať riadne poučený a výslovne vyhlásil, že poučeniu porozumel a toto právo nevyužíva, ak bol výsluch vykonaný spôsobom zodpovedajúcim ustanoveniam tohto zákona. Preto, ak svedok po poučení podľa 130 Trestného poriadku o práve odoprieť vypovedať nevyužije toto právo, v zápisnici o výsluchu sa uvedie : „výslovne vyhlasujem, že toto právo nevyužívam ' Neoprávnené odopretie výpovede podľa ustanovení § 130 Trestného poriadku je podľa § 70 Trestného poriadku postihnuteľné poriadkovou pokutou do 1.650,-€; ak ide o právnickú osobu, až do 16.590,-€.
 
@@ -70,8 +67,7 @@ Podľa § 554 ods. 1 Trestného poriadku Vás upozorňujem, že ak napriek tomu,
 
 Výzva a upozornenie pre svedka v zmysle vyššie citovaného poučenia a oznátnenia: Svedok bol vyšetrovateľom ústne vyzvaný, aby pri tonłto výsluchu nepoužíval žiadne záznamové zariadenie (o jeho použití na účely tohto úkonu je oprávnený rozhodnúť len policajt alebo prokurátor podľa 58 odsek 7 Trestného poriadku) a taktiež mobilný telefón.
 
-===== PÔVODNÁ STRANA 5 Z 7 =====
-5. strana zápisniceo 'sluchu svedka Marek Plch zo dňa 12.01.2025 Svedok bol vyšetrovateľom upozOtmenÝ' že nevyhovenie výzve môže byť potrestané poriadkovou pokutou, a to až do výšky 1.650,- € (§ 70 Trestného poriadku). Svedok svojim podpisom berie uvedené poučenie a výzvu na vedomie.
+===== PÔVODNÁ STRANA 5 Z 7 ===== 5. strana zápisniceo 'sluchu svedka Marek Plch zo dňa 12.01.2025 Svedok bol vyšetrovateľom upozOtmenÝ' že nevyhovenie výzve môže byť potrestané poriadkovou pokutou, a to až do výšky 1.650,- € (§ 70 Trestného poriadku). Svedok svojim podpisom berie uvedené poučenie a výzvu na vedomie.
 
 Výzva a upozornenie pre právneho Zástupcu svedka v zmysle vyššie citovaného poučenia a oznámenia: Právny zástupca svedka bol vyšetrovateľom ústne vyzvaný, aby pri tomto výsluchu nepoužíval žiadne záznamové zariadenie (o jeho použití na účely tohto úkonu je oprávnený rozhodnúť len policajt alebo prokurátor podľa § 58 odsek 7 Trestného poriadku) a taktiež mobilný telefón.
 
@@ -97,8 +93,7 @@ Podľa § 3 ods. 2 zákona žiadosť o poskytnutie ochrany podľa odseku I obsah
 
 Podľa § 4 ods. I zákona ak prokurátor alebo súd zistí, že osoba, ktorá podala žiadosť o poskytnutie ochrany podľa § 3 ods. I zákona, je oznamovateľom, bezodkladne písomne oznámi inšpektorátu práce,
 
-===== PÔVODNÁ STRANA 6 Z 7 =====
-6. strana zápisniceo 'sluchu svedka Marek Plch zo dňa 12.01.2025 zamestnávateľovi a oznamovateľovi, že sa oznamovateľovi poskytuje ochrana podľa 7 zákona; to neplatí, ak osoba požiadala o ochranu podľa odseku 2. Doručením písomného oznámenia prokurátora alebo súdu zamestnávateľovi podľa prvej vety sa oznamovateľ stáva chráneným oznamovateľom. podľa ss 4 ods. 2 zákona osoba, ktorá podala žiadosť o poskytnutie ochrany podľa 3 ods. I zákona môže namiesto ochrany podľa § 7 zákona požiadať len o zaslanie písomného potvrdenia o tom, že je oznamovateľ. Ak prokurátor alebo súd zistí, že osoba, ktorá podala žiadosť o poskytnutie ochrany podľa § 3 ods. I zákona, je oznamovateľom, bezodkladne jej písomne oznámi, že je oznamovateľom.
+===== PÔVODNÁ STRANA 6 Z 7 ===== 6. strana zápisniceo 'sluchu svedka Marek Plch zo dňa 12.01.2025 zamestnávateľovi a oznamovateľovi, že sa oznamovateľovi poskytuje ochrana podľa 7 zákona; to neplatí, ak osoba požiadala o ochranu podľa odseku 2. Doručením písomného oznámenia prokurátora alebo súdu zamestnávateľovi podľa prvej vety sa oznamovateľ stáva chráneným oznamovateľom. podľa ss 4 ods. 2 zákona osoba, ktorá podala žiadosť o poskytnutie ochrany podľa 3 ods. I zákona môže namiesto ochrany podľa § 7 zákona požiadať len o zaslanie písomného potvrdenia o tom, že je oznamovateľ. Ak prokurátor alebo súd zistí, že osoba, ktorá podala žiadosť o poskytnutie ochrany podľa § 3 ods. I zákona, je oznamovateľom, bezodkladne jej písomne oznámi, že je oznamovateľom.
 
 podľa § 4 ods. 3 zákona ak prokurátor alebo súd zistí, že osoba, ktorá podala žiadosť o poskytnutie ochrany podľa § 3 ods. I zákona, nie je oznamovateľom, bezodkladne jej písomne oznámi túto skutočnosť s uvedením dôvodov neposkytnutia ochrany.
 
@@ -120,8 +115,7 @@ Orgán, ktorý oznamovateľovi zaslal písomné oznámenie podľa 4 ods. I alebo
 
 Žiadosť obsahuje meno a priezvisko, dátum narodenia a adresu bydliska oznamovateľa a
 
-===== PÔVODNÁ STRANA 7 Z 7 =====
-7. strana zápisnice o výsluchu svedka Marek Plch zo dňa 12.01.2025
+===== PÔVODNÁ STRANA 7 Z 7 ===== 7. strana zápisnice o výsluchu svedka Marek Plch zo dňa 12.01.2025
 
 odôvodnenie žiadosti; k žiadosti oznamovateľ priloží kópiu oznámenia o nadobudnutí právoplatnosti rozhodnutia.
 

@@ -135,6 +135,7 @@ export function StatusBar() {
         new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
+          hour12: false,
         }),
       );
     tick();
@@ -143,8 +144,10 @@ export function StatusBar() {
   }, []);
 
   return (
-    <div className="flex items-center justify-between px-6 pt-3 pb-1 text-[11px] font-semibold text-foreground/90 tnum lg:hidden">
-      <span suppressHydrationWarning>{now || "\u00a0"}</span>
+    <div className="forendo-status-bar flex items-center justify-between px-6 pt-3 pb-1 text-[11px] font-semibold tnum lg:hidden">
+      <span className="forendo-status-time" suppressHydrationWarning>
+        {now || "\u00a0"}
+      </span>
       <span className="flex items-center gap-1">
         <span className="inline-block h-2 w-3 rounded-[2px] bg-foreground/70" />
         <span className="inline-block h-2 w-2 rounded-full bg-foreground/70" />
@@ -179,12 +182,28 @@ export function AppHeader({
   return (
     <header
       className={cn(
-        "liquid-glass-header sticky top-0 z-20 rounded-b-[1.75rem] text-white transition-[padding,box-shadow] duration-300",
+        "liquid-glass-header forendo-neon-frame sticky top-0 z-20 rounded-b-[1.75rem] text-white transition-[padding,box-shadow] duration-300",
         scrolled ? "pb-3 shadow-elevated" : "pb-5",
       )}
     >
+      <svg
+        className="forendo-neon-orbit"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <rect
+          className="forendo-neon-orbit-path"
+          x="1"
+          y="1"
+          width="98"
+          height="98"
+          rx="8"
+          pathLength="100"
+        />
+      </svg>
       <StatusBar />
-      <div className="flex items-center gap-3 px-5 pt-2 pb-3 lg:pt-4">
+      <div className="relative z-[1] flex items-center gap-3 px-5 pt-2 pb-3 lg:pt-4">
         {back ? (
           <button
             type="button"
@@ -221,7 +240,7 @@ export function AppHeader({
       </div>
       <div
         className={cn(
-          "origin-top transition-all duration-300",
+          "relative z-[1] origin-top transition-all duration-300",
           scrolled
             ? "pointer-events-none max-h-0 scale-y-95 opacity-0"
             : "max-h-105 opacity-100",

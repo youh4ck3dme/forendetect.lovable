@@ -16,6 +16,7 @@ import {
   Info,
   Lock,
   Plug,
+  Settings,
   Share2,
 } from "lucide-react";
 import {
@@ -249,6 +250,26 @@ function More() {
         </Card>
 
         <SectionTitle>Nastavenia</SectionTitle>
+
+        <Link to="/nastavenia" className="block">
+          <Card className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Settings className="h-4 w-4" aria-hidden />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold">
+                Nastavenia aplikácie
+              </p>
+              <p className="truncate text-[11px] text-muted-foreground">
+                Prihlasovací e-mail a Lovable e-mail projektu
+              </p>
+            </div>
+            <ChevronRight
+              className="ml-auto h-4 w-4 text-muted-foreground"
+              aria-hidden
+            />
+          </Card>
+        </Link>
 
         <Card className="divide-y divide-border p-0">
           {links.map(({ title, detail, icon: Icon }) => (

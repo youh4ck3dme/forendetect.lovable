@@ -99,14 +99,14 @@ CCZC425 CCZC426 CCZC427 CCZU428
 f) 6 ks Krátka samonabíjacia zbraň – GLOCK 48 / kal.: 9x19
 CBTV393 CBTV394 CGMA971 CGMA972 CGMA973 CGMA974
 
- 8. Nákup, dňa 17.10.2025, faktúra č. 250174
+8.  Nákup, dňa 17.10.2025, faktúra č. 250174
     a) 10 ks Krátka samonabíjacia zbraň – GLOCK 19 Gen5 M13
     CANS650 CANS651 CANS652 CANS653 CANS654 CANS655 CANS656 CANS657 CANS658 CANS659
     b) 6 ks Krátka samonabíjacia zbraň – GLOCK 19X Gen5 M13
     CBBX964 CCZD570 CCZD571 CCZD572 CCZD573 CCZD574
     c) 2 ks Krátka samonabíjacia zbraň – GLOCK 48 EU
     CECG085 CECG086
- 9. Nákup, dňa 17.10.2025, faktúra č. 250175
+9.  Nákup, dňa 17.10.2025, faktúra č. 250175
     a) 4 ks Krátka samonabíjacia zbraň – GLOCK 48 EU
     CECG087 CECG088 CECG089 CGMA975
     b) 10 ks Krátka samonabíjacia zbraň – GLOCK 17 Gen5

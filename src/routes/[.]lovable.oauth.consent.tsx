@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -108,34 +107,6 @@ function Consent() {
     window.location.href = next;
   }
 
-  async function signInGoogle() {
-    setError(null);
-    const host = window.location.hostname;
-    const onLovablePreview =
-      host.endsWith(".lovable.app") ||
-      host.endsWith(".lovableproject.com") ||
-      host.endsWith(".lovableproject-dev.com");
-
-    if (onLovablePreview) {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.href,
-      });
-      if (result.error) {
-        setError(String(result.error));
-        return;
-      }
-      if (result.redirected) return;
-      window.location.reload();
-      return;
-    }
-
-    const { error: e } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.href },
-    });
-    if (e) setError(e.message);
-  }
-
   if (!authorizationId) {
     return (
       <main className="mx-auto max-w-md p-6">Chýba parameter autorizácie.</main>
@@ -182,14 +153,6 @@ function Consent() {
               Registrovať
             </Button>
           </div>
-          <Button
-            variant="outline"
-            className="w-full"
-            disabled={busy}
-            onClick={() => void signInGoogle()}
-          >
-            Pokračovať cez Google
-          </Button>
         </div>
       )}
 

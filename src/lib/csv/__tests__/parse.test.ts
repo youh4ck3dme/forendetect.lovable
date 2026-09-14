@@ -25,6 +25,8 @@ describe("CSV parser", () => {
     expect(parseAmountValue("1 234,56", ",")).toBe(1234.56);
     expect(parseAmountValue("-1,234.50", ".")).toBe(-1234.5);
     expect(parseAmountValue("abc", ",")).toBeNull();
+    expect(parseAmountValue("0", ",")).toBe(0);
+    expect(parseAmountValue("1,234", ",")).toBeNull();
   });
 
   it("neháda dátum mimo zvoleného formátu", () => {
@@ -87,5 +89,69 @@ describe("CSV parser", () => {
     const groups = findSimilar(rows);
     expect(groups).toHaveLength(1);
     expect(groups[0]?.rows).toEqual([2, 3]);
+  });
+
+  it("odmietne nulu, neznámu menu, chýbajúci dátum a rovnaké strany", () => {
+    const result = validateRows(
+      [
+        ["datum", "suma", "mena", "od", "komu"],
+        ["01.01.2026", "0", "EUR", "A", "B"],
+        ["02.01.2026", "10,00", "EURO", "A", "B"],
+        ["", "10,00", "EUR", "A", "B"],
+        ["03.01.2026", "10,00", "EUR", "A", "A"],
+      ],
+      {
+        mapping: {
+          ...EMPTY_MAPPING,
+          date: 0,
+          amount: 1,
+          currency: 2,
+          counterpartyFrom: 3,
+          counterpartyTo: 4,
+        },
+        dateFormat: "DD.MM.YYYY",
+        decimal: ",",
+        defaultCurrency: "EUR",
+        defaultMethod: "transfer",
+        hasHeader: true,
+      },
+    );
+
+    expect(result.valid).toHaveLength(0);
+    expect(result.errors).toHaveLength(4);
+    expect(result.errors[0]?.reasons).toContain("Suma je nula.");
+    expect(result.errors[1]?.reasons[0]).toContain('Menu „EURO"');
+    expect(result.errors[2]?.reasons[0]).toContain("Dátum");
+    expect(result.errors[3]?.reasons).toContain(
+      "Odosielateľ a príjemca sú rovnakí.",
+    );
+  });
+
+  it("mapuje hotovosť, zátvorkovú zápornú sumu a symbol meny", () => {
+    const result = validateRows(
+      [["01.01.2026", "(1 234,50)", "€", "A", "B", "vklad v hotovosti"]],
+      {
+        mapping: {
+          ...EMPTY_MAPPING,
+          date: 0,
+          amount: 1,
+          currency: 2,
+          counterpartyFrom: 3,
+          counterpartyTo: 4,
+          method: 5,
+        },
+        dateFormat: "DD.MM.YYYY",
+        decimal: ",",
+        defaultCurrency: "EUR",
+        defaultMethod: "transfer",
+        hasHeader: false,
+      },
+    );
+
+    expect(result.valid[0]).toMatchObject({
+      amount: -1234.5,
+      currency: "EUR",
+      method: "cash",
+    });
   });
 });

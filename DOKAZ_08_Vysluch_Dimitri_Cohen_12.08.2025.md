@@ -11,7 +11,6 @@ UPOZORNENIE NA ROZPOR: Na prvej strane je pri prevzatí uvedený rok 2025, zatia
 
 Poznámka: Zdrojové PDF obsahuje 17 obrazových strán. Druhá fotografia pôvodnej strany 5 bola v tomto pracovnom prepise odstránená ako duplicita. Prepis obsahuje 16 unikátnych pôvodných strán a pri nejasne čitateľných miestach ponecháva najbližšie rozpoznateľné znenie.
 
-
 ===== PÔVODNÁ STRANA 1 Z 16 =====
 
 vrove V a k ia of satýnik: i bilo EA v o
@@ -52,7 +51,6 @@ majetkové pomery: nemajtený
 v minulosti bol vyšetrovaný pre: — nevie uviesť, približne šesťkrát
 koľkokrát: približne šesťkrát
 predošlé tresty: !
-
 
 ===== PÔVODNÁ STRANA 2 Z 16 =====
 
@@ -104,13 +102,12 @@ U. a ň va skutku, z ktorého ste podozrivý. Máte tiež právo na poskytnutie 
 rT.T£€“ send ého výsluchu alebo od iného úkonu vyšetrovateľa voči nemu alebo v súvislosti s ním «
 1... SIOSTI s podozreniami. ktoré sa ho týkajú.
 
-
 ===== PÔVODNÁ STRANA 3 Z 16 =====
 
 3. strana zápisni ýsluchu zadržaného ivého Dimiítri
-snice o výsluc ozrivého Dimitri Cohen zo dňa 12.08.2026
-a 8122 > jadku b VÁ 4
-A. „Podľa 122 ods. | Trestného poria olo podozrivému Prečítané poučenie uvedené v § 121
+   snice o výsluc ozrivého Dimitri Cohen zo dňa 12.08.2026
+   a 8122 > jadku b VÁ 4
+   A. „Podľa 122 ods. | Trestného poria olo podozrivému Prečítané poučenie uvedené v § 121
 
 ods. 2 Trestného poriadku. NL
 
@@ -174,7 +171,6 @@ právo odoprieť vypovedať. Môžete uvádzať okolnosti. navrhovať, predklada
 slúžiace na Vašu obhajobu, robiť návrhy a podávať žiadosti a opravné prostriedky. rý sas a A
 si obhajcu a s ním sa radiť aj počas úkonov vykonávaných vyšetrovateľom. S s ú kla a
 priebehu svojho výsluchu nemôžete radiť o tom, ako odpovedať na položenú otázku. Môžete žiadať,
-
 
 ===== PÔVODNÁ STRANA 4 Z 16 =====
 
@@ -250,7 +246,6 @@ uloženia, považuje sa posledný deň tejto lehoty za deň doručenia, aj keď 
 raSlelka vráti z adresy, ktorú ste na tieto účely uviedli, s tým, že adresát je neznámy, a to dňom. keď
 bola zásielka vrátená orgánu činnému v trestnom konaní alebo súdu, aj keď ste sa o tom nedozvedeli:
 
-
 ===== PÔVODNÁ STRANA 5 Z 16 =====
 
 S, sltuha záplaníce o výsluchu zadižaného podozrivého Dtyltrí Cohen
@@ -318,7 +313,6 @@ sa do konania tlmočník.
 | písomnosť, priberie sa prekladateľ opatrením. Obvinenému sa písomne preloží uznesenie © vznesení
 |
 |
-
 
 ===== PÔVODNÁ STRANA 6 Z 16 =====
 
@@ -395,28 +389,27 @@ môže Vás sudca a v prípravnom konaní prokurátor alebo policajt potrestať 
 1 650,- eur, ak ide o právnickú osobu, až do 16 590,- eur. Na možnosť uloženia poriadkovej pokuty
 musíte byť vopred upozornený.
 
-
 ===== PÔVODNÁ STRANA 7 Z 16 =====
 
 7. strana zápisnice o výsluchu zadržaného podozrivého Dimitri Cohen zo dňa 12.08.2026
-zápisnice o výsluchu zadržaného podozrivého Dimitri Cohen zo dňa 12.08.2026
-Ak bol výsluch zaznamenaný prostriedkami zvukovej alebo obrazovej techni |
-videokonferenčným hovorom, na záver zápisnice sa táto skutočnosť uvedi RA NJ techniky, prípadne
-sa vopred o zaznamenávaní výsluchu upov edomia. %. uvedie s tým, že prítomné osoby
-Zároveň Vás poučujem o tom, ze ak sa rozhodnete vypovedať, Vaša výpoveď môže byť v
-prípade neskoršieho vznesenia obvinenia a podania obžaloby použitá ako dôkaz v k j d
-súdom, a to aj proti Vám. plodia zob
-Vyjadrenie zadržaného - podozrivého k poučeniu a k veci:
-K veci uvádzam, Že nemám žiadne zranenie, ale tfpnu mi prsty, vyráža mi z ramena. Toto
-nesúvisí s mojim obmedzením na osobnej slobode, toto už mám asi týždeň, zo športu.
-Zároveň uvádzam, že som bol vyšetrovateľom poučený o dôvodoch väzby podľa § 71 ods. |
-písm. c) Trestného poriadku.
-Obhajcu som si zvolil a to JUDr. Jakuba Križana. Ten počas telefonického hovoru, ktorý bol
-nahlas. uviedol, že dnes sa k úkonu nemôže dostaviť. Napriek tomu si volím ja jeho
-a nežiadam prítomnosť druhého obhajcu..
-Ďalej k mojej osobe uvádzam, že sa na psychiatrií som nikdy nebol, avšak panické ataky. Nie
-som psychiatrický pacient. Nenavštevujem ani psychológa. Alkohol nepijem. Drogy
-neužívam.
+   zápisnice o výsluchu zadržaného podozrivého Dimitri Cohen zo dňa 12.08.2026
+   Ak bol výsluch zaznamenaný prostriedkami zvukovej alebo obrazovej techni |
+   videokonferenčným hovorom, na záver zápisnice sa táto skutočnosť uvedi RA NJ techniky, prípadne
+   sa vopred o zaznamenávaní výsluchu upov edomia. %. uvedie s tým, že prítomné osoby
+   Zároveň Vás poučujem o tom, ze ak sa rozhodnete vypovedať, Vaša výpoveď môže byť v
+   prípade neskoršieho vznesenia obvinenia a podania obžaloby použitá ako dôkaz v k j d
+   súdom, a to aj proti Vám. plodia zob
+   Vyjadrenie zadržaného - podozrivého k poučeniu a k veci:
+   K veci uvádzam, Že nemám žiadne zranenie, ale tfpnu mi prsty, vyráža mi z ramena. Toto
+   nesúvisí s mojim obmedzením na osobnej slobode, toto už mám asi týždeň, zo športu.
+   Zároveň uvádzam, že som bol vyšetrovateľom poučený o dôvodoch väzby podľa § 71 ods. |
+   písm. c) Trestného poriadku.
+   Obhajcu som si zvolil a to JUDr. Jakuba Križana. Ten počas telefonického hovoru, ktorý bol
+   nahlas. uviedol, že dnes sa k úkonu nemôže dostaviť. Napriek tomu si volím ja jeho
+   a nežiadam prítomnosť druhého obhajcu..
+   Ďalej k mojej osobe uvádzam, že sa na psychiatrií som nikdy nebol, avšak panické ataky. Nie
+   som psychiatrický pacient. Nenavštevujem ani psychológa. Alkohol nepijem. Drogy
+   neužívam.
 
 Ja som bol poučený o tom, Že mám právo odoprieť vypovedať. Ja toto právo
 nevyužívam a k veci vypovedať chcem a budem a to aj napriek tomu, že nemám prítomného
@@ -450,7 +443,6 @@ keď že bol držiteľom zbrojného preukazu. Erik začal vybavovať povolenia. 
 EB-EU s.r.o., má sídlo v Banskej Bystrici, pokiaľ sa mi zdá, tak takto sme to vtedy zobrali.
 Ako som povedal vybavoval všetky povolenia, vybavoval to v Rači na polícií. Originál
 o ——I—D2—2—-—-—- O OE oo |
-
 
 ===== PÔVODNÁ STRANA 8 Z 16 =====
 
@@ -509,7 +501,6 @@ v hotovosti, peniaze mi predtým dal Miroslav Tomčík. Podpísal som preberací
 som predtým mal už dostal pečiatku EB-EU s.r.o., to mi poslal Erik Babčan a ja som tie
 ľaktúry orazil a podpísal. Toto bolo následne pri všetkých faktúrach. Ale vždy som ohlasoval
 
-
 ===== PÔVODNÁ STRANA 9 Z 16 =====
 
 AE TIC
@@ -563,7 +554,6 @@ odberatelia, podľa mňa ani on nevedel. :
 Mňa stále úkoloval teda Miroslav Tomčik spolu s Ľubošom. Mne počas toho, ako som |
 nosil tie zoznamy zbraní do spoločnosti PETRIS.SLOVAKIA S.r.o., povedal konateľ, ten |
 
-
 ===== PÔVODNÁ STRANA 10 Z 16 =====
 
 a
@@ -616,7 +606,6 @@ Mne Miroslav Tomčík poslal zoznam zbraní, ktoré chcú. Tým pádom, že on b
 mi v caffé štefánik odovzdal nejaký cudzí chalan, nejaký Miroslavov poskok. Ja som oslovil
 Skyrčáka, že či nemá nejakú novú firmu, odkiaľ sa mali zobrať zbrane. On mi povedal, že
 
-
 ===== PÔVODNÁ STRANA 11 Z 16 =====
 
 našli, že majú firmu s názvom REMETA, že to mal byť jeho kamaráta strýko a že musím ísť
@@ -664,13 +653,12 @@ Erikovi navyše, lebo raz si pýtal ako keby zálohu, že pokiaľ mu nepošleme 
 peniaze nevráti.
 Otázka vyšetrovateľa: kto rokoval so spoločnosťou TATRAGEN s.r.o.. kto ju dohodil?
 
-
 ===== PÔVODNÁ STRANA 12 Z 16 =====
 
 12. strana zápisnice o výsluchu zadržaného podozrivého Dimitri Cohen zo dňa 12.08.20
-Odpoveď: ja som názov TATRAGEN S.r.o. počul len od Mira Tomčíka, s tým, že mám
-poslať peniaze Erikovi Babčanovi. aby zaplatil faktúru TATRAGEN s.r.o.. Ja som ale v tom
-čase nevedel, že sa jedná o zbrane.
+    Odpoveď: ja som názov TATRAGEN S.r.o. počul len od Mira Tomčíka, s tým, že mám
+    poslať peniaze Erikovi Babčanovi. aby zaplatil faktúru TATRAGEN s.r.o.. Ja som ale v tom
+    čase nevedel, že sa jedná o zbrane.
 
 Otázka vyšetrovateľa: máte nejaké informácie o zbraniach, ktoré boli nakúpené
 spoločnosťou EB-EU s.r.o. zo spoločnosti TATRAGEN s.r.o.?
@@ -711,11 +699,9 @@ Odpoveď: áno, systém som popísal. Skyrčák ich dohodil, to boli jeho známi
 | nich, na začiatku som jemu zaniesol faktúry 40N mi povedal, že to konateľ chce mať
 podpísané. Neskôr som to už podpisoval Ja a aj som ich pečiatkoval.
 
-
 ===== PÔVODNÁ STRANA 13 Z 16 =====
 
-MA TOO SRO TOVECH IBORIVÝOOSOVTDESSTVO TVOROV RONE OVNENOVESISITESI TEEO u.
-13. strana zápisnice o výsluchu zadržaného odozrivého Dimitri Cohen zo dňa 12.08.2026
+MA TOO SRO TOVECH IBORIVÝOOSOVTDESSTVO TVOROV RONE OVNENOVESISITESI TEEO u. 13. strana zápisnice o výsluchu zadržaného odozrivého Dimitri Cohen zo dňa 12.08.2026
 Otázka vyšetrovateľa: disponovali ste pečiatkou spoločnosti EB-EU s.r.o. a Bark Factory
 enterprise s.r.o.?
 Odpoveď: áno, ja som si ich dokonca nechával na firme PETRIS-SLOV AKIA s.r.o..
@@ -759,11 +745,9 @@ Otázka vyšetrovateľa: kde sa nachádza celá sprievodná dokumentácia k tým
 Tým myslím štítok zbrane atd.
 PM "ra i
 
-
 ===== PÔVODNÁ STRANA 14 Z 16 =====
 
-RAP 70 dňa 12.08.202
-14. strana zápisnice o výsluchu zadržaného podozrivého Dimitri Cohen zo dňa 12.08.2026
+RAP 70 dňa 12.08.202 14. strana zápisnice o výsluchu zadržaného podozrivého Dimitri Cohen zo dňa 12.08.2026
 Odpoveď: To bolo asi v tých krabiciach, tam to bolo asi všetko. Ja som dostal len faktúru a tú
 som poslal odfotenú účtovnícke. Pri Bark Factory s.r.o. som faktúry odovzdával Norbertovi
 Skyrčákovi. Jemu som posielal aj fotky faktúr.
@@ -806,11 +790,9 @@ už podpísané splnomocnenie dal Norbert Skyrčák,
 Otázka vyšetrovateľa: Ste držiteľom zbrojného preukazu??
 | Odpoveď: nie.
 
-
 ===== PÔVODNÁ STRANA 15 Z 16 =====
 
-V. JAJ y
-13. strana zápisnice o vý žané fer SOVA
+V. JAJ y 13. strana zápisnice o vý žané fer SOVA
 zapisnice o výsluchu zadržaného podozrivého Dimitri Cohen zo dňa 12.08.2026 |
 j „> 7 , “ M A s é ú “ - |
 Otázka vyšetrovateľa: preberali ste zbrane a] napriek tomu, že ste neboli držiteľom |
@@ -856,39 +838,38 @@ Otázka vyšetrovateľa: vyjadrite sa k osobe Norbert Skyrčák? Ako participova
 |
 a kúpe zbraní? |
 
-
 ===== PÔVODNÁ STRANA 16 Z 16 =====
 
 X
 
 16. strana zápisnice o výsluchu zadržaného odozrivého Dimitrí Cohen zo dňa 12.08.2026
-Odpoveď: poznáme sa už dlhšie, robili sme spolu upratovanie: On al rez predaji
-bol poštár. Dohodil firmu Bark Factory enterprise s.r.o. a potom jen A , s #5 A
-podpisoval a dostával províziu za to. On podľa mňa nepoznal Ľuba, Miroslava Tomčíka
-pozná, ale neviem, že by sa kamarárili. a
-Otázka vyšetrovateľa: vyjadrite sa k osobe Dmitrij Marjov“ — | tá aj úh žiči
-Odpoveď: s ním ma zoznámil Norbert Skyrčák, on ma oslovil s tým, Marjov si chce požičiat
-auto. lebo som mal vtedy autopožičovňu. Vánaleb
-Otázka vyšetovateľa: oslovili ste Marjova s tým. že by kupoval zbrane pre Vás alebo
-niekoho iného? 1 h 1
-Odpoveď: on mi hovoril, že nemá peniaze a vedel som, že si chce urobiť. Ja som EN so
-že keď chce, nech si spraví biznis. A hovoril som mu, že je na ňom ČI sI to urobí legálne alebo
-nelegálne. Ja som ho oslovil, že nech ideme robiť. A to bolo v tom obodbí, keď skončilo EB-
-EU a musel som zohnať novú firmu.
-Otázka vyšetrovateľa: opíšte osobu „Ľubo“? akým spôsobom participoval, koľkrát ste sa
-stretli?
-Odpoveď: vek okolo 43 rokov, výška okolo 177 cm, chudá postáva, šlachovitá, holohlavý.
-Má žiť v Banskej Bystrici, ale je niekde z južného Slovenska vraj. Má zlomený nos. Jadzil na
-AUDI A8, čierna. Evidenčné číslo mal na Nové zámky. Ja neviem, ako sa volal na priezvisko.
-My sme sa spolu stretli možno dva razy. Raz bol so mnou na PETRIS-SLOVAKIA. Keď sme
-sa prvýkrát stretli, on prišiel s týmto biznis plánom, takto to začalo. On to celé financoval, on
-mi posielal inštrukcie cez Miroslava Tomčíka. Keď sme sa teda prvýkrát stretli, to bolo
-v Ivanke pri Dunaji, v kaviarni Štefánik. Boli sme tam ja, Miroslav Tomčík a tento Ľubo. On
-vtedy opisoval, že ja potrebujem otvoriť predajňu. Ja som mu povedal, že nemám zbroják. On
-mi povedal, že mám niekoho zohnať. On vysvetlil celý biznis plán, že sa musí zohnať
-dodávateľ a potom budem dostávať inštrukcie, že kde to mám zaviesť a kde sa budú zbrane
-vyzdvihovať. Povedal, že papiere si budú riešiť oni, to mal mať on klientov. On to takto
-vysvetlil.
+    Odpoveď: poznáme sa už dlhšie, robili sme spolu upratovanie: On al rez predaji
+    bol poštár. Dohodil firmu Bark Factory enterprise s.r.o. a potom jen A , s #5 A
+    podpisoval a dostával províziu za to. On podľa mňa nepoznal Ľuba, Miroslava Tomčíka
+    pozná, ale neviem, že by sa kamarárili. a
+    Otázka vyšetrovateľa: vyjadrite sa k osobe Dmitrij Marjov“ — | tá aj úh žiči
+    Odpoveď: s ním ma zoznámil Norbert Skyrčák, on ma oslovil s tým, Marjov si chce požičiat
+    auto. lebo som mal vtedy autopožičovňu. Vánaleb
+    Otázka vyšetovateľa: oslovili ste Marjova s tým. že by kupoval zbrane pre Vás alebo
+    niekoho iného? 1 h 1
+    Odpoveď: on mi hovoril, že nemá peniaze a vedel som, že si chce urobiť. Ja som EN so
+    že keď chce, nech si spraví biznis. A hovoril som mu, že je na ňom ČI sI to urobí legálne alebo
+    nelegálne. Ja som ho oslovil, že nech ideme robiť. A to bolo v tom obodbí, keď skončilo EB-
+    EU a musel som zohnať novú firmu.
+    Otázka vyšetrovateľa: opíšte osobu „Ľubo“? akým spôsobom participoval, koľkrát ste sa
+    stretli?
+    Odpoveď: vek okolo 43 rokov, výška okolo 177 cm, chudá postáva, šlachovitá, holohlavý.
+    Má žiť v Banskej Bystrici, ale je niekde z južného Slovenska vraj. Má zlomený nos. Jadzil na
+    AUDI A8, čierna. Evidenčné číslo mal na Nové zámky. Ja neviem, ako sa volal na priezvisko.
+    My sme sa spolu stretli možno dva razy. Raz bol so mnou na PETRIS-SLOVAKIA. Keď sme
+    sa prvýkrát stretli, on prišiel s týmto biznis plánom, takto to začalo. On to celé financoval, on
+    mi posielal inštrukcie cez Miroslava Tomčíka. Keď sme sa teda prvýkrát stretli, to bolo
+    v Ivanke pri Dunaji, v kaviarni Štefánik. Boli sme tam ja, Miroslav Tomčík a tento Ľubo. On
+    vtedy opisoval, že ja potrebujem otvoriť predajňu. Ja som mu povedal, že nemám zbroják. On
+    mi povedal, že mám niekoho zohnať. On vysvetlil celý biznis plán, že sa musí zohnať
+    dodávateľ a potom budem dostávať inštrukcie, že kde to mám zaviesť a kde sa budú zbrane
+    vyzdvihovať. Povedal, že papiere si budú riešiť oni, to mal mať on klientov. On to takto
+    vysvetlil.
 
 Na záver chcem uviesť, že ja som fyzicky nikdy pištoľ žiadnu nedržal. mal som len
 krabice s pištoľami, ale ja som ich nikdy nerozbaľoval. Nikdy som to nepredával. len som to

@@ -7,44 +7,43 @@ Výsluch: začiatok 13.08.2026 o 01:10, koniec 13.08.2026 o 04:00.
 
 Poznámka: Prepis bol vytvorený zo skenov. Zachováva poradie a obsah všetkých 14 dodaných strán; pri nejasne čitateľných miestach sa ponecháva najbližšie rozpoznateľné znenie.
 
-
 ===== PÔVODNÁ STRANA 1 =====
 
 1. 1... A
-ERSTVO VNÚTRA SLOVENSKEJ REPUBLIKY ni
-PREZÍDIUM POLICAJNÉHO ZBORU
-1.“ úrad boja proti organizovanej kriminalite
-1... protizločinecká jednotka |
-NT.“ expozitúra Stred
- . Partizánska cesta 106, 974 86 Banská Bystrica
-PPZ- 51/UBOK-PZ-ST-2025
-0 ZÁPISNICA OVÝSLUCHU ZADRŽANÉHO - PODOZRIVÉHO
-Hi ah al 0. VKoŠiciach dňa 12.08.2025 0 15:02 hod. bol podľa $ 85 ods. 1 Trestného poriadku
-“meno. priezvisko, dátum narodenia: Erik Babčan, 30.05.1989
-miesto narodenia, okres: Košice
-predošlé meno a priezvisko: -
-preukaz totožnosti: NF983846
-trvalé bydlisko: Bratislava, Ľuda Zúbka — tel. č. 0950 491 856
-prechodné bydlisko: Košice, Kostoľany nad Hornádom, Pod Pytakovou, 7
-pa adresa na doručovanie písomností: Košice, Kostoľany nad Hornádom, Pod Pytakovou 7
-0 > spôsobdoručovania: poštou
-i. zamestnávateľ a miesto zamestnania: nezamestnaný
-postavenie v zamestnani: -
--— zamestnanie predošlé (u nezamestnaného odkedy): Podtrubie a.s..
-— počet zamestnaní v posledných dvoch rokoch: 0
-Štátna príslušnosť: — SR národnosť: SK stav: slobodný
+   ERSTVO VNÚTRA SLOVENSKEJ REPUBLIKY ni
+   PREZÍDIUM POLICAJNÉHO ZBORU
+   1.“ úrad boja proti organizovanej kriminalite
+   1... protizločinecká jednotka |
+   NT.“ expozitúra Stred
+   . Partizánska cesta 106, 974 86 Banská Bystrica
+   PPZ- 51/UBOK-PZ-ST-2025
+   0 ZÁPISNICA OVÝSLUCHU ZADRŽANÉHO - PODOZRIVÉHO
+   Hi ah al 0. VKoŠiciach dňa 12.08.2025 0 15:02 hod. bol podľa $ 85 ods. 1 Trestného poriadku
+   “meno. priezvisko, dátum narodenia: Erik Babčan, 30.05.1989
+   miesto narodenia, okres: Košice
+   predošlé meno a priezvisko: -
+   preukaz totožnosti: NF983846
+   trvalé bydlisko: Bratislava, Ľuda Zúbka — tel. č. 0950 491 856
+   prechodné bydlisko: Košice, Kostoľany nad Hornádom, Pod Pytakovou, 7
+   pa adresa na doručovanie písomností: Košice, Kostoľany nad Hornádom, Pod Pytakovou 7
+   0 > spôsobdoručovania: poštou
+   i. zamestnávateľ a miesto zamestnania: nezamestnaný
+   postavenie v zamestnani: -
+   -— zamestnanie predošlé (u nezamestnaného odkedy): Podtrubie a.s..
+   — počet zamestnaní v posledných dvoch rokoch: 0
+   Štátna príslušnosť: — SR národnosť: SK stav: slobodný
+
 - základné školské vzdelanie: Kežmarská 28, Košice
 - vyučený: polytechnika
-„osobitná škola: -
-stredná, stredná odborná, vysoká škola: SPŠ Hutnická, Košice,s maturitou
-ďalšie vzdelanie: 4
-neukončené školské vzdelanie: :
-rodin 1 prostredie, z ktorého vyšiel: otec podnikateľ, mama laborantka
-ojenský pomer: ..
-7 mesačný príjem: — — do1000€
-NA pomery: —  nemajetný
-nulosi i bol vyšetrovaný pre: — áno
-
+  „osobitná škola: -
+  stredná, stredná odborná, vysoká škola: SPŠ Hutnická, Košice,s maturitou
+  ďalšie vzdelanie: 4
+  neukončené školské vzdelanie: :
+  rodin 1 prostredie, z ktorého vyšiel: otec podnikateľ, mama laborantka
+  ojenský pomer: ..
+  7 mesačný príjem: — — do1000€
+  NA pomery: — nemajetný
+  nulosi i bol vyšetrovaný pre: — áno
 
 ===== PÔVODNÁ STRANA 2 =====
 
@@ -99,7 +98,6 @@ kladie Podľa $ 122 ods. | Trestného poriadku bol podozrivý oboznámený so sk
 p vá NOVE
 VuČeNIE mi bolo aj primerane vysvetlené a tomuto som porozumel,
 podpis podozrivého
-
 
 ===== PÔVODNÁ STRANA 3 =====
 
@@ -167,11 +165,9 @@ ohrozeniu účelu trestného konania a je to technicky možné, a to v trvaní n
 Ž ý účel trestného konania.
 |
 
-
 ===== PÔVODNÁ STRANA 4 =====
 
-|
-4. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
+| 4. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
 Podľa $ 34 ods. Š Trestného poriadku Vás poučujem, že orgány činné v trestnom konaní a súd
 sú povinné Vás 0 Vašich právach poučiť vrátane významu priznania a poskytnúť Vám plnú možnosť
 na ich uplatnenie. Ak Je obvineným mladistvý, orgány činné v trestnom konaní sú povinné poučiť o
@@ -236,12 +232,11 @@ aby ste napísali potrebný počet určených slov. Ak treba identifikovať Vá�
 aby ste poskytol hlasovú vzorku. K tomuto Vás však nemožno nijakým spôsobom donucovať. Šte
 však povinný strpieť úkony potrebné na zistenie Vašej totožnosti.
 
-
 ===== PÔVODNÁ STRANA 5 =====
 
 5. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
-) M v M. 9 , i g x 4 [9 r
-Podľa $ 124 ods. 2 Trestného poriadku po skončení výsluchu Vám — musí byť závisutte
+   ) M v M. 9 , i g x 4 [9 r
+   Podľa $ 124 ods. 2 Trestného poriadku po skončení výsluchu Vám — musí byť závisutte
 predložená na prečítanie alebo ak o to požiadate. prečítaná. Máte právo žiadať aby bola zápisníc
 doplnená alebo aby v nej bolí vykonané opravy V súhlase s Vašou výpoveďou.
 | Podľa Ä 210 ods. I Trestného poriadku mate právo kedykoľvek v priebehu prípravného
@@ -249,9 +244,9 @@ konania žiadať prokurátora, aby bol preskúmaný postup policajta, najmä aby
 alebo iné nedostatky v prípravnom konaní. “
 “ , A) té 3 14 € viť + A Ň dd . ,
 Podľa $ 210 ods. 2 Trestného poriadku Žiadost o odstránenie prieťahov alebo iných
-nedostatkov v postupe prokurátora pri vykonávaní Jeho pôsobnosti v prípravnom konaní vybavuje
-prokurátor bezprostredne nadriadenej prokuratúry: ak žiadost smeruje proti prokurátorovi generálnej |
-prokuratúry, vybavuje ju generálny prokurátor. Posledná veta odseku | platí rovnako. |
+   nedostatkov v postupe prokurátora pri vykonávaní Jeho pôsobnosti v prípravnom konaní vybavuje
+   prokurátor bezprostredne nadriadenej prokuratúry: ak žiadost smeruje proti prokurátorovi generálnej |
+   prokuratúry, vybavuje ju generálny prokurátor. Posledná veta odseku | platí rovnako. |
 
 Podľa $ 213 ods. | Trestného poriadku môže policajt povoliť Vašu účasť na vyšetrovacích
 úkonoch a umožniť Vám klásť vypočúvaným svedkom otázky. Postupuje tak najmä vtedy, ak nemáte
@@ -304,13 +299,13 @@ Podľa $ 155 ods. 2 Trestného poriadku ak na dôkaz treba vykonať odber krvi a
 obdobný úkon, je osoba, o ktorú ide, povinná strpieť. aby jej lekár alebo odborny para veloy lupa nik
 odobral krv alebo vykonal Iný obdobný úkon. ak nie JC spojeny s nebezpečenstvom pre JC] ZATAv 1€.
 
-
 ===== PÔVODNÁ STRANA 6 =====
 
-A
-6. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
+A 6. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
 | Odber biologického materiálu, ktorý nie je spojený so zásahom do telesnej integrity osoby ktorej s
+
 # x sl > alá ? af I r 4? g POŠ Ň a
+
 | úkon týka. môže uskutočniť aj táto osoba alebo s jej súhlasom orgán činný v trestnom konaní.
 Podľa Š [55 ods. 3 [ restného poriadku osoba podozrivá zo spáchania trestného činu a
 obvinený sú povinní strpieť odobratie daktyloskopických odtlačkov. ktoré vykoná policajt, a odobratie
@@ -362,13 +357,12 @@ Z ká , - - , A si - 9 Ň 1S, ]
 sral uvádzam, že som bol vyšetrovateľom poučený o dôvodoch väzby podľa $ 71 od
 pism. c) Trestného poriadku.
 
-
 ===== PÔVODNÁ STRANA 7 =====
 
 7. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
-Obhajcu si nevolím. “ poznámka, dňa 12.08.2026 bola kontaktovaná družka Kada Dakaj, na
-tel č. +421 944 071 611, ktorá povedala, že obhajcu mu ako blízka osoba zatiaľ nezvolila.
-V prípade, že tam spraví, bude vyšetrovateľa kontaktovať dňa 13.08.2026.
+   Obhajcu si nevolím. “ poznámka, dňa 12.08.2026 bola kontaktovaná družka Kada Dakaj, na
+   tel č. +421 944 071 611, ktorá povedala, že obhajcu mu ako blízka osoba zatiaľ nezvolila.
+   V prípade, že tam spraví, bude vyšetrovateľa kontaktovať dňa 13.08.2026.
 
 Dalej k mojej osobe uvádzam, že som sa nikdy neliečil na psychiatrií, nemám žiadne
 psychické choroby. Alkohol pijem príležitostne. Drogy príležitostne a to marihuanu.
@@ -405,8 +399,7 @@ Vysoškolákov v Žiline, ja som tam však nebol ani raz. Priestory teda určite
 Ja som všetky materiály v tejto súvislosti odovzdal Ľubošovi, aj záznamové knihy zbraní,
 ktoré mi vydali na polícií na firmu EB-EU s.r.o.. Bola vydaná aj licencia, ja si už nepamätám,
 že či som ju odovzdal Dimitri Cohenovi alebo tomu Ľubošovi, ale jednému z nich áno. Potom
-sa ku mne už nevrátila. Toto bol hneď, ako som dostal tú licenciu, takže to bolo v decembri
-2024.
+sa ku mne už nevrátila. Toto bol hneď, ako som dostal tú licenciu, takže to bolo v decembri 2024.
 
 Ja neviem, čo sa potom dialo s firmou a s licenciou. Dimitri mal na starosti účtovné
 veci, aspoň tak hovoril, mal nejakú svoju ekonómku. Ľuboš priebežne za mnou chodil do
@@ -420,7 +413,6 @@ som musel cestovať za účelom vybavenia licencie tak som chcel nejakú náhrad
 v hotovosti odovzdal na Donovaloch. Potom mi raz Ľuboš poslal 10 000€ vopred na firemný
 účet, následne chcel ešte so mnou vložiť ďalšie peniaze cez banku, aby sme mohli zaplatiť
 nejakú faktúru s väčším limitom. Mal prísť na ďalší deň, lenže ja som z toho 5000 € minul, na
-
 
 ===== PÔVODNÁ STRANA 8 =====
 
@@ -478,13 +470,10 @@ nestaral, Ja som sa až od vyšetrovateľa dozvedel, že oni nakupovali zbrane t
 predajní.
 | 1.
 
-
 ===== PÔVODNÁ STRANA 9 =====
 
-2
-9. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa | 3.08.2026
-Otázka vyšetrovateľa: v akom ste vzťahu k spoločnosti EB-EU s.r.o.?
-3. 3, SÉ i ? y r s
+2 9. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa | 3.08.2026
+Otázka vyšetrovateľa: v akom ste vzťahu k spoločnosti EB-EU s.r.o.? 3. 3, SÉ i ? y r s
 Odpov eď: som konateľom. Ja som mal na starosti dať dokopy webstránku, bol aj spustený,
 ale keď som dostal napomenutie Z Banskej Bystrice z polície, tak som ho vypol. Boli tam
 zverejnené zbrane, ale nikdy sa žiadna nepredala. Inak som nechodil na žiadne jednania,
@@ -503,7 +492,7 @@ Otázka vyšetrovateľa: komunikovali ste s firmou Tatragen s.r.o., alebo s jej 
 Odpoveď: nie, ani raz.
 Otázka vyšetrovateľa: aký email ste využívali?
 Odpoveď: buď Erikbabcanú) gmail.com alebo magikasro0hotmail.com
-Otázka — vyšetrovateľa: používali ste — email  erik.babcaníGJebeu.cu — alebo
+Otázka — vyšetrovateľa: používali ste — email erik.babcaníGJebeu.cu — alebo
 abeudefense (ad) gmail.com?
 Odpoveď: k tomu prvému kôr nie ako áno, ale mal som podobný. Lebo sme riešili na Eb-EU
 s.r.o. nejaký web, ale neviem si teraz spomenúť, ten druhý vôbec.
@@ -524,57 +513,55 @@ vklad na účet.
 Otázka vyšetrovateľa: vypisovali alebo podpisovali ste nejaké splnomocnenie alebo plnú
 moc, aby nejakým spôsobom konala za spoločnosť za EB-EU s.r.o.?
 
-
 ===== PÔVODNÁ STRANA 10 =====
 
->.
-10. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
-Odpoveď: viem, že Dimitri Cohenovi som dával splnomocnenie. Nespomínam si účel toho
-splnomocnenia ale posielal Dimitri Cohen na email. Možno dvakrát som mu ho posielal.
-Posielal som mu ho emailom naspäť.
-Otázka vyšetrovateľa: kto všetko disponoval zbrojnou licenciou, ktorá bola vydaná
-spoločnosti EB-EU s.r.o.?
-Odpoveď: prvýkrát som ju dal buď Dimitri Cohenovi alebo Ľubošovi. Takže len medzi nimi
-prebehol ten kontakt s touto licenciou.
-Otázka vyšetrovateľa: mali ste nejaké pečiatky spoločnosti EB-EU s.r.o.? mal niekto iný
-pečiatky spoločnosti EB-EU s.r.o.?
-Odpoveď: asi som nemal. A ja neviem, že či mal niekto Iný.
-Otázka vyšetrovateľa: aké všetky činnosti vykonával Dimitri Cohen v spoločnosti EB-EU
-s.r.o..
-Odpoveď: účtovné veci a ďalej už neviem.
-Otázka vyšetrovateľa: dostával Dimitri Cohen nejakú odmenu alebo províziu? Posielali ste
-nejaké peniaze Dimitrimu?
-Odpoveď: určite bol s Ľubošom nejako dohnutý, ale ja som do toho nevidel. Inak som
-peniaze ja nedával Dimitrimu..
-Otázka vyšetrovateľa: kto bol účtovníkom spoločnosti EB-EU s.r.o.?
-Odpoveď: Čo Dimitri spomínal, nejaká pani z východu, ale presne neviem povedať.
-Otázka vyšetrovateľa: kto odovzdával faktúry v mene spoločnosti EB-EU s.r.o.?
-Odpoveď: Dimitri.
-Otázka vyšetrovateľa: boli ste niekedy na predajni spoločnosti TATRAGEN s.r.o.?
-Odpoveď: nie.
-Otázka vyšetrovateľa: boli ste niekedy niekedy v prevádzke v spoločnosti PETRIS-
-SLOVAKIA s.r.o.? konateľ Michal Žember.
-Odpoveď: nie. Ani nepoznám túto spoločnosť. Ani jeho nepoznám.
-Otázka vyšetrovateľa: V akom vzťahu ste s osobou Filip Flat, čo najpodrobnejšie?
-Odpoveď: netuším, že kto to je.
-Otázka vyšetrovateľa: je vám známa spoločnosť Bark Factory Enterprise s.r.o.. IČO:
-35 961 635, 127 Borinka 900 32?
-Odpoveď: nepoznám túto spoločnosť.
-Otázka vyšetrovateľa: v akom vzťahu je Filip Flat k spoločnosti Bark Factory Enterprise
-s.r.o. IČO: 35 961 635, 127 Borinka 900 32 (ďalej len Bark Factory Enterprise s.r.o.)?
-Otázka vyšetrovateľa: akú činnosť robil pre túto spoločnosť Filip Flat? Čo najpodrobnejšie.
-Prípadne osoba Dimitri Cohen
-Odpoveď: vôbec nemám šajnu. Neviem vôbec ani čo tam Cohen robil.
-Otázka vyšetrovateľa: disponovali ste pečiatkou spoločnosti EB-EU s.r.o. a Bark Factory
-enterprise s.r.o.?
-Odpoveď: nemal som k dispozícií?.
-No ——
+> .
 
+10. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
+    Odpoveď: viem, že Dimitri Cohenovi som dával splnomocnenie. Nespomínam si účel toho
+    splnomocnenia ale posielal Dimitri Cohen na email. Možno dvakrát som mu ho posielal.
+    Posielal som mu ho emailom naspäť.
+    Otázka vyšetrovateľa: kto všetko disponoval zbrojnou licenciou, ktorá bola vydaná
+    spoločnosti EB-EU s.r.o.?
+    Odpoveď: prvýkrát som ju dal buď Dimitri Cohenovi alebo Ľubošovi. Takže len medzi nimi
+    prebehol ten kontakt s touto licenciou.
+    Otázka vyšetrovateľa: mali ste nejaké pečiatky spoločnosti EB-EU s.r.o.? mal niekto iný
+    pečiatky spoločnosti EB-EU s.r.o.?
+    Odpoveď: asi som nemal. A ja neviem, že či mal niekto Iný.
+    Otázka vyšetrovateľa: aké všetky činnosti vykonával Dimitri Cohen v spoločnosti EB-EU
+    s.r.o..
+    Odpoveď: účtovné veci a ďalej už neviem.
+    Otázka vyšetrovateľa: dostával Dimitri Cohen nejakú odmenu alebo províziu? Posielali ste
+    nejaké peniaze Dimitrimu?
+    Odpoveď: určite bol s Ľubošom nejako dohnutý, ale ja som do toho nevidel. Inak som
+    peniaze ja nedával Dimitrimu..
+    Otázka vyšetrovateľa: kto bol účtovníkom spoločnosti EB-EU s.r.o.?
+    Odpoveď: Čo Dimitri spomínal, nejaká pani z východu, ale presne neviem povedať.
+    Otázka vyšetrovateľa: kto odovzdával faktúry v mene spoločnosti EB-EU s.r.o.?
+    Odpoveď: Dimitri.
+    Otázka vyšetrovateľa: boli ste niekedy na predajni spoločnosti TATRAGEN s.r.o.?
+    Odpoveď: nie.
+    Otázka vyšetrovateľa: boli ste niekedy niekedy v prevádzke v spoločnosti PETRIS-
+    SLOVAKIA s.r.o.? konateľ Michal Žember.
+    Odpoveď: nie. Ani nepoznám túto spoločnosť. Ani jeho nepoznám.
+    Otázka vyšetrovateľa: V akom vzťahu ste s osobou Filip Flat, čo najpodrobnejšie?
+    Odpoveď: netuším, že kto to je.
+    Otázka vyšetrovateľa: je vám známa spoločnosť Bark Factory Enterprise s.r.o.. IČO:
+    35 961 635, 127 Borinka 900 32?
+    Odpoveď: nepoznám túto spoločnosť.
+    Otázka vyšetrovateľa: v akom vzťahu je Filip Flat k spoločnosti Bark Factory Enterprise
+    s.r.o. IČO: 35 961 635, 127 Borinka 900 32 (ďalej len Bark Factory Enterprise s.r.o.)?
+    Otázka vyšetrovateľa: akú činnosť robil pre túto spoločnosť Filip Flat? Čo najpodrobnejšie.
+    Prípadne osoba Dimitri Cohen
+    Odpoveď: vôbec nemám šajnu. Neviem vôbec ani čo tam Cohen robil.
+    Otázka vyšetrovateľa: disponovali ste pečiatkou spoločnosti EB-EU s.r.o. a Bark Factory
+    enterprise s.r.o.?
+    Odpoveď: nemal som k dispozícií?.
+    No ——
 
 ===== PÔVODNÁ STRANA 11 =====
 
-Áú
-11. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
+Áú 11. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
 Otázka vyšetrovateľa: kedy, kedy akto jednal so spoločnosťou PETRIS — SLOVAKIA
 s.r.o.. za spoločnosť EB-EU s.r.o.
 Odpoveď: neviem vôbec. že by niekto jednal z touto spoločnosť.
@@ -617,101 +604,97 @@ Odpoveď: ja neviem, ja ju určite nemám. To je asi tá zbraň, ktorú som vted
 lebo to bolo vtom období, podľa mňa to je ona. Ako som povedal, ja som k dispozícii
 nemám, bola odovzdaná tomu pánovi.
 
-
 ===== PÔVODNÁ STRANA 12 =====
 
 12. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
-Otázka vyšetrovateľa: kto preberal zbrane z PETRIS-SLOVAKIA s.ro. a zo spoločnosti
-TATRAGEN s.r.o.? Dostali fyzicky do skladov spoločnosti Bark Factory Enterprise s.r.o..
-resp. EB-EU s.r.o.? akým spôsobom sa prevážali?
-Odpoveď": to ja neviem.
-Otázka vyšetrovateľa: čo sa stalo s týmito zbraňami? Kde sa momentálne nachádzajú?
-Odpoveď: neviem povedať.
-Otázka vyšetrovateľa: kto preberal tie zbrane?
-Odpoveď: to vôbec neviem, k tomu nemám informácie.
-Otázka vyšetrovateľa: komu boli tieto zbrane predané / vydané?
-Odpoveď: toto tiež neviem.
-Otázka vyšetrovateľa: kde sa nachádza celá sprievodná dokumentácia k týmto zbraniam?
-Tým myslím štítok zbrane atd.
-Odpoveď: neviem.
-Otázka vyšetrovateľa: komu všetkému predávala / dodávala spoločnosť Bark Factory
-Enterprise s.r.o. a EB-EU s.r.o. zbrane?
-Odpoveď: neviem.
-Otázka vyšetrovateľa: mala spoločnosť EB-EU s.r.o. alebo Bark Factory Enteprise s.r.o.
-zahraničných odberateľov? Ak áno, koho.
-Odpoveď: zahraničné platby som neevidoval.
-Otázka vyšetrovateľa: mala spoločnosť EB-EU s.r.o. a Bark Factory Enterprise s.r.o. aj
-iných dodávateľov zbraní?
-Odpoveď: to neviem povedať.
-Otázka vyšetrovateľa: mala spoločnosť EB-EU s.r.o. nejaké povolenie na predaj alebo
-vývoz zbraní za hranice Slovenska? Viete takéto povolenie predložiť?
-Odpoveď: viem, že sme mali prepravu zbraní, ale myslím si, že sme nemali povolenie do
-zahraničia. Ja som nič také nevybavoval.
-Otázka vyšetrovateľa: boli ste niekedy v Žiline na ul. Vysokoškolákov, na „kamennej“
-prevádzke spoločnosti EB-EU s.r.o..
-Odpoveď: ani raz
-Otázka vyšetrovateľa: kto má v držbe účtovníctvo, či už vo fyzickej alebo elektronickej
-podobe, spoločnosti EB-EU s.r.o.?
-Odpoveď: Ja ho nemám.
-Otázka vyšetrovateľa: z akých zdrojov nakupovala spoločnosť EB-EU s.r.o. a Bark Factory
-enterprise s.r.o. zbrane? Čo najpodrobnejšie.
-Odpoveď: peniaze mal Ľuboš a kupovalo sa, pokiaľ viem, len od TATRAGEN s.r.o. Pokiaľ
-"em, celé to financoval len Ľuboš. o iných neviem, on nosil peniaze.
-Otázka Vyšetrovateľa: kde sa nachádza kniha zbraní? Kto s ňou disponuje?
-Odpoveď: Ja som ju odovzdal Ľubošovi, tých 5 kníh alebo tak nejak ich bolo. Mne sa tieto už
-nevrátili,
-
+    Otázka vyšetrovateľa: kto preberal zbrane z PETRIS-SLOVAKIA s.ro. a zo spoločnosti
+    TATRAGEN s.r.o.? Dostali fyzicky do skladov spoločnosti Bark Factory Enterprise s.r.o..
+    resp. EB-EU s.r.o.? akým spôsobom sa prevážali?
+    Odpoveď": to ja neviem.
+    Otázka vyšetrovateľa: čo sa stalo s týmito zbraňami? Kde sa momentálne nachádzajú?
+    Odpoveď: neviem povedať.
+    Otázka vyšetrovateľa: kto preberal tie zbrane?
+    Odpoveď: to vôbec neviem, k tomu nemám informácie.
+    Otázka vyšetrovateľa: komu boli tieto zbrane predané / vydané?
+    Odpoveď: toto tiež neviem.
+    Otázka vyšetrovateľa: kde sa nachádza celá sprievodná dokumentácia k týmto zbraniam?
+    Tým myslím štítok zbrane atd.
+    Odpoveď: neviem.
+    Otázka vyšetrovateľa: komu všetkému predávala / dodávala spoločnosť Bark Factory
+    Enterprise s.r.o. a EB-EU s.r.o. zbrane?
+    Odpoveď: neviem.
+    Otázka vyšetrovateľa: mala spoločnosť EB-EU s.r.o. alebo Bark Factory Enteprise s.r.o.
+    zahraničných odberateľov? Ak áno, koho.
+    Odpoveď: zahraničné platby som neevidoval.
+    Otázka vyšetrovateľa: mala spoločnosť EB-EU s.r.o. a Bark Factory Enterprise s.r.o. aj
+    iných dodávateľov zbraní?
+    Odpoveď: to neviem povedať.
+    Otázka vyšetrovateľa: mala spoločnosť EB-EU s.r.o. nejaké povolenie na predaj alebo
+    vývoz zbraní za hranice Slovenska? Viete takéto povolenie predložiť?
+    Odpoveď: viem, že sme mali prepravu zbraní, ale myslím si, že sme nemali povolenie do
+    zahraničia. Ja som nič také nevybavoval.
+    Otázka vyšetrovateľa: boli ste niekedy v Žiline na ul. Vysokoškolákov, na „kamennej“
+    prevádzke spoločnosti EB-EU s.r.o..
+    Odpoveď: ani raz
+    Otázka vyšetrovateľa: kto má v držbe účtovníctvo, či už vo fyzickej alebo elektronickej
+    podobe, spoločnosti EB-EU s.r.o.?
+    Odpoveď: Ja ho nemám.
+    Otázka vyšetrovateľa: z akých zdrojov nakupovala spoločnosť EB-EU s.r.o. a Bark Factory
+    enterprise s.r.o. zbrane? Čo najpodrobnejšie.
+    Odpoveď: peniaze mal Ľuboš a kupovalo sa, pokiaľ viem, len od TATRAGEN s.r.o. Pokiaľ
+    "em, celé to financoval len Ľuboš. o iných neviem, on nosil peniaze.
+    Otázka Vyšetrovateľa: kde sa nachádza kniha zbraní? Kto s ňou disponuje?
+    Odpoveď: Ja som ju odovzdal Ľubošovi, tých 5 kníh alebo tak nejak ich bolo. Mne sa tieto už
+    nevrátili,
 
 ===== PÔVODNÁ STRANA 13 =====
 
 13. strana zápisnice o výsluchu zadržaného podozrivého Erik Babčan zo dňa 13.08.2026
-Otázka vyšetrovateľa: koho ste všetkého splnomocnili na EB-EU s.r.o.?
-Odpoveď: Dimitri Cohena, jemu som to poslal na email..
-Otázka vyšetrovateľa: ak áno, v akom rozsahu a bol splnomocnený?
-Odpoveď: neviem presne povedať. Na nejaké úkony, ale neviem čo všetko. Niekde mám toto
-ešte v emaily.
-Otázka vyšetrovateľa: Z akého dôvodu ste odovzdali zbrojný preukaz a zbrojnú licenciu??
-Odpoveď: zbrojnému preukazu končila platnosť a nevyužíval som ho alicenciu som
-odovzdal. lebo ma predvolali policajti do Banskej Bystrici kvôli priestoru predajne, lebo
-nebol v stave, ako mal byť, tak som navrhol, aby som zrušil licenciu.
-Otázka vyšetrovateľa: Bol Dimitri Cohen v pracovnom pomere vo vzťahu k spoločnosti EB-
-EU s.r.o.?
-Odpoveď: nie. |
-Otázka vyšetrovateľa: bol Dimitri Cohen poučený o bezpečnej manipulácií so zbraňami
-Vami ako zodpovednou osobou?
-Odpoveď: asi nebol. Ja som ani nevedel, že niečo on robil so zbraňami, som si myslel, že
-rieši len účtovné veci.
-Otázka vyšetrovateľa: prišli ste do kontaktu aj s nejakou inou osobou, mimo vyššie
-menovaných, s súvislosti so spoločnosťou EB-EU s.r.o. alebo Bark Factory enterprise s.r.o.?
-ak áno, kedy, kde a akú činnosť vykonával?
-Odpoveď: neviem, kto je za tým Bark Factory enterprise s.r.o.
-Otázka vyšetrovateľa: nechali ste si nejaké faktúry z nákupov?
-Odpoveď: tie sa ku mne ani nedostali.
-Otázka vyšetrovateľa: opíšte Miroslava Tomčíka a vzťah s ním s poukazom na vyšetrovaciu
-vec. Ako participoval na tomto predaji zbraní?
-Odpoveď: jeho som videl asi dvakrát v Avione v Bratislave, Dimitri Cohen s ním niečo
-riešil. Ale neviem. čo presne riešil. Možno sa tam vtedy robil nejaký vklad, ale to si len matne
-spomínam. Neviem viacej uviesť.
-Otázka vyšetrovateľa: vyjadrite sa k osobe Norbert Skyrčák? Ako participoval na predaji
-a kúpe zbraní?
-Odpoveď: to mi tiež niečo hovorí. Ale s ním som nebol v kontakte alebo že by som s ním
-riešil. Ani neviem, či niekto iný s ním niečo riešil..
-Otázka vyšetrovateľa: vyjadrite sa k osobe Dmitrij Marjov?
-Odpoveď: toho vôbec nepoznám
-Otázka vyšetrovateľa: opíšte osobu „Ľubo“? akým spôsobom participoval, koľokrát ste sa
-stretli? Ako ste spolu komunikovali?
-Nepoved: Ja som si sním volal, normálne cez telefón. Volali sme cez operátora a aj
-normálne sme spolu volali. Sociálne siete nepoužíval, aspoň som © žiadnych nevedel. Inak
-s volali spolu WhatsApp a signal. Ja som ho mal v telefóne uloženého pod menom Ľuboš
-x so Marek, Stretli sme sa dokopy možno 5-6krát v Košiciach a 6-8 král v Banskej Bystrici.
-a začiatku on zariadil všetky potrebné veci k vydaniu zbrojnej licencie a k tomu priestoru
-a dodal peniaze, Ľubo mal okolo 42-43 rokov. nejakých 178 cm, tenká postava, Mal
-
+    Otázka vyšetrovateľa: koho ste všetkého splnomocnili na EB-EU s.r.o.?
+    Odpoveď: Dimitri Cohena, jemu som to poslal na email..
+    Otázka vyšetrovateľa: ak áno, v akom rozsahu a bol splnomocnený?
+    Odpoveď: neviem presne povedať. Na nejaké úkony, ale neviem čo všetko. Niekde mám toto
+    ešte v emaily.
+    Otázka vyšetrovateľa: Z akého dôvodu ste odovzdali zbrojný preukaz a zbrojnú licenciu??
+    Odpoveď: zbrojnému preukazu končila platnosť a nevyužíval som ho alicenciu som
+    odovzdal. lebo ma predvolali policajti do Banskej Bystrici kvôli priestoru predajne, lebo
+    nebol v stave, ako mal byť, tak som navrhol, aby som zrušil licenciu.
+    Otázka vyšetrovateľa: Bol Dimitri Cohen v pracovnom pomere vo vzťahu k spoločnosti EB-
+    EU s.r.o.?
+    Odpoveď: nie. |
+    Otázka vyšetrovateľa: bol Dimitri Cohen poučený o bezpečnej manipulácií so zbraňami
+    Vami ako zodpovednou osobou?
+    Odpoveď: asi nebol. Ja som ani nevedel, že niečo on robil so zbraňami, som si myslel, že
+    rieši len účtovné veci.
+    Otázka vyšetrovateľa: prišli ste do kontaktu aj s nejakou inou osobou, mimo vyššie
+    menovaných, s súvislosti so spoločnosťou EB-EU s.r.o. alebo Bark Factory enterprise s.r.o.?
+    ak áno, kedy, kde a akú činnosť vykonával?
+    Odpoveď: neviem, kto je za tým Bark Factory enterprise s.r.o.
+    Otázka vyšetrovateľa: nechali ste si nejaké faktúry z nákupov?
+    Odpoveď: tie sa ku mne ani nedostali.
+    Otázka vyšetrovateľa: opíšte Miroslava Tomčíka a vzťah s ním s poukazom na vyšetrovaciu
+    vec. Ako participoval na tomto predaji zbraní?
+    Odpoveď: jeho som videl asi dvakrát v Avione v Bratislave, Dimitri Cohen s ním niečo
+    riešil. Ale neviem. čo presne riešil. Možno sa tam vtedy robil nejaký vklad, ale to si len matne
+    spomínam. Neviem viacej uviesť.
+    Otázka vyšetrovateľa: vyjadrite sa k osobe Norbert Skyrčák? Ako participoval na predaji
+    a kúpe zbraní?
+    Odpoveď: to mi tiež niečo hovorí. Ale s ním som nebol v kontakte alebo že by som s ním
+    riešil. Ani neviem, či niekto iný s ním niečo riešil..
+    Otázka vyšetrovateľa: vyjadrite sa k osobe Dmitrij Marjov?
+    Odpoveď: toho vôbec nepoznám
+    Otázka vyšetrovateľa: opíšte osobu „Ľubo“? akým spôsobom participoval, koľokrát ste sa
+    stretli? Ako ste spolu komunikovali?
+    Nepoved: Ja som si sním volal, normálne cez telefón. Volali sme cez operátora a aj
+    normálne sme spolu volali. Sociálne siete nepoužíval, aspoň som © žiadnych nevedel. Inak
+    s volali spolu WhatsApp a signal. Ja som ho mal v telefóne uloženého pod menom Ľuboš
+    x so Marek, Stretli sme sa dokopy možno 5-6krát v Košiciach a 6-8 král v Banskej Bystrici.
+    a začiatku on zariadil všetky potrebné veci k vydaniu zbrojnej licencie a k tomu priestoru
+    a dodal peniaze, Ľubo mal okolo 42-43 rokov. nejakých 178 cm, tenká postava, Mal
 
 ===== PÔVODNÁ STRANA 14 =====
 
-oa %
-14. strana zápisnice o výsluchu zadržaného podozrivého Erík Babčan zo dňa 1 3.08.2026
+oa % 14. strana zápisnice o výsluchu zadržaného podozrivého Erík Babčan zo dňa 1 3.08.2026
 potetované ruky. mal implantáty zuby. Má sa pohybovať niekde v okolí Banskej Bystrici, mal
 dve deti. Mal čierne AUDI AB a JEEP Wrangler, ale evindečné číslo si nepamätám.
 Otázka vyšetrovateľa: vyjadrite sa k osobe Ivan Von Draxler

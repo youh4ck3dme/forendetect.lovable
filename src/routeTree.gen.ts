@@ -20,11 +20,13 @@ import { Route as AuthenticatedAnalyzaVypisovRouteImport } from './routes/_authe
 import { Route as AuthenticatedAsistentRouteImport } from './routes/_authenticated/asistent'
 import { Route as AuthenticatedImportCsvRouteImport } from './routes/_authenticated/import-csv'
 import { Route as AuthenticatedMcpInfoRouteImport } from './routes/_authenticated/mcp-info'
+import { Route as AuthenticatedNastaveniaRouteImport } from './routes/_authenticated/nastavenia'
 import { Route as AuthenticatedOsobyRouteImport } from './routes/_authenticated/osoby'
 import { Route as AuthenticatedPravnyKontextRouteImport } from './routes/_authenticated/pravny-kontext'
 import { Route as AuthenticatedPredplatneRouteImport } from './routes/_authenticated/predplatne'
 import { Route as AuthenticatedPrehladRouteImport } from './routes/_authenticated/prehlad'
 import { Route as AuthenticatedPripadyRouteImport } from './routes/_authenticated/pripady'
+import { Route as AuthenticatedSandboxRouteImport } from './routes/_authenticated/sandbox'
 import { Route as AuthenticatedSietRouteImport } from './routes/_authenticated/siet'
 import { Route as AuthenticatedSukromieRouteImport } from './routes/_authenticated/sukromie'
 import { Route as AuthenticatedViacRouteImport } from './routes/_authenticated/viac'
@@ -92,6 +94,11 @@ const AuthenticatedMcpInfoRoute = AuthenticatedMcpInfoRouteImport.update({
   path: '/mcp-info',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNastaveniaRoute = AuthenticatedNastaveniaRouteImport.update({
+  id: '/nastavenia',
+  path: '/nastavenia',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOsobyRoute = AuthenticatedOsobyRouteImport.update({
   id: '/osoby',
   path: '/osoby',
@@ -116,6 +123,11 @@ const AuthenticatedPrehladRoute = AuthenticatedPrehladRouteImport.update({
 const AuthenticatedPripadyRoute = AuthenticatedPripadyRouteImport.update({
   id: '/pripady',
   path: '/pripady',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSandboxRoute = AuthenticatedSandboxRouteImport.update({
+  id: '/sandbox',
+  path: '/sandbox',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSietRoute = AuthenticatedSietRouteImport.update({
@@ -177,11 +189,13 @@ export interface FileRoutesByFullPath {
   '/asistent': typeof AuthenticatedAsistentRoute
   '/import-csv': typeof AuthenticatedImportCsvRoute
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
+  '/nastavenia': typeof AuthenticatedNastaveniaRoute
   '/osoby': typeof AuthenticatedOsobyRoute
   '/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
   '/predplatne': typeof AuthenticatedPredplatneRoute
   '/prehlad': typeof AuthenticatedPrehladRoute
   '/pripady': typeof AuthenticatedPripadyRoute
+  '/sandbox': typeof AuthenticatedSandboxRoute
   '/siet': typeof AuthenticatedSietRoute
   '/sukromie': typeof AuthenticatedSukromieRoute
   '/viac': typeof AuthenticatedViacRoute
@@ -203,11 +217,13 @@ export interface FileRoutesByTo {
   '/asistent': typeof AuthenticatedAsistentRoute
   '/import-csv': typeof AuthenticatedImportCsvRoute
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
+  '/nastavenia': typeof AuthenticatedNastaveniaRoute
   '/osoby': typeof AuthenticatedOsobyRoute
   '/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
   '/predplatne': typeof AuthenticatedPredplatneRoute
   '/prehlad': typeof AuthenticatedPrehladRoute
   '/pripady': typeof AuthenticatedPripadyRoute
+  '/sandbox': typeof AuthenticatedSandboxRoute
   '/siet': typeof AuthenticatedSietRoute
   '/sukromie': typeof AuthenticatedSukromieRoute
   '/viac': typeof AuthenticatedViacRoute
@@ -231,11 +247,13 @@ export interface FileRoutesById {
   '/_authenticated/asistent': typeof AuthenticatedAsistentRoute
   '/_authenticated/import-csv': typeof AuthenticatedImportCsvRoute
   '/_authenticated/mcp-info': typeof AuthenticatedMcpInfoRoute
+  '/_authenticated/nastavenia': typeof AuthenticatedNastaveniaRoute
   '/_authenticated/osoby': typeof AuthenticatedOsobyRoute
   '/_authenticated/pravny-kontext': typeof AuthenticatedPravnyKontextRoute
   '/_authenticated/predplatne': typeof AuthenticatedPredplatneRoute
   '/_authenticated/prehlad': typeof AuthenticatedPrehladRoute
   '/_authenticated/pripady': typeof AuthenticatedPripadyRoute
+  '/_authenticated/sandbox': typeof AuthenticatedSandboxRoute
   '/_authenticated/siet': typeof AuthenticatedSietRoute
   '/_authenticated/sukromie': typeof AuthenticatedSukromieRoute
   '/_authenticated/viac': typeof AuthenticatedViacRoute
@@ -259,11 +277,13 @@ export interface FileRouteTypes {
     | '/asistent'
     | '/import-csv'
     | '/mcp-info'
+    | '/nastavenia'
     | '/osoby'
     | '/pravny-kontext'
     | '/predplatne'
     | '/prehlad'
     | '/pripady'
+    | '/sandbox'
     | '/siet'
     | '/sukromie'
     | '/viac'
@@ -285,11 +305,13 @@ export interface FileRouteTypes {
     | '/asistent'
     | '/import-csv'
     | '/mcp-info'
+    | '/nastavenia'
     | '/osoby'
     | '/pravny-kontext'
     | '/predplatne'
     | '/prehlad'
     | '/pripady'
+    | '/sandbox'
     | '/siet'
     | '/sukromie'
     | '/viac'
@@ -312,11 +334,13 @@ export interface FileRouteTypes {
     | '/_authenticated/asistent'
     | '/_authenticated/import-csv'
     | '/_authenticated/mcp-info'
+    | '/_authenticated/nastavenia'
     | '/_authenticated/osoby'
     | '/_authenticated/pravny-kontext'
     | '/_authenticated/predplatne'
     | '/_authenticated/prehlad'
     | '/_authenticated/pripady'
+    | '/_authenticated/sandbox'
     | '/_authenticated/siet'
     | '/_authenticated/sukromie'
     | '/_authenticated/viac'
@@ -420,6 +444,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMcpInfoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/nastavenia': {
+      id: '/_authenticated/nastavenia'
+      path: '/nastavenia'
+      fullPath: '/nastavenia'
+      preLoaderRoute: typeof AuthenticatedNastaveniaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/osoby': {
       id: '/_authenticated/osoby'
       path: '/osoby'
@@ -453,6 +484,13 @@ declare module '@tanstack/react-router' {
       path: '/pripady'
       fullPath: '/pripady'
       preLoaderRoute: typeof AuthenticatedPripadyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sandbox': {
+      id: '/_authenticated/sandbox'
+      path: '/sandbox'
+      fullPath: '/sandbox'
+      preLoaderRoute: typeof AuthenticatedSandboxRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/siet': {
@@ -526,11 +564,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAsistentRoute: typeof AuthenticatedAsistentRoute
   AuthenticatedImportCsvRoute: typeof AuthenticatedImportCsvRoute
   AuthenticatedMcpInfoRoute: typeof AuthenticatedMcpInfoRoute
+  AuthenticatedNastaveniaRoute: typeof AuthenticatedNastaveniaRoute
   AuthenticatedOsobyRoute: typeof AuthenticatedOsobyRoute
   AuthenticatedPravnyKontextRoute: typeof AuthenticatedPravnyKontextRoute
   AuthenticatedPredplatneRoute: typeof AuthenticatedPredplatneRoute
   AuthenticatedPrehladRoute: typeof AuthenticatedPrehladRoute
   AuthenticatedPripadyRoute: typeof AuthenticatedPripadyRoute
+  AuthenticatedSandboxRoute: typeof AuthenticatedSandboxRoute
   AuthenticatedSietRoute: typeof AuthenticatedSietRoute
   AuthenticatedSukromieRoute: typeof AuthenticatedSukromieRoute
   AuthenticatedViacRoute: typeof AuthenticatedViacRoute
@@ -544,11 +584,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAsistentRoute: AuthenticatedAsistentRoute,
   AuthenticatedImportCsvRoute: AuthenticatedImportCsvRoute,
   AuthenticatedMcpInfoRoute: AuthenticatedMcpInfoRoute,
+  AuthenticatedNastaveniaRoute: AuthenticatedNastaveniaRoute,
   AuthenticatedOsobyRoute: AuthenticatedOsobyRoute,
   AuthenticatedPravnyKontextRoute: AuthenticatedPravnyKontextRoute,
   AuthenticatedPredplatneRoute: AuthenticatedPredplatneRoute,
   AuthenticatedPrehladRoute: AuthenticatedPrehladRoute,
   AuthenticatedPripadyRoute: AuthenticatedPripadyRoute,
+  AuthenticatedSandboxRoute: AuthenticatedSandboxRoute,
   AuthenticatedSietRoute: AuthenticatedSietRoute,
   AuthenticatedSukromieRoute: AuthenticatedSukromieRoute,
   AuthenticatedViacRoute: AuthenticatedViacRoute,

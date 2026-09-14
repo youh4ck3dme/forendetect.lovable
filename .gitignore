@@ -36,3 +36,5 @@ dist-ssr
 *.zip
 
 .vercel
+coverage/
+test-results/

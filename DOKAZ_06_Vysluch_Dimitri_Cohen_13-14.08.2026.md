@@ -301,7 +301,7 @@ Otázka vyšetrovateľa: Nechali ste si nejaké faktúry z nákupov?
 
 Odpoveď: Nejaké mi ostali v aute, lebo PETRIS ich vždy dával dvojmo.
 
-Otázka vyšetrovateľa: *Svedkovi boli predložené faktúry a poznámky, ktoré vydal do konania Dmitrij Marjov podľa § 89a ods. 1 TP* Vyjadrite sa k predmetným poznámkam a faktúram.
+Otázka vyšetrovateľa: _Svedkovi boli predložené faktúry a poznámky, ktoré vydal do konania Dmitrij Marjov podľa § 89a ods. 1 TP_ Vyjadrite sa k predmetným poznámkam a faktúram.
 
 Odpoveď: Tie, to bola pečiatka, čo bola v BMW X6. Podpis na faktúre nie je môj.
 
