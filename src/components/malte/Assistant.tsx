@@ -60,6 +60,9 @@ import {
   runForensicAutopilot,
   extractBulkFilesText,
   MIN_EXTRACT_CHARS,
+  MAX_UPLOAD_FILES,
+  MAX_UPLOAD_FILE_BYTES,
+  MAX_UPLOAD_BATCH_BYTES,
   saveCaseDossier,
   getForensicDossier,
   type AiRunResult,
@@ -236,7 +239,21 @@ export function Assistant() {
         toast.info("Tieto súbory už sú vo fronte.");
         return;
       }
-      setBulkFiles((prev) => [...prev, ...newItems]);
+      const candidate = [...bulkFiles, ...newItems];
+      if (candidate.length > MAX_UPLOAD_FILES) {
+        toast.error(`Naraz možno spracovať najviac ${MAX_UPLOAD_FILES} súborov.`);
+        return;
+      }
+      const oversized = newItems.find((file) => file.size > MAX_UPLOAD_FILE_BYTES);
+      if (oversized) {
+        toast.error(`${oversized.name} prekračuje limit 10 MB.`);
+        return;
+      }
+      if (candidate.reduce((sum, file) => sum + file.size, 0) > MAX_UPLOAD_BATCH_BYTES) {
+        toast.error("Dávka súborov prekračuje celkový limit 25 MB.");
+        return;
+      }
+      setBulkFiles(candidate);
       setFileErrors((prev) => {
         const next = { ...prev };
         for (const f of newItems) delete next[f.name];

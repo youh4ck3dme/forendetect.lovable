@@ -3,6 +3,8 @@ import * as XLSX from "xlsx";
 import {
   classifyExtractResult,
   extractSingleBufferText,
+  validateUploadBatch,
+  MAX_UPLOAD_FILES,
 } from "../ai.functions";
 
 describe("Bulk Media Sandbox & File Extraction", () => {
@@ -97,5 +99,21 @@ describe("Bulk Media Sandbox & File Extraction", () => {
     await expect(
       extractSingleBufferText("malware.exe", base64),
     ).rejects.toThrow(/Nepodporovaný formát/);
+  });
+
+  it("odmietne priveľa súborov a falošnú príponu", async () => {
+    expect(() =>
+      validateUploadBatch(
+        Array.from({ length: MAX_UPLOAD_FILES + 1 }, (_, index) => ({
+          fileName: `spis-${index}.txt`,
+          textContent: "obsah",
+        })),
+      ),
+    ).toThrow(/najviac 10/);
+
+    const fakePdf = Buffer.from("toto nie je PDF").toString("base64");
+    await expect(extractSingleBufferText("falosny.pdf", fakePdf)).rejects.toThrow(
+      /nezodpovedá jeho prípone/,
+    );
   });
 });
