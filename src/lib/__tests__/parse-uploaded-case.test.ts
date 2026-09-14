@@ -42,7 +42,7 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     expect(personNames).toContain("Dáša Babčanová");
     expect(personNames).toContain("Kada Dakaj");
     expect(personNames).toContain("Dea Babčan");
-    expect(personNames).toContain("Denis Cohen");
+    expect(personNames).toContain("Dimitri Cohen");
 
     const novak = result.entities.persons.find(
       (p) => p.name === "Erik Babčan",
