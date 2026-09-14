@@ -1,4 +1,5 @@
 import type { ForensicDossier } from "./types";
+import { canonicalJson } from "./canonical-json";
 
 // ─── Kryptografický výpočet SHA-256 (NIST FIPS 180-4) ────────────
 
@@ -95,11 +96,10 @@ export function sha256Hex(str: string): string {
 
 /**
  * Vypočíta kanonický kryptografický odtlačok (SHA-256) forenzného dossieru.
- * Zabezpečuje dôkaznú nemennosť a overiteľnosť elektronického spisu podľa § 119 TP.
+ * Umožňuje technicky porovnať dve verzie exportovaných dát.
  */
 export function computeDossierSha256(dossier: ForensicDossier): string {
-  const canonical = JSON.stringify(dossier, Object.keys(dossier).sort());
-  return sha256Hex(canonical);
+  return sha256Hex(canonicalJson(dossier));
 }
 
 /**
@@ -131,17 +131,18 @@ export function exportDossierToPDF(dossier: ForensicDossier): void {
 
 export function buildReportHTML(d: ForensicDossier): string {
   const dossierHash = computeDossierSha256(d);
+  const e = escapeHtml;
 
   const tracesRows = d.evidenceStrength.traces
     .map(
       (t) => `
     <tr>
-      <td><code>${t.id}</code></td>
-      <td><strong>${t.name}</strong></td>
-      <td style="text-align:center;font-weight:bold">${t.lr}</td>
+      <td><code>${e(t.id)}</code></td>
+      <td><strong>${e(t.name)}</strong></td>
+      <td style="text-align:center;font-weight:bold">${e(t.lr)}</td>
       <td style="text-align:center">${strengthEmoji(t.light)}</td>
-      <td>${t.strength}</td>
-      <td>${t.paragraph}</td>
+      <td>${e(t.strength)}</td>
+      <td>${e(t.paragraph)}</td>
     </tr>`,
     )
     .join("");
@@ -150,9 +151,9 @@ export function buildReportHTML(d: ForensicDossier): string {
     .map(
       (a) => `
     <div class="attack">
-      <p class="attack-claim"><strong>Tvrdenie obhajoby:</strong> ${a.defenseClaim}</p>
-      <p class="attack-counter"><strong>Protiúder zo spisu:</strong> ${a.counterStrike}</p>
-      <p class="attack-gap"><em>Identifikovaná medzera:</em> ${a.evidenceGap} — <strong class="badge-risk">Riziko: ${a.risk}</strong></p>
+      <p class="attack-claim"><strong>Tvrdenie obhajoby:</strong> ${e(a.defenseClaim)}</p>
+      <p class="attack-counter"><strong>Zistenie zo spisu:</strong> ${e(a.counterStrike)}</p>
+      <p class="attack-gap"><em>Identifikovaná medzera:</em> ${e(a.evidenceGap)} — <strong class="badge-risk">Riziko: ${e(a.risk)}</strong></p>
     </div>`,
     )
     .join("");
@@ -162,19 +163,19 @@ export function buildReportHTML(d: ForensicDossier): string {
   <h2>Záväzný analytický rámec ÚBOK (3 vyšetrovacie otázky — Source of Truth)</h2>
   <div class="section">
     <div class="question-card">
-      <h3>1. ${d.investigativeAnswers.q1_buyer_seller.question}</h3>
-      <p>${d.investigativeAnswers.q1_buyer_seller.answer}</p>
-      <p class="question-meta"><strong>Identifikované osoby:</strong> ${d.investigativeAnswers.q1_buyer_seller.identifiedPersons.join(", ")} · <strong>Miera istoty:</strong> ${d.investigativeAnswers.q1_buyer_seller.confidenceLevel} %</p>
+      <h3>1. ${e(d.investigativeAnswers.q1_buyer_seller.question)}</h3>
+      <p>${e(d.investigativeAnswers.q1_buyer_seller.answer)}</p>
+      <p class="question-meta"><strong>Identifikované osoby:</strong> ${d.investigativeAnswers.q1_buyer_seller.identifiedPersons.map(e).join(", ")} · <strong>Miera istoty:</strong> ${d.investigativeAnswers.q1_buyer_seller.confidenceLevel} %</p>
     </div>
     <div class="question-card">
-      <h3>2. ${d.investigativeAnswers.q2_planner_coordinator.question}</h3>
-      <p>${d.investigativeAnswers.q2_planner_coordinator.answer}</p>
-      <p class="question-meta"><strong>Identifikované osoby:</strong> ${d.investigativeAnswers.q2_planner_coordinator.identifiedPersons.join(", ")} · <strong>Miera istoty:</strong> ${d.investigativeAnswers.q2_planner_coordinator.confidenceLevel} %</p>
+      <h3>2. ${e(d.investigativeAnswers.q2_planner_coordinator.question)}</h3>
+      <p>${e(d.investigativeAnswers.q2_planner_coordinator.answer)}</p>
+      <p class="question-meta"><strong>Identifikované osoby:</strong> ${d.investigativeAnswers.q2_planner_coordinator.identifiedPersons.map(e).join(", ")} · <strong>Miera istoty:</strong> ${d.investigativeAnswers.q2_planner_coordinator.confidenceLevel} %</p>
     </div>
     <div class="question-card">
-      <h3>3. ${d.investigativeAnswers.q3_financier.question}</h3>
-      <p>${d.investigativeAnswers.q3_financier.answer}</p>
-      <p class="question-meta"><strong>Identifikované osoby:</strong> ${d.investigativeAnswers.q3_financier.identifiedPersons.join(", ")} · <strong>Miera istoty:</strong> ${d.investigativeAnswers.q3_financier.confidenceLevel} %</p>
+      <h3>3. ${e(d.investigativeAnswers.q3_financier.question)}</h3>
+      <p>${e(d.investigativeAnswers.q3_financier.answer)}</p>
+      <p class="question-meta"><strong>Identifikované osoby:</strong> ${d.investigativeAnswers.q3_financier.identifiedPersons.map(e).join(", ")} · <strong>Miera istoty:</strong> ${d.investigativeAnswers.q3_financier.confidenceLevel} %</p>
     </div>
   </div>`
     : "";
@@ -201,11 +202,11 @@ export function buildReportHTML(d: ForensicDossier): string {
         .map(
           (tc) => `
         <tr>
-          <td><strong>${tc.topic}</strong></td>
-          <td><em>${tc.personA.name} (${tc.personA.status}):</em> „${tc.personA.claim}“</td>
-          <td>${tc.factualRecord}</td>
+          <td><strong>${e(tc.topic)}</strong></td>
+          <td><em>${e(tc.personA.name)} (${e(tc.personA.status)}):</em> „${e(tc.personA.claim)}“</td>
+          <td>${e(tc.factualRecord)}</td>
           <td style="text-align:center;font-weight:bold;color:${tc.deceitPercentage >= 75 ? "#dc2626" : "#d97706"}">${tc.deceitPercentage} %</td>
-          <td>${tc.proceduralResolution}</td>
+          <td>${e(tc.proceduralResolution)}</td>
         </tr>`,
         )
         .join("")}
@@ -218,7 +219,7 @@ export function buildReportHTML(d: ForensicDossier): string {
   <h2>Forenzná analýza transakcií a tokov financií (§ 119 ods. 1 písm. f) TP)</h2>
   <div class="section">
     <p><strong>Celkový objem:</strong> ${d.financialAnalysis.totalVolume.toLocaleString("sk-SK")} € · <strong>Hotovosť:</strong> ${d.financialAnalysis.cashVolume.toLocaleString("sk-SK")} € (${d.financialAnalysis.cashRatioPercent} %) · <strong>Prevody:</strong> ${d.financialAnalysis.transferVolume.toLocaleString("sk-SK")} €</p>
-    <p><em>Záver o financovaní:</em> ${d.financialAnalysis.financingConclusion}</p>
+    <p><em>Analytické pozorovanie:</em> ${e(d.financialAnalysis.financingConclusion)}</p>
     <h3>Podozrivé finančné toky a platobné operácie</h3>
     <table>
       <thead>
@@ -235,11 +236,11 @@ export function buildReportHTML(d: ForensicDossier): string {
           .map(
             (sf) => `
           <tr>
-            <td>${sf.date}</td>
-            <td>${sf.payer} ➔ ${sf.recipient}</td>
+            <td>${e(sf.date)}</td>
+            <td>${e(sf.payer)} ➔ ${e(sf.recipient)}</td>
             <td style="text-align:right;font-weight:bold">${sf.amount.toLocaleString("sk-SK")} €</td>
-            <td style="text-align:center">${sf.method}</td>
-            <td><strong>${sf.purpose}</strong>: ${sf.redFlag}</td>
+            <td style="text-align:center">${e(sf.method)}</td>
+            <td><strong>${e(sf.purpose)}</strong>: ${e(sf.redFlag)}</td>
           </tr>`,
           )
           .join("")}
@@ -252,7 +253,7 @@ export function buildReportHTML(d: ForensicDossier): string {
 <html lang="sk">
 <head>
 <meta charset="UTF-8">
-<title>Forenzný posudok — ${d.caseTitle}</title>
+<title>Forenzný report — ${e(d.caseTitle)}</title>
 <style>
   @page { margin: 2cm; }
   body { font-family: "Times New Roman", Times, serif; font-size: 11pt; line-height: 1.5; color: #111827; margin: 0; padding: 20px; }
@@ -303,18 +304,18 @@ export function buildReportHTML(d: ForensicDossier): string {
 
 <div class="court-header">
   <div class="court-agency">Prezídium Policajného zboru · Úrad boja proti organizovanej kriminalite</div>
-  <h1>FORENZNÝ REPORT — ${d.caseTitle}</h1>
+  <h1>FORENZNÝ REPORT — ${e(d.caseTitle)}</h1>
   <div class="meta">
-    Spisová značka / ČVS: <strong>${d.caseId}</strong> · Dátum vyhotovenia: <strong>${new Date(d.generatedAt).toLocaleString("sk-SK")}</strong><br>
-    Procesný formát: <strong>§ 142–147 TP (Odborné vyjadrenie) & § 168 TP (Odôvodnenie rozsudku)</strong><br>
+    Identifikátor prípadu: <strong>${e(d.caseId)}</strong> · Dátum vyhotovenia: <strong>${e(new Date(d.generatedAt).toLocaleString("sk-SK"))}</strong><br>
+    Typ dokumentu: <strong>analytický pracovný report na odborné overenie</strong><br>
     <span class="meta-hash">Kryptografický odtlačok spisu (SHA-256): <code>${dossierHash}</code></span>
   </div>
 </div>
 
 <div class="index-box">
-  <p><strong>Index obhájiteľnosti obžaloby pred súdom</strong></p>
+  <p><strong>Analytický index úplnosti podkladov</strong></p>
   <span class="num">${d.defendabilityIndex}/100</span>
-  <p style="font-size:9pt;color:#64748b">Kvantitatívny indikátor nepriestrelnosti dôkazov pred súdom Slovenskej republiky</p>
+  <p style="font-size:9pt;color:#64748b">Pomocný indikátor z dostupných údajov; nejde o právny záver ani predikciu rozhodnutia.</p>
 </div>
 
 ${questionsHtml}
@@ -325,19 +326,19 @@ ${financialHtml}
 
 <h2>I. Zistený skutkový stav (§ 119 ods. 1 Trestného poriadku)</h2>
 <div class="section">
-  <p>${d.judgeReadyText.skutkovyStav}</p>
+  <p>${e(d.judgeReadyText.skutkovyStav)}</p>
 </div>
 
 <h2>II. Vyporiadanie sa s obhajobou obvineného (§ 168 TP)</h2>
 <div class="section">
-  <p>${d.judgeReadyText.vyporiadanie}</p>
+  <p>${e(d.judgeReadyText.vyporiadanie)}</p>
   <h3>Identifikované body útoku obhajoby a dôkazné protiúdery:</h3>
   ${attacksHtml}
 </div>
 
 <h2>III. Vedecké zhodnotenie stôp</h2>
 <div class="section">
-  <p>${d.judgeReadyText.vedecke}</p>
+  <p>${e(d.judgeReadyText.vedecke)}</p>
   <h3>Dôkazová matica stôp (§ 119 ods. 2 TP & ENFSI metodika)</h3>
   <table>
     <thead>
@@ -369,10 +370,10 @@ ${financialHtml}
       .map(
         (p) => `
       <tr>
-        <td><strong>${p.para}</strong></td>
-        <td>${p.title}</td>
+        <td><strong>${e(p.para)}</strong></td>
+        <td>${e(p.title)}</td>
         <td style="text-align:center;font-weight:bold;color:${p.status === "OK" ? "#16a34a" : p.status === "Narušené" ? "#dc2626" : "#d97706"}">${p.status}</td>
-        <td>${p.note}</td>
+        <td>${e(p.note)}</td>
       </tr>`,
       )
       .join("")}
@@ -380,38 +381,46 @@ ${financialHtml}
 </table>
 
 <div class="integrity-section">
-  <h2>V. Doložka integrity a nemennosti elektronického spisu (§ 119 ods. 2 TP)</h2>
+  <h2>V. Technická kontrola integrity exportu</h2>
   <div class="hash-box">
     <div style="font-size:9pt;color:#475569;margin-bottom:2px">Kryptografický kontrolný odtlačok spisu (FIPS 180-4 SHA-256):</div>
     <div class="hash-code">${dossierHash}</div>
   </div>
   <p class="legal-clause">
-    <strong>Znalcovo a procesné osvedčenie:</strong> Tento znalecký posudok / rozsudkový predklad bol deterministicky vygenerovaný na základe overených listín, výpovedí a vecných dôkazov vyšetrovacieho spisu ČVS: <strong>${d.caseId}</strong>.
-    Uvedený SHA-256 kontrolný odtlačok digitálne zväzuje a osvedčuje nemennosť celého skutkového stavu, dôkazovej matice, rozporov vo výpovediach a finančných tokov.
-    V zmysle <strong>§ 119 ods. 2 zákona č. 301/2005 Z. z. (Trestný poriadok)</strong> a zákona č. 382/2004 Z. z. o znalcoch, tlmočníkoch a prekladateľoch slúži tento dokument ako zákonný dôkaz pre rozhodovanie OČTK a súdu.
+    <strong>Technické upozornenie:</strong> SHA-256 odtlačok umožňuje porovnať obsah tejto konkrétnej verzie exportu prípadu <strong>${e(d.caseId)}</strong> s neskoršou kópiou.
+    Odtlačok sám neoveruje pravdivosť, pôvod ani právnu prípustnosť vstupných údajov a nenahrádza elektronický podpis, znalecké skúmanie ani rozhodnutie oprávneného orgánu.
   </p>
   <div class="signature-grid">
     <div class="sig-block">
       <div class="sig-line"></div>
-      <p>Forenzný analytik / OČTK ÚBOK PZ</p>
+      <p>Spracoval/a</p>
     </div>
     <div class="sig-block">
       <div class="sig-line"></div>
-      <p>Dozorujúci prokurátor / Predseda senátu</p>
+      <p>Odborne skontroloval/a</p>
     </div>
   </div>
 </div>
 
 <div class="footer">
-  Forenzný Autopilot v1.0 · Vygenerované v súlade s § 142–147 a § 168 Trestného poriadku Slovenskej republiky.
+  Forendo · Pracovný analytický výstup. AI hypotézy a právne odkazy vyžadujú ľudské overenie.
 </div>
 
 <div class="no-print" style="text-align:center;margin-top:24px">
-  <button onclick="window.print()" style="padding:10px 28px;font-size:12pt;font-weight:bold;background:#1e40af;color:#fff;border:none;border-radius:6px;cursor:pointer">Tlačiť / Uložiť súdny posudok ako PDF</button>
+  <button onclick="window.print()" style="padding:10px 28px;font-size:12pt;font-weight:bold;background:#1e40af;color:#fff;border:none;border-radius:6px;cursor:pointer">Tlačiť / Uložiť report ako PDF</button>
 </div>
 
 </body>
 </html>`;
+}
+
+function escapeHtml(value: unknown): string {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function strengthEmoji(light: string): string {
