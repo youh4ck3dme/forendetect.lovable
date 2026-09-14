@@ -1042,8 +1042,9 @@ export async function handleGetForensicDossier(
     .maybeSingle();
 
   if (error) throw new Error(`Supabase: ${error.message}`);
+  // Čítanie: chýbajúci (alebo neprístupný) prípad nie je chyba – jednoducho nie je spis.
   if (!row) {
-    throw new Error("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+    return { success: true, dossier: null as ForensicDossier | null };
   }
   return {
     success: true,
