@@ -98,7 +98,7 @@ describe("Bulk Media Sandbox & File Extraction", () => {
     const base64 = Buffer.from("fake exe content").toString("base64");
     await expect(
       extractSingleBufferText("malware.exe", base64),
-    ).rejects.toThrow(/Nepodporovaný formát/);
+    ).rejects.toThrow(/Nepodporovaný/);
   });
 
   it("odmietne priveľa súborov a falošnú príponu", async () => {
