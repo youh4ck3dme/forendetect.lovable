@@ -238,11 +238,7 @@ export function AppHeader({
           <span className="lg:hidden">
             <ThemeToggle />
           </span>
-          {actions ?? (
-            <span className="lg:hidden">
-              <NotificationsBell />
-            </span>
-          )}
+          {actions ?? <NotificationsBell />}
         </div>
       </div>
       <div
