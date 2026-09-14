@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, X } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
