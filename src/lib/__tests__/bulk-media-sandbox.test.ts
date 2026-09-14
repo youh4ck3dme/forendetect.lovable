@@ -115,5 +115,8 @@ describe("Bulk Media Sandbox & File Extraction", () => {
     await expect(extractSingleBufferText("falosny.pdf", fakePdf)).rejects.toThrow(
       /nezodpovedá jeho prípone/,
     );
+    await expect(
+      extractSingleBufferText("obchadzka.pdf", undefined, "podvrhnutý text"),
+    ).rejects.toThrow(/Textový prenos nie je povolený/);
   });
 });

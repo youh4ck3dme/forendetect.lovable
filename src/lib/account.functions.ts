@@ -20,6 +20,27 @@ const CASE_TABLES = [
   "case_imports",
 ] as const;
 
+const auditPageSchema = z.object({
+  page: z.number().int().min(0).max(200).default(0),
+  pageSize: z.number().int().min(1).max(50).default(20),
+});
+
+/** Bezpečný, stránkovaný pohľad na technickú históriu bez starých/nových hodnôt. */
+export const getMyAuditLog = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) => auditPageSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const from = data.page * data.pageSize;
+    const to = from + data.pageSize - 1;
+    const { data: rows, error, count } = await context.supabase
+      .from("case_audit_log")
+      .select("id, case_id, table_name, operation, changed_fields, revision, created_at", { count: "exact" })
+      .order("created_at", { ascending: false })
+      .range(from, to);
+    if (error) throw new Error(`Históriu zmien sa nepodarilo načítať: ${error.message}`);
+    return { rows: rows ?? [], total: count ?? 0, page: data.page, pageSize: data.pageSize };
+  });
+
 /** Kompletný export vlastných údajov vo formáte JSON. */
 export const exportMyData = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

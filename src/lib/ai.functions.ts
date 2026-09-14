@@ -470,6 +470,9 @@ export function validateUploadBatch(
     const bytes = file.fileBase64
       ? decodedBase64Bytes(file.fileBase64)
       : new TextEncoder().encode(file.textContent ?? "").byteLength;
+    if (file.textContent !== undefined && !/\.(txt|md|csv|json)$/i.test(file.fileName)) {
+      throw new Error(`Textový prenos nie je povolený pre formát súboru ${file.fileName}.`);
+    }
     if (bytes > MAX_UPLOAD_FILE_BYTES) throw new Error(`Súbor ${file.fileName} prekračuje limit 10 MB.`);
     totalBytes += bytes;
   }
@@ -1020,7 +1023,9 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { getQuotas } = await import("@/lib/entitlements.server");
     const quotas = await getQuotas(context.userId);
-    const uuidCaseId = z.string().uuid().safeParse(caseId).success ? caseId : null;
+    const uuidCaseId = z.string().uuid().safeParse(caseId).success
+      ? caseId
+      : (null as unknown as string);
     const { data: reservationId, error: reserveError } = await supabaseAdmin.rpc("reserve_ai_call", {
       _user: context.userId,
       _case: uuidCaseId,
