@@ -13,7 +13,7 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     "docs/forenz/DOKAZ_07_Vysluch_Erik_Babcan_12-13.08.2026.md",
   );
 
-  it("správne načíta a extrahuje entity z reálneho vyšetrovacieho spisu Petra Nováka", async () => {
+  it("správne načíta a extrahuje entity z reálneho vyšetrovacieho spisu Erika Babčana", async () => {
     expect(fs.existsSync(realEvidencePath)).toBe(true);
     const content = fs.readFileSync(realEvidencePath, "utf-8");
 
@@ -37,20 +37,20 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
 
     // Extrahované osoby a rodinné väzby
     const personNames = result.entities.persons.map((p) => p.name);
-    expect(personNames).toContain("Peter Novák");
-    expect(personNames).toContain("Milan Novák");
-    expect(personNames).toContain("Dáša Nováková");
+    expect(personNames).toContain("Erik Babčan");
+    expect(personNames).toContain("Milan Babčan");
+    expect(personNames).toContain("Dáša Babčanová");
     expect(personNames).toContain("Kada Dakaj");
-    expect(personNames).toContain("Dea Novák");
-    expect(personNames).toContain("Denis Koval");
+    expect(personNames).toContain("Dea Babčan");
+    expect(personNames).toContain("Dimitri Cohen");
 
-    const novak = result.entities.persons.find(
-      (p) => p.name === "Peter Novák",
+    const babcan = result.entities.persons.find(
+      (p) => p.name === "Erik Babčan",
     );
-    expect(novak?.role).toBe("Podozrivý / Vypočúvaný");
-    expect(novak?.birthDate).toBe("30.05.1989");
+    expect(babcan?.role).toBe("Podozrivý / Vypočúvaný");
+    expect(babcan?.birthDate).toBe("30.05.1989");
 
-    const otec = result.entities.persons.find((p) => p.name === "Milan Novák");
+    const otec = result.entities.persons.find((p) => p.name === "Milan Babčan");
     expect(otec?.role).toBe("Otec");
 
     // Extrahované spoločnosti

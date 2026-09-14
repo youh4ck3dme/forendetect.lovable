@@ -89,7 +89,6 @@ describe("Live E2E: Forendo <-> Laravel ICO Atlas <-> ORSR Register", () => {
       }
     }
 
-
     // Vloženie testovacieho používateľa a prípadu
     await adminDbClient.query(
       `INSERT INTO auth.users (id, email, raw_user_meta_data) VALUES ($1, 'e2e-user@forendetect.internal', '{}'::jsonb) ON CONFLICT (id) DO NOTHING;`,
