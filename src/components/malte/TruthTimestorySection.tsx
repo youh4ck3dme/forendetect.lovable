@@ -919,10 +919,19 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
         </div>
 
         {/* ═══ AKTÍVNA EPIZÓDA S KOMIKSOVÝM PANELOM ═══ */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <div
+          key={activeEpisodeId}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start animate-fade-in"
+        >
           {/* ĽAVÁ ČASŤ: VIZUÁL KOMIKSOVÉHO PANELU */}
           <div className="lg:col-span-7 space-y-2.5">
-            <div className="relative overflow-hidden rounded-2xl border-2 border-black/80 bg-black shadow-2xl group">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-black/80 bg-black shadow-2xl group transition-transform duration-300 hover:scale-[1.01]">
+              {switching ? (
+                <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 backdrop-blur-[2px]">
+                  <Loader2 className="h-7 w-7 animate-spin text-primary" />
+                </div>
+              ) : null}
+
               {/* Halftone komiksový vzor v ráme */}
               <div
                 className="absolute inset-0 opacity-15 pointer-events-none z-10"
