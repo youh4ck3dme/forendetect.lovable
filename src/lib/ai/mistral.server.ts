@@ -1,13 +1,11 @@
-/**
- * Serverový klient pre Mistral API (POST https://api.mistral.ai/v1/chat/completions).
- * Kľúč `MISTRAL_API_KEY` je serverové tajomstvo — nikdy sa nedostane do klientského balíka.
- * Model sa nastavuje serverovou premennou `MISTRAL_MODEL`.
- */
+/** Server-only Mistral client with explicit two-mode routing. */
 
 export const MISTRAL_ENDPOINT = "https://api.mistral.ai/v1/chat/completions";
-export const DEFAULT_MODEL = "mistral-large-latest";
-export const REQUEST_TIMEOUT_MS = 30_000;
+export const MISTRAL_MODELS_ENDPOINT = "https://api.mistral.ai/v1/models";
+export const DEFAULT_FAST_MODEL = "mistral-small-latest";
+export const DEFAULT_REASONING_MODEL = "magistral-medium-latest";
 
+export type MistralMode = "fast" | "reasoning";
 export type MistralMessage = { role: "system" | "user"; content: string };
 
 export type MistralResult =
@@ -16,291 +14,191 @@ export type MistralResult =
       content: string;
       usage: { prompt: number | null; completion: number | null };
       model: string;
+      mode: MistralMode;
+      fallback: boolean;
+      requestId: string;
     }
   | {
       status: "not_configured" | "timeout" | "rate_limited" | "failed";
       message: string;
       retryAfterSeconds?: number;
+      errorCode?: string;
+      model?: string;
+      mode?: MistralMode;
+      fallback?: boolean;
+      requestId?: string;
     };
 
-export function mistralModel(): string {
-  return process.env["MISTRAL_MODEL"] || DEFAULT_MODEL;
+const modelCache = new Map<string, { ids: Set<string>; expiresAt: number }>();
+
+function modeKey(mode: MistralMode): string | undefined {
+  return process.env[mode === "fast" ? "MISTRAL_API_KEY_FAST" : "MISTRAL_API_KEY_REASONING"];
 }
 
-export function mistralConfigured(): boolean {
-  return Boolean(process.env["MISTRAL_API_KEY"]);
+export function mistralModel(mode: MistralMode = "fast"): string {
+  if (mode === "fast") return process.env["MISTRAL_MODEL_FAST"] || DEFAULT_FAST_MODEL;
+  return process.env["MISTRAL_MODEL_REASONING"] || DEFAULT_REASONING_MODEL;
+}
+
+export function mistralConfigured(mode?: MistralMode): boolean {
+  if (mode) return Boolean(modeKey(mode));
+  return Boolean(modeKey("fast") && modeKey("reasoning"));
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function retryDelay(response: Response, attempt: number): number {
+  const raw = response.headers.get("retry-after");
+  const seconds = raw ? Number(raw) : Number.NaN;
+  if (Number.isFinite(seconds) && seconds >= 0) return Math.min(seconds, 30) * 1000;
+  return Math.min(1000 * 2 ** attempt, 8000) + Math.floor(Math.random() * 250);
+}
+
+async function verifyModel(apiKey: string, model: string, fetchImpl: typeof fetch): Promise<MistralResult | null> {
+  const cached = modelCache.get(apiKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.ids.has(model) ? null : { status: "failed", errorCode: "unsupported_model", message: `Model ${model} nie je pre tento Mistral účet dostupný.` };
+  }
+  const response = await fetchImpl(MISTRAL_MODELS_ENDPOINT, {
+    headers: { authorization: `Bearer ${apiKey}` },
+  });
+  if (!response.ok) return null;
+  const body = (await response.json()) as { data?: Array<{ id?: string }> };
+  const ids = new Set((body.data ?? []).flatMap((item) => item.id ? [item.id] : []));
+  modelCache.set(apiKey, { ids, expiresAt: Date.now() + 15 * 60_000 });
+  return ids.has(model) ? null : { status: "failed", errorCode: "unsupported_model", message: `Model ${model} nie je pre tento Mistral účet dostupný.` };
 }
 
 type CallOptions = {
   messages: MistralMessage[];
+  mode?: MistralMode;
   maxTokens?: number;
-  /** Injektovateľné len v testoch. */
+  requestId?: string;
+  allowFallback?: boolean;
   fetchImpl?: typeof fetch;
+  sleepImpl?: (ms: number) => Promise<void>;
+  skipModelVerification?: boolean;
 };
 
-/**
- * Jedno volanie s časovým limitom. Opakuje sa NAJVIAC raz a len pri jednoznačne
- * prechodnej chybe (429 alebo 503) s rešpektovaním hlavičky Retry-After.
- * Po nejednoznačnom zlyhaní (timeout, prerušené spojenie) sa neopakuje —
- * požiadavka už mohla byť u poskytovateľa spracovaná a účtovaná.
- */
-export async function callMistral(
-  options: CallOptions,
-): Promise<MistralResult> {
-  const apiKey = process.env["MISTRAL_API_KEY"];
-  if (!apiKey) {
-    return { status: "not_configured", message: "AI nie je nakonfigurovaná." };
-  }
-  const model = mistralModel();
+async function callMode(options: CallOptions, mode: MistralMode, fallback: boolean): Promise<MistralResult> {
+  const apiKey = modeKey(mode);
+  const model = mistralModel(mode);
+  const requestId = options.requestId ?? crypto.randomUUID();
+  if (!apiKey) return { status: "not_configured", message: `Mistral režim ${mode} nie je nakonfigurovaný.`, mode, model, fallback, requestId };
   const doFetch = options.fetchImpl ?? fetch;
+  if (!options.skipModelVerification) {
+    const invalid = await verifyModel(apiKey, model, doFetch);
+    if (invalid) return { ...invalid, mode, model, fallback, requestId };
+  }
 
-  const attempt = async (): Promise<
-    | { kind: "ok"; body: unknown }
-    | { kind: "retry"; after: number }
-    | MistralResult
-  > => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    let response: Response;
     try {
-      const response = await doFetch(MISTRAL_ENDPOINT, {
+      response = await doFetch(MISTRAL_ENDPOINT, {
         method: "POST",
         headers: {
           "content-type": "application/json",
           authorization: `Bearer ${apiKey}`,
+          "x-client-request-id": requestId,
         },
         body: JSON.stringify({
           model,
-          temperature: 0.2,
-          max_tokens: options.maxTokens ?? 900,
+          temperature: mode === "fast" ? 0.2 : 0.1,
+          max_tokens: options.maxTokens ?? (mode === "fast" ? 900 : 4_000),
           response_format: { type: "json_object" },
           messages: options.messages,
         }),
-        signal: controller.signal,
       });
-
-      if (response.status === 429 || response.status === 503) {
-        const header = response.headers.get("retry-after");
-        const after = header ? Number(header) : 2;
-        return {
-          kind: "retry",
-          after: Number.isFinite(after) ? Math.min(after, 10) : 2,
-        };
-      }
-      if (response.status === 401 || response.status === 403) {
-        return {
-          status: "failed",
-          message: "Mistral odmietol kľúč (neplatný alebo bez oprávnenia).",
-        };
-      }
-      if (response.status === 402) {
-        return {
-          status: "failed",
-          message:
-            "Mistral má vyčerpaný kredit — doplňte kredit u poskytovateľa.",
-        };
-      }
-      if (!response.ok) {
-        return {
-          status: "failed",
-          message: `Poskytovateľ vrátil chybu ${response.status}.`,
-        };
-      }
-      return { kind: "ok", body: await response.json() };
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
-        return {
-          status: "timeout",
-          message: "Volanie AI prekročilo časový limit.",
-        };
+        return { status: "timeout", errorCode: "aborted", message: "Volanie AI bolo prerušené.", mode, model, fallback, requestId };
+      }
+      return { status: "failed", errorCode: "network_error", message: "Spojenie s Mistral zlyhalo.", mode, model, fallback, requestId };
+    }
+
+    if (response.ok) {
+      const body = (await response.json()) as {
+        choices?: { message?: { content?: string } }[];
+        usage?: { prompt_tokens?: number; completion_tokens?: number };
+      };
+      const content = body.choices?.[0]?.message?.content;
+      if (!content?.trim()) return { status: "failed", errorCode: "empty_response", message: "Odpoveď AI bola prázdna.", mode, model, fallback, requestId };
+      return {
+        status: "ok", content, model, mode, fallback, requestId,
+        usage: {
+          prompt: typeof body.usage?.prompt_tokens === "number" ? body.usage.prompt_tokens : null,
+          completion: typeof body.usage?.completion_tokens === "number" ? body.usage.completion_tokens : null,
+        },
+      };
+    }
+
+    if (response.status === 400 || response.status === 401 || response.status === 402 || response.status === 403) {
+      const messages: Record<number, string> = {
+        400: "Mistral odmietol neplatnú požiadavku.",
+        401: "Mistral odmietol API kľúč.",
+        402: "Mistral účet nemá dostupný kredit.",
+        403: "Mistral kľúč nemá oprávnenie pre zvolený model.",
+      };
+      return { status: "failed", errorCode: `http_${response.status}`, message: messages[response.status] ?? `Mistral vrátil chybu ${response.status}.`, mode, model, fallback, requestId };
+    }
+
+    if (response.status === 429 || response.status >= 500) {
+      const delay = retryDelay(response, attempt);
+      if (attempt === 0) {
+        await (options.sleepImpl ?? sleep)(delay);
+        continue;
       }
       return {
-        status: "failed",
-        message: "Spojenie s poskytovateľom zlyhalo.",
-      };
-    } finally {
-      clearTimeout(timer);
-    }
-  };
-
-  let result = await attempt();
-  if ("kind" in result && result.kind === "retry") {
-    const wait = result.after;
-    await new Promise((r) => setTimeout(r, Math.min(wait, 5) * 1000));
-    const second = await attempt();
-    if ("kind" in second && second.kind === "retry") {
-      return {
-        status: "rate_limited",
-        message: "Poskytovateľ je momentálne vyťažený. Skúste to o chvíľu.",
-        retryAfterSeconds: second.after,
+        status: response.status === 429 ? "rate_limited" : "failed",
+        errorCode: `http_${response.status}`,
+        message: response.status === 429 ? "Mistral je dočasne vyťažený." : `Mistral vrátil prechodnú chybu ${response.status}.`,
+        retryAfterSeconds: Math.ceil(delay / 1000), mode, model, fallback, requestId,
       };
     }
-    result = second;
+    return { status: "failed", errorCode: `http_${response.status}`, message: `Mistral vrátil chybu ${response.status}.`, mode, model, fallback, requestId };
   }
-  if (!("kind" in result)) return result;
-
-  const body = result.body as {
-    choices?: { message?: { content?: string } }[];
-    usage?: { prompt_tokens?: number; completion_tokens?: number };
-  };
-  const content = body.choices?.[0]?.message?.content;
-  if (typeof content !== "string" || content.trim() === "") {
-    return { status: "failed", message: "Odpoveď AI bola prázdna." };
-  }
-  return {
-    status: "ok",
-    content,
-    // Chýbajúcu spotrebu neuvádzame ako nulu — ostáva neznáma.
-    usage: {
-      prompt:
-        typeof body.usage?.prompt_tokens === "number"
-          ? body.usage.prompt_tokens
-          : null,
-      completion:
-        typeof body.usage?.completion_tokens === "number"
-          ? body.usage.completion_tokens
-          : null,
-    },
-    model,
-  };
+  return { status: "failed", errorCode: "unknown", message: "Mistral volanie zlyhalo.", mode, model, fallback, requestId };
 }
 
-/**
- * Mistral OCR API (POST https://api.mistral.ai/v1/ocr).
- * Slúži ako fallback pre skenované PDF (bez textovej vrstvy) a obrázky listín.
- * 1. Upload dočasného súboru cez /v1/files (purpose: "ocr")
- * 2. Získanie podpísanej URL cez /v1/files/:id/url
- * 3. Spustenie mistral-ocr-latest
- * 4. Asynchrónne zmazanie dočasného súboru
- */
-export async function callMistralOcr(
-  fileBuffer: Buffer,
-  fileName: string,
-): Promise<string> {
+export async function callMistral(options: CallOptions): Promise<MistralResult> {
+  const mode = options.mode ?? "fast";
+  const first = await callMode(options, mode, false);
+  const transient = first.status !== "ok" && (first.status === "rate_limited" || first.errorCode?.startsWith("http_5"));
+  if (!transient || options.allowFallback === false) return first;
+  const other: MistralMode = mode === "fast" ? "reasoning" : "fast";
+  if (!mistralConfigured(other)) return first;
+  return callMode({ ...options, ...(first.requestId ? { requestId: first.requestId } : {}) }, other, true);
+}
+
+/** OCR compatibility remains on the existing dedicated Mistral secret. */
+export async function callMistralOcr(fileBuffer: Buffer, fileName: string): Promise<string> {
   const apiKey = process.env["MISTRAL_API_KEY"];
-  if (!apiKey) {
-    throw new Error(
-      "MISTRAL_API_KEY nie je nastavený. Pre OCR je potrebný API kľúč.",
-    );
-  }
-
-  const mimeByExt: Record<string, string> = {
-    pdf: "application/pdf",
-    png: "image/png",
-    jpg: "image/jpeg",
-    jpeg: "image/jpeg",
-    webp: "image/webp",
-    tif: "image/tiff",
-    tiff: "image/tiff",
-    bmp: "image/bmp",
-  };
+  if (!apiKey) throw new Error("MISTRAL_API_KEY nie je nastavený. Pre OCR je potrebný API kľúč.");
+  const mimeByExt: Record<string, string> = { pdf: "application/pdf", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", tif: "image/tiff", tiff: "image/tiff", bmp: "image/bmp" };
   const ext = fileName.split(".").pop()?.toLowerCase() ?? "";
-  const mime = mimeByExt[ext] ?? "application/octet-stream";
-
-  // 1. Upload do /v1/files
   const formData = new FormData();
-  const blob = new Blob([new Uint8Array(fileBuffer)], { type: mime });
-  formData.append("file", blob, fileName);
+  formData.append("file", new Blob([new Uint8Array(fileBuffer)], { type: mimeByExt[ext] ?? "application/octet-stream" }), fileName);
   formData.append("purpose", "ocr");
-
-  const uploadRes = await fetch("https://api.mistral.ai/v1/files", {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${apiKey}`,
-    },
-    body: formData,
-  });
-
-  if (!uploadRes.ok) {
-    const errText = await uploadRes.text();
-    throw new Error(
-      `Mistral File Upload zlyhal (${uploadRes.status}): ${errText}`,
-    );
-  }
-
-  const uploadData = (await uploadRes.json()) as { id?: string };
-  const fileId = uploadData.id;
-  if (!fileId) {
-    throw new Error("Mistral File Upload nevrátil ID súboru.");
-  }
-
+  const upload = await fetch("https://api.mistral.ai/v1/files", { method: "POST", headers: { authorization: `Bearer ${apiKey}` }, body: formData });
+  if (!upload.ok) throw new Error(`Mistral File Upload zlyhal (${upload.status}).`);
+  const fileId = ((await upload.json()) as { id?: string }).id;
+  if (!fileId) throw new Error("Mistral File Upload nevrátil ID súboru.");
   try {
-    // 2. Získaj signed URL
-    const signedUrlRes = await fetch(
-      `https://api.mistral.ai/v1/files/${fileId}/url`,
-      {
-        headers: {
-          authorization: `Bearer ${apiKey}`,
-        },
-      },
-    );
-
-    if (!signedUrlRes.ok) {
-      const errText = await signedUrlRes.text();
-      throw new Error(
-        `Získanie signed URL zlyhalo (${signedUrlRes.status}): ${errText}`,
-      );
-    }
-
-    const signedUrlData = (await signedUrlRes.json()) as { url: string };
-    const documentUrl = signedUrlData.url;
-
-    // 3. Spusť OCR
+    const urlResponse = await fetch(`https://api.mistral.ai/v1/files/${fileId}/url`, { headers: { authorization: `Bearer ${apiKey}` } });
+    if (!urlResponse.ok) throw new Error(`Získanie signed URL zlyhalo (${urlResponse.status}).`);
+    const documentUrl = ((await urlResponse.json()) as { url: string }).url;
     const isImage = /\.(png|jpe?g|webp|tiff?|bmp)$/i.test(fileName);
-    const docPayload = isImage
-      ? { type: "image_url", image_url: documentUrl }
-      : { type: "document_url", document_url: documentUrl };
-
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 60_000); // 60s timeout pre OCR
-
-    try {
-      const ocrRes = await fetch("https://api.mistral.ai/v1/ocr", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: "mistral-ocr-latest",
-          document: docPayload,
-        }),
-        signal: controller.signal,
-      });
-
-      if (!ocrRes.ok) {
-        const errText = await ocrRes.text();
-        throw new Error(
-          `Mistral OCR API zlyhalo (${ocrRes.status}): ${errText}`,
-        );
-      }
-
-      const ocrData = (await ocrRes.json()) as {
-        pages?: Array<{ index: number; markdown: string }>;
-      };
-
-      const extracted =
-        ocrData.pages?.map((p) => p.markdown).join("\n\n") || "";
-      if (!extracted.trim()) {
-        throw new Error(
-          "Mistral OCR nerozpoznalo žiadny text v nahranom dokumente.",
-        );
-      }
-      return extracted;
-    } finally {
-      clearTimeout(timer);
-    }
-  } finally {
-    // 4. Cleanup: zmaž súbor z Mistral storage na pozadí
-    Promise.resolve(
-      fetch(`https://api.mistral.ai/v1/files/${fileId}`, {
-        method: "DELETE",
-        headers: { authorization: `Bearer ${apiKey}` },
-      }),
-    ).catch((err) => {
-      console.warn(
-        "Nepodarilo sa vymazať dočasný súbor z Mistral storage:",
-        err,
-      );
+    const ocr = await fetch("https://api.mistral.ai/v1/ocr", {
+      method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({ model: "mistral-ocr-latest", document: isImage ? { type: "image_url", image_url: documentUrl } : { type: "document_url", document_url: documentUrl } }),
     });
+    if (!ocr.ok) throw new Error(`Mistral OCR API zlyhalo (${ocr.status}).`);
+    const text = ((await ocr.json()) as { pages?: Array<{ markdown: string }> }).pages?.map((page) => page.markdown).join("\n\n") ?? "";
+    if (!text.trim()) throw new Error("Mistral OCR nerozpoznalo žiadny text v nahranom dokumente.");
+    return text;
+  } finally {
+    void fetch(`https://api.mistral.ai/v1/files/${fileId}`, { method: "DELETE", headers: { authorization: `Bearer ${apiKey}` } }).catch(() => undefined);
   }
 }

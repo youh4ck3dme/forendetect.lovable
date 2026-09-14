@@ -20,12 +20,15 @@ export type Database = {
           completion_tokens: number | null
           created_at: string
           error_code: string | null
+          fallback: boolean
           finished_at: string | null
           id: string
           input_revision: string | null
+          mode: string | null
           model: string
           prompt_tokens: number | null
           prompt_version: string
+          request_id: string | null
           status: string
           task: string
           user_id: string
@@ -35,12 +38,15 @@ export type Database = {
           completion_tokens?: number | null
           created_at?: string
           error_code?: string | null
+          fallback?: boolean
           finished_at?: string | null
           id?: string
           input_revision?: string | null
+          mode?: string | null
           model: string
           prompt_tokens?: number | null
           prompt_version: string
+          request_id?: string | null
           status?: string
           task: string
           user_id: string
@@ -50,12 +56,15 @@ export type Database = {
           completion_tokens?: number | null
           created_at?: string
           error_code?: string | null
+          fallback?: boolean
           finished_at?: string | null
           id?: string
           input_revision?: string | null
+          mode?: string | null
           model?: string
           prompt_tokens?: number | null
           prompt_version?: string
+          request_id?: string | null
           status?: string
           task?: string
           user_id?: string

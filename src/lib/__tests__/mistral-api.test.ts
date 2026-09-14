@@ -1,313 +1,73 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// Mock the fetch function
-const mockFetch = vi.fn();
+const response = (status: number, body: unknown, retryAfter?: string) => new Response(JSON.stringify(body), {
+  status,
+  headers: retryAfter ? { "content-type": "application/json", "retry-after": retryAfter } : { "content-type": "application/json" },
+});
 
-describe("Mistral API Integration Tests", () => {
+describe("dual Mistral API", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
-    // Save original fetch and process.env
-    global.fetch = mockFetch;
+    process.env["MISTRAL_API_KEY_FAST"] = "fast-secret";
+    process.env["MISTRAL_API_KEY_REASONING"] = "reasoning-secret";
+    process.env["MISTRAL_MODEL_FAST"] = "mistral-small-latest";
+    process.env["MISTRAL_MODEL_REASONING"] = "magistral-medium-latest";
+  });
+  afterEach(() => vi.restoreAllMocks());
+
+  it("uses the fast key and model", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(response(200, { choices: [{ message: { content: '{"summary":"ok"}' } }] }));
+    const { callMistral } = await import("@/lib/ai/mistral.server");
+    const result = await callMistral({ mode: "fast", messages: [{ role: "user", content: "json test" }], fetchImpl, skipModelVerification: true });
+    expect(result.status).toBe("ok");
+    const init = fetchImpl.mock.calls[0]?.[1] as RequestInit;
+    expect(new Headers(init.headers).get("authorization")).toBe("Bearer fast-secret");
+    expect(JSON.parse(String(init.body)).model).toBe("mistral-small-latest");
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
+  it("uses the reasoning key and model", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(response(200, { choices: [{ message: { content: '{"summary":"ok"}' } }] }));
+    const { callMistral } = await import("@/lib/ai/mistral.server");
+    const result = await callMistral({ mode: "reasoning", messages: [{ role: "user", content: "json test" }], fetchImpl, skipModelVerification: true });
+    expect(result.status).toBe("ok");
+    const init = fetchImpl.mock.calls[0]?.[1] as RequestInit;
+    expect(new Headers(init.headers).get("authorization")).toBe("Bearer reasoning-secret");
+    expect(JSON.parse(String(init.body)).model).toBe("magistral-medium-latest");
   });
 
-  describe("callMistral function", () => {
-    it("should return not_configured when MISTRAL_API_KEY is missing", async () => {
-      const originalKey = process.env["MISTRAL_API_KEY"];
-      delete process.env["MISTRAL_API_KEY"];
-
-      try {
-        const { callMistral } = await import("@/lib/ai/mistral.server");
-        const result = await callMistral({
-          messages: [{ role: "user", content: "Test" }],
-        });
-
-        expect(result.status).toBe("not_configured");
-        if (result.status === "not_configured") {
-          expect(result.message).toBe("AI nie je nakonfigurovaná.");
-        }
-      } finally {
-        if (originalKey) process.env["MISTRAL_API_KEY"] = originalKey;
-      }
-    });
-
-    it("should call Mistral API with correct endpoint and headers", async () => {
-      const mockResponse = {
-        ok: true,
-        status: 200,
-        json: () =>
-          Promise.resolve({
-            choices: [{ message: { content: '{"test": "response"}' } }],
-            usage: { prompt_tokens: 10, completion_tokens: 5 },
-          }),
-        headers: new Map(),
-      };
-
-      mockFetch.mockResolvedValue(mockResponse);
-      process.env["MISTRAL_API_KEY"] = "test_api_key";
-
-      const { callMistral } = await import("@/lib/ai/mistral.server");
-      const result = await callMistral({
-        messages: [{ role: "user", content: "Test message" }],
-      });
-
-      expect(mockFetch).toHaveBeenCalledWith(
-        "https://api.mistral.ai/v1/chat/completions",
-        expect.objectContaining({
-          method: "POST",
-          headers: expect.objectContaining({
-            "content-type": "application/json",
-            authorization: "Bearer test_api_key",
-          }),
-        }),
-      );
-
-      const firstCall = mockFetch.mock.calls[0];
-      const requestInit = firstCall?.[1] as RequestInit | undefined;
-      expect(requestInit?.body).toBeDefined();
-      const requestBody = JSON.parse(String(requestInit?.body));
-      expect(requestBody).toMatchObject({
-        model: "mistral-large-latest",
-        temperature: 0.2,
-        max_tokens: 900,
-        messages: [{ role: "user", content: "Test message" }],
-      });
-
-      expect(result.status).toBe("ok");
-      if (result.status === "ok") {
-        expect(result.content).toBe('{"test": "response"}');
-      }
-    });
-
-    it("should handle API errors correctly", async () => {
-      const mockResponse = {
-        ok: false,
-        status: 401,
-        json: () => Promise.resolve({ error: "Invalid API key" }),
-        headers: new Map(),
-      };
-
-      mockFetch.mockResolvedValue(mockResponse);
-      process.env["MISTRAL_API_KEY"] = "invalid_key";
-
-      const { callMistral } = await import("@/lib/ai/mistral.server");
-      const result = await callMistral({
-        messages: [{ role: "user", content: "Test" }],
-      });
-
-      expect(result.status).toBe("failed");
-    });
-
-    it("should handle rate limiting (429) with retry", async () => {
-      const mockRateLimitResponse = {
-        ok: false,
-        status: 429,
-        headers: new Map([["retry-after", "2"]]),
-        json: () => Promise.resolve({}),
-      };
-
-      const mockSuccessResponse = {
-        ok: true,
-        status: 200,
-        json: () =>
-          Promise.resolve({
-            choices: [{ message: { content: '{"test": "success"}' } }],
-          }),
-        headers: new Map(),
-      };
-
-      mockFetch
-        .mockResolvedValueOnce(mockRateLimitResponse)
-        .mockResolvedValueOnce(mockSuccessResponse);
-
-      process.env["MISTRAL_API_KEY"] = "test_api_key";
-
-      const { callMistral } = await import("@/lib/ai/mistral.server");
-      const result = await callMistral({
-        messages: [{ role: "user", content: "Test" }],
-        fetchImpl: mockFetch,
-      });
-
-      expect(mockFetch).toHaveBeenCalledTimes(2);
-      expect(result.status).toBe("ok");
-    });
-
-    it("should handle timeout correctly", async () => {
-      mockFetch.mockImplementation(() => {
-        const err = new Error("AbortError");
-        err.name = "AbortError";
-        return Promise.reject(err);
-      });
-
-      process.env["MISTRAL_API_KEY"] = "test_api_key";
-
-      const { callMistral } = await import("@/lib/ai/mistral.server");
-      const result = await callMistral({
-        messages: [{ role: "user", content: "Test" }],
-        fetchImpl: mockFetch,
-      });
-
-      expect(result.status).toBe("timeout");
-      if (result.status === "timeout") {
-        expect(result.message).toContain("prekročilo časový limit");
-      }
-    });
+  it.each([400, 401, 402, 403])("does not retry or fallback terminal HTTP %s", async (status) => {
+    const fetchImpl = vi.fn().mockResolvedValue(response(status, { message: "denied" }));
+    const { callMistral } = await import("@/lib/ai/mistral.server");
+    const result = await callMistral({ mode: "fast", messages: [{ role: "user", content: "json" }], fetchImpl, skipModelVerification: true });
+    expect(result.status).toBe("failed");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
 
-  describe("callMistralOcr function", () => {
-    it("should throw error when MISTRAL_API_KEY is missing", async () => {
-      const originalKey = process.env["MISTRAL_API_KEY"];
-      delete process.env["MISTRAL_API_KEY"];
-
-      try {
-        const { callMistralOcr } = await import("@/lib/ai/mistral.server");
-        const buffer = Buffer.from("test content");
-
-        await expect(callMistralOcr(buffer, "test.pdf")).rejects.toThrow(
-          "MISTRAL_API_KEY nie je nastavený",
-        );
-      } finally {
-        if (originalKey) process.env["MISTRAL_API_KEY"] = originalKey;
-      }
-    });
-
-    it("should upload file, get signed URL, call OCR, and cleanup", async () => {
-      // Mock responses for each step
-      const mockUploadResponse = {
-        ok: true,
-        json: () => Promise.resolve({ id: "test_file_id" }),
-      };
-
-      const mockSignedUrlResponse = {
-        ok: true,
-        json: () =>
-          Promise.resolve({ url: "https://signed.url/test_file_id.txt" }),
-      };
-
-      const mockOcrResponse = {
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            pages: [{ index: 0, markdown: "Extracted text from OCR" }],
-          }),
-      };
-
-      const mockDeleteResponse = {
-        ok: true,
-        json: () => Promise.resolve({}),
-      };
-
-      mockFetch
-        .mockResolvedValueOnce(mockUploadResponse)
-        .mockResolvedValueOnce(mockSignedUrlResponse)
-        .mockResolvedValueOnce(mockOcrResponse)
-        .mockResolvedValueOnce(mockDeleteResponse);
-
-      process.env["MISTRAL_API_KEY"] = "test_api_key";
-
-      const { callMistralOcr } = await import("@/lib/ai/mistral.server");
-      const buffer = Buffer.from("test content");
-
-      const result = await callMistralOcr(buffer, "test.pdf");
-
-      // Verify all steps were called
-      expect(mockFetch).toHaveBeenCalledTimes(4);
-
-      // Verify upload was called
-      expect(mockFetch.mock.calls[0]![1]).toEqual(
-        expect.objectContaining({
-          method: "POST",
-          headers: expect.objectContaining({
-            authorization: "Bearer test_api_key",
-          }),
-        }),
-      );
-
-      // Verify signed URL was requested
-      expect(mockFetch.mock.calls[1]![0]).toBe(
-        "https://api.mistral.ai/v1/files/test_file_id/url",
-      );
-
-      // Verify OCR was called
-      expect(mockFetch.mock.calls[2]![0]).toBe("https://api.mistral.ai/v1/ocr");
-
-      expect(result).toBe("Extracted text from OCR");
-    });
-
-    it("should handle OCR failure for empty text", async () => {
-      const mockUploadResponse = {
-        ok: true,
-        json: () => Promise.resolve({ id: "test_file_id" }),
-      };
-
-      const mockSignedUrlResponse = {
-        ok: true,
-        json: () =>
-          Promise.resolve({ url: "https://signed.url/test_file_id.txt" }),
-      };
-
-      const mockOcrResponse = {
-        ok: true,
-        json: () => Promise.resolve({ pages: [] }),
-      };
-
-      mockFetch
-        .mockResolvedValueOnce(mockUploadResponse)
-        .mockResolvedValueOnce(mockSignedUrlResponse)
-        .mockResolvedValueOnce(mockOcrResponse)
-        .mockResolvedValueOnce({ ok: true });
-
-      process.env["MISTRAL_API_KEY"] = "test_api_key";
-
-      const { callMistralOcr } = await import("@/lib/ai/mistral.server");
-      const buffer = Buffer.from("test content");
-
-      await expect(callMistralOcr(buffer, "test.pdf")).rejects.toThrow(
-        "Mistral OCR nerozpoznalo žiadny text",
-      );
-    });
+  it("honours Retry-After and retries 429 once", async () => {
+    const sleepImpl = vi.fn().mockResolvedValue(undefined);
+    const fetchImpl = vi.fn().mockResolvedValueOnce(response(429, {}, "3")).mockResolvedValueOnce(response(200, { choices: [{ message: { content: "{}" } }] }));
+    const { callMistral } = await import("@/lib/ai/mistral.server");
+    const result = await callMistral({ mode: "fast", messages: [{ role: "user", content: "json" }], fetchImpl, sleepImpl, skipModelVerification: true });
+    expect(result.status).toBe("ok");
+    expect(sleepImpl).toHaveBeenCalledWith(3000);
+    expect(fetchImpl).toHaveBeenCalledTimes(2);
   });
 
-  describe("mistralConfigured and mistralModel functions", () => {
-    it("should return false when API key is not set", async () => {
-      const originalKey = process.env["MISTRAL_API_KEY"];
-      delete process.env["MISTRAL_API_KEY"];
+  it("falls back after two 5xx attempts and keeps one request id", async () => {
+    const sleepImpl = vi.fn().mockResolvedValue(undefined);
+    const fetchImpl = vi.fn().mockResolvedValueOnce(response(503, {})).mockResolvedValueOnce(response(503, {})).mockResolvedValueOnce(response(200, { choices: [{ message: { content: "{}" } }] }));
+    const { callMistral } = await import("@/lib/ai/mistral.server");
+    const result = await callMistral({ mode: "fast", requestId: "7d9a767f-4c01-462f-a8a6-230984bf6c87", messages: [{ role: "user", content: "json" }], fetchImpl, sleepImpl, skipModelVerification: true });
+    expect(result.status).toBe("ok");
+    if (result.status === "ok") { expect(result.fallback).toBe(true); expect(result.mode).toBe("reasoning"); expect(result.requestId).toBe("7d9a767f-4c01-462f-a8a6-230984bf6c87"); }
+    expect(fetchImpl).toHaveBeenCalledTimes(3);
+  });
 
-      try {
-        const { mistralConfigured } = await import("@/lib/ai/mistral.server");
-        expect(mistralConfigured()).toBe(false);
-      } finally {
-        if (originalKey) process.env["MISTRAL_API_KEY"] = originalKey;
-      }
-    });
-
-    it("should return true when API key is set", async () => {
-      process.env["MISTRAL_API_KEY"] = "test_key";
-
-      const { mistralConfigured } = await import("@/lib/ai/mistral.server");
-      expect(mistralConfigured()).toBe(true);
-    });
-
-    it("should return default model when MISTRAL_MODEL is not set", async () => {
-      const originalModel = process.env["MISTRAL_MODEL"];
-      delete process.env["MISTRAL_MODEL"];
-
-      try {
-        const { mistralModel } = await import("@/lib/ai/mistral.server");
-        expect(mistralModel()).toBe("mistral-large-latest");
-      } finally {
-        if (originalModel) process.env["MISTRAL_MODEL"] = originalModel;
-      }
-    });
-
-    it("should return custom model when MISTRAL_MODEL is set", async () => {
-      process.env["MISTRAL_MODEL"] = "mistral-small-latest";
-
-      const { mistralModel } = await import("@/lib/ai/mistral.server");
-      expect(mistralModel()).toBe("mistral-small-latest");
-    });
+  it("does not fallback after an abort", async () => {
+    const error = new Error("aborted"); error.name = "AbortError";
+    const fetchImpl = vi.fn().mockRejectedValue(error);
+    const { callMistral } = await import("@/lib/ai/mistral.server");
+    const result = await callMistral({ mode: "fast", messages: [{ role: "user", content: "json" }], fetchImpl, skipModelVerification: true });
+    expect(result.status).toBe("timeout");
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
 });

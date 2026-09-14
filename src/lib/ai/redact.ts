@@ -73,7 +73,13 @@ export function buildPseudonyms(analysis: CaseAnalysis): Pseudonyms {
 export type PayloadScope =
   | { task: "explain_finding"; alertId: string }
   | { task: "case_summary" }
+  | { task: "short_summary" }
+  | { task: "document_classification" }
   | { task: "normalize_descriptions" }
+  | { task: "contradiction_analysis" }
+  | { task: "temporal_analysis" }
+  | { task: "financial_flow_analysis" }
+  | { task: "report_assistance" }
   | { task: "alt_devil" }
   | { task: "admiss_audit" };
 
@@ -108,7 +114,7 @@ export function buildAiPayload(
   );
 
   const includeTx =
-    scope.task === "case_summary" || scope.task === "normalize_descriptions"
+    scope.task !== "explain_finding"
       ? analysis.case.transactions
       : analysis.case.transactions.filter((t) => evidenceIds.has(t.id));
 

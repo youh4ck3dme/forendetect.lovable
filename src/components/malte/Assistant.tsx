@@ -78,6 +78,12 @@ const TASK_LABELS: Record<AiTask, string> = {
   explain_finding: "Vysvetliť vybraný nález",
   case_summary: "Návrh zhrnutia prípadu",
   normalize_descriptions: "Normalizovať popisy platieb",
+  short_summary: "Krátke zhrnutie",
+  document_classification: "Klasifikácia dokumentov",
+  contradiction_analysis: "Analýza rozporov",
+  temporal_analysis: "Časové súvislosti",
+  financial_flow_analysis: "Analýza finančných tokov",
+  report_assistance: "Podklady pre správu",
   alt_devil: "Alternatívne vysvetlenie (Diablov advokát)",
   admiss_audit: "Audit procesnej prípustnosti dôkazov",
 };
@@ -401,6 +407,7 @@ export function Assistant() {
 
   // Quick tasks state
   const [task, setTask] = useState<AiTask>("case_summary");
+  const [analysisMode, setAnalysisMode] = useState<"auto" | "fast" | "reasoning">("auto");
   const [alertId, setAlertId] = useState<string>(analysis.alerts[0]?.id ?? "");
   const [result, setResult] = useState<AiRunResult | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -556,6 +563,7 @@ export function Assistant() {
         data: {
           caseId: activeCase.id,
           task,
+          ...(analysisMode === "auto" ? {} : { mode: analysisMode }),
           ...(task === "explain_finding" ? { alertId } : {}),
         },
       });
@@ -2033,9 +2041,7 @@ ${dossier.judgeReadyText.vedecke}`;
                   <Badge className="bg-primary/15 text-primary">
                     {status.data.providerName ?? "AI"}
                   </Badge>
-                  <span className="font-mono text-muted-foreground">
-                    {status.data.model}
-                  </span>
+                  <span className="font-mono text-muted-foreground">FAST: {status.data.models?.fast} · REASONING: {status.data.models?.reasoning}</span>
                   <span className="ml-auto text-muted-foreground tnum">
                     {status.data.used}/{status.data.dailyLimit} volaní dnes
                   </span>
@@ -2049,6 +2055,14 @@ ${dossier.judgeReadyText.vedecke}`;
             </Card>
 
             <SectionTitle>Výber úlohy</SectionTitle>
+
+            <div className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-card p-1" aria-label="Režim AI analýzy">
+              {(["auto", "fast", "reasoning"] as const).map((mode) => (
+                <Button key={mode} type="button" size="sm" variant={analysisMode === mode ? "default" : "ghost"} onClick={() => setAnalysisMode(mode)} aria-pressed={analysisMode === mode}>
+                  {mode === "auto" ? "Automaticky" : mode === "fast" ? "Rýchla analýza" : "Hĺbková analýza"}
+                </Button>
+              ))}
+            </div>
 
             <div className="space-y-2">
               {(Object.keys(TASK_LABELS) as AiTask[]).map((t) => (
@@ -2150,14 +2164,22 @@ ${dossier.judgeReadyText.vedecke}`;
               (suggestions && suggestions.length > 0)) ? (
               <>
                 <SectionTitle>Výsledok</SectionTitle>
+                <div role="status"><Card className="flex flex-wrap items-center gap-2 p-3 text-xs">
+                  <Badge>{result.mode === "reasoning" ? "Hĺbková analýza" : "Rýchla analýza"}</Badge>
+                  <span>Mistral · {result.model}</span>
+                  <span>{result.fallback ? "Použitý záložný model" : "Bez fallbacku"}</span>
+                  <span className="ml-auto">{(result.usage?.prompt ?? 0) + (result.usage?.completion ?? 0)} tokenov</span>
+                </Card></div>
                 {text ? (
                   <Card className="space-y-2 p-3 text-xs">
+                    <Badge variant="outline">AI vysvetlenie</Badge>
                     <p className="whitespace-pre-wrap">{text}</p>
                   </Card>
                 ) : null}
 
                 {output?.hypotheses?.map((h) => (
                   <Card key={h.id} className="space-y-2 p-3 text-xs">
+                    <Badge variant="outline">AI hypotéza</Badge>
                     <p className="font-semibold">{h.title}</p>
                     <p className="whitespace-pre-wrap text-muted-foreground">
                       {h.scenario}
