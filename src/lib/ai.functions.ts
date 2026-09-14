@@ -805,15 +805,16 @@ export function extractCaseEntities(text: string) {
 
   // Ďalšie osoby v spise
   for (const knownPerson of [
+    // Rozpoznávanie osôb z nahraných dokumentov (vrátane bežných zápisov mien).
     "Denis Koval",
-    "Peter Novák",
-    "Marek Hruška",
-    "Igor Malina",
-    "Michal Ondruš",
     "Dimitri Cohen",
+    "Peter Novák",
     "Erik Babčan",
+    "Marek Hruška",
     "Marek Plch",
+    "Igor Malina",
     "Dmitrij Marjov",
+    "Michal Ondruš",
     "Michal Žember",
     "Kada Dakaj",
     "Filip Flat",
@@ -1046,8 +1047,9 @@ export async function handleGetForensicDossier(
     .maybeSingle();
 
   if (error) throw new Error(`Supabase: ${error.message}`);
+  // Čítanie: chýbajúci (alebo neprístupný) prípad nie je chyba – jednoducho nie je spis.
   if (!row) {
-    throw new Error("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+    return { success: true, dossier: null as ForensicDossier | null };
   }
   return {
     success: true,

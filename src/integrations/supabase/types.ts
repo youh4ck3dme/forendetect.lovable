@@ -777,7 +777,7 @@ export type Database = {
     };
     Functions: {
       commit_import: {
-        Args: { _import: string; _rows: Json };
+        Args: { _actor: string; _import: string; _rows: Json };
         Returns: number;
       };
       current_plan: { Args: { _user: string }; Returns: string };
