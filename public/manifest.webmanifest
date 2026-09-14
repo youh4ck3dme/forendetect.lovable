@@ -7,8 +7,8 @@
   "scope": "/",
   "start_url": "/prehlad",
   "display": "standalone",
-  "background_color": "#f5f5f7",
-  "theme_color": "#f5f5f7",
+  "background_color": "#0A4FD7",
+  "theme_color": "#0A4FD7",
   "icons": [
     {
       "src": "/pwa-192.png",
@@ -19,12 +19,6 @@
       "src": "/pwa-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "/pwa-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }
