@@ -1,4 +1,11 @@
-import { FileUp, Clock, ArrowRightLeft, Scale, ShieldCheck, FileDown } from "lucide-react";
+import {
+  FileUp,
+  Clock,
+  ArrowRightLeft,
+  Scale,
+  ShieldCheck,
+  FileDown,
+} from "lucide-react";
 
 export interface TourStep {
   id: number;

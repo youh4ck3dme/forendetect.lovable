@@ -73,27 +73,26 @@ export const importDimitriCheckerReport = createServerFn({ method: "POST" })
     const { report, warnings } = validateDimitriReferences(rawReport, caseData);
 
     // 4. Uloženie do databázy cross_border_analyses
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: inserted, error: insertError } = await (
-      supabase.from("cross_border_analyses" as any) as any
-    )
-      .insert({
-        case_id: data.caseId,
-        user_id: userId,
-        report_id: report.reportId,
-        source: report.source.source,
-        captured_at: report.capturedAt,
-        countries: report.countries,
-        routes: report.routes,
-        intermediaries: report.intermediaries,
-        signals: report.signals,
-        nominee_indicators: report.nomineeIndicators || [],
-        source_url: report.source.sourceUrl ?? null,
-        source_hash: report.source.sourceHash ?? null,
-        raw_payload: data.reportPayload,
-      })
-      .select("id")
-      .single();
+    const { data: inserted, error: insertError } =
+      await // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase.from("cross_border_analyses" as any) as any)
+        .insert({
+          case_id: data.caseId,
+          user_id: userId,
+          report_id: report.reportId,
+          source: report.source.source,
+          captured_at: report.capturedAt,
+          countries: report.countries,
+          routes: report.routes,
+          intermediaries: report.intermediaries,
+          signals: report.signals,
+          nominee_indicators: report.nomineeIndicators || [],
+          source_url: report.source.sourceUrl ?? null,
+          source_hash: report.source.sourceHash ?? null,
+          raw_payload: data.reportPayload,
+        })
+        .select("id")
+        .single();
 
     if (insertError)
       fail(insertError, "Uloženie reportu Dimitri Checker zlyhalo.");
@@ -119,14 +118,13 @@ export const listCrossBorderAnalyses = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: analyses, error } = await (
-      supabase.from("cross_border_analyses" as any) as any
-    )
-      .select("*")
-      .eq("case_id", data.caseId)
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false });
+    const { data: analyses, error } =
+      await // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase.from("cross_border_analyses" as any) as any)
+        .select("*")
+        .eq("case_id", data.caseId)
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
     if (error) fail(error, "Načítanie cezhraničných analýz zlyhalo.");
     return { ok: true, analyses: analyses ?? [] };

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Network, Scale, ShieldCheck } from "lucide-react";
-import malteMark from "@/assets/malte-mark.png";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
@@ -79,8 +78,8 @@ function Landing() {
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col justify-between px-5 pt-3 sm:pt-5 pb-5 sm:pb-6 gap-5 sm:gap-6">
         <header className="flex items-center gap-2">
           <img
-            src={malteMark}
-            alt=""
+            src="/favicon-32x32.png"
+            alt="Forendo"
             width={30}
             height={30}
             className="h-7 w-7"

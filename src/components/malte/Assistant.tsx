@@ -1013,7 +1013,9 @@ ${dossier.judgeReadyText.vedecke}`;
                             className="h-9 gap-1.5 border border-primary/40 bg-primary/15 font-semibold text-primary shadow-xs transition-all hover:border-primary/60 hover:bg-primary/25 cursor-pointer"
                           >
                             <Zap className="h-4 w-4 text-primary" />
-                            <span>⚡ Načítať syntetickú ukážku (fiktívne údaje)</span>
+                            <span>
+                              ⚡ Načítať syntetickú ukážku (fiktívne údaje)
+                            </span>
                           </Button>
                         </div>
                       </>
@@ -2124,7 +2126,6 @@ ${dossier.judgeReadyText.vedecke}`;
                 </Card>
               </>
             ) : null}
-
 
             {result?.status === "ok" &&
             (text ||

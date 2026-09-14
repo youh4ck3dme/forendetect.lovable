@@ -52,7 +52,9 @@ describe("Forenzný Switcher pre obhajobu (3 perspektívy spisu)", () => {
 
     // Kritický rozpor: Novák vs Hruška
     const novakHruška = contradictions.find(
-      (c) => c.personA.name.includes("Novák") || (c.personB && c.personB.name.includes("Hruška")),
+      (c) =>
+        c.personA.name.includes("Novák") ||
+        (c.personB && c.personB.name.includes("Hruška")),
     );
     expect(novakHruška).toBeDefined();
     expect(novakHruška!.deceitPercentage).toBeGreaterThanOrEqual(80);

@@ -241,11 +241,7 @@ const TIMESTORY_EPISODES: TimestoryEpisode[] = [
       "Tento kľúčový moment jednoznačne dokazuje, že Novák nebol spolupáchateľom v deľbe ziskov. Člen organizovaného gangu nekradne vlastnej skupine peniaze a nevypína si mobil. Zúfalý krok znamenal totálny kolaps kontaktu s Ľubošom a Kovalom.",
     debunkedLie:
       "OČTK interpretuje zadržané peniaze ako 'zisk z trestnej činnosti'. V skutočnosti išlo o jednostranné započítanie nevyplatenej mzdy a definitívny útek Nováka zo spolupráce.",
-    involvedActors: [
-      "Peter Novák",
-      "'Ľubo' (odlet do Thajska)",
-      "Denis Koval",
-    ],
+    involvedActors: ["Peter Novák", "'Ľubo' (odlet do Thajska)", "Denis Koval"],
     location: "Košice / Banská Bystrica",
   },
   {
@@ -696,7 +692,8 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               <span>Kauza Armivex & Peter Novák: Priebeh od A po Z</span>
             </h3>
             <p className="text-xs text-muted-foreground max-w-3xl leading-relaxed">
-              Syntetická ukážka — vymyslené osoby, firmy a sumy. Rekonštrukcia modelového spisu{" "}
+              Syntetická ukážka — vymyslené osoby, firmy a sumy. Rekonštrukcia
+              modelového spisu{" "}
               <strong className="text-foreground">
                 PPZ-51/UBOK-PZ-ST-2025
               </strong>{" "}
@@ -1584,8 +1581,8 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
 
             <p className="text-[11px] text-foreground/80 leading-relaxed">
               Skutočné nákupy, manipuláciu s tovarom a distribúciu vykonával
-              Denis Koval s Miroslavom Tkáčom cez vozidlá BMW 7 a prekládky
-              na nočných diaľničných odpočívadlách.
+              Denis Koval s Miroslavom Tkáčom cez vozidlá BMW 7 a prekládky na
+              nočných diaľničných odpočívadlách.
             </p>
 
             <div className="space-y-2 pt-1">
@@ -1780,8 +1777,7 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
               {/* Formálna hlavička podania */}
               <div className="border-b-2 border-foreground/20 pb-4 text-center space-y-1">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground block">
-                  SYNTETICKÁ UKÁŽKA — FIKTÍVNE ÚDAJE • DEMONŠTRATÍVNY
-                  STORYBOARD
+                  SYNTETICKÁ UKÁŽKA — FIKTÍVNE ÚDAJE • DEMONŠTRATÍVNY STORYBOARD
                 </span>
                 <h2 className="text-xl font-black uppercase tracking-tight">
                   Kauza ARMIVEX & Peter Novák: Priebeh od A po Z

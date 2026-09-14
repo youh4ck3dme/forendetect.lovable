@@ -11,13 +11,15 @@ const SIGN_IN_ROUTE = "/auth";
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
+    if (isDevFreeEntryActive()) {
+      return {
+        user: DEV_MOCK_USER as unknown as NonNullable<
+          Awaited<ReturnType<typeof supabase.auth.getUser>>["data"]["user"]
+        >,
+      };
+    }
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
-      if (isDevFreeEntryActive()) {
-        return {
-          user: DEV_MOCK_USER as unknown as NonNullable<typeof data.user>,
-        };
-      }
       throw redirect({ to: SIGN_IN_ROUTE });
     }
     return { user: data.user };

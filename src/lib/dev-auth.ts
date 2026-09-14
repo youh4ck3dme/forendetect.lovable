@@ -1,18 +1,12 @@
 export const DEV_FREE_ENTRY_KEY = "forendo:dev-free-entry";
 
 /**
- * Zistí, či beží aplikácia v lokálnom vývojovom prostredí (localhost, 127.0.0.1, dev mode).
+ * Lokálny vstup je dostupný iba na loopback hostiteľovi, nezávisle od build režimu.
  */
 export function isLocalDevEnvironment(): boolean {
-  if (import.meta.env.DEV) return true;
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
-    return (
-      host === "localhost" ||
-      host === "127.0.0.1" ||
-      host === "[::1]" ||
-      host.endsWith(".local")
-    );
+    return host === "localhost" || host === "127.0.0.1" || host === "[::1]";
   }
   return false;
 }
@@ -30,7 +24,7 @@ export function isDevFreeEntryActive(): boolean {
  * Aktivuje lokálny vývojársky bezplatný vstup.
  */
 export function setDevFreeEntryActive(): void {
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && isLocalDevEnvironment()) {
     window.localStorage.setItem(DEV_FREE_ENTRY_KEY, "true");
   }
 }

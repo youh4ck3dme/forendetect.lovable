@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2, Lock, Mail, Zap } from "lucide-react";
-import malteMark from "@/assets/malte-mark.png";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,10 +39,11 @@ function AuthScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-  const isLocal = isLocalDevEnvironment();
+  const [isLocal, setIsLocal] = useState(false);
 
   useEffect(() => {
     let active = true;
+    setIsLocal(isLocalDevEnvironment());
     if (isDevFreeEntryActive()) {
       void navigate({ to: "/prehlad", replace: true });
       return;
@@ -106,16 +106,8 @@ function AuthScreen() {
     setBusy(true);
     try {
       setDevFreeEntryActive();
-      try {
-        await supabase.auth.signInWithPassword({
-          email: "dev@forendo.local",
-          password: "DevPassword123!",
-        });
-      } catch {
-        /* V lokálnom režime stačí lokálny dev bypass */
-      }
       toast.success("⚡ Vývojársky prístup aktivovaný (lokálny režim)");
-      void navigate({ to: "/prehlad", replace: true });
+      await navigate({ to: "/prehlad", replace: true });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Dev vstup zlyhal.");
     } finally {
@@ -164,12 +156,11 @@ function AuthScreen() {
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-2 text-center">
           <img
-            src={malteMark}
-            alt=""
+            src="/favicon-32x32.png"
+            alt="Forendo"
             width={40}
             height={40}
             className="h-10 w-10 drop-shadow-sm transition-transform hover:scale-105"
-            aria-hidden
           />
           <h1 className="text-2xl font-extrabold tracking-tight">
             {mode === "signin" ? "Prihlásenie do Forendo" : "Vytvorenie účtu"}

@@ -1,6 +1,12 @@
 import { defineConfig } from "vitest/config";
 
-if (typeof process.loadEnvFile === "function") {
+const runLiveE2e = process.env["RUN_LIVE_E2E"] === "1";
+const liveTestFiles = [
+  "src/lib/__tests__/live-e2e-laravel-import.test.ts",
+  "src/lib/__tests__/real-postgres-registry-import.test.ts",
+];
+
+if (runLiveE2e && typeof process.loadEnvFile === "function") {
   try {
     process.loadEnvFile(".env");
   } catch {
@@ -16,7 +22,7 @@ export default defineConfig({
     maxWorkers: 1,
     minWorkers: 1,
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
-    exclude: ["e2e/**"],
+    exclude: ["e2e/**", ...(runLiveE2e ? [] : liveTestFiles)],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

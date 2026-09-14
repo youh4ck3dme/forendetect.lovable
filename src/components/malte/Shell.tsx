@@ -3,7 +3,6 @@ import { ChevronLeft } from "lucide-react";
 import type React from "react";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import malteMark from "@/assets/malte-mark.png";
 import {
   CommandPalette,
   CommandPaletteTrigger,
@@ -25,8 +24,8 @@ function DesktopSidebar() {
     <aside className="sticky top-0 hidden h-screen w-[288px] shrink-0 flex-col border-r border-border bg-card px-4 py-6 lg:flex">
       <div className="flex items-center gap-2 px-2">
         <img
-          src={malteMark}
-          alt=""
+          src="/favicon-32x32.png"
+          alt="Forendo"
           width={30}
           height={30}
           className="h-7 w-7"
@@ -112,10 +111,10 @@ function DesktopSidebar() {
 /** Responzívny shell: telefónny rám na mobile, pracovná plocha na desktope. */
 export function PhoneFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background lg:flex">
+    <div className="min-h-screen overflow-x-clip bg-background lg:flex">
       <DesktopSidebar />
       <div className="flex min-w-0 flex-1 justify-center py-0 sm:px-4 sm:py-10 lg:px-6 lg:py-8">
-        <div className="w-full min-w-0 max-w-[min(100%,560px)] sm:overflow-hidden sm:rounded-[2.5rem] sm:border sm:border-border sm:bg-card sm:shadow-elevated lg:max-w-[min(100%,1180px)] lg:rounded-3xl xl:max-w-[min(100%,1320px)] 2xl:max-w-[min(100%,1480px)]">
+        <div className="w-full min-w-0 max-w-[min(100%,560px)] sm:overflow-clip sm:rounded-[2.5rem] sm:border sm:border-border sm:bg-card sm:shadow-elevated lg:max-w-[min(100%,1180px)] lg:rounded-3xl xl:max-w-[min(100%,1320px)] 2xl:max-w-[min(100%,1480px)]">
           <div className="relative flex min-h-screen flex-col sm:min-h-215 lg:min-h-[calc(100vh-4rem)]">
             {children}
           </div>
@@ -135,6 +134,7 @@ export function StatusBar() {
         new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
+          hour12: false,
         }),
       );
     tick();
@@ -143,8 +143,10 @@ export function StatusBar() {
   }, []);
 
   return (
-    <div className="flex items-center justify-between px-6 pt-3 pb-1 text-[11px] font-semibold text-foreground/90 tnum lg:hidden">
-      <span suppressHydrationWarning>{now || "\u00a0"}</span>
+    <div className="forendo-status-bar flex items-center justify-between px-6 pt-3 pb-1 text-[11px] font-semibold tnum lg:hidden">
+      <span className="forendo-status-time" suppressHydrationWarning>
+        {now || "\u00a0"}
+      </span>
       <span className="flex items-center gap-1">
         <span className="inline-block h-2 w-3 rounded-[2px] bg-foreground/70" />
         <span className="inline-block h-2 w-2 rounded-full bg-foreground/70" />
@@ -179,12 +181,28 @@ export function AppHeader({
   return (
     <header
       className={cn(
-        "liquid-glass-header sticky top-0 z-20 rounded-b-[1.75rem] text-white transition-[padding,box-shadow] duration-300",
+        "liquid-glass-header forendo-neon-frame sticky top-0 z-20 rounded-b-[1.75rem] text-white transition-[padding,box-shadow] duration-300",
         scrolled ? "pb-3 shadow-elevated" : "pb-5",
       )}
     >
+      <svg
+        className="forendo-neon-orbit"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <rect
+          className="forendo-neon-orbit-path"
+          x="1"
+          y="1"
+          width="98"
+          height="98"
+          rx="8"
+          pathLength="100"
+        />
+      </svg>
       <StatusBar />
-      <div className="flex items-center gap-3 px-5 pt-2 pb-3 lg:pt-4">
+      <div className="relative z-1 flex items-center gap-3 px-5 pt-2 pb-3 lg:pt-4">
         {back ? (
           <button
             type="button"
@@ -197,7 +215,7 @@ export function AppHeader({
         ) : null}
         {brand ? (
           <img
-            src={malteMark}
+            src="/favicon-32x32.png"
             alt="Forendo"
             width={28}
             height={28}
@@ -240,7 +258,10 @@ export function BottomNav() {
   ).length;
 
   return (
-    <nav className="sticky bottom-0 z-10 mt-auto border-t border-border surface-glass px-2 pt-2 pb-5 lg:hidden">
+    <nav
+      aria-label="Spodná navigácia"
+      className="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-[min(100%,560px)] border-t border-border/80 surface-glass backdrop-blur-xl bg-card/85 dark:bg-card/90 shadow-elevated px-2 pt-2.5 pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:hidden"
+    >
       <ul className="flex items-stretch justify-between">
         {navItems.map(({ to, label, icon: Icon }) => (
           <li key={to} className="flex-1">
@@ -267,7 +288,7 @@ export function BottomNav() {
               {label}
               <span
                 data-ind
-                className="absolute -top-2 h-1 w-8 rounded-full bg-foreground opacity-0 transition-opacity duration-300"
+                className="absolute -top-2.5 h-1 w-8 rounded-full bg-foreground opacity-0 transition-opacity duration-300"
               />
             </Link>
           </li>
@@ -279,7 +300,7 @@ export function BottomNav() {
 
 export function Screen({ children }: { children: ReactNode }) {
   return (
-    <main className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-hidden px-4 py-4 sm:px-5 lg:px-8 lg:py-6">
+    <main className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-clip px-4 pt-4 pb-24 sm:px-5 sm:pb-28 lg:px-8 lg:py-6">
       {children}
     </main>
   );
@@ -301,7 +322,8 @@ export function Card({
       id={id}
       className={cn(
         "rounded-2xl border border-border/80 liquid-glass-card p-4 shadow-card transition-all duration-200",
-        onClick && "cursor-pointer hover:shadow-elevated hover:border-primary/40",
+        onClick &&
+          "cursor-pointer hover:shadow-elevated hover:border-primary/40",
         className,
       )}
       {...(onClick

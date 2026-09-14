@@ -1,5 +1,5 @@
 /* Forendo PWA Service Worker */
-const CACHE_NAME = "forendo-cache-v3";
+const CACHE_NAME = "forendo-cache-v5-pwa-assets";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());

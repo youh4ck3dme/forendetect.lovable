@@ -32,7 +32,7 @@ export function RiskFilter({
             className={cn(
               "inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors",
               active
-                ? activeStyles[level]
+                ? cn(activeStyles[level], "font-semibold")
                 : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground",
             )}
           >
