@@ -11,14 +11,18 @@
 4. **Rizikový stav je miestami vyjadrený iba farbou** — uzly možných schránkových spoločností potrebujú aj samostatnú ikonu alebo textové označenie.
 5. **Malé dotykové plochy** — späť, zatvorenie panela, upozornenia a duplikovanie prípadu majú iba 28–32 px. Zväčšia sa minimálne na 44 × 44 px bez zväčšovania samotných ikon.
 6. **Filtrované uzly siete zostávajú v poradí klávesnice** — neviditeľné/zoslabené prvky sa musia deaktivovať a čitateľný celý názov sa doplní do prístupného popisu.
+7. **Presmerovanie neprihláseného používateľa stráca pôvodnú adresu** — pri otvorení chránenej obrazovky sa používateľ dostane na prihlásenie bez vysvetlenia a bez návratu na pôvodné miesto.
 
 ### Stredná závažnosť
-7. **Dve navigácie nemajú rozlíšiteľné názvy** — desktopová a spodná mobilná navigácia dostanú samostatné popisy pre čítačky obrazovky.
-8. **Prázdne stavy sa po zmene obsahu neoznamujú** — doplní sa nenásilné oznámenie dynamickej zmeny.
-9. **Niektoré loading spinnery nemajú textový stav** — doplní sa oznámenie „Načítava sa“ pre čítačky obrazovky.
-10. **Malý graf vzťahov môže pri hustých dátach prekrývať názvy** — zachová sa jednoduchý náhľad, ale doplní sa jasný prístup k plnej interaktívnej sieti a klávesnicovo použiteľná alternatíva.
-11. **Ručne vytvorený náhľad firmy sa správa ako modal bez kompletnej správy fokusu** — nahradí sa existujúcim prístupným dialógom.
-12. **Placeholder ovládací prvok je neaktívny, ale stále sa dá fokusovať** — odstráni sa z poradia klávesnice.
+8. **Dve navigácie nemajú rozlíšiteľné názvy** — desktopová a spodná mobilná navigácia dostanú samostatné popisy pre čítačky obrazovky.
+9. **Prázdne stavy sa po zmene obsahu neoznamujú** — doplní sa nenásilné oznámenie dynamickej zmeny.
+10. **Niektoré loading spinnery nemajú textový stav** — doplní sa oznámenie „Načítava sa“ pre čítačky obrazovky.
+11. **Malý graf vzťahov môže pri hustých dátach prekrývať názvy** — zachová sa jednoduchý náhľad, ale doplní sa jasný prístup k plnej interaktívnej sieti a klávesnicovo použiteľná alternatíva.
+12. **Ručne vytvorený náhľad firmy sa správa ako modal bez kompletnej správy fokusu** — nahradí sa existujúcim prístupným dialógom.
+13. **Placeholder ovládací prvok je neaktívny, ale stále sa dá fokusovať** — odstráni sa z poradia klávesnice.
+14. **Úvodná stránka pri overovaní prihlásenia mení výšku obsahu** — text načítania nemá rezervovaný priestor a po načítaní spôsobí posun rozloženia.
+15. **Prepínač témy pred načítaním pôsobí ako pokazené ovládanie** — tri deaktivované ikony nemajú vizuálny loading stav.
+16. **Nevyvážené prázdne miesto na úvodnej a prihlasovacej obrazovke** — obsah je najmä na vyšších displejoch nahustený hore a spodná časť zostáva nevyužitá.
 
 ## Implementácia
 
@@ -28,6 +32,8 @@
 - Odstrániť nefunkčné ikony na obrazovke Vzťahy a doplniť nefarebné označenie rizikových uzlov.
 - Nahradiť ručne vytvorený náhľad firmy existujúcim dialógom so správnym fokusom a zatvorením cez Escape.
 - Doplniť prístupné loading stavy pri AI analýze bez zmeny jej logiky.
+- Zachovať cieľovú obrazovku pri presmerovaní na prihlásenie a po úspešnom prihlásení sa na ňu vrátiť.
+- Stabilizovať priestor počas kontroly prihlásenia a vizuálne vyvážiť úvodnú a prihlasovaciu obrazovku.
 
 ## Overenie
 
