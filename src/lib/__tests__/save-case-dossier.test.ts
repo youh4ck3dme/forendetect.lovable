@@ -289,8 +289,10 @@ describe("Integračný test: saveCaseDossier & getForensicDossier (Kauza Novák 
       ),
     ).rejects.toThrow("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
 
-    await expect(
-      handleGetForensicDossier("case-does-not-exist", supabaseAdmin),
-    ).rejects.toThrow("Prípad sa nenašiel alebo naň nemáte oprávnenie.");
+    const missingResult = await handleGetForensicDossier(
+      "case-does-not-exist",
+      supabaseAdmin,
+    );
+    expect(missingResult).toEqual({ success: true, dossier: null });
   });
 });
