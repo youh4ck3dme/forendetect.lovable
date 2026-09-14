@@ -12,10 +12,21 @@ const TEST_DB_URL = assertStrictLocalDatabaseUrl(
     "postgres://postgres:postgres@localhost:54322/forendetect_test",
 );
 
+import fs from "node:fs";
+
+if (typeof process.loadEnvFile === "function" && fs.existsSync(".env")) {
+  try {
+    process.loadEnvFile(".env");
+  } catch {
+    // Ignore
+  }
+}
+
 const LARAVEL_API_URL =
   process.env["ICO_ATLAS_API_URL"] || "http://127.0.0.1:8000";
 const LARAVEL_API_KEY =
-  process.env["ICO_ATLAS_API_KEY"] || "test-service-key-not-set";
+  process.env["ICO_ATLAS_API_KEY"] ||
+  "1369aa7e230ea5d26360f661b5898d3f702f0369bec01cdbd1dc5f71224743fa";
 describe("Live E2E: Forendo <-> Laravel ICO Atlas <-> ORSR Register", () => {
   let adminDbClient: Client;
   let userDbClient: Client;

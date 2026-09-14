@@ -10,8 +10,35 @@ test("local developer entry reaches the protected dashboard", async ({
   ).toBeVisible();
   await page.getByRole("button", { name: /Dev Free Entry/i }).click();
   await expect(page).toHaveURL(/\/prehlad$/);
-  await expect(page.getByText(/^\d{2}:\d{2}$/).first()).toBeVisible();
+  await expect(page.locator(".forendo-status-time")).toHaveText(/^\d{2}:\d{2}$/);
   await expect(page.getByText("Vyšetrovací spis")).toBeVisible();
+});
+
+test("favicon package is linked with valid public assets", async ({ page }) => {
+  await page.goto("/auth");
+  await expect(
+    page.locator('link[rel="icon"][sizes="32x32"][href="/favicon-32x32.png"]'),
+  ).toHaveCount(1);
+  await expect(
+    page.locator(
+      'link[rel="apple-touch-icon"][sizes="180x180"][href="/apple-touch-icon.png"]',
+    ),
+  ).toHaveCount(1);
+  await expect(
+    page.locator('link[rel="manifest"][href="/manifest.webmanifest"]'),
+  ).toHaveCount(1);
+
+  for (const asset of [
+    "/favicon-16x16.png",
+    "/favicon-32x32.png",
+    "/favicon.ico",
+    "/apple-touch-icon.png",
+    "/android-chrome-192x192.png",
+    "/android-chrome-512x512.png",
+  ]) {
+    const response = await page.request.get(asset);
+    expect(response.ok(), asset).toBe(true);
+  }
 });
 
 test("header clock and neon frame remain readable in both themes", async ({

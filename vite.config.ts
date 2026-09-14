@@ -70,10 +70,18 @@ export default defineConfig({
         background_color: "#f5f5f7",
         theme_color: "#f5f5f7",
         icons: [
-          { src: "/pwa-192.png", sizes: "192x192", type: "image/png" },
-          { src: "/pwa-512.png", sizes: "512x512", type: "image/png" },
           {
-            src: "/pwa-512.png",
+            src: "/android-chrome-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/android-chrome-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "/android-chrome-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
@@ -85,8 +93,10 @@ export default defineConfig({
         globPatterns: [
           "**/*.{js,css,woff2}",
           "offline.html",
-          "pwa-*.png",
-          "favicon.png",
+          "android-chrome-*.png",
+          "favicon*.{png,ico}",
+          "apple-touch-icon.png",
+          "manifest.webmanifest",
         ],
         globIgnores: ["**/node_modules/**", "**/_server/**"],
         navigateFallback: null,
