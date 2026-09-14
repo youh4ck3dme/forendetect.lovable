@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
-  TATRAGEN_CROSS_CONTRADICTIONS,
+  ARMIVEX_CROSS_CONTRADICTIONS,
   getCrossContradictionStats,
 } from "@/lib/cross-contradictions";
 
 describe("cross-contradictions (Krížová konfrontačná matica rozporov § 125 TP)", () => {
   it("obsahuje všetkých 6 kľúčových rozporov medzi obvinenými a svedkami", () => {
-    expect(TATRAGEN_CROSS_CONTRADICTIONS).toHaveLength(6);
-    const ids = TATRAGEN_CROSS_CONTRADICTIONS.map((c) => c.id);
+    expect(ARMIVEX_CROSS_CONTRADICTIONS).toHaveLength(6);
+    const ids = ARMIVEX_CROSS_CONTRADICTIONS.map((c) => c.id);
     expect(ids).toEqual(["TC-01", "TC-02", "TC-03", "TC-04", "TC-05", "TC-06"]);
   });
 
   it("každý rozpor má kompletnú procesnú štruktúru pre súdne dokazovanie", () => {
-    for (const item of TATRAGEN_CROSS_CONTRADICTIONS) {
+    for (const item of ARMIVEX_CROSS_CONTRADICTIONS) {
       expect(item.id).toMatch(/^TC-\d{2}$/);
       expect(item.topic.length).toBeGreaterThan(10);
 
@@ -45,20 +45,20 @@ describe("cross-contradictions (Krížová konfrontačná matica rozporov § 125
     }
   });
 
-  it("pokrýva kľúčových aktérov kauzy Tatragen / Babčan", () => {
-    const allText = JSON.stringify(TATRAGEN_CROSS_CONTRADICTIONS);
-    expect(allText).toContain("Erik Babčan");
-    expect(allText).toContain("Marek Plch");
-    expect(allText).toContain("Michal Žember");
-    expect(allText).toContain("Dmitrij Marjov");
-    expect(allText).toContain("Dimitri Cohen");
-    expect(allText).toContain("TATRAGEN");
+  it("pokrýva kľúčových aktérov kauzy Armivex / Novák", () => {
+    const allText = JSON.stringify(ARMIVEX_CROSS_CONTRADICTIONS);
+    expect(allText).toContain("Peter Novák");
+    expect(allText).toContain("Marek Hruška");
+    expect(allText).toContain("Michal Ondruš");
+    expect(allText).toContain("Igor Malina");
+    expect(allText).toContain("Denis Koval");
+    expect(allText).toContain("ARMIVEX");
     expect(allText).toContain("PETRIS-SLOVAKIA");
     expect(allText).toContain("Shadowarms");
   });
 
   it("správne počíta štatistiky závažnosti a priemerné percento klamstva", () => {
-    const stats = getCrossContradictionStats(TATRAGEN_CROSS_CONTRADICTIONS);
+    const stats = getCrossContradictionStats(ARMIVEX_CROSS_CONTRADICTIONS);
     expect(stats.total).toBe(6);
     expect(stats.critical).toBe(3);
     expect(stats.high).toBe(3);
@@ -78,7 +78,7 @@ describe("cross-contradictions (Krížová konfrontačná matica rozporov § 125
   });
 
   it("každý procesný návrh odkazuje na § 125 TP (konfrontácia) alebo priame vyšetrovacie úkony", () => {
-    const resolutionsWith125OrExpertise = TATRAGEN_CROSS_CONTRADICTIONS.filter(
+    const resolutionsWith125OrExpertise = ARMIVEX_CROSS_CONTRADICTIONS.filter(
       (c) =>
         c.proceduralResolution.includes("§ 125") ||
         c.proceduralResolution.includes("§ 142") ||

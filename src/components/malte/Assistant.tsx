@@ -68,8 +68,8 @@ import {
 import type { ForensicDossier, BulkFileItem } from "@/lib/types";
 import { exportDossierToPDF } from "@/lib/export-pdf";
 import { upsertTransaction } from "@/lib/case-data";
-import { TATRAGEN_CROSS_CONTRADICTIONS } from "@/lib/cross-contradictions";
-import { TATRAGEN_CASE_DOSSIER } from "@/lib/tatragen-dossier";
+import { ARMIVEX_CROSS_CONTRADICTIONS } from "@/lib/cross-contradictions";
+import { ARMIVEX_CASE_DOSSIER } from "@/lib/demo-dossier";
 
 const TASK_LABELS: Record<AiTask, string> = {
   explain_finding: "Vysvetliť vybraný nález",
@@ -79,11 +79,11 @@ const TASK_LABELS: Record<AiTask, string> = {
   admiss_audit: "Audit procesnej prípustnosti dôkazov",
 };
 
-function isTatragenDossier(d: ForensicDossier | null): boolean {
+function isArmivexDossier(d: ForensicDossier | null): boolean {
   if (!d) return false;
   return (
-    d.caseId === TATRAGEN_CASE_DOSSIER.caseId ||
-    /tatragen/i.test(d.caseTitle ?? "")
+    d.caseId === ARMIVEX_CASE_DOSSIER.caseId ||
+    /armivex/i.test(d.caseTitle ?? "")
   );
 }
 
@@ -218,7 +218,7 @@ export function Assistant() {
     };
   }, [activeCase.id, getForensicDossierFn]);
 
-  const showTimestory = isTatragenDossier(dossier);
+  const showTimestory = isArmivexDossier(dossier);
 
   useEffect(() => {
     if (!showTimestory && autopilotTab === "timestory") {
@@ -492,33 +492,33 @@ export function Assistant() {
       switch (stepId) {
         case 1:
           if (!dossier) {
-            setDossier(TATRAGEN_CASE_DOSSIER);
+            setDossier(ARMIVEX_CASE_DOSSIER);
             setAutopilotTab("timestory");
-            toast.success("Načítaný autentický spis: Kauza Tatragen & Babčan.");
+            toast.success("Načítaný autentický spis: Kauza Armivex & Novák.");
           }
           break;
         case 2:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("facts");
           break;
         case 3:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("transakcie");
           break;
         case 4:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("rozpory");
           break;
         case 5:
-          if (!dossier) setDossier(TATRAGEN_CASE_DOSSIER);
+          if (!dossier) setDossier(ARMIVEX_CASE_DOSSIER);
           setAutopilotTab("defense");
           break;
         case 6:
           if (dossier) {
             handleExportPDF();
           } else {
-            setDossier(TATRAGEN_CASE_DOSSIER);
-            exportDossierToPDF(TATRAGEN_CASE_DOSSIER);
+            setDossier(ARMIVEX_CASE_DOSSIER);
+            exportDossierToPDF(ARMIVEX_CASE_DOSSIER);
             toast.success(
               "Vzorový súdny posudok (A4) so SHA-256 pečaťou vygenerovaný.",
             );
@@ -1004,16 +1004,16 @@ ${dossier.judgeReadyText.vedecke}`;
                             variant="secondary"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setDossier(TATRAGEN_CASE_DOSSIER);
+                              setDossier(ARMIVEX_CASE_DOSSIER);
                               setAutopilotTab("timestory");
                               toast.success(
-                                "Načítaný autentický spis: Kauza Tatragen & Babčan",
+                                "Načítaná syntetická ukážka: Kauza ARMIVEX (fiktívne údaje)",
                               );
                             }}
                             className="h-9 gap-1.5 border border-primary/40 bg-primary/15 font-semibold text-primary shadow-xs transition-all hover:border-primary/60 hover:bg-primary/25 cursor-pointer"
                           >
                             <Zap className="h-4 w-4 text-primary" />
-                            <span>⚡ Načítať demo: Kauza Tatragen (UBOK)</span>
+                            <span>⚡ Načítať syntetickú ukážku (fiktívne údaje)</span>
                           </Button>
                         </div>
                       </>
@@ -2004,7 +2004,35 @@ ${dossier.judgeReadyText.vedecke}`;
         {/* ═══ REŽIM 2: RÝCHLE TRIÁŽNE ÚLOHY (Pôvodná logika) ═══ */}
         {mainMode === "quick_tasks" && (
           <>
+            <SectionTitle>Model</SectionTitle>
+            <Card className="flex flex-wrap items-center gap-2 p-3 text-xs animate-fade-in">
+              {status.isLoading ? (
+                <span className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" /> Zisťujem stav
+                  AI…
+                </span>
+              ) : status.data?.configured ? (
+                <>
+                  <Badge className="bg-primary/15 text-primary">
+                    {status.data.providerName ?? "AI"}
+                  </Badge>
+                  <span className="font-mono text-muted-foreground">
+                    {status.data.model}
+                  </span>
+                  <span className="ml-auto text-muted-foreground tnum">
+                    {status.data.used}/{status.data.dailyLimit} volaní dnes
+                  </span>
+                </>
+              ) : (
+                <span className="text-risk-medium">
+                  AI nie je nakonfigurovaná — chýba serverový kľúč (Grok je
+                  predvolený, Mistral je záloha).
+                </span>
+              )}
+            </Card>
+
             <SectionTitle>Výber úlohy</SectionTitle>
+
             <div className="space-y-2">
               {(Object.keys(TASK_LABELS) as AiTask[]).map((t) => (
                 <button
@@ -2062,21 +2090,41 @@ ${dossier.judgeReadyText.vedecke}`;
                 variant="outline"
                 onClick={() => void showPreview()}
                 disabled={!hasCase}
+                className="gap-1.5"
               >
                 <Eye className="h-4 w-4" />
+                <span className="hidden sm:inline">Náhľad údajov</span>
               </Button>
             </div>
 
             {preview ? (
               <>
-                <SectionTitle>Náhľad payloadu</SectionTitle>
-                <Card className="space-y-2 p-3 text-xs">
+                <SectionTitle
+                  action={
+                    <button
+                      type="button"
+                      onClick={() => setPreview(null)}
+                      className="text-[11px] text-muted-foreground hover:text-foreground"
+                    >
+                      Skryť
+                    </button>
+                  }
+                >
+                  Údaje odosielané modelu
+                </SectionTitle>
+                <Card className="space-y-2 p-3 text-xs animate-fade-in">
+                  <p className="text-caption">
+                    Presne toto sa odošle poskytovateľovi (
+                    {status.data?.providerName ?? "AI"}). Mená a identifikátory
+                    sú nahradené pseudonymami; preklad späť prebieha na serveri.
+                  </p>
                   <pre className="max-h-64 overflow-auto whitespace-pre-wrap font-mono text-[11px] text-muted-foreground">
                     {preview}
                   </pre>
                 </Card>
               </>
             ) : null}
+
 
             {result?.status === "ok" &&
             (text ||

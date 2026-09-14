@@ -4,7 +4,7 @@ import type { ForensicDossier } from "@/lib/types";
 // Import sample dossier matching asistent.tsx
 const sampleDossier: ForensicDossier = {
   caseId: "PPZ-51/UBOK-PZ-ST-2025",
-  caseTitle: "Kauza Tatragen & Babčan (Nedovolené ozbrojovanie & Legalizácia)",
+  caseTitle: "Kauza Armivex & Novák (Nedovolené ozbrojovanie & Legalizácia)",
   defendabilityIndex: 38,
   generatedAt: new Date().toISOString(),
   facts: {
@@ -12,8 +12,8 @@ const sampleDossier: ForensicDossier = {
       {
         time: "2024-10-15 08:30",
         event:
-          "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Tatragen v Žiline.",
-        source: "Zápisnica o výsluchu svedka M. Plcha (č. l. 42)",
+          "Prevzatie 48 ks pištolí Glock 19 a GP K100 z predajne Armivex v Žiline.",
+        source: "Zápisnica o výsluchu svedka M. Hrušku (č. l. 42)",
         chainBreak: false,
         severity: "info",
         paragraph: "§ 119 TP",
@@ -21,7 +21,7 @@ const sampleDossier: ForensicDossier = {
       {
         time: "2024-10-18 14:00",
         event:
-          "Zaistenie vozidla BMW X6 (D. Marjov) — nájdené kúpne zmluvy a pečiatky.",
+          "Zaistenie vozidla BMW X6 (D. Malina) — nájdené kúpne zmluvy a pečiatky.",
         source: "Protokol o prehliadke iných priestorov (č. l. 88)",
         chainBreak: true,
         severity: "critical",
@@ -41,7 +41,7 @@ const sampleDossier: ForensicDossier = {
       {
         id: "TR-05",
         type: "dokument",
-        description: "Evidenčná kniha zbraní Tatragen s.r.o. — nezabezpečená",
+        description: "Evidenčná kniha zbraní Armivex s.r.o. — nezabezpečená",
         light: "red",
         chainComplete: false,
         lr: "—",
@@ -54,19 +54,19 @@ const sampleDossier: ForensicDossier = {
     attacks: [
       {
         id: "DA-1",
-        defenseClaim: "Cohen: 'V aute som sa len viezol ako tlmočník.'",
+        defenseClaim: "Koval: 'V aute som sa len viezol ako tlmočník.'",
         risk: "VYSOKÉ",
         counterStrike:
-          "Vozidlo malo pečiatky EB-EU a rukou písané zoznamy kalibrov.",
+          "Vozidlo malo pečiatky VELTRA a rukou písané zoznamy kalibrov.",
         evidenceGap: "Chýba grafologická expertíza rukou písaných zoznamov.",
         paragraph: "§ 142 TP",
       },
       {
         id: "DA-2",
         defenseClaim:
-          "Babčan: 'V Tatragene som v živote nebol a Mareka Plcha nepoznám.'",
+          "Novák: 'V Armivexe som v živote nebol a Mareka Hrušku nepoznám.'",
         risk: "KRITICKÉ",
-        counterStrike: "Svedok Marek Plch 3x overil totožnosť z OP a ZP.",
+        counterStrike: "Svedok Marek Hruška 3x overil totožnosť z OP a ZP.",
         evidenceGap: "Protokoly neboli podrobené porovnaniu podpisového vzoru.",
         paragraph: "§ 125 TP",
       },

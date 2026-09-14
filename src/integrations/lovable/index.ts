@@ -15,25 +15,18 @@ export const lovable = {
       provider: "google" | "apple" | "microsoft" | "lovable",
       opts?: SignInOptions,
     ) => {
-      const host =
-        typeof window !== "undefined" ? window.location.hostname : "";
+      const host = typeof window !== "undefined" ? window.location.hostname : "";
       const onLovablePreview =
         host.endsWith(".lovable.app") ||
         host.endsWith(".lovableproject.com") ||
         host.endsWith(".lovableproject-dev.com");
 
-      if (
-        !onLovablePreview &&
-        (provider === "google" ||
-          provider === "apple" ||
-          provider === "microsoft")
-      ) {
+      if (!onLovablePreview && (provider === "google" || provider === "apple" || provider === "microsoft")) {
         const supabaseProvider = provider === "microsoft" ? "azure" : provider;
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: supabaseProvider,
           options: {
-            redirectTo:
-              opts?.redirect_uri || `${window.location.origin}/prehlad`,
+            redirectTo: opts?.redirect_uri || `${window.location.origin}/prehlad`,
           },
         });
         if (error) return { error };
@@ -65,18 +58,12 @@ export const lovable = {
         }
         return result;
       } catch (err) {
-        if (
-          provider === "google" ||
-          provider === "apple" ||
-          provider === "microsoft"
-        ) {
-          const supabaseProvider =
-            provider === "microsoft" ? "azure" : provider;
+        if (provider === "google" || provider === "apple" || provider === "microsoft") {
+          const supabaseProvider = provider === "microsoft" ? "azure" : provider;
           const { data, error } = await supabase.auth.signInWithOAuth({
             provider: supabaseProvider,
             options: {
-              redirectTo:
-                opts?.redirect_uri || `${window.location.origin}/prehlad`,
+              redirectTo: opts?.redirect_uri || `${window.location.origin}/prehlad`,
             },
           });
           if (error) return { error };
