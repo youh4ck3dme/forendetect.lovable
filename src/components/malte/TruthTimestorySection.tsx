@@ -583,6 +583,15 @@ export function TruthTimestorySection() {
     TIMESTORY_EPISODES.find((e) => e.id === activeEpisodeId) ??
     TIMESTORY_EPISODES[0]!;
 
+  // Krátky prechod pri prepnutí kapitoly — vizuálna spätná väzba.
+  const [switching, setSwitching] = useState(false);
+  useEffect(() => {
+    setSwitching(true);
+    const id = setTimeout(() => setSwitching(false), 320);
+    return () => clearTimeout(id);
+  }, [activeEpisodeId]);
+
+
   const filteredAnomalies =
     filterStrength === "all"
       ? ANOMALIES_DATA
