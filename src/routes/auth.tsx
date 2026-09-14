@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2, Lock, Mail, Zap } from "lucide-react";
-import malteMark from "@/assets/forendo-mark.png";
+import forendoPegasus from "@/assets/forendo-pegasus.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
@@ -155,7 +155,7 @@ function AuthScreen() {
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-2 text-center">
           <img
-            src={malteMark}
+            src={forendoPegasus.url}
             alt=""
             width={40}
             height={40}
