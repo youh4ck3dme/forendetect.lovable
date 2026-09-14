@@ -112,13 +112,16 @@ export const commitImport = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const { data: inserted, error } = await context.supabase.rpc(
-      "commit_import",
-      {
-        _import: data.importId,
-        _rows: data.rows,
-      },
+    // Zápis beží len na serveri; vlastníctvo importu overuje databáza voči
+    // overenej identite z auth middleware.
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
     );
+    const { data: inserted, error } = await supabaseAdmin.rpc("commit_import", {
+      _import: data.importId,
+      _rows: data.rows,
+      _actor: context.userId,
+    });
     if (error) {
       await context.supabase
         .from("case_imports")

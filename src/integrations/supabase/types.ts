@@ -773,7 +773,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      commit_import: { Args: { _import: string; _rows: Json }; Returns: number }
+      commit_import: {
+        Args: { _actor: string; _import: string; _rows: Json }
+        Returns: number
+      }
       current_plan: { Args: { _user: string }; Returns: string }
       entity_belongs: {
         Args: { _case: string; _entity: string; _user: string }
