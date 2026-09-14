@@ -17,6 +17,11 @@ export async function callLlm(options: { messages: MistralMessage[]; mode?: Mist
 
 const XAI_VISION_EXT = /\.(png|jpe?g)$/i;
 export async function extractWithOcrFallback(fileBuffer: Buffer, fileName: string): Promise<string> {
+  const hasMistralOcr = Boolean(process.env["MISTRAL_API_KEY"]);
+  if (!hasMistralOcr && !xaiConfigured()) throw new Error("OCR nie je nakonfigurované.");
+  if (!hasMistralOcr && xaiConfigured() && !XAI_VISION_EXT.test(fileName)) {
+    throw new Error("Záložné xAI OCR podporuje iba JPEG/PNG obrázky.");
+  }
   let mistralError: unknown;
   try { return await callMistralOcr(fileBuffer, fileName); } catch (error) { mistralError = error; }
   if (xaiConfigured() && XAI_VISION_EXT.test(fileName)) return callXaiVisionOcr(fileBuffer, fileName);
