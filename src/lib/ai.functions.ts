@@ -10,6 +10,7 @@ import {
   type AiPayload,
 } from "@/lib/ai/redact";
 import type { ExtractedCaseEntity, ParsedCaseDocument } from "./types";
+import type { MistralMode } from "@/lib/ai/mistral.server";
 
 /**
  * AI asistent — výhradne Mistral API cez server. Žiadny iný poskytovateľ,
@@ -28,10 +29,30 @@ const taskEnum = z.enum([
   "explain_finding",
   "case_summary",
   "normalize_descriptions",
+  "short_summary",
+  "document_classification",
+  "contradiction_analysis",
+  "temporal_analysis",
+  "financial_flow_analysis",
+  "report_assistance",
   "alt_devil",
   "admiss_audit",
 ]);
 export type AiTask = z.infer<typeof taskEnum>;
+
+export const AI_TASK_MODE: Record<AiTask, MistralMode> = {
+  explain_finding: "fast",
+  normalize_descriptions: "fast",
+  short_summary: "fast",
+  document_classification: "fast",
+  case_summary: "reasoning",
+  contradiction_analysis: "reasoning",
+  temporal_analysis: "reasoning",
+  financial_flow_analysis: "reasoning",
+  report_assistance: "reasoning",
+  alt_devil: "reasoning",
+  admiss_audit: "reasoning",
+};
 
 const SYSTEM_PROMPT = `Si forenzný analytický asistent. Odpovedáš po slovensky.
 PRAVIDLÁ:
@@ -52,6 +73,12 @@ const schemas = {
     unverified: z.array(z.string().max(400)).max(10).default([]),
     cited: z.array(z.string().max(12)).max(120).default([]),
   }),
+  short_summary: z.object({ summary: z.string().max(2000), unverified: z.array(z.string().max(400)).max(10).default([]), cited: z.array(z.string().max(12)).max(60).default([]) }),
+  document_classification: z.object({ summary: z.string().max(2000), unverified: z.array(z.string().max(400)).max(10).default([]), cited: z.array(z.string().max(12)).max(60).default([]) }),
+  contradiction_analysis: z.object({ summary: z.string().max(6000), unverified: z.array(z.string().max(400)).max(20).default([]), cited: z.array(z.string().max(12)).max(120).default([]) }),
+  temporal_analysis: z.object({ summary: z.string().max(6000), unverified: z.array(z.string().max(400)).max(20).default([]), cited: z.array(z.string().max(12)).max(120).default([]) }),
+  financial_flow_analysis: z.object({ summary: z.string().max(6000), unverified: z.array(z.string().max(400)).max(20).default([]), cited: z.array(z.string().max(12)).max(120).default([]) }),
+  report_assistance: z.object({ summary: z.string().max(6000), unverified: z.array(z.string().max(400)).max(20).default([]), cited: z.array(z.string().max(12)).max(120).default([]) }),
   normalize_descriptions: z.object({
     suggestions: z
       .array(
@@ -110,6 +137,12 @@ const instructions: Record<AiTask, string> = {
     'Vysvetli vybraný nález laikovi: čo pravidlo sleduje, ktoré konkrétne záznamy ho spustili a čo NEznamená. Vráť JSON {"explanation": string, "unverified": string[], "cited": string[]}.',
   case_summary:
     'Priprav návrh zhrnutia prípadu: rozsah dát, hlavné pozorovania a čo treba overiť. Zhrnutie je návrh na kontrolu, nie záver. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
+  short_summary: 'Priprav krátke vecné zhrnutie bez právnych záverov. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
+  document_classification: 'Klasifikuj obsah dostupných záznamov a stručne vysvetli zaradenie. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
+  contradiction_analysis: 'Identifikuj možné rozpory a ku každému uveď zdrojové identifikátory. Ide o AI hypotézy na overenie. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
+  temporal_analysis: 'Analyzuj časové súvislosti a medzery bez domýšľania udalostí. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
+  financial_flow_analysis: 'Vysvetli finančné toky len z dostupných transakcií; nič neoznačuj za dokázanú trestnú činnosť. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
+  report_assistance: 'Priprav kontrolovateľný návrh textu správy so zdrojovými identifikátormi, nie právne stanovisko. Vráť JSON {"summary": string, "unverified": string[], "cited": string[]}.',
   normalize_descriptions:
     'Navrhni normalizovaný tvar popisov platieb a možné zhody protistrán na kontrolu používateľom. Nič nespájaj automaticky. Vráť JSON {"suggestions": [{"transaction": string, "normalized": string, "counterparty": string, "confidence": "low"|"medium"|"high"}], "unverified": string[]}.',
   alt_devil:
@@ -148,7 +181,7 @@ type SupabaseLike = any;
 export const getAiStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { llmConfigured, preferredLlmModel, activeProvider, providerDisplayName } =
+    const { llmConfigured, preferredLlmModel } =
       await import("@/lib/ai/llm.server");
     const { getQuotas } = await import("@/lib/entitlements.server");
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
@@ -160,12 +193,11 @@ export const getAiStatus = createServerFn({ method: "POST" })
         .neq("status", "failed"),
       getQuotas(context.userId),
     ]);
-    const provider = activeProvider();
     return {
       configured: llmConfigured(),
-      model: llmConfigured() ? preferredLlmModel() : null,
-      provider,
-      providerName: provider ? providerDisplayName(provider) : null,
+      provider: llmConfigured() ? "mistral" : null,
+      providerName: llmConfigured() ? "Mistral" : null,
+      models: llmConfigured() ? { fast: preferredLlmModel("fast"), reasoning: preferredLlmModel("reasoning") } : null,
       promptVersion: PROMPT_VERSION,
       plan: quotas.plan,
       dailyLimit: quotas.aiPerDay,
@@ -183,6 +215,7 @@ export const previewAiPayload = createServerFn({ method: "POST" })
         caseId: z.string().uuid(),
         task: taskEnum,
         alertId: z.string().max(200).optional(),
+        mode: z.enum(["fast", "reasoning"]).optional(),
       })
       .parse(input),
   )
@@ -211,6 +244,10 @@ export type AiRunResult = {
   dataFingerprint: string;
   payload?: AiPayload;
   usage?: { prompt: number | null; completion: number | null };
+  mode?: MistralMode;
+  provider?: "mistral";
+  fallback?: boolean;
+  requestId?: string;
   /** Text alebo návrhy — vždy s pôvodnými identifikátormi záznamov. */
   output?: {
     summary?: string;
@@ -255,12 +292,14 @@ export const runAiTask = createServerFn({ method: "POST" })
         caseId: z.string().uuid(),
         task: taskEnum,
         alertId: z.string().max(200).optional(),
+        mode: z.enum(["fast", "reasoning"]).optional(),
       })
       .parse(input),
   )
   .handler(async ({ data, context }): Promise<AiRunResult> => {
     const { callLlm, llmConfigured, preferredLlmModel } =
       await import("@/lib/ai/llm.server");
+    const mode = data.mode ?? AI_TASK_MODE[data.task];
     const analysis = await loadAnalysis(context.supabase, data.caseId);
     const pseudonyms = buildPseudonyms(analysis);
     const scope =
@@ -293,7 +332,7 @@ export const runAiTask = createServerFn({ method: "POST" })
         _user: context.userId,
         _case: data.caseId,
         _task: data.task,
-        _model: preferredLlmModel(),
+        _model: preferredLlmModel(mode),
         _prompt_version: PROMPT_VERSION,
         _input_revision: analysis.dataFingerprint,
         _daily_limit: quotas.aiPerDay,
@@ -325,6 +364,8 @@ export const runAiTask = createServerFn({ method: "POST" })
     }
 
     const result = await callLlm({
+      mode,
+      requestId: reservationId,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         {
@@ -346,6 +387,10 @@ export const runAiTask = createServerFn({ method: "POST" })
           error_code: errorCode ?? null,
           prompt_tokens: usage?.prompt ?? null,
           completion_tokens: usage?.completion ?? null,
+          model: result.model ?? preferredLlmModel(mode),
+          mode: result.mode ?? mode,
+          fallback: result.fallback ?? false,
+          request_id: result.requestId ?? reservationId,
           finished_at: new Date().toISOString(),
         })
         .eq("id", reservationId);
@@ -360,7 +405,7 @@ export const runAiTask = createServerFn({ method: "POST" })
             : "failed",
         result.status,
       );
-      return { ...base, status: result.status, message: result.message };
+      return { ...base, status: result.status, message: result.message, mode: result.mode ?? mode, provider: "mistral", fallback: result.fallback ?? false, requestId: result.requestId ?? reservationId, model: result.model };
     }
 
     let parsedJson: unknown;
@@ -407,6 +452,10 @@ export const runAiTask = createServerFn({ method: "POST" })
       ...base,
       status: "ok",
       model: result.model,
+      mode: result.mode,
+      provider: "mistral",
+      fallback: result.fallback,
+      requestId: result.requestId,
       usage: result.usage,
       output: {
         ...(output as AiRunResult["output"]),
@@ -1047,6 +1096,8 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
 
     const userPrompt = buildUserPrompt(documentText);
     const result = await callLlm({
+      mode: "reasoning",
+      requestId: reservationId,
       messages: [
         {
           role: "system",
