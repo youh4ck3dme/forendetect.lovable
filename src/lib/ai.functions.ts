@@ -405,7 +405,16 @@ export const runAiTask = createServerFn({ method: "POST" })
             : "failed",
         result.status,
       );
-      return { ...base, status: result.status, message: result.message, mode: result.mode ?? mode, provider: "mistral", fallback: result.fallback ?? false, requestId: result.requestId ?? reservationId, model: result.model };
+      return {
+        ...base,
+        status: result.status,
+        message: result.message,
+        mode: result.mode ?? mode,
+        provider: "mistral",
+        fallback: result.fallback ?? false,
+        requestId: result.requestId ?? reservationId,
+        ...(result.model ? { model: result.model } : {}),
+      };
     }
 
     let parsedJson: unknown;

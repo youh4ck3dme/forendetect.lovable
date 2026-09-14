@@ -165,11 +165,11 @@ async function callMode(options: CallOptions, mode: MistralMode, fallback: boole
 export async function callMistral(options: CallOptions): Promise<MistralResult> {
   const mode = options.mode ?? "fast";
   const first = await callMode(options, mode, false);
-  const transient = first.status === "rate_limited" || first.errorCode?.startsWith("http_5");
+  const transient = first.status !== "ok" && (first.status === "rate_limited" || first.errorCode?.startsWith("http_5"));
   if (!transient || options.allowFallback === false) return first;
   const other: MistralMode = mode === "fast" ? "reasoning" : "fast";
   if (!mistralConfigured(other)) return first;
-  return callMode({ ...options, requestId: first.requestId }, other, true);
+  return callMode({ ...options, ...(first.requestId ? { requestId: first.requestId } : {}) }, other, true);
 }
 
 /** OCR compatibility remains on the existing dedicated Mistral secret. */

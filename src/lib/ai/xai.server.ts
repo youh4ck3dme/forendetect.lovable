@@ -3,8 +3,7 @@
  * Kľúč `XAI_API_KEY` je serverové tajomstvo. Model: `XAI_MODEL` (default grok-4.6).
  */
 
-import type { MistralMessage, MistralResult } from "./mistral.server";
-import { REQUEST_TIMEOUT_MS } from "./mistral.server";
+import type { MistralMessage } from "./mistral.server";
 
 export const XAI_ENDPOINT = "https://api.x.ai/v1/chat/completions";
 export const DEFAULT_XAI_MODEL = "grok-4.6";
@@ -23,7 +22,11 @@ type CallOptions = {
   fetchImpl?: typeof fetch;
 };
 
-export async function callXai(options: CallOptions): Promise<MistralResult> {
+type XaiResult =
+  | { status: "ok"; content: string; usage: { prompt: number | null; completion: number | null }; model: string }
+  | { status: "not_configured" | "timeout" | "rate_limited" | "failed"; message: string; retryAfterSeconds?: number };
+
+export async function callXai(options: CallOptions): Promise<XaiResult> {
   const apiKey = process.env["XAI_API_KEY"];
   if (!apiKey) {
     return { status: "not_configured", message: "xAI nie je nakonfigurovaná." };
@@ -31,8 +34,6 @@ export async function callXai(options: CallOptions): Promise<MistralResult> {
   const model = xaiModel();
   const doFetch = options.fetchImpl ?? fetch;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
     const response = await doFetch(XAI_ENDPOINT, {
       method: "POST",
@@ -47,7 +48,6 @@ export async function callXai(options: CallOptions): Promise<MistralResult> {
         response_format: { type: "json_object" },
         messages: options.messages,
       }),
-      signal: controller.signal,
     });
 
     if (response.status === 429 || response.status === 503) {
@@ -97,8 +97,6 @@ export async function callXai(options: CallOptions): Promise<MistralResult> {
       };
     }
     return { status: "failed", message: "Spojenie s xAI zlyhalo." };
-  } finally {
-    clearTimeout(timer);
   }
 }
 

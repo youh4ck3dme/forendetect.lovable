@@ -2164,12 +2164,12 @@ ${dossier.judgeReadyText.vedecke}`;
               (suggestions && suggestions.length > 0)) ? (
               <>
                 <SectionTitle>Výsledok</SectionTitle>
-                <Card className="flex flex-wrap items-center gap-2 p-3 text-xs" role="status">
+                <div role="status"><Card className="flex flex-wrap items-center gap-2 p-3 text-xs">
                   <Badge>{result.mode === "reasoning" ? "Hĺbková analýza" : "Rýchla analýza"}</Badge>
                   <span>Mistral · {result.model}</span>
                   <span>{result.fallback ? "Použitý záložný model" : "Bez fallbacku"}</span>
                   <span className="ml-auto">{(result.usage?.prompt ?? 0) + (result.usage?.completion ?? 0)} tokenov</span>
-                </Card>
+                </Card></div>
                 {text ? (
                   <Card className="space-y-2 p-3 text-xs">
                     <Badge variant="outline">AI vysvetlenie</Badge>

@@ -1,125 +1,31 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-function jsonResponse(status: number, body: unknown) {
-  return {
-    ok: status >= 200 && status < 300,
-    status,
-    headers: new Headers(),
-    json: () => Promise.resolve(body),
-    text: () => Promise.resolve(JSON.stringify(body)),
-  };
-}
-
-describe("LLM failover Grok (xAI) → Mistral", () => {
-  const originalMistral = process.env["MISTRAL_API_KEY"];
-  const originalXai = process.env["XAI_API_KEY"];
-
-  beforeEach(() => {
-    vi.resetModules();
-  });
-
+describe("explicit Mistral task routing", () => {
+  const originalFast = process.env["MISTRAL_API_KEY_FAST"];
+  const originalReasoning = process.env["MISTRAL_API_KEY_REASONING"];
+  beforeEach(() => { vi.resetModules(); process.env["MISTRAL_API_KEY_FAST"] = "fast"; process.env["MISTRAL_API_KEY_REASONING"] = "reasoning"; });
   afterEach(() => {
-    if (originalMistral) process.env["MISTRAL_API_KEY"] = originalMistral;
-    else delete process.env["MISTRAL_API_KEY"];
-    if (originalXai) process.env["XAI_API_KEY"] = originalXai;
-    else delete process.env["XAI_API_KEY"];
+    if (originalFast) process.env["MISTRAL_API_KEY_FAST"] = originalFast; else delete process.env["MISTRAL_API_KEY_FAST"];
+    if (originalReasoning) process.env["MISTRAL_API_KEY_REASONING"] = originalReasoning; else delete process.env["MISTRAL_API_KEY_REASONING"];
   });
 
-  it("nie je nakonfigurované, keď chýbajú oba kľúče", async () => {
-    delete process.env["MISTRAL_API_KEY"];
-    delete process.env["XAI_API_KEY"];
-    const { llmConfigured, callLlm } = await import("@/lib/ai/llm.server");
-    expect(llmConfigured()).toBe(false);
-    const result = await callLlm({
-      messages: [{ role: "user", content: "hi" }],
-    });
-    expect(result.status).toBe("not_configured");
+  it("maps every supported task to a fixed server mode", async () => {
+    const { AI_TASK_MODE } = await import("@/lib/ai.functions");
+    expect(AI_TASK_MODE.explain_finding).toBe("fast");
+    expect(AI_TASK_MODE.normalize_descriptions).toBe("fast");
+    expect(AI_TASK_MODE.short_summary).toBe("fast");
+    expect(AI_TASK_MODE.document_classification).toBe("fast");
+    expect(AI_TASK_MODE.case_summary).toBe("reasoning");
+    expect(AI_TASK_MODE.contradiction_analysis).toBe("reasoning");
+    expect(AI_TASK_MODE.temporal_analysis).toBe("reasoning");
+    expect(AI_TASK_MODE.financial_flow_analysis).toBe("reasoning");
+    expect(AI_TASK_MODE.report_assistance).toBe("reasoning");
   });
 
-  it("pri úspešnom Grok nevolá Mistral", async () => {
-    process.env["MISTRAL_API_KEY"] = "mistral-key";
-    process.env["XAI_API_KEY"] = "xai-key";
-    const fetchImpl = vi.fn().mockResolvedValue(
-      jsonResponse(200, {
-        choices: [{ message: { content: '{"ok":true}' } }],
-        usage: { prompt_tokens: 1, completion_tokens: 1 },
-      }),
-    );
-    const { callLlm } = await import("@/lib/ai/llm.server");
-    const result = await callLlm({
-      messages: [{ role: "user", content: "hi" }],
-      fetchImpl,
-    });
-    expect(result.status).toBe("ok");
-    if (result.status === "ok") {
-      expect(result.provider).toBe("xai");
-      expect(result.content).toBe('{"ok":true}');
-    }
-    expect(fetchImpl).toHaveBeenCalledTimes(1);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.x.ai");
-  });
-
-  it("keď Grok vráti 500, prejde na Mistral", async () => {
-    process.env["MISTRAL_API_KEY"] = "mistral-key";
-    process.env["XAI_API_KEY"] = "xai-key";
-    const fetchImpl = vi
-      .fn()
-      .mockResolvedValueOnce(jsonResponse(500, { error: "down" }))
-      .mockResolvedValueOnce(
-        jsonResponse(200, {
-          choices: [{ message: { content: '{"fallback":true}' } }],
-        }),
-      );
-    const { callLlm } = await import("@/lib/ai/llm.server");
-    const result = await callLlm({
-      messages: [{ role: "user", content: "hi" }],
-      fetchImpl,
-    });
-    expect(result.status).toBe("ok");
-    if (result.status === "ok") {
-      expect(result.provider).toBe("mistral");
-      expect(result.content).toBe('{"fallback":true}');
-    }
-    expect(fetchImpl).toHaveBeenCalledTimes(2);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.x.ai");
-    expect(String(fetchImpl.mock.calls[1]?.[0])).toContain("mistral.ai");
-  });
-
-  it("pri Grok timeout nevolá Mistral (požiadavka už mohla byť účtovaná)", async () => {
-    process.env["MISTRAL_API_KEY"] = "mistral-key";
-    process.env["XAI_API_KEY"] = "xai-key";
-    const fetchImpl = vi.fn().mockImplementation(() => {
-      const err = new Error("aborted");
-      err.name = "AbortError";
-      return Promise.reject(err);
-    });
-    const { callLlm } = await import("@/lib/ai/llm.server");
-    const result = await callLlm({
-      messages: [{ role: "user", content: "hi" }],
-      fetchImpl,
-    });
-    expect(result.status).toBe("timeout");
-    expect(fetchImpl).toHaveBeenCalledTimes(1);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("api.x.ai");
-  });
-
-  it("keď chýba kľúč pre Grok, ide priamo na Mistral", async () => {
-    process.env["MISTRAL_API_KEY"] = "mistral-key";
-    delete process.env["XAI_API_KEY"];
-    const fetchImpl = vi.fn().mockResolvedValue(
-      jsonResponse(200, {
-        choices: [{ message: { content: '{"direct":true}' } }],
-      }),
-    );
-    const { callLlm, preferredLlmModel } = await import("@/lib/ai/llm.server");
-    expect(preferredLlmModel()).toBe("mistral-large-latest");
-    const result = await callLlm({
-      messages: [{ role: "user", content: "hi" }],
-      fetchImpl,
-    });
-    expect(result.status).toBe("ok");
-    if (result.status === "ok") expect(result.provider).toBe("mistral");
-    expect(fetchImpl).toHaveBeenCalledTimes(1);
-    expect(String(fetchImpl.mock.calls[0]?.[0])).toContain("mistral.ai");
+  it("reports both configured Mistral models", async () => {
+    const { llmConfigured, preferredLlmModel } = await import("@/lib/ai/llm.server");
+    expect(llmConfigured()).toBe(true);
+    expect(preferredLlmModel("fast")).toBe("mistral-small-latest");
+    expect(preferredLlmModel("reasoning")).toBe("magistral-medium-latest");
   });
 });
