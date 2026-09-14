@@ -320,9 +320,33 @@ function MobileMoreSheet({
 export function BottomNav() {
   const { analysis } = useActiveCase();
   const [moreOpen, setMoreOpen] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
   const criticalCount = analysis.alerts.filter(
     (a) => a.severity === "critical",
   ).length;
+
+  /** Šípky/Home/End presúvajú fokus medzi položkami spodného menu. */
+  const onKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
+    if (!keys.includes(event.key)) return;
+    const items = Array.from(
+      listRef.current?.querySelectorAll<HTMLElement>("[data-navitem]") ?? [],
+    );
+    if (items.length === 0) return;
+    const current = items.indexOf(document.activeElement as HTMLElement);
+    let next = current;
+    if (event.key === "ArrowRight") next = (current + 1) % items.length;
+    if (event.key === "ArrowLeft")
+      next = (current - 1 + items.length) % items.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = items.length - 1;
+    if (next < 0) next = 0;
+    event.preventDefault();
+    items[next]?.focus();
+  };
+
+  const itemClass =
+    "group relative flex w-full min-h-11 flex-col items-center justify-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
   return (
     <>
@@ -331,16 +355,22 @@ export function BottomNav() {
         className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[560px] border-t border-border surface-glass px-2 pt-2 shadow-elevated lg:hidden"
         style={{ paddingBottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
       >
-        <ul className="flex items-stretch justify-between">
+        <ul
+          ref={listRef}
+          onKeyDown={onKeyDown}
+          className="flex items-stretch justify-between"
+        >
           {navItems.map(({ to, label, icon: Icon }) =>
             to === "/viac" ? (
               <li key={to} className="flex-1">
                 <button
                   type="button"
+                  data-navitem
                   onClick={() => setMoreOpen(true)}
                   aria-haspopup="dialog"
                   aria-expanded={moreOpen}
-                  className="group relative flex w-full flex-col items-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  aria-label={`${label} — ďalšie nástroje`}
+                  className={itemClass}
                 >
                   <span className="relative">
                     <Icon
@@ -355,11 +385,13 @@ export function BottomNav() {
               <li key={to} className="flex-1">
                 <Link
                   to={to}
-                  className="group relative flex flex-col items-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  data-navitem
+                  className={itemClass}
                   activeOptions={{ exact: to === "/" }}
                   activeProps={{
                     className:
                       "!text-foreground font-semibold [&_[data-ind]]:opacity-100",
+                    "aria-current": "page",
                   }}
                 >
                   <span className="relative">
@@ -368,7 +400,10 @@ export function BottomNav() {
                       aria-hidden
                     />
                     {to === "/prehlad" && criticalCount > 0 ? (
-                      <span className="absolute -top-1 -right-2 rounded-full bg-risk-high px-1 text-[9px] font-bold text-risk-high-foreground tnum">
+                      <span
+                        className="absolute -top-1 -right-2 rounded-full bg-risk-high px-1 text-[9px] font-bold text-risk-high-foreground tnum"
+                        aria-label={`${criticalCount} kritických nálezov`}
+                      >
                         {criticalCount}
                       </span>
                     ) : null}
@@ -376,6 +411,7 @@ export function BottomNav() {
                   {label}
                   <span
                     data-ind
+                    aria-hidden
                     className="absolute -top-2 h-1 w-8 rounded-full bg-foreground opacity-0 transition-opacity duration-300"
                   />
                 </Link>
@@ -388,6 +424,7 @@ export function BottomNav() {
     </>
   );
 }
+
 
 export function Screen({ children }: { children: ReactNode }) {
   return (
