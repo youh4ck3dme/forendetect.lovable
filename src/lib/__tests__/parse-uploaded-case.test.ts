@@ -13,7 +13,7 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     "docs/forenz/DOKAZ_07_Vysluch_Erik_Babcan_12-13.08.2026.md",
   );
 
-  it("správne načíta a extrahuje entity z reálneho vyšetrovacieho spisu Petra Nováka", async () => {
+  it("správne načíta a extrahuje entity z reálneho vyšetrovacieho spisu Petra Babčana", async () => {
     expect(fs.existsSync(realEvidencePath)).toBe(true);
     const content = fs.readFileSync(realEvidencePath, "utf-8");
 
@@ -37,20 +37,20 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
 
     // Extrahované osoby a rodinné väzby
     const personNames = result.entities.persons.map((p) => p.name);
-    expect(personNames).toContain("Peter Novák");
-    expect(personNames).toContain("Milan Novák");
-    expect(personNames).toContain("Dáša Nováková");
+    expect(personNames).toContain("Erik Babčan");
+    expect(personNames).toContain("Milan Babčan");
+    expect(personNames).toContain("Dáša Babčanová");
     expect(personNames).toContain("Kada Dakaj");
-    expect(personNames).toContain("Dea Novák");
-    expect(personNames).toContain("Denis Koval");
+    expect(personNames).toContain("Dea Babčan");
+    expect(personNames).toContain("Denis Cohen");
 
     const novak = result.entities.persons.find(
-      (p) => p.name === "Peter Novák",
+      (p) => p.name === "Erik Babčan",
     );
     expect(novak?.role).toBe("Podozrivý / Vypočúvaný");
     expect(novak?.birthDate).toBe("30.05.1989");
 
-    const otec = result.entities.persons.find((p) => p.name === "Milan Novák");
+    const otec = result.entities.persons.find((p) => p.name === "Milan Babčan");
     expect(otec?.role).toBe("Otec");
 
     // Extrahované spoločnosti
@@ -73,7 +73,7 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
       ČVS: PPZ-51/UBOK-PZ-ST-2025
       Vozidlo: BMW X6 s evidenčným číslom.
       Zaistené veci: 48 ks pištolí Glock 19 Gen 5, zbraň GP K100 a zbraň v. č. CGDV051.
-      Firma: ARMIVEX s.r.o. a VELTRA s.r.o.
+      Firma: TATRAGEN s.r.o. a VELTRA s.r.o.
       Právna kvalifikácia: § 294 ods. 1 TZ.
     `;
 
@@ -84,7 +84,7 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     expect(entities.weapons).toContain("Glock 19 Gen 5");
     expect(entities.weapons).toContain("Grand Power K100");
     expect(entities.weapons).toContain("Zbraň v. č. CGDV051");
-    expect(entities.companies).toContain("ARMIVEX s.r.o.");
+    expect(entities.companies).toContain("TATRAGEN s.r.o.");
     expect(entities.companies).toContain("VELTRA s.r.o.");
     expect(entities.legalParagraphs.some((p) => p.includes("§ 294"))).toBe(
       true,
@@ -117,8 +117,8 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
 # ZÁPISNICA O VÝSLUCHU SVIEDKA
 Miesto: Žilina
 Dátum: 12.01.2026
-Osoba: Marek Hruška, nar. 14.04.1982
-Spoločnosť: ARMIVEX s.r.o.
+Osoba: Marek Plch, nar. 14.04.1982
+Spoločnosť: TATRAGEN s.r.o.
 Zbrane: Glock 19 a GP K100
 Ustanovenie: § 119 TP
     `);
@@ -127,7 +127,7 @@ Ustanovenie: § 119 TP
       const dummyImageBase64 =
         Buffer.from("dummy-scan-bytes").toString("base64");
       const result = await handleParseUploadedCaseDocument(
-        "vysluch_hruska_scan.png",
+        "vysluch_plch_scan.png",
         dummyImageBase64,
       );
 
@@ -137,8 +137,8 @@ Ustanovenie: § 119 TP
       expect(result.metadata.location).toBe("Žilina");
 
       const names = result.entities.persons.map((p) => p.name);
-      expect(names).toContain("Marek Hruška");
-      expect(result.entities.companies).toContain("ARMIVEX s.r.o.");
+      expect(names).toContain("Marek Plch");
+      expect(result.entities.companies).toContain("TATRAGEN s.r.o.");
       expect(result.entities.weapons).toContain("Glock 19 Gen 5");
     } finally {
       ocrSpy.mockRestore();
