@@ -328,7 +328,7 @@ export function BottomNav() {
     <>
       <nav
         aria-label="Spodná navigácia"
-        className="sticky bottom-0 z-10 mt-auto border-t border-border surface-glass px-2 pt-2 pb-5 lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[560px] border-t border-border surface-glass px-2 pt-2 shadow-elevated lg:hidden"
         style={{ paddingBottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
       >
         <ul className="flex items-stretch justify-between">
@@ -391,7 +391,7 @@ export function BottomNav() {
 
 export function Screen({ children }: { children: ReactNode }) {
   return (
-    <main className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-hidden px-4 py-4 pb-6 sm:px-5 lg:px-8 lg:py-6">
+    <main className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-hidden px-4 py-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] sm:px-5 lg:px-8 lg:py-6 lg:pb-6">
       {children}
     </main>
   );
