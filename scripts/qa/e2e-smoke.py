@@ -97,10 +97,14 @@ async def main() -> int:
         # 5. Všetky hlavné obrazovky
         for path in PROTECTED:
             before = len(errors)
-            await page.goto(f"{BASE}{path}", wait_until="domcontentloaded")
-            await page.wait_for_timeout(1400)
-            body = await page.inner_text("body")
-            loaded = path.rstrip("/") in page.url and len(body.strip()) > 40
+            loaded = False
+            for attempt in range(2):  # prvé načítanie môže čakať na kompiláciu
+                await page.goto(f"{BASE}{path}", wait_until="domcontentloaded")
+                await page.wait_for_timeout(1800)
+                body = await page.inner_text("body")
+                loaded = path.rstrip("/") in page.url and len(body.strip()) > 40
+                if loaded:
+                    break
             check(loaded, f"obrazovka {path} sa načíta")
             check(len(errors) == before, f"obrazovka {path} bez chýb v konzole")
 
