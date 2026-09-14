@@ -1,5 +1,13 @@
 import { defineConfig } from "vitest/config";
 
+if (typeof process.loadEnvFile === "function") {
+  try {
+    process.loadEnvFile(".env");
+  } catch {
+    // Ignore if .env is missing in CI
+  }
+}
+
 export default defineConfig({
   test: {
     environment: "node",

@@ -15,8 +15,7 @@ const TEST_DB_URL = assertStrictLocalDatabaseUrl(
 const LARAVEL_API_URL =
   process.env["ICO_ATLAS_API_URL"] || "http://127.0.0.1:8000";
 const LARAVEL_API_KEY =
-  process.env["ICO_ATLAS_API_KEY"] || "secret_atlas_token_2026_forendo";
-
+  process.env["ICO_ATLAS_API_KEY"] || "test-service-key-not-set";
 describe("Live E2E: Forendo <-> Laravel ICO Atlas <-> ORSR Register", () => {
   let adminDbClient: Client;
   let userDbClient: Client;
@@ -69,7 +68,8 @@ describe("Live E2E: Forendo <-> Laravel ICO Atlas <-> ORSR Register", () => {
     );
 
     await adminDbClient.query(
-      `INSERT INTO public.cases (id, user_id, name) VALUES ($1, $2, 'Živý E2E Test Prípad') ON CONFLICT (id) DO NOTHING;`,
+      `INSERT INTO public.cases (id, user_id, name) VALUES ($1, $2, 'Živý E2E Test Prípad')
+       ON CONFLICT (id) DO UPDATE SET user_id = EXCLUDED.user_id, name = EXCLUDED.name;`,
       [testCaseId, testUserId],
     );
   });
@@ -225,7 +225,11 @@ describe("Live E2E: Forendo <-> Laravel ICO Atlas <-> ORSR Register", () => {
 
     // 1c. Transakčné potvrdenie importu cez RPC commit_company_registry_import
     const confirmResult = await handleConfirmCompanyRegistryImport(
-      { caseId: testCaseId, snapshotId: lookupResult.snapshotId, mode: "auto" },
+      {
+        caseId: testCaseId,
+        snapshotId: lookupResult.snapshotId,
+        mode: "auto",
+      },
       context,
     );
 
@@ -250,7 +254,11 @@ describe("Live E2E: Forendo <-> Laravel ICO Atlas <-> ORSR Register", () => {
 
     // 1e. Overenie idempotencie: opakované potvrdenie rovnakého snapshotu nevytvorí duplicity
     const repeatResult = await handleConfirmCompanyRegistryImport(
-      { caseId: testCaseId, snapshotId: lookupResult.snapshotId, mode: "auto" },
+      {
+        caseId: testCaseId,
+        snapshotId: lookupResult.snapshotId,
+        mode: "auto",
+      },
       context,
     );
     expect(repeatResult.ok).toBe(true);
@@ -285,7 +293,11 @@ describe("Live E2E: Forendo <-> Laravel ICO Atlas <-> ORSR Register", () => {
     );
 
     const confirmResult = await handleConfirmCompanyRegistryImport(
-      { caseId: testCaseId, snapshotId: lookupResult.snapshotId, mode: "auto" },
+      {
+        caseId: testCaseId,
+        snapshotId: lookupResult.snapshotId,
+        mode: "auto",
+      },
       context,
     );
     expect(confirmResult.ok).toBe(true);
