@@ -4,9 +4,18 @@ import {
   appendLedgerEntry,
   verifyLedgerIntegrity,
   GENESIS_PREV_HASH,
+  computePayloadHash,
 } from "../ledger";
 
 describe("Chain of Custody Ledger (Tamper-evident SHA-256)", () => {
+  it("hashuje vnorené objekty nezávisle od poradia kľúčov", () => {
+    expect(computePayloadHash({ b: 2, a: { y: 2, x: 1 } })).toBe(
+      computePayloadHash({ a: { x: 1, y: 2 }, b: 2 }),
+    );
+    expect(computePayloadHash({ a: { x: 2, y: 2 }, b: 2 })).not.toBe(
+      computePayloadHash({ a: { x: 1, y: 2 }, b: 2 }),
+    );
+  });
   it("vytvorí platný Genesis záznam so správnym prevHash", () => {
     const genesis = createGenesisEntry(
       "ČRZ-2025/084-A",

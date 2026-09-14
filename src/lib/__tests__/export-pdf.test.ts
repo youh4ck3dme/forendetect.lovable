@@ -77,7 +77,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
     const html = buildReportHTML(mockDossier);
 
     expect(html).toContain("<!DOCTYPE html>");
-    expect(html).toContain("FORENZNÝ REPORT — Kauza Armivex & Novák");
+    expect(html).toContain("FORENZNÝ REPORT — Kauza Armivex &amp; Novák");
     expect(html).toContain("PPZ-51/UBOK-PZ-ST-2025");
     expect(html).toContain("@page { margin: 2cm; }");
     expect(html).toContain("42/100");
@@ -100,7 +100,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
 
     expect(html).toContain("III. Vedecké zhodnotenie stôp");
     expect(html).toContain("Balistická expertíza KEU PZ preukázala zhodu");
-    expect(html).toContain("> 1 000 000");
+    expect(html).toContain("&gt; 1 000 000");
   });
 
   it("vypočíta platný a overiteľný kryptografický SHA-256 hash dossieru", async () => {
@@ -137,6 +137,13 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
     const modifiedHash = computeDossierSha256(modifiedDossier);
     expect(modifiedHash).not.toBe(dossierHash);
 
+    const reordered = JSON.parse(JSON.stringify(mockDossier)) as ForensicDossier;
+    reordered.facts = {
+      traces: reordered.facts.traces,
+      timeline: reordered.facts.timeline,
+    };
+    expect(computeDossierSha256(reordered)).toBe(dossierHash);
+
     // 5. Overenie prítomnosti a zhody hashu vo vygenerovanom HTML posudku
     const html = buildReportHTML(mockDossier);
     expect(html).toContain(dossierHash);
@@ -144,7 +151,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
       `Kryptografický odtlačok spisu (SHA-256): <code>${dossierHash}</code>`,
     );
     expect(html).toContain(
-      "V. Doložka integrity a nemennosti elektronického spisu (§ 119 ods. 2 TP)",
+      "V. Technická kontrola integrity exportu",
     );
   });
 
@@ -249,8 +256,23 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
       "Dôkazová matica stôp (§ 119 ods. 2 TP & ENFSI metodika)",
     );
 
-    // Overenie znaleckého osvedčenia a podpisovej doložky
-    expect(html).toContain("Znalcovo a procesné osvedčenie:");
-    expect(html).toContain("Dozorujúci prokurátor / Predseda senátu");
+    expect(html).toContain("Technické upozornenie:");
+    expect(html).toContain("Odborne skontroloval/a");
+  });
+
+  it("unikne používateľský a AI obsah a nevkladá spustiteľné HTML", () => {
+    const hostile: ForensicDossier = {
+      ...mockDossier,
+      caseTitle: '<img src=x onerror="alert(1)">',
+      judgeReadyText: {
+        ...mockDossier.judgeReadyText,
+        skutkovyStav: "<script>window.pwned=true</script>",
+      },
+    };
+    const html = buildReportHTML(hostile);
+    expect(html).not.toContain("<script>window.pwned=true</script>");
+    expect(html).not.toContain('<img src=x onerror="alert(1)">');
+    expect(html).toContain("&lt;script&gt;window.pwned=true&lt;/script&gt;");
+    expect(html).toContain("&lt;img src=x onerror=&quot;alert(1)&quot;&gt;");
   });
 });

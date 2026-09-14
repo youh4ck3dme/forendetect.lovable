@@ -98,8 +98,10 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
     delete process.env["XAI_API_KEY"];
 
     try {
-      const dummyImageBase64 =
-        Buffer.from("dummy-image-data").toString("base64");
+      const dummyImageBase64 = Buffer.concat([
+        Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+        Buffer.from("dummy-image-data"),
+      ]).toString("base64");
       await expect(
         handleParseUploadedCaseDocument("zapisnica_scan.png", dummyImageBase64),
       ).rejects.toThrow(/OCR nie je nakonfigurované/);
@@ -124,8 +126,10 @@ Ustanovenie: § 119 TP
     `);
 
     try {
-      const dummyImageBase64 =
-        Buffer.from("dummy-scan-bytes").toString("base64");
+      const dummyImageBase64 = Buffer.concat([
+        Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+        Buffer.from("dummy-scan-bytes"),
+      ]).toString("base64");
       const result = await handleParseUploadedCaseDocument(
         "vysluch_plch_scan.png",
         dummyImageBase64,

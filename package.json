@@ -10,7 +10,11 @@
     "preview": "vite preview --port 5656",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:security": "vitest run src/lib/__tests__/export-pdf.test.ts src/lib/__tests__/ledger.test.ts src/lib/__tests__/bulk-media-sandbox.test.ts src/lib/__tests__/webhook-security.test.ts",
+    "test:e2e": "python3 scripts/qa/e2e-smoke.py",
+    "test:release": "bun run test:security && bun run test:unit && tsgo --noEmit && bun run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

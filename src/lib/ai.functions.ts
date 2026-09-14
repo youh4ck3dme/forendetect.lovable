@@ -19,6 +19,10 @@ import type { ExtractedCaseEntity, ParsedCaseDocument } from "./types";
 
 /** Predvolený limit bez platného predplatného; plán ho môže zvýšiť. */
 export const AI_DAILY_LIMIT = 25;
+export const MAX_UPLOAD_FILES = 10;
+export const MAX_UPLOAD_FILE_BYTES = 10 * 1024 * 1024;
+export const MAX_UPLOAD_BATCH_BYTES = 25 * 1024 * 1024;
+export const MAX_EXTRACTED_CHARS = 250_000;
 
 const taskEnum = z.enum([
   "explain_finding",
@@ -421,6 +425,60 @@ export const runAiTask = createServerFn({ method: "POST" })
 
 export const MIN_EXTRACT_CHARS = 30;
 
+const supportedFilePattern = /\.(pdf|docx|xlsx|xls|txt|md|csv|json|png|jpe?g|webp|tiff?|bmp|html?|rtf)$/i;
+
+function decodedBase64Bytes(value: string): number {
+  const normalized = value.replace(/\s/g, "");
+  const padding = normalized.endsWith("==") ? 2 : normalized.endsWith("=") ? 1 : 0;
+  return Math.max(0, Math.floor((normalized.length * 3) / 4) - padding);
+}
+
+function assertSupportedContent(fileName: string, buffer: Buffer): void {
+  const lower = fileName.toLowerCase();
+  const starts = (...bytes: number[]) => bytes.every((byte, index) => buffer[index] === byte);
+  const ascii = buffer.subarray(0, 16).toString("ascii").trimStart().toLowerCase();
+  const hasNull = buffer.subarray(0, Math.min(buffer.length, 4096)).includes(0);
+  let valid = true;
+
+  if (lower.endsWith(".pdf")) valid = buffer.subarray(0, 5).toString("ascii") === "%PDF-";
+  else if (lower.endsWith(".png")) valid = starts(0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a);
+  else if (/\.jpe?g$/i.test(lower)) valid = starts(0xff, 0xd8, 0xff);
+  else if (lower.endsWith(".webp")) valid = buffer.subarray(0, 4).toString("ascii") === "RIFF" && buffer.subarray(8, 12).toString("ascii") === "WEBP";
+  else if (lower.endsWith(".bmp")) valid = buffer.subarray(0, 2).toString("ascii") === "BM";
+  else if (/\.tiff?$/i.test(lower)) valid = starts(0x49, 0x49, 0x2a, 0x00) || starts(0x4d, 0x4d, 0x00, 0x2a);
+  else if (lower.endsWith(".docx") || lower.endsWith(".xlsx")) valid = starts(0x50, 0x4b);
+  else if (lower.endsWith(".xls")) valid = starts(0xd0, 0xcf, 0x11, 0xe0) || starts(0x50, 0x4b);
+  else if (lower.endsWith(".rtf")) valid = ascii.startsWith("{\\rtf");
+  else if (lower.endsWith(".html") || lower.endsWith(".htm")) valid = !hasNull;
+  else valid = !hasNull;
+
+  if (!valid) {
+    throw new Error(`Obsah súboru ${fileName} nezodpovedá jeho prípone alebo je poškodený.`);
+  }
+}
+
+export function validateUploadBatch(
+  files: { fileName: string; fileBase64?: string; textContent?: string }[],
+): void {
+  if (files.length === 0) throw new Error("Neboli poskytnuté žiadne súbory na extrakciu.");
+  if (files.length > MAX_UPLOAD_FILES) throw new Error(`Naraz možno spracovať najviac ${MAX_UPLOAD_FILES} súborov.`);
+  let totalBytes = 0;
+  for (const file of files) {
+    if (!file.fileName || file.fileName.length > 240 || !supportedFilePattern.test(file.fileName)) {
+      throw new Error(`Nepodporovaný alebo neplatný názov súboru: ${file.fileName || "bez názvu"}.`);
+    }
+    const bytes = file.fileBase64
+      ? decodedBase64Bytes(file.fileBase64)
+      : new TextEncoder().encode(file.textContent ?? "").byteLength;
+    if (file.textContent !== undefined && !/\.(txt|md|csv|json)$/i.test(file.fileName)) {
+      throw new Error(`Textový prenos nie je povolený pre formát súboru ${file.fileName}.`);
+    }
+    if (bytes > MAX_UPLOAD_FILE_BYTES) throw new Error(`Súbor ${file.fileName} prekračuje limit 10 MB.`);
+    totalBytes += bytes;
+  }
+  if (totalBytes > MAX_UPLOAD_BATCH_BYTES) throw new Error("Dávka súborov prekračuje celkový limit 25 MB.");
+}
+
 export function classifyExtractResult(
   fileName: string,
   res: { text: string; charCount: number; usedOcr?: boolean },
@@ -465,6 +523,8 @@ export async function extractSingleBufferText(
   const lower = fileName.toLowerCase();
 
   if (textContent) {
+    validateUploadBatch([{ fileName, textContent }]);
+    if (textContent.length > MAX_EXTRACTED_CHARS) throw new Error(`Text v súbore ${fileName} prekračuje limit ${MAX_EXTRACTED_CHARS.toLocaleString("sk-SK")} znakov.`);
     return {
       success: true,
       text: textContent,
@@ -478,6 +538,8 @@ export async function extractSingleBufferText(
   }
 
   const buffer = Buffer.from(fileBase64, "base64");
+  validateUploadBatch([{ fileName, fileBase64 }]);
+  assertSupportedContent(fileName, buffer);
 
   // 1. Textové a dátové formáty
   if (
@@ -662,9 +724,7 @@ export const extractBulkFilesText = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const { files } = data;
-    if (!files || files.length === 0) {
-      throw new Error("Neboli poskytnuté žiadne súbory na extrakciu.");
-    }
+    validateUploadBatch(files ?? []);
 
     const results: {
       fileName: string;
@@ -699,12 +759,18 @@ export const extractBulkFilesText = createServerFn({ method: "POST" })
     for (let i = 0; i < results.length; i++) {
       const r = results[i];
       if (!r || !r.success) continue;
-      aggregatedParts.push(
+      const nextPart =
         `=================================================================\n` +
           `=== DOKUMENT [${i + 1}/${results.length}]: ${r.fileName} ===\n` +
           `=================================================================\n\n` +
-          r.text,
-      );
+          r.text;
+      if (aggregatedParts.join("\n\n\n").length + nextPart.length > MAX_EXTRACTED_CHARS) {
+        r.success = false;
+        r.text = "";
+        r.error = `Celkový extrahovaný text prekračuje limit ${MAX_EXTRACTED_CHARS.toLocaleString("sk-SK")} znakov.`;
+        continue;
+      }
+      aggregatedParts.push(nextPart);
     }
 
     const aggregatedText = aggregatedParts.join("\n\n\n");
@@ -949,7 +1015,27 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
         `Dokument je príliš krátky (minimálne ${MIN_EXTRACT_CHARS} znakov).`,
       );
     }
+    if (documentText.length > MAX_EXTRACTED_CHARS) {
+      throw new Error(`Dokument prekračuje limit ${MAX_EXTRACTED_CHARS.toLocaleString("sk-SK")} znakov.`);
+    }
     await assertCaseOwned(context.supabase, caseId);
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { getQuotas } = await import("@/lib/entitlements.server");
+    const quotas = await getQuotas(context.userId);
+    const uuidCaseId = z.string().uuid().safeParse(caseId).success
+      ? caseId
+      : (null as unknown as string);
+    const { data: reservationId, error: reserveError } = await supabaseAdmin.rpc("reserve_ai_call", {
+      _user: context.userId,
+      _case: uuidCaseId,
+      _task: "forensic_autopilot",
+      _model: "configured-provider",
+      _prompt_version: PROMPT_VERSION,
+      _input_revision: `chars:${documentText.length}`,
+      _daily_limit: quotas.aiPerDay,
+    });
+    if (reserveError || !reservationId) throw new Error("Denný limit AI analýz bol vyčerpaný alebo rezervácia zlyhala.");
 
     const {
       buildUserPrompt,
@@ -975,6 +1061,7 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
     });
 
     if (result.status !== "ok") {
+      await supabaseAdmin.from("ai_usage").update({ status: "failed", error_code: result.status, finished_at: new Date().toISOString() }).eq("id", reservationId);
       throw new Error(result.message || "Volanie AI zlyhalo.");
     }
 
@@ -1007,6 +1094,7 @@ export const runForensicAutopilot = createServerFn({ method: "POST" })
 
     parsed.caseId = caseId || "case-autopilot";
     parsed.generatedAt = new Date().toISOString();
+    await supabaseAdmin.from("ai_usage").update({ status: "succeeded", prompt_tokens: result.usage.prompt, completion_tokens: result.usage.completion, finished_at: new Date().toISOString() }).eq("id", reservationId);
 
     if (caseId && caseId !== "current" && caseId !== "demo") {
       try {

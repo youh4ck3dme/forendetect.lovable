@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Download, ShieldAlert } from "lucide-react";
+import { Download, History, ShieldAlert } from "lucide-react";
 
 import {
   AppHeader,
@@ -17,7 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BRAND } from "@/config/brand";
-import { exportMyData, deleteMyAccount } from "@/lib/account.functions";
+import { exportMyData, deleteMyAccount, getMyAuditLog } from "@/lib/account.functions";
+import { EmptyState } from "@/components/malte/EmptyState";
 import { supabase } from "@/integrations/supabase/client";
 import { clearClientState } from "@/lib/pwa";
 
@@ -43,10 +44,16 @@ export const Route = createFileRoute("/_authenticated/sukromie")({
 function PrivacyScreen() {
   const runExport = useServerFn(exportMyData);
   const runDelete = useServerFn(deleteMyAccount);
+  const loadAudit = useServerFn(getMyAuditLog);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [confirmEmail, setConfirmEmail] = useState("");
   const [busy, setBusy] = useState(false);
+  const [auditPage, setAuditPage] = useState(0);
+  const audit = useQuery({
+    queryKey: ["my-audit-log", auditPage],
+    queryFn: () => loadAudit({ data: { page: auditPage, pageSize: 20 } }),
+  });
 
   async function handleExport() {
     setBusy(true);
@@ -136,6 +143,38 @@ function PrivacyScreen() {
             <Download className="mr-1 h-4 w-4" aria-hidden /> Stiahnuť moje
             údaje (JSON)
           </Button>
+        </Card>
+
+        <SectionTitle>História zmien</SectionTitle>
+        <Card className="space-y-3">
+          <p className="text-[12px] text-muted-foreground">
+            Technická stopa uvádza čas, typ záznamu a zmenené polia. Pôvodné ani nové citlivé hodnoty sa tu nezobrazujú.
+          </p>
+          {audit.isLoading ? (
+            <p role="status" className="text-[12px] text-muted-foreground">Načítavam históriu…</p>
+          ) : audit.isError ? (
+            <p role="alert" className="text-[12px] text-destructive">Históriu sa nepodarilo načítať.</p>
+          ) : !audit.data || audit.data.rows.length === 0 ? (
+            <EmptyState icon={History} title="Zatiaľ bez zmien" detail="Po úprave prípadu sa tu zobrazí technická história." />
+          ) : (
+            <div className="divide-y divide-border">
+              {(audit.data?.rows ?? []).map((row) => (
+                <div key={row.id} className="py-3 text-[12px]">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <strong className="text-foreground">{row.table_name} · {row.operation}</strong>
+                    <time className="text-muted-foreground" dateTime={row.created_at}>{new Date(row.created_at).toLocaleString("sk-SK")}</time>
+                  </div>
+                  <p className="mt-1 text-muted-foreground">Zmenené polia: {row.changed_fields.length ? row.changed_fields.join(", ") : "nezaznamenané"}{row.revision ? ` · revízia ${row.revision}` : ""}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {(audit.data?.total ?? 0) > 20 ? (
+            <div className="flex justify-between gap-2">
+              <Button variant="outline" disabled={auditPage === 0 || audit.isFetching} onClick={() => setAuditPage((page) => Math.max(0, page - 1))}>Predchádzajúce</Button>
+              <Button variant="outline" disabled={(auditPage + 1) * 20 >= (audit.data?.total ?? 0) || audit.isFetching} onClick={() => setAuditPage((page) => page + 1)}>Ďalšie</Button>
+            </div>
+          ) : null}
         </Card>
 
         <SectionTitle>Vymazanie účtu</SectionTitle>
