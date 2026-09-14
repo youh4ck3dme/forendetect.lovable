@@ -35,7 +35,6 @@ function DesktopSidebar() {
         <span className="text-lg font-extrabold tracking-tight">Forendo</span>
         <span className="ml-auto flex items-center gap-1.5">
           <ThemeToggle />
-          <NotificationsBell />
         </span>
       </div>
 
@@ -239,11 +238,7 @@ export function AppHeader({
           <span className="lg:hidden">
             <ThemeToggle />
           </span>
-          {actions ?? (
-            <span className="lg:hidden">
-              <NotificationsBell />
-            </span>
-          )}
+          {actions ?? <NotificationsBell />}
         </div>
       </div>
       <div
