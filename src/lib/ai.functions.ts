@@ -802,11 +802,17 @@ export function extractCaseEntities(text: string) {
 
   // Ďalšie osoby v spise
   for (const knownPerson of [
+    // Rozpoznávanie osôb z nahraných dokumentov (vrátane bežných zápisov mien).
     "Denis Koval",
+    "Dimitri Cohen",
     "Peter Novák",
+    "Erik Babčan",
     "Marek Hruška",
+    "Marek Plch",
     "Igor Malina",
+    "Dmitrij Marjov",
     "Michal Ondruš",
+    "Michal Žember",
     "Kada Dakaj",
     "Filip Flat",
     "Norbert Slezák",
@@ -842,6 +848,7 @@ export function extractCaseEntities(text: string) {
   // Spoločnosti
   const companies = new Set<string>();
   if (/ARMIVEX/i.test(text)) companies.add("ARMIVEX s.r.o.");
+  if (/TATRAGEN/i.test(text)) companies.add("TATRAGEN s.r.o.");
   if (/PETRIS/i.test(text)) companies.add("PETRIS-SLOVAKIA s.r.o.");
   if (/Shadowarms/i.test(text)) companies.add("Shadowarms s.r.o.");
   if (/Bark\s*Factory/i.test(text))

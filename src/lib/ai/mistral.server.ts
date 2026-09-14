@@ -86,6 +86,19 @@ export async function callMistral(
           after: Number.isFinite(after) ? Math.min(after, 10) : 2,
         };
       }
+      if (response.status === 401 || response.status === 403) {
+        return {
+          status: "failed",
+          message: "Mistral odmietol kľúč (neplatný alebo bez oprávnenia).",
+        };
+      }
+      if (response.status === 402) {
+        return {
+          status: "failed",
+          message:
+            "Mistral má vyčerpaný kredit — doplňte kredit u poskytovateľa.",
+        };
+      }
       if (!response.ok) {
         return {
           status: "failed",
