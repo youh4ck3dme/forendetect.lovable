@@ -88,7 +88,7 @@ export function NotificationsBell({ className }: { className?: string }) {
               : "Upozornenia prípadu"
           }
           className={cn(
-            "group relative flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-surface/70 text-foreground/80 shadow-xs backdrop-blur-xs transition-all duration-200 hover:bg-surface-2 hover:text-foreground active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "group relative flex h-11 w-11 items-center justify-center rounded-full border border-border/70 bg-surface/70 text-foreground/80 shadow-xs backdrop-blur-xs transition-all duration-200 hover:bg-surface-2 hover:text-foreground active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             unreadCriticalCount > 0 && "border-risk-high/40 text-risk-high",
             className,
           )}

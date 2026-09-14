@@ -938,8 +938,9 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
           <div className="lg:col-span-7 space-y-2.5">
             <div className="relative overflow-hidden rounded-2xl border-2 border-black/80 bg-black shadow-2xl group transition-transform duration-300 hover:scale-[1.01]">
               {switching ? (
-                <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 backdrop-blur-[2px]">
-                  <Loader2 className="h-7 w-7 animate-spin text-primary" />
+                <div role="status" aria-live="polite" className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 backdrop-blur-[2px]">
+                  <Loader2 className="h-7 w-7 animate-spin text-primary" aria-hidden />
+                  <span className="sr-only">Načítava sa ďalšia časť</span>
                 </div>
               ) : null}
 
@@ -1788,7 +1789,8 @@ ${ep.dialogues.map((d) => `  • ${d.speaker} (${d.role}): "${d.text}"`).join("\
                   size="sm"
                   variant="ghost"
                   onClick={() => setShowPrintModal(false)}
-                  className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground cursor-pointer"
+                  aria-label="Zavrieť náhľad tlače"
+                  className="h-11 w-11 p-0 text-muted-foreground hover:text-foreground cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </Button>

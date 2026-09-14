@@ -57,15 +57,28 @@ function Landing() {
 
   useEffect(() => {
     let active = true;
+    const continueAfterLogin = () => {
+      let destination = "/prehlad";
+      try {
+        const stored = sessionStorage.getItem("forendo:after-login");
+        if (stored?.startsWith("/") && !stored.startsWith("//")) {
+          destination = stored;
+        }
+        sessionStorage.removeItem("forendo:after-login");
+      } catch {
+        /* sessionStorage nemusí byť dostupné */
+      }
+      window.location.assign(destination);
+    };
     if (isDevFreeEntryActive()) {
-      void navigate({ to: "/prehlad", replace: true });
+      continueAfterLogin();
       return;
     }
     supabase.auth
       .getUser()
       .then(({ data }) => {
         if (!active) return;
-        if (data.user) void navigate({ to: "/prehlad", replace: true });
+        if (data.user) continueAfterLogin();
         else setChecking(false);
       })
       .catch(() => active && setChecking(false));
@@ -95,7 +108,7 @@ function Landing() {
           </div>
         </header>
 
-        <section className="max-w-2xl space-y-3 sm:space-y-4 my-auto">
+        <section className="max-w-2xl space-y-3 sm:space-y-4 lg:my-auto">
           <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
             Forenzná analýza
           </p>
@@ -114,9 +127,9 @@ function Landing() {
               </Link>
             </Button>
           </div>
-          {checking ? (
-            <p className="text-caption">Overujeme prihlásenie…</p>
-          ) : null}
+          <p role="status" aria-live="polite" className="min-h-4 text-caption">
+            {checking ? "Overujeme prihlásenie…" : "\u00a0"}
+          </p>
         </section>
 
         <section className="grid gap-3 sm:grid-cols-3">

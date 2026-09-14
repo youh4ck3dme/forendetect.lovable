@@ -22,6 +22,13 @@ import { useCaseStore, passesFilter } from "@/hooks/useCaseStore";
 import { cn } from "@/lib/utils";
 import { formatEur, type Severity } from "@/forensic";
 import { CheckCircle2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/_authenticated/osoby")({
   head: () => ({
@@ -185,7 +192,7 @@ function People() {
               className={cn(
                 "h-8 rounded-full border px-3 text-xs font-medium transition-colors",
                 kind === option.id
-                  ? "gradient-brand border-transparent text-foreground"
+                  ? "gradient-brand border-transparent text-primary-foreground"
                   : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground",
               )}
             >
@@ -232,20 +239,24 @@ function People() {
           </div>
         </Card>
 
-        {/* Modal Náhľadu ICO Atlas Profilu */}
-        {previewProfile && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-            <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-card p-5 shadow-2xl space-y-4">
+        <Dialog
+          open={Boolean(previewProfile)}
+          onOpenChange={(open) => {
+            if (!open) setPreviewProfile(null);
+          }}
+        >
+          {previewProfile ? (
+            <DialogContent className="max-h-[90dvh] max-w-md overflow-y-auto rounded-xl bg-card p-5">
               <div className="flex items-center justify-between border-b border-border pb-3">
-                <div>
-                  <h4 className="text-base font-bold">
+                <DialogHeader className="text-left">
+                  <DialogTitle className="text-base font-bold">
                     {previewProfile.legalName}
-                  </h4>
-                  <p className="text-xs text-muted-foreground">
+                  </DialogTitle>
+                  <DialogDescription className="text-xs">
                     IČO: {previewProfile.ico} •{" "}
                     {previewProfile.legalForm || "s.r.o."}
-                  </p>
-                </div>
+                  </DialogDescription>
+                </DialogHeader>
                 <RiskChip level="low">Náhľad profilu</RiskChip>
               </div>
 
@@ -324,7 +335,7 @@ function People() {
                 <button
                   type="button"
                   onClick={() => confirmImport("new")}
-                  className="h-9 w-full rounded-md gradient-brand font-medium text-foreground text-xs"
+                  className="h-9 w-full rounded-md gradient-brand font-medium text-primary-foreground text-xs"
                 >
                   Vytvoriť novú firmu v prípade
                 </button>
@@ -343,9 +354,9 @@ function People() {
                   Zrušiť import
                 </button>
               </div>
-            </div>
-          </div>
-        )}
+            </DialogContent>
+          ) : null}
+        </Dialog>
 
         <SectionTitle>
           {visible.length} subjektov • zoradené podľa rizika

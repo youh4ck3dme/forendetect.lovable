@@ -470,9 +470,9 @@ function ImportCsv() {
       <AppHeader title="Import výpisu (CSV)" />
       <Screen>
         <Card className="space-y-2">
-          <h1 className="text-base font-semibold tracking-tight">
+          <h2 className="text-base font-semibold tracking-tight">
             Import do prípadu {activeCase.name}
-          </h1>
+          </h2>
           <p className="text-caption">
             Postup: súbor → mapovanie stĺpcov → kontrola → potvrdenie. Pred
             potvrdením sa nezapíše žiadna transakcia. Súbor sa spracúva vo vašom

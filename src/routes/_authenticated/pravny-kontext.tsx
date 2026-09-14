@@ -47,9 +47,9 @@ function LegalScreen() {
       />
       <Screen>
         <Card className="space-y-2">
-          <h1 className="text-base font-semibold tracking-tight">
+          <h2 className="text-base font-semibold tracking-tight">
             Právne posúdenie prípadu {activeCase.name}
-          </h1>
+          </h2>
           <p className="text-caption">
             {legal.assessments.length} posúdení naviazaných na konkrétne
             detekcie • {legal.availableLaws.length} dostupných predpisov

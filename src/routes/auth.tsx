@@ -42,20 +42,32 @@ function AuthScreen() {
   const [busy, setBusy] = useState(false);
   const isLocal = isLocalDevEnvironment();
 
+  function continueAfterLogin() {
+    let destination = "/prehlad";
+    try {
+      const stored = sessionStorage.getItem("forendo:after-login");
+      if (stored?.startsWith("/") && !stored.startsWith("//")) {
+        destination = stored;
+      }
+      sessionStorage.removeItem("forendo:after-login");
+    } catch {
+      /* sessionStorage nemusí byť dostupné */
+    }
+    window.location.assign(destination);
+  }
+
   useEffect(() => {
     let active = true;
     if (isDevFreeEntryActive()) {
-      void navigate({ to: "/prehlad", replace: true });
+      continueAfterLogin();
       return;
     }
     void supabase.auth.getUser().then((res: { data: { user: unknown } }) => {
-      if (active && res.data.user)
-        void navigate({ to: "/prehlad", replace: true });
+      if (active && res.data.user) continueAfterLogin();
     });
     const { data: sub } = supabase.auth.onAuthStateChange(
       (event: string, session: unknown) => {
-        if (event === "SIGNED_IN" && session)
-          void navigate({ to: "/prehlad", replace: true });
+        if (event === "SIGNED_IN" && session) continueAfterLogin();
       },
     );
     return () => {
@@ -70,7 +82,9 @@ function AuthScreen() {
       // Návrat vždy na verejnú adresu (nie na chránenú trasu) —
       // cieľ si zapamätáme a presmerujeme až po vytvorení relácie.
       try {
-        sessionStorage.setItem("forendo:after-login", "/prehlad");
+        if (!sessionStorage.getItem("forendo:after-login")) {
+          sessionStorage.setItem("forendo:after-login", "/prehlad");
+        }
       } catch {
         /* sessionStorage nemusí byť dostupné */
       }
@@ -106,7 +120,7 @@ function AuthScreen() {
         /* V lokálnom režime stačí lokálny dev bypass */
       }
       toast.success("⚡ Vývojársky prístup aktivovaný (lokálny režim)");
-      void navigate({ to: "/prehlad", replace: true });
+      continueAfterLogin();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Dev vstup zlyhal.");
     } finally {
@@ -143,7 +157,7 @@ function AuthScreen() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-background px-5 py-12">
+    <main className="relative flex min-h-dvh items-center justify-center overflow-x-hidden bg-background px-5 py-20 sm:py-16">
       <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
         <Button asChild variant="ghost" size="sm">
           <Link to="/">

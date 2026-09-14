@@ -120,9 +120,9 @@ function Cases() {
       />
       <Screen>
         <Card className="space-y-3">
-          <h1 className="text-base font-semibold tracking-tight">
+          <h2 className="text-base font-semibold tracking-tight">
             Nový prípad
-          </h1>
+          </h2>
           <form className="space-y-2" onSubmit={handleCreateCase}>
             <input
               aria-label="Názov prípadu"
@@ -174,7 +174,7 @@ function Cases() {
               <Card key={item.id} className="flex items-center gap-3">
                 <button
                   type="button"
-                  className="flex-1 text-left cursor-pointer"
+                  className="min-h-11 flex-1 text-left cursor-pointer"
                   onClick={() => setActiveCaseId(item.id)}
                 >
                   <p className="text-sm font-semibold">{item.name}</p>
@@ -193,7 +193,7 @@ function Cases() {
                   variant="ghost"
                   title="Duplikovať prípad"
                   aria-label={`Duplikovať prípad ${item.name}`}
-                  className="h-7 w-7 text-muted-foreground hover:text-foreground cursor-pointer"
+                  className="h-11 w-11 text-muted-foreground hover:text-foreground cursor-pointer"
                   onClick={async () => {
                     setBusy(true);
                     try {

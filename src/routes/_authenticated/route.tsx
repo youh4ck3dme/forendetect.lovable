@@ -18,6 +18,14 @@ export const Route = createFileRoute("/_authenticated")({
           user: DEV_MOCK_USER as unknown as NonNullable<typeof data.user>,
         };
       }
+      try {
+        const destination = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+        if (destination.startsWith("/") && !destination.startsWith("//")) {
+          window.sessionStorage.setItem("forendo:after-login", destination);
+        }
+      } catch {
+        /* Storage may be unavailable in privacy-restricted browsers. */
+      }
       throw redirect({ to: SIGN_IN_ROUTE });
     }
     return { user: data.user };

@@ -171,8 +171,8 @@ export function EntityForm({
               onClick={() => setKind(value)}
               className={
                 kind === value
-                  ? "h-9 flex-1 rounded-xl border border-transparent gradient-brand text-xs font-medium"
-                  : "h-9 flex-1 rounded-xl border border-border bg-card text-xs font-medium text-muted-foreground"
+                  ? "min-h-11 flex-1 rounded-xl border border-transparent gradient-brand text-primary-foreground text-xs font-medium"
+                  : "min-h-11 flex-1 rounded-xl border border-border bg-card text-xs font-medium text-muted-foreground"
               }
             >
               {value === "person" ? "Osoba" : "Firma"}
@@ -343,8 +343,8 @@ export function TransactionForm({
               onClick={() => setMethod(value)}
               className={
                 method === value
-                  ? "h-9 flex-1 rounded-xl border border-transparent gradient-brand text-xs font-medium"
-                  : "h-9 flex-1 rounded-xl border border-border bg-card text-xs font-medium text-muted-foreground"
+                  ? "min-h-11 flex-1 rounded-xl border border-transparent gradient-brand text-primary-foreground text-xs font-medium"
+                  : "min-h-11 flex-1 rounded-xl border border-border bg-card text-xs font-medium text-muted-foreground"
               }
             >
               {value === "cash" ? "Hotovosť" : "Prevod"}

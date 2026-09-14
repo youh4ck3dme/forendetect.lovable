@@ -30,7 +30,7 @@ export function RiskFilter({
             onClick={() => toggleRisk(level)}
             aria-pressed={active}
             className={cn(
-              "inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors",
+              "inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors",
               active
                 ? activeStyles[level]
                 : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -47,7 +47,7 @@ export function RiskFilter({
         <button
           type="button"
           onClick={clearRisk}
-          className="inline-flex h-8 items-center gap-1 rounded-full px-2 text-xs text-muted-foreground hover:text-foreground"
+          className="inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-xs text-muted-foreground hover:text-foreground"
         >
           <X className="h-3.5 w-3.5" aria-hidden />
           Zrušiť

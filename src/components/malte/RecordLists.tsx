@@ -65,7 +65,7 @@ export function TransactionList({
                 type="button"
                 aria-label={`Upraviť transakciu z ${transaction.date}`}
                 onClick={() => setEditing(transaction.id)}
-                className="text-muted-foreground transition-colors hover:text-foreground"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 <Pencil className="h-4 w-4" aria-hidden />
               </button>
@@ -119,7 +119,7 @@ export function EntityList({
               type="button"
               aria-label={`Upraviť subjekt ${entity.name}`}
               onClick={() => setEditing(entity.id)}
-              className="text-muted-foreground transition-colors hover:text-foreground"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               <Pencil className="h-4 w-4" aria-hidden />
             </button>
