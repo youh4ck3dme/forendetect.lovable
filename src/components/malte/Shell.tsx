@@ -3,7 +3,7 @@ import { ChevronLeft, X } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import malteMark from "@/assets/malte-mark.png";
+import malteMark from "@/assets/forendo-mark.png";
 import {
   CommandPalette,
   CommandPaletteTrigger,
