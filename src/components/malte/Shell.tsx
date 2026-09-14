@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ChevronLeft, X } from "lucide-react";
 import type React from "react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import malteMark from "@/assets/malte-mark.png";
 import {
@@ -233,53 +233,164 @@ export function AppHeader({
   );
 }
 
+/** Vysúvací panel zospodu s nástrojmi — mobilná náhrada desktopového sidebaru. */
+function MobileMoreSheet({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const navigate = useNavigate();
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    closeRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 lg:hidden">
+      <button
+        type="button"
+        aria-label="Zavrieť panel nástrojov"
+        onClick={onClose}
+        className="absolute inset-0 bg-foreground/40 backdrop-blur-sm animate-[fade-in_0.2s_ease-out]"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Nástroje"
+        className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-[1.75rem] border-t border-border bg-card shadow-elevated animate-[sheet-up_0.25s_ease-out] max-h-[80vh] overflow-y-auto"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        <div className="mx-auto mt-2.5 h-1 w-10 rounded-full bg-muted-foreground/30" />
+        <div className="flex items-center justify-between px-5 pt-3 pb-2">
+          <h2 className="text-base font-bold tracking-tight">Nástroje</h2>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Zavrieť"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:scale-90 transition-all"
+          >
+            <X className="h-4.5 w-4.5" aria-hidden />
+          </button>
+        </div>
+        <ul className="grid grid-cols-3 gap-2 px-4 pb-6 pt-1">
+          {secondaryItems.map(({ to, label, icon: Icon }) => (
+            <li key={to}>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  navigate({ to });
+                }}
+                className="group flex w-full flex-col items-center gap-2 rounded-2xl border border-border/60 liquid-glass-card px-2 py-4 text-center transition-all hover:border-primary/40 hover:shadow-card active:scale-95"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                  <Icon
+                    className="h-5 w-5 transition-transform duration-200 group-active:scale-90"
+                    aria-hidden
+                  />
+                </span>
+                <span className="text-[11px] font-semibold leading-tight">
+                  {label}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 export function BottomNav() {
   const { analysis } = useActiveCase();
+  const [moreOpen, setMoreOpen] = useState(false);
   const criticalCount = analysis.alerts.filter(
     (a) => a.severity === "critical",
   ).length;
 
   return (
-    <nav className="sticky bottom-0 z-10 mt-auto border-t border-border surface-glass px-2 pt-2 pb-5 lg:hidden">
-      <ul className="flex items-stretch justify-between">
-        {navItems.map(({ to, label, icon: Icon }) => (
-          <li key={to} className="flex-1">
-            <Link
-              to={to}
-              className="group relative flex flex-col items-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
-              activeOptions={{ exact: to === "/" }}
-              activeProps={{
-                className:
-                  "!text-foreground font-semibold [&_[data-ind]]:opacity-100",
-              }}
-            >
-              <span className="relative">
-                <Icon
-                  className="h-5 w-5 transition-transform duration-200 group-active:scale-90"
-                  aria-hidden
-                />
-                {to === "/prehlad" && criticalCount > 0 ? (
-                  <span className="absolute -top-1 -right-2 rounded-full bg-risk-high px-1 text-[9px] font-bold text-risk-high-foreground tnum">
-                    {criticalCount}
+    <>
+      <nav
+        className="sticky bottom-0 z-10 mt-auto border-t border-border surface-glass px-2 pt-2 pb-5 lg:hidden"
+        style={{ paddingBottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
+      >
+        <ul className="flex items-stretch justify-between">
+          {navItems.map(({ to, label, icon: Icon }) =>
+            to === "/viac" ? (
+              <li key={to} className="flex-1">
+                <button
+                  type="button"
+                  onClick={() => setMoreOpen(true)}
+                  aria-haspopup="dialog"
+                  aria-expanded={moreOpen}
+                  className="group relative flex w-full flex-col items-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <span className="relative">
+                    <Icon
+                      className="h-5 w-5 transition-transform duration-200 group-active:scale-90"
+                      aria-hidden
+                    />
                   </span>
-                ) : null}
-              </span>
-              {label}
-              <span
-                data-ind
-                className="absolute -top-2 h-1 w-8 rounded-full bg-foreground opacity-0 transition-opacity duration-300"
-              />
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+                  {label}
+                </button>
+              </li>
+            ) : (
+              <li key={to} className="flex-1">
+                <Link
+                  to={to}
+                  className="group relative flex flex-col items-center gap-1 rounded-xl py-1 text-[10px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  activeOptions={{ exact: to === "/" }}
+                  activeProps={{
+                    className:
+                      "!text-foreground font-semibold [&_[data-ind]]:opacity-100",
+                  }}
+                >
+                  <span className="relative">
+                    <Icon
+                      className="h-5 w-5 transition-transform duration-200 group-active:scale-90"
+                      aria-hidden
+                    />
+                    {to === "/prehlad" && criticalCount > 0 ? (
+                      <span className="absolute -top-1 -right-2 rounded-full bg-risk-high px-1 text-[9px] font-bold text-risk-high-foreground tnum">
+                        {criticalCount}
+                      </span>
+                    ) : null}
+                  </span>
+                  {label}
+                  <span
+                    data-ind
+                    className="absolute -top-2 h-1 w-8 rounded-full bg-foreground opacity-0 transition-opacity duration-300"
+                  />
+                </Link>
+              </li>
+            ),
+          )}
+        </ul>
+      </nav>
+      <MobileMoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} />
+    </>
   );
 }
 
 export function Screen({ children }: { children: ReactNode }) {
   return (
-    <main className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-hidden px-4 py-4 sm:px-5 lg:px-8 lg:py-6">
+    <main className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-hidden px-4 py-4 pb-6 sm:px-5 lg:px-8 lg:py-6">
       {children}
     </main>
   );
