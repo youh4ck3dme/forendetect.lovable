@@ -451,7 +451,11 @@ export function BottomNav() {
 
 export function Screen({ children }: { children: ReactNode }) {
   return (
-    <main className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-hidden px-4 py-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] sm:px-5 lg:px-8 lg:py-6 lg:pb-6">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="stagger-children min-w-0 flex-1 space-y-4 overflow-x-hidden px-4 py-4 pb-[calc(6.5rem+env(safe-area-inset-bottom))] outline-none sm:px-5 lg:px-8 lg:py-6 lg:pb-6"
+    >
       {children}
     </main>
   );
