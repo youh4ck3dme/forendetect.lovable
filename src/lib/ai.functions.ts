@@ -461,10 +461,10 @@ export const runAiTask = createServerFn({ method: "POST" })
       ...base,
       status: "ok",
       model: result.model,
-      mode: result.mode,
+      mode: result.mode ?? mode,
       provider: "mistral",
-      fallback: result.fallback,
-      requestId: result.requestId,
+      fallback: result.fallback ?? false,
+      requestId: result.requestId ?? reservationId,
       usage: result.usage,
       output: {
         ...(output as AiRunResult["output"]),
