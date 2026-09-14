@@ -53,8 +53,8 @@ describe("Secrets boundary (kľúče nesmú ísť do klienta)", () => {
     const files = globSync("supabase/migrations/*.sql", { cwd: ROOT });
     const schema = files.map((rel) => readFileSync(path.join(ROOT, rel), "utf8")).join("\n");
     const aiUsage = schema.match(/create table(?: if not exists)? public\.ai_usage\s*\(([\s\S]*?)\);/i)?.[1] ?? "";
-    expect(aiUsage).toMatch(/request_id/i);
-    expect(aiUsage).toMatch(/fallback/i);
+    expect(schema).toMatch(/alter table public\.ai_usage[\s\S]*?add column if not exists request_id uuid/i);
+    expect(schema).toMatch(/alter table public\.ai_usage[\s\S]*?add column if not exists fallback boolean/i);
     expect(aiUsage).not.toMatch(/api_key|authorization|full_prompt|prompt_body|response_body|messages\s/i);
   });
 });

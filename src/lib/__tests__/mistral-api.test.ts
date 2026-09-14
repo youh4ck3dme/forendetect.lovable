@@ -45,6 +45,7 @@ describe("dual Mistral API", () => {
     const { callMistral } = await import("@/lib/ai/mistral.server");
     const result = await callMistral({ mode: "fast", messages: [{ role: "user", content: "json" }], fetchImpl, skipModelVerification: true });
     expect(result.status).toBe("failed");
+    if (result.status === "ok") throw new Error("Terminal HTTP status unexpectedly succeeded");
     expect(result.errorCode).toBe(`http_${status}`);
     expect(result.fallback).toBe(false);
     expect(result.message).not.toContain("denied");
