@@ -197,11 +197,11 @@ export function AppHeader({
         ) : null}
         {brand ? (
           <img
-            src={malteMark}
+            src={forendoPegasus.url}
             alt="Forendo"
             width={28}
             height={28}
-            className="h-7 w-7 lg:hidden"
+            className="h-7 w-7 object-contain lg:hidden"
           />
         ) : null}
         <h1
