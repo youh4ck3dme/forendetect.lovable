@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "author", content: "Forendo" },
         { name: "robots", content: "noindex, nofollow, noarchive" },
         { name: "googlebot", content: "noindex, nofollow" },
-        { name: "theme-color", content: "#f5f5f7" },
+        { name: "theme-color", content: "#0A4FD7" },
         {
           property: "og:title",
           content: "Forendo — forenzná analýza finančných tokov",
