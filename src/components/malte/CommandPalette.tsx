@@ -24,7 +24,7 @@ export function CommandPaletteTrigger() {
     <button
       type="button"
       onClick={openCommandPalette}
-      className="flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+      className="flex min-h-11 w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
     >
       <Search className="h-3.5 w-3.5" aria-hidden />
       Hľadať v prípade…

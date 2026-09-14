@@ -65,7 +65,7 @@ function DesktopSidebar() {
         <CommandPaletteTrigger />
       </div>
 
-      <nav className="mt-5 flex-1 space-y-1 overflow-y-auto">
+      <nav aria-label="Hlavná navigácia" className="mt-5 flex-1 space-y-1 overflow-y-auto">
         {navItems.map(({ to, label, icon: Icon }) => (
           <Link
             key={to}
@@ -143,12 +143,12 @@ export function StatusBar() {
   }, []);
 
   return (
-    <div className="flex items-center justify-between px-6 pt-3 pb-1 text-[11px] font-semibold text-foreground/90 tnum lg:hidden">
+    <div className="flex items-center justify-between px-6 pt-3 pb-1 text-[11px] font-semibold text-primary-foreground tnum lg:hidden">
       <span suppressHydrationWarning>{now || "\u00a0"}</span>
       <span className="flex items-center gap-1">
-        <span className="inline-block h-2 w-3 rounded-[2px] bg-foreground/70" />
-        <span className="inline-block h-2 w-2 rounded-full bg-foreground/70" />
-        <span className="inline-block h-2 w-5 rounded-[3px] border border-foreground/70" />
+        <span className="inline-block h-2 w-3 rounded-[2px] bg-primary-foreground/80" />
+        <span className="inline-block h-2 w-2 rounded-full bg-primary-foreground/80" />
+        <span className="inline-block h-2 w-5 rounded-[3px] border border-primary-foreground/80" />
       </span>
     </div>
   );
@@ -190,7 +190,7 @@ export function AppHeader({
             type="button"
             onClick={() => window.history.back()}
             aria-label="Späť"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white/90 hover:text-white hover:bg-white/15 active:scale-90 transition-all"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-primary-foreground/90 hover:text-primary-foreground hover:bg-primary-foreground/15 active:scale-90 transition-all"
           >
             <ChevronLeft className="h-5 w-5 opacity-90" aria-hidden />
           </button>
@@ -283,7 +283,7 @@ function MobileMoreSheet({
             type="button"
             onClick={onClose}
             aria-label="Zavrieť"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:scale-90 transition-all"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:scale-90 transition-all"
           >
             <X className="h-4.5 w-4.5" aria-hidden />
           </button>
@@ -327,6 +327,7 @@ export function BottomNav() {
   return (
     <>
       <nav
+        aria-label="Spodná navigácia"
         className="sticky bottom-0 z-10 mt-auto border-t border-border surface-glass px-2 pt-2 pb-5 lg:hidden"
         style={{ paddingBottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
       >

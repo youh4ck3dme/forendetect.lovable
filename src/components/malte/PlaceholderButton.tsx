@@ -8,7 +8,7 @@ const placeholderVariants = cva(
     variants: {
       variant: {
         primary:
-          "gradient-brand text-foreground shadow-card hover:brightness-110",
+          "gradient-brand text-primary-foreground shadow-card hover:brightness-110",
         soft: "bg-secondary text-secondary-foreground hover:bg-accent",
         outline: "border border-border bg-card text-foreground hover:bg-accent",
         ghost: "text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -42,7 +42,7 @@ export function PlaceholderButton({
   return (
     <span
       role="button"
-      tabIndex={0}
+      tabIndex={-1}
       aria-disabled="true"
       aria-label={label}
       title="Ukážkové rozhranie — bez funkcie"

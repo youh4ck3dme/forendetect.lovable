@@ -3,7 +3,7 @@ import { EmptyState } from "@/components/malte/EmptyState";
 import { useActiveCase } from "@/hooks/useActiveCase";
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Building2, MoreVertical, Search, User } from "lucide-react";
+import { Building2, ShieldAlert, User } from "lucide-react";
 import {
   AppHeader,
   BottomNav,
@@ -75,15 +75,7 @@ function Relations() {
 
   return (
     <PhoneFrame>
-      <AppHeader
-        title="Vzťahy"
-        actions={
-          <>
-            <Search className="h-5 w-5 opacity-90" aria-hidden />
-            <MoreVertical className="h-5 w-5 opacity-90" aria-hidden />
-          </>
-        }
-      />
+      <AppHeader title="Vzťahy" />
 
       <Screen>
         <div className="flex gap-2">
@@ -103,7 +95,7 @@ function Relations() {
               className={cn(
                 "h-8 rounded-full border px-4 text-xs font-medium transition-colors",
                 view === option
-                  ? "gradient-brand border-transparent text-foreground"
+                  ? "gradient-brand border-transparent text-primary-foreground"
                   : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground",
               )}
             >
@@ -146,13 +138,17 @@ function Relations() {
               <button
                 type="button"
                 key={item.entity.id}
+                aria-label={`${item.entity.name}, riziko ${item.score} zo 100${item.isShell ? ", možná schránková spoločnosť" : ""}`}
+                disabled={!visibleIds.has(item.entity.id)}
                 onClick={() => {
                   setSelectedId(item.entity.id);
                   setTarget({ kind: "entity", id: item.entity.id });
                 }}
                 className={cn(
                   "absolute -translate-x-1/2 -translate-y-1/2 text-center transition-opacity",
-                  visibleIds.has(item.entity.id) ? "opacity-100" : "opacity-25",
+                  visibleIds.has(item.entity.id)
+                    ? "opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    : "pointer-events-none opacity-25",
                 )}
                 style={{ left: `${item.entity.x}%`, top: `${item.entity.y}%` }}
               >
@@ -168,6 +164,9 @@ function Relations() {
                   ) : (
                     <Building2 className="h-4 w-4" aria-hidden />
                   )}
+                  {item.isShell ? (
+                    <ShieldAlert className="absolute h-3.5 w-3.5 translate-x-4 -translate-y-4" aria-hidden />
+                  ) : null}
                 </span>
                 <p className="mt-1 w-24 truncate text-[10px] font-semibold">
                   {item.entity.name}

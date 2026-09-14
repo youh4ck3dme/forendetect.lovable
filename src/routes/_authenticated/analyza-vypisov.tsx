@@ -370,7 +370,7 @@ function StatementAnalysis() {
                 <Button
                   type="button"
                   onClick={confirmDimitriImport}
-                  className="flex-1 gradient-brand text-foreground text-xs"
+                  className="flex-1 gradient-brand text-primary-foreground text-xs"
                 >
                   Uložiť report do prípadu
                 </Button>

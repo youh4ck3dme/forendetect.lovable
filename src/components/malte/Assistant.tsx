@@ -939,8 +939,8 @@ ${dossier.judgeReadyText.vedecke}`;
                     } ${isProcessing ? "opacity-60 pointer-events-none" : ""}`}
                   >
                     {isProcessing ? (
-                      <>
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                      <div role="status" aria-live="polite" className="contents">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" aria-hidden />
                         <div>
                           <p className="text-sm font-medium">
                             {stage === "extracting" &&
@@ -952,7 +952,7 @@ ${dossier.judgeReadyText.vedecke}`;
                             Spracovávam reťazec stôp a právne náležitosti
                           </p>
                         </div>
-                      </>
+                      </div>
                     ) : (
                       <>
                         <div className="rounded-xl bg-primary/10 p-3 text-primary">
