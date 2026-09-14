@@ -67,33 +67,23 @@ function AuthScreen() {
   async function handleGoogle() {
     setBusy(true);
     try {
-      const redirectTo = `${window.location.origin}/prehlad`;
-      const host = window.location.hostname;
-      const onLovablePreview =
-        host.endsWith(".lovable.app") ||
-        host.endsWith(".lovableproject.com") ||
-        host.endsWith(".lovableproject-dev.com");
-
-      // Na Lovable preview existuje broker /~oauth/initiate.
-      // Na Vercel/localhost ten path nie je — Google musí ísť cez Supabase OAuth.
-      if (onLovablePreview) {
-        const result = await lovable.auth.signInWithOAuth("google", {
-          redirect_uri: redirectTo,
-        });
-        if ("error" in result && result.error) {
-          throw result.error instanceof Error
-            ? result.error
-            : new Error(String(result.error));
-        }
-        if ("redirected" in result && result.redirected) return;
-        return;
+      // Návrat vždy na verejnú adresu (nie na chránenú trasu) —
+      // cieľ si zapamätáme a presmerujeme až po vytvorení relácie.
+      try {
+        sessionStorage.setItem("forendo:after-login", "/prehlad");
+      } catch {
+        /* sessionStorage nemusí byť dostupné */
       }
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo },
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
       });
-      if (error) throw error;
+      if (result.error) {
+        throw result.error instanceof Error
+          ? result.error
+          : new Error(String(result.error));
+      }
+      if (result.redirected) return;
+      // Relácia je nastavená — presmerovanie zabezpečí onAuthStateChange.
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Prihlásenie zlyhalo.",
@@ -101,6 +91,7 @@ function AuthScreen() {
       setBusy(false);
     }
   }
+
 
   async function handleDevEntry() {
     setBusy(true);
