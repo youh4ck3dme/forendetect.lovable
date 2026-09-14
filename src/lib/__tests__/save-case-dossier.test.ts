@@ -33,14 +33,13 @@ vi.mock("@/integrations/supabase/client.server", () => {
                     if (val === "missing-case") {
                       return Promise.resolve({ error: null, data: [] });
                     }
-                    if (!dbCases[val]) {
-                      dbCases[val] = {
-                        id: val,
-                        forensic_dossier: null,
-                        forensic_dossier_updated_at: null,
-                      };
-                    }
-                    Object.assign(dbCases[val], fields);
+                    const target = dbCases[val] ?? {
+                      id: val,
+                      forensic_dossier: null,
+                      forensic_dossier_updated_at: null,
+                    };
+                    Object.assign(target, fields);
+                    dbCases[val] = target;
                     return Promise.resolve({
                       error: null,
                       data: [{ id: val }],
