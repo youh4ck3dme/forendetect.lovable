@@ -154,11 +154,11 @@ function PrivacyScreen() {
             <p role="status" className="text-[12px] text-muted-foreground">Načítavam históriu…</p>
           ) : audit.isError ? (
             <p role="alert" className="text-[12px] text-destructive">Históriu sa nepodarilo načítať.</p>
-          ) : audit.data.rows.length === 0 ? (
+          ) : !audit.data || audit.data.rows.length === 0 ? (
             <EmptyState icon={History} title="Zatiaľ bez zmien" detail="Po úprave prípadu sa tu zobrazí technická história." />
           ) : (
             <div className="divide-y divide-border">
-              {audit.data.rows.map((row) => (
+              {(audit.data?.rows ?? []).map((row) => (
                 <div key={row.id} className="py-3 text-[12px]">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <strong className="text-foreground">{row.table_name} · {row.operation}</strong>
