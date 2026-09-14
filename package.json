@@ -14,6 +14,7 @@
     "test:unit": "vitest run",
     "test:security": "vitest run src/lib/__tests__/export-pdf.test.ts src/lib/__tests__/ledger.test.ts src/lib/__tests__/bulk-media-sandbox.test.ts src/lib/__tests__/webhook-security.test.ts",
     "test:e2e": "python3 scripts/qa/e2e-smoke.py",
+    "test:ai-errors": "vitest run src/lib/__tests__/mistral-api.test.ts src/lib/__tests__/ai-error-e2e.test.ts src/lib/__tests__/secrets-boundary.test.ts",
     "test:release": "bun run test:security && bun run test:unit && tsgo --noEmit && bun run build"
   },
   "dependencies": {

@@ -36,4 +36,25 @@ describe("Secrets boundary (kľúče nesmú ísť do klienta)", () => {
     }
     expect(leaks).toEqual([]);
   });
+
+  it("AI kľúče ani celé prompty sa nezapisujú do browser storage alebo konzoly", () => {
+    const files = globSync("src/**/*.{ts,tsx}", { cwd: ROOT });
+    const leaks: string[] = [];
+    for (const rel of files) {
+      const text = readFileSync(path.join(ROOT, rel), "utf8");
+      const storageLeak = /(localStorage|sessionStorage)\.setItem\([^\n]*(MISTRAL_API_KEY|XAI_API_KEY|authorization|messages|prompt)/i.test(text);
+      const consoleLeak = /console\.(log|debug|info|warn|error)\([^\n]*(MISTRAL_API_KEY|XAI_API_KEY|authorization|messages|serialized|SYSTEM_PROMPT)/i.test(text);
+      if (storageLeak || consoleLeak) leaks.push(rel);
+    }
+    expect(leaks).toEqual([]);
+  });
+
+  it("AI audit schema stores metadata, never prompts, responses, or keys", () => {
+    const files = globSync("supabase/migrations/*.sql", { cwd: ROOT });
+    const schema = files.map((rel) => readFileSync(path.join(ROOT, rel), "utf8")).join("\n");
+    const aiUsage = schema.match(/create table(?: if not exists)? public\.ai_usage\s*\(([\s\S]*?)\);/i)?.[1] ?? "";
+    expect(aiUsage).toMatch(/request_id/i);
+    expect(aiUsage).toMatch(/fallback/i);
+    expect(aiUsage).not.toMatch(/api_key|authorization|full_prompt|prompt_body|response_body|messages\s/i);
+  });
 });
