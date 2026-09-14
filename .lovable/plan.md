@@ -24,12 +24,26 @@ Doplniť iba vážne chýbajúce ochrany a overenia. Existujúci dizajn, analyti
 - Doplniť samostatné príkazy pre unit, security, E2E a coverage; vytvoriť release kontrolu, ktorá zlyhá pri neúspešnom kroku.
 - Zachovať aktuálne 160 testov a UI audit ako existujúcu regresnú vrstvu.
 
-## 4. Cielené odstránenie aktívneho databázového upozornenia
+## 4. Ochrana AI/OCR pred zneužitím
+- Vynútiť serverové limity na používateľa pre AI analýzu, OCR a dávkovú extrakciu; samotné prihlásenie nie je dostatočná ochrana pred nákladovým zneužitím.
+- Pri prekročení limitu nič neposielať externému modelu a zobraziť zrozumiteľný čas obnovenia kvóty.
+- Zaznamenávať len technické metadáta volania bez textu spisu alebo osobných údajov.
+
+## 5. Použiteľná auditná stopa prípadu
+- Sprístupniť vlastníkovi prípadu existujúcu históriu zmien: kto, kedy, aký typ záznamu a ktoré polia zmenil.
+- Nezobrazovať citlivé staré/nové hodnoty ani dáta cudzieho prípadu; pridať stránkovanie a prázdny stav.
+- Overiť, že používateľ auditný záznam nevytvorí, neupraví ani nevymaže priamo.
+
+## 6. Cielené odstránenie aktívneho databázového upozornenia
 - Overiť presnú funkciu označenú scanom a upraviť iba jej oprávnenie alebo spôsob volania.
 - Zachovať serverové overovanie rolí aj funkčnosť administrátorského stiahnutia zdrojov.
 - Zopakovať bezpečnostný scan a funkčné testy; nulový počet nálezov nebude prezentovaný ako úplná bezpečnosť.
 
-## 5. PWA a release konzistencia
+## 7. Bezpečnostné hlavičky
+- Pridať primeranú CSP, Referrer-Policy a Permissions-Policy na serverovej odpovedi bez narušenia prihlásenia, platieb, fontov a tlačových reportov.
+- Overiť hlavičky na verejných aj prihlásených obrazovkách a zachovať ochranu proti vloženiu aplikácie do cudzieho rámca.
+
+## 8. PWA a release konzistencia
 - Odstrániť konflikt medzi ručným `public/sw.js` a generovaným service workerom; ponechať jediný kontrolovaný zdroj registrácie.
 - Zjednotiť manifesty a overiť, že offline režim nikdy necachuje prípady, API, AI požiadavky ani podpísané odkazy.
 - Otestovať aktualizáciu, odhlásenie a vyčistenie lokálneho stavu v publikovanom režime bez automatického reloadu rozpracovaného formulára.
