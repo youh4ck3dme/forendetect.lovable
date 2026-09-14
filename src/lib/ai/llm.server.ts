@@ -3,17 +3,25 @@ import { callMistral, callMistralOcr, mistralConfigured, mistralModel, type Mist
 import { callXai, callXaiVisionOcr, xaiConfigured, xaiModel } from "./xai.server";
 
 export type LlmProvider = "mistral" | "xai";
-export type LlmResult = MistralResult | ({
+export type LlmResult = {
   status: "ok";
   content: string;
   usage: { prompt: number | null; completion: number | null };
   model: string;
-  provider: "xai";
+  provider?: LlmProvider;
+  mode?: MistralMode;
+  fallback?: boolean;
+  requestId?: string;
 } | {
   status: "not_configured" | "timeout" | "rate_limited" | "failed";
   message: string;
   retryAfterSeconds?: number;
-});
+  errorCode?: string;
+  model?: string;
+  mode?: MistralMode;
+  fallback?: boolean;
+  requestId?: string;
+};
 
 export function llmConfigured(): boolean { return mistralConfigured() || xaiConfigured(); }
 export function activeProvider(): LlmProvider | null { return xaiConfigured() ? "xai" : mistralConfigured() ? "mistral" : null; }
