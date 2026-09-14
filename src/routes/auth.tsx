@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2, Lock, Mail, Zap } from "lucide-react";
-import malteMark from "@/assets/malte-mark.png";
+import malteMark from "@/assets/forendo-mark.png";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
