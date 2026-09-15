@@ -119,6 +119,11 @@ function ImportCsv() {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
   const [replacementChars, setReplacementChars] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [aiState, setAiState] = useState<
+    "idle" | "running" | "suggested" | "error"
+  >("idle");
+  const [aiReason, setAiReason] = useState("");
   const [summary, setSummary] = useState<{
     inserted: number;
     stored: boolean;
