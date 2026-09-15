@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ComponentType, type ReactNode } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Copy, MessageSquare, Sparkles, Terminal, Users } from "lucide-react";
 import {
@@ -79,7 +79,7 @@ function CopyBlock({ text, mono = true }: { text: string; mono?: boolean }) {
   );
 }
 
-function Steps({ items }: { items: React.ReactNode[] }) {
+function Steps({ items }: { items: ReactNode[] }) {
   return (
     <ol className="space-y-2">
       {items.map((item, i) => (
@@ -104,10 +104,10 @@ function ConnectPage() {
 
   const sections: {
     id: string;
-    icon: React.ComponentType<{ className?: string }>;
+    icon: ComponentType<{ className?: string }>;
     title: string;
-    connect: React.ReactNode[];
-    refresh: React.ReactNode[];
+    connect: ReactNode[];
+    refresh: ReactNode[];
   }[] = [
     {
       id: "chatgpt",
