@@ -80,7 +80,7 @@ export function guessMapping(
 /** Odfiltruje neplatné, duplicitné a už rozpoznané indexy z návrhu AI. */
 export function mergeMappingSuggestion(
   current: ColumnMapping,
-  suggestion: Partial<Record<keyof ColumnMapping, number>>,
+  suggestion: Partial<Record<keyof ColumnMapping, number | undefined>>,
   columnCount: number,
 ): ColumnMapping {
   const merged: ColumnMapping = { ...current };
