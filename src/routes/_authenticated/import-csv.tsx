@@ -228,38 +228,18 @@ function ImportCsv() {
       setRows(parsed.rows);
       setReplacementChars(parsed.replacement);
       const body = parsed.rows.slice(hasHeader ? 1 : 0);
-      const guess = { ...EMPTY_MAPPING };
-      const header = parsed.rows[0] ?? [];
-      header.forEach((name, index) => {
-        const n = name.toLowerCase();
-        if (guess.date < 0 && /dat/.test(n)) guess.date = index;
-        else if (guess.amount < 0 && /(suma|amount|čiast|ciast|betrag)/.test(n))
-          guess.amount = index;
-        else if (guess.currency < 0 && /(mena|currency)/.test(n))
-          guess.currency = index;
-        else if (
-          guess.counterpartyFrom < 0 &&
-          /(odosiel|from|platiteľ|platitel)/.test(n)
-        )
-          guess.counterpartyFrom = index;
-        else if (
-          guess.counterpartyTo < 0 &&
-          /(prijem|príjem|to|benefic)/.test(n)
-        )
-          guess.counterpartyTo = index;
-        else if (
-          guess.description < 0 &&
-          /(popis|description|účel|ucel|sprava|správa)/.test(n)
-        )
-          guess.description = index;
-        else if (guess.method < 0 && /(sposob|spôsob|typ|method)/.test(n))
-          guess.method = index;
-      });
+      const headerRow = parsed.rows[0] ?? [];
+      const guess = guessMapping(headerRow, body.slice(0, 5));
       setMapping(guess);
       const amounts = body.slice(0, 50).map((r) => r[guess.amount] ?? "");
       const dates = body.slice(0, 50).map((r) => r[guess.date] ?? "");
       setDecimal(detectDecimalSeparator(amounts).value);
       setDateFormat(detectDateFormat(dates.filter(Boolean)).value);
+      const missing = REQUIRED_FIELDS.some((f) => guess[f] < 0);
+      setAiState(missing ? "running" : "idle");
+      setAiReason("");
+      if (missing) void askAi(headerRow, body.slice(0, 5), guess);
+      else setDetailsOpen(false);
     } catch (error) {
       toast.error(
         error instanceof Error
