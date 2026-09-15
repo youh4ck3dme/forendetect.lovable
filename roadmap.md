@@ -9,3 +9,6 @@
 - [x] Dvojmodelové Mistral napojenie s bezpečným serverovým routingom, retry a auditom
 - [x] E2E scenáre AI chýb 401/403/429/5xx, Retry-After, fallback a ochrana citlivých dát
 - [x] Pripraviť implementačný prompt na zjednodušenie navigácie a kategórií menu
+
+- [x] Stránka /connect s návodom na pripojenie AI asistentov (MCP URL, ChatGPT/Claude/Claude Code, refresh)
+

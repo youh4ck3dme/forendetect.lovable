@@ -19,6 +19,7 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as AuthenticatedAgentRouteImport } from './routes/_authenticated/agent'
 import { Route as AuthenticatedAnalyzaVypisovRouteImport } from './routes/_authenticated/analyza-vypisov'
 import { Route as AuthenticatedAsistentRouteImport } from './routes/_authenticated/asistent'
+import { Route as AuthenticatedConnectRouteImport } from './routes/_authenticated/connect'
 import { Route as AuthenticatedImportCsvRouteImport } from './routes/_authenticated/import-csv'
 import { Route as AuthenticatedMcpInfoRouteImport } from './routes/_authenticated/mcp-info'
 import { Route as AuthenticatedOsobyRouteImport } from './routes/_authenticated/osoby'
@@ -86,6 +87,11 @@ const AuthenticatedAnalyzaVypisovRoute =
 const AuthenticatedAsistentRoute = AuthenticatedAsistentRouteImport.update({
   id: '/asistent',
   path: '/asistent',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConnectRoute = AuthenticatedConnectRouteImport.update({
+  id: '/connect',
+  path: '/connect',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedImportCsvRoute = AuthenticatedImportCsvRouteImport.update({
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/agent': typeof AuthenticatedAgentRoute
   '/analyza-vypisov': typeof AuthenticatedAnalyzaVypisovRoute
   '/asistent': typeof AuthenticatedAsistentRoute
+  '/connect': typeof AuthenticatedConnectRoute
   '/import-csv': typeof AuthenticatedImportCsvRoute
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/osoby': typeof AuthenticatedOsobyRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByTo {
   '/agent': typeof AuthenticatedAgentRoute
   '/analyza-vypisov': typeof AuthenticatedAnalyzaVypisovRoute
   '/asistent': typeof AuthenticatedAsistentRoute
+  '/connect': typeof AuthenticatedConnectRoute
   '/import-csv': typeof AuthenticatedImportCsvRoute
   '/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/osoby': typeof AuthenticatedOsobyRoute
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/_authenticated/agent': typeof AuthenticatedAgentRoute
   '/_authenticated/analyza-vypisov': typeof AuthenticatedAnalyzaVypisovRoute
   '/_authenticated/asistent': typeof AuthenticatedAsistentRoute
+  '/_authenticated/connect': typeof AuthenticatedConnectRoute
   '/_authenticated/import-csv': typeof AuthenticatedImportCsvRoute
   '/_authenticated/mcp-info': typeof AuthenticatedMcpInfoRoute
   '/_authenticated/osoby': typeof AuthenticatedOsobyRoute
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/agent'
     | '/analyza-vypisov'
     | '/asistent'
+    | '/connect'
     | '/import-csv'
     | '/mcp-info'
     | '/osoby'
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/agent'
     | '/analyza-vypisov'
     | '/asistent'
+    | '/connect'
     | '/import-csv'
     | '/mcp-info'
     | '/osoby'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/_authenticated/agent'
     | '/_authenticated/analyza-vypisov'
     | '/_authenticated/asistent'
+    | '/_authenticated/connect'
     | '/_authenticated/import-csv'
     | '/_authenticated/mcp-info'
     | '/_authenticated/osoby'
@@ -423,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/asistent'
       fullPath: '/asistent'
       preLoaderRoute: typeof AuthenticatedAsistentRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/connect': {
+      id: '/_authenticated/connect'
+      path: '/connect'
+      fullPath: '/connect'
+      preLoaderRoute: typeof AuthenticatedConnectRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/import-csv': {
@@ -544,6 +563,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAgentRoute: typeof AuthenticatedAgentRoute
   AuthenticatedAnalyzaVypisovRoute: typeof AuthenticatedAnalyzaVypisovRoute
   AuthenticatedAsistentRoute: typeof AuthenticatedAsistentRoute
+  AuthenticatedConnectRoute: typeof AuthenticatedConnectRoute
   AuthenticatedImportCsvRoute: typeof AuthenticatedImportCsvRoute
   AuthenticatedMcpInfoRoute: typeof AuthenticatedMcpInfoRoute
   AuthenticatedOsobyRoute: typeof AuthenticatedOsobyRoute
@@ -563,6 +583,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAgentRoute: AuthenticatedAgentRoute,
   AuthenticatedAnalyzaVypisovRoute: AuthenticatedAnalyzaVypisovRoute,
   AuthenticatedAsistentRoute: AuthenticatedAsistentRoute,
+  AuthenticatedConnectRoute: AuthenticatedConnectRoute,
   AuthenticatedImportCsvRoute: AuthenticatedImportCsvRoute,
   AuthenticatedMcpInfoRoute: AuthenticatedMcpInfoRoute,
   AuthenticatedOsobyRoute: AuthenticatedOsobyRoute,
