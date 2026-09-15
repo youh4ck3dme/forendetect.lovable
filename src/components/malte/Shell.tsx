@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, X } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import forendoPegasus from "@/assets/forendo-pegasus.png.asset.json";
 import {
@@ -10,12 +10,77 @@ import {
 } from "@/components/malte/CommandPalette";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { NotificationsBell } from "@/components/malte/NotificationsBell";
-import { navItems, secondaryItems } from "@/components/malte/nav";
+import {
+  navGroup,
+  navItems,
+  type NavGroup,
+  type NavItem,
+} from "@/components/malte/nav";
 import { severityLabel } from "@/forensic";
 import { useActiveCase } from "@/hooks/useActiveCase";
 
+const linkClass =
+  "flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+const activeLinkProps = {
+  className: "bg-accent text-accent-foreground font-semibold",
+  "aria-current": "page" as const,
+};
+
+/** Rozbaliteľná skupina v sidebari. Aktívna skupina sa otvorí automaticky. */
+function SidebarGroup({
+  group,
+  pathname,
+  exclude = [],
+}: {
+  group: NavGroup;
+  pathname: string;
+  exclude?: string[];
+}) {
+  const items = group.items.filter((i) => !exclude.includes(i.to));
+  const hasActive = items.some((i) => pathname.startsWith(i.to));
+  const [open, setOpen] = useState(hasActive);
+  const panelId = useId();
+
+  useEffect(() => {
+    if (hasActive) setOpen(true);
+  }, [hasActive]);
+
+  return (
+    <div className="pt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-label transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        {group.label}
+        <ChevronDown
+          className={cn(
+            "ml-auto h-3.5 w-3.5 transition-transform duration-200 motion-reduce:transition-none",
+            open ? "rotate-0" : "-rotate-90",
+          )}
+          aria-hidden
+        />
+      </button>
+      <ul id={panelId} hidden={!open} className="space-y-1 pt-1">
+        {items.map(({ to, label, icon: Icon }) => (
+          <li key={to}>
+            <Link to={to} activeProps={activeLinkProps} className={linkClass}>
+              <Icon className="h-4 w-4" aria-hidden />
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function DesktopSidebar() {
   const { activeCase, analysis } = useActiveCase();
+  const location = useLocation();
   const shellAnalysis = analysis;
   const criticalCount = analysis.alerts.filter(
     (a) => a.severity === "critical",
@@ -64,49 +129,52 @@ function DesktopSidebar() {
         <CommandPaletteTrigger />
       </div>
 
-      <nav aria-label="Hlavná navigácia" className="mt-5 flex-1 space-y-1 overflow-y-auto">
-        {navItems.map(({ to, label, icon: Icon }) => (
-          <Link
-            key={to}
-            to={to}
-            activeOptions={{ exact: to === "/" }}
-            activeProps={{
-              className: "bg-accent text-accent-foreground font-semibold",
-            }}
-            className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
-          >
-            <Icon className="h-4 w-4" aria-hidden />
-            {label}
-            {to === "/prehlad" && criticalCount > 0 ? (
-              <span className="ml-auto rounded-full bg-risk-high px-1.5 text-[10px] font-bold text-risk-high-foreground tnum">
-                {criticalCount}
-              </span>
-            ) : null}
-          </Link>
-        ))}
+      <nav
+        aria-label="Hlavná navigácia"
+        className="mt-4 flex-1 space-y-1 overflow-y-auto"
+      >
+        <Link
+          to="/prehlad"
+          activeProps={activeLinkProps}
+          className={linkClass}
+        >
+          <LayoutGridIcon />
+          Prehľad
+          {criticalCount > 0 ? (
+            <span className="ml-auto rounded-full bg-risk-high px-1.5 text-[10px] font-bold text-risk-high-foreground tnum">
+              {criticalCount}
+            </span>
+          ) : null}
+        </Link>
 
-        <p className="px-3 pt-5 pb-1 text-label">Nástroje</p>
-        {secondaryItems.map(({ to, label, icon: Icon }) => (
-          <Link
-            key={to}
-            to={to}
-            activeProps={{
-              className: "bg-accent text-accent-foreground font-semibold",
-            }}
-            className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
-          >
-            <Icon className="h-4 w-4" aria-hidden />
-            {label}
-          </Link>
-        ))}
+        <SidebarGroup
+          group={navGroup("pripad")}
+          pathname={location.pathname}
+          exclude={["/prehlad"]}
+        />
+        <SidebarGroup group={navGroup("vysetrovanie")} pathname={location.pathname} />
+        <SidebarGroup group={navGroup("asistencia")} pathname={location.pathname} />
       </nav>
 
-      <p className="px-3 pt-4 text-[10px] text-muted-foreground">
-        Forendo v1.0 • vaše prípady sú súkromné
-      </p>
+      <div className="border-t border-border pt-2">
+        <SidebarGroup
+          group={navGroup("system")}
+          pathname={location.pathname}
+          exclude={["/viac"]}
+        />
+        <p className="px-3 pt-3 text-[10px] text-muted-foreground">
+          Forendo v1.0 • vaše prípady sú súkromné
+        </p>
+      </div>
     </aside>
   );
 }
+
+function LayoutGridIcon() {
+  const Icon = navItems[0]!.icon;
+  return <Icon className="h-4 w-4" aria-hidden />;
+}
+
 
 /** Responzívny shell: telefónny rám na mobile, pracovná plocha na desktope. */
 export function PhoneFrame({ children }: { children: ReactNode }) {
@@ -296,48 +364,103 @@ function MobileMoreSheet({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Nástroje"
-        className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-[1.75rem] border-t border-border bg-card shadow-elevated animate-[sheet-up_0.25s_ease-out] max-h-[80vh] overflow-y-auto"
+        aria-label="Rozšírená navigácia"
+        onKeyDown={(event) => {
+          if (event.key !== "Tab") return;
+          const focusables = Array.from(
+            event.currentTarget.querySelectorAll<HTMLElement>(
+              "button, [href], input, [tabindex]:not([tabindex='-1'])",
+            ),
+          ).filter((el) => !el.hasAttribute("disabled"));
+          if (focusables.length === 0) return;
+          const first = focusables[0]!;
+          const last = focusables[focusables.length - 1]!;
+          const active = document.activeElement as HTMLElement | null;
+          if (event.shiftKey && active === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && active === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }}
+        className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-[1.75rem] border-t border-border bg-card shadow-elevated animate-[sheet-up_0.25s_ease-out] motion-reduce:animate-none max-h-[85vh] overflow-y-auto"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="mx-auto mt-2.5 h-1 w-10 rounded-full bg-muted-foreground/30" />
         <div className="flex items-center justify-between px-5 pt-3 pb-2">
-          <h2 className="text-base font-bold tracking-tight">Nástroje</h2>
+          <h2 className="text-base font-bold tracking-tight">Navigácia</h2>
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
             aria-label="Zavrieť"
-            className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:scale-90 transition-all"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:scale-90 transition-all motion-reduce:transition-none"
           >
             <X className="h-4.5 w-4.5" aria-hidden />
           </button>
         </div>
-        <ul className="grid grid-cols-3 gap-2 px-4 pb-6 pt-1">
-          {secondaryItems.map(({ to, label, icon: Icon }) => (
-            <li key={to}>
+
+        <div className="px-4 pb-2">
+          <p className="px-1 pb-1.5 text-label">Rýchle akcie</p>
+          <div className="grid grid-cols-3 gap-2">
+            {(
+              [
+                { to: "/pripady", label: "Zmeniť prípad" },
+                { to: "/import-csv", label: "Importovať údaje" },
+                { to: "/asistent", label: "AI asistent" },
+              ] as const
+            ).map((action) => (
               <button
+                key={action.to}
                 type="button"
                 onClick={() => {
                   onClose();
-                  navigate({ to });
+                  void navigate({ to: action.to });
                 }}
-                className="group flex w-full flex-col items-center gap-2 rounded-2xl border border-border/60 liquid-glass-card px-2 py-4 text-center transition-all hover:border-primary/40 hover:shadow-card active:scale-95"
+                className="min-h-11 rounded-xl border border-border/70 bg-accent/40 px-2 py-2.5 text-[11px] font-semibold leading-tight transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-accent-foreground">
-                  <Icon
-                    className="h-5 w-5 transition-transform duration-200 group-active:scale-90"
-                    aria-hidden
-                  />
-                </span>
-                <span className="text-[11px] font-semibold leading-tight">
-                  {label}
-                </span>
+                {action.label}
               </button>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        </div>
+
+        {(["vysetrovanie", "asistencia", "system"] as const).map((groupId) => {
+          const group = navGroup(groupId);
+          const items = group.items.filter((i: NavItem) => i.to !== "/viac");
+          return (
+            <section key={group.id} className="px-4 pt-3 last:pb-6">
+              <h3 className="px-1 pb-1 text-label">{group.label}</h3>
+              <ul className="divide-y divide-border rounded-xl border border-border/70">
+                {items.map(({ to, label, icon: Icon, hint }) => (
+                  <li key={to}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        void navigate({ to });
+                      }}
+                      className="flex min-h-11 w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                      <span className="min-w-0">
+                        <span className="block text-sm font-medium">{label}</span>
+                        {hint ? (
+                          <span className="block text-[11px] text-muted-foreground">
+                            {hint}
+                          </span>
+                        ) : null}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
       </div>
+
     </div>
   );
 }
