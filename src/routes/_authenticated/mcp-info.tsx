@@ -107,6 +107,19 @@ function McpInfo() {
             repozitári v súbore docs/mcp-api.md.
           </p>
         </Card>
+
+        <Link
+          to="/connect"
+          className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <div className="min-w-0">
+            <p className="text-sm font-semibold">Návod na pripojenie</p>
+            <p className="text-caption">
+              Krok za krokom pre ChatGPT, Claude a Claude Code.
+            </p>
+          </div>
+          <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+        </Link>
       </Screen>
       <BottomNav />
     </PhoneFrame>
