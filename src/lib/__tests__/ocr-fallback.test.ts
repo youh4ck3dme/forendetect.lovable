@@ -28,7 +28,10 @@ describe("OCR (výhradne Mistral)", () => {
     ).rejects.toThrow(/OCR nie je nakonfigurované/);
   });
 
-  it("v projekte už neexistuje xAI klient", async () => {
-    await expect(import("@/lib/ai/xai.server")).rejects.toBeTruthy();
+  it("hlási Mistral ako jediného poskytovateľa", async () => {
+    process.env["MISTRAL_API_KEY"] = "test-key";
+    const { providerDisplayName, activeProvider } = await import("@/lib/ai/llm.server");
+    expect(providerDisplayName()).toBe("Mistral");
+    expect(activeProvider()).toBe("mistral");
   });
 });
