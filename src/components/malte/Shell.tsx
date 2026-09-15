@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, X } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import forendoPegasus from "@/assets/forendo-pegasus.png.asset.json";
 import {
@@ -10,12 +10,78 @@ import {
 } from "@/components/malte/CommandPalette";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { NotificationsBell } from "@/components/malte/NotificationsBell";
-import { navItems, secondaryItems } from "@/components/malte/nav";
+import {
+  navGroup,
+  navGroups,
+  navItems,
+  type NavGroup,
+  type NavItem,
+} from "@/components/malte/nav";
 import { severityLabel } from "@/forensic";
 import { useActiveCase } from "@/hooks/useActiveCase";
 
+const linkClass =
+  "flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+
+const activeLinkProps = {
+  className: "bg-accent text-accent-foreground font-semibold",
+  "aria-current": "page" as const,
+};
+
+/** Rozbaliteľná skupina v sidebari. Aktívna skupina sa otvorí automaticky. */
+function SidebarGroup({
+  group,
+  pathname,
+  exclude = [],
+}: {
+  group: NavGroup;
+  pathname: string;
+  exclude?: string[];
+}) {
+  const items = group.items.filter((i) => !exclude.includes(i.to));
+  const hasActive = items.some((i) => pathname.startsWith(i.to));
+  const [open, setOpen] = useState(hasActive);
+  const panelId = useId();
+
+  useEffect(() => {
+    if (hasActive) setOpen(true);
+  }, [hasActive]);
+
+  return (
+    <div className="pt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-label transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        {group.label}
+        <ChevronDown
+          className={cn(
+            "ml-auto h-3.5 w-3.5 transition-transform duration-200 motion-reduce:transition-none",
+            open ? "rotate-0" : "-rotate-90",
+          )}
+          aria-hidden
+        />
+      </button>
+      <ul id={panelId} hidden={!open} className="space-y-1 pt-1">
+        {items.map(({ to, label, icon: Icon }) => (
+          <li key={to}>
+            <Link to={to} activeProps={activeLinkProps} className={linkClass}>
+              <Icon className="h-4 w-4" aria-hidden />
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function DesktopSidebar() {
   const { activeCase, analysis } = useActiveCase();
+  const location = useLocation();
   const shellAnalysis = analysis;
   const criticalCount = analysis.alerts.filter(
     (a) => a.severity === "critical",
@@ -64,49 +130,52 @@ function DesktopSidebar() {
         <CommandPaletteTrigger />
       </div>
 
-      <nav aria-label="Hlavná navigácia" className="mt-5 flex-1 space-y-1 overflow-y-auto">
-        {navItems.map(({ to, label, icon: Icon }) => (
-          <Link
-            key={to}
-            to={to}
-            activeOptions={{ exact: to === "/" }}
-            activeProps={{
-              className: "bg-accent text-accent-foreground font-semibold",
-            }}
-            className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
-          >
-            <Icon className="h-4 w-4" aria-hidden />
-            {label}
-            {to === "/prehlad" && criticalCount > 0 ? (
-              <span className="ml-auto rounded-full bg-risk-high px-1.5 text-[10px] font-bold text-risk-high-foreground tnum">
-                {criticalCount}
-              </span>
-            ) : null}
-          </Link>
-        ))}
+      <nav
+        aria-label="Hlavná navigácia"
+        className="mt-4 flex-1 space-y-1 overflow-y-auto"
+      >
+        <Link
+          to="/prehlad"
+          activeProps={activeLinkProps}
+          className={linkClass}
+        >
+          <LayoutGridIcon />
+          Prehľad
+          {criticalCount > 0 ? (
+            <span className="ml-auto rounded-full bg-risk-high px-1.5 text-[10px] font-bold text-risk-high-foreground tnum">
+              {criticalCount}
+            </span>
+          ) : null}
+        </Link>
 
-        <p className="px-3 pt-5 pb-1 text-label">Nástroje</p>
-        {secondaryItems.map(({ to, label, icon: Icon }) => (
-          <Link
-            key={to}
-            to={to}
-            activeProps={{
-              className: "bg-accent text-accent-foreground font-semibold",
-            }}
-            className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent/60 hover:text-foreground"
-          >
-            <Icon className="h-4 w-4" aria-hidden />
-            {label}
-          </Link>
-        ))}
+        <SidebarGroup
+          group={navGroup("pripad")}
+          pathname={location.pathname}
+          exclude={["/prehlad"]}
+        />
+        <SidebarGroup group={navGroup("vysetrovanie")} pathname={location.pathname} />
+        <SidebarGroup group={navGroup("asistencia")} pathname={location.pathname} />
       </nav>
 
-      <p className="px-3 pt-4 text-[10px] text-muted-foreground">
-        Forendo v1.0 • vaše prípady sú súkromné
-      </p>
+      <div className="border-t border-border pt-2">
+        <SidebarGroup
+          group={navGroup("system")}
+          pathname={location.pathname}
+          exclude={["/viac"]}
+        />
+        <p className="px-3 pt-3 text-[10px] text-muted-foreground">
+          Forendo v1.0 • vaše prípady sú súkromné
+        </p>
+      </div>
     </aside>
   );
 }
+
+function LayoutGridIcon() {
+  const Icon = navItems[0]!.icon;
+  return <Icon className="h-4 w-4" aria-hidden />;
+}
+
 
 /** Responzívny shell: telefónny rám na mobile, pracovná plocha na desktope. */
 export function PhoneFrame({ children }: { children: ReactNode }) {
