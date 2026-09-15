@@ -9,7 +9,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { navItems } from "@/components/malte/nav";
+import { allNavItems } from "@/components/malte/nav";
 import { formatEur } from "@/forensic";
 import { useActiveCase } from "@/hooks/useActiveCase";
 
@@ -68,10 +68,7 @@ export function CommandPalette() {
         <CommandEmpty>Nič sa nenašlo.</CommandEmpty>
 
         <CommandGroup heading="Obrazovky">
-          {[
-            ...navItems,
-            { to: "/siet", label: "Sieť tokov", icon: Search },
-          ].map(({ to, label, icon: Icon }) => (
+          {allNavItems.map(({ to, label, icon: Icon }) => (
             <CommandItem
               key={to}
               value={`obrazovka ${label}`}

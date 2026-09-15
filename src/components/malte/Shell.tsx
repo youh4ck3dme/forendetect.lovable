@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { ChevronDown, ChevronLeft, X } from "lucide-react";
 import type React from "react";
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import forendoPegasus from "@/assets/forendo-pegasus.png.asset.json";
 import {
@@ -12,7 +12,6 @@ import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { NotificationsBell } from "@/components/malte/NotificationsBell";
 import {
   navGroup,
-  navGroups,
   navItems,
   type NavGroup,
   type NavItem,
