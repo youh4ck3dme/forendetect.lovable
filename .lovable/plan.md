@@ -1,22 +1,46 @@
-# Rozšírený prompt: kompletný UI/UX audit Forendo (~3000 slov)
+# Prompt: zjednodušenie navigácie Forendo
 
 ## Cieľ
-Vytvoriť jeden samostatne použiteľný slovenský prompt v rozsahu približne 3000 slov, ktorý zadá úplný audit a cielené opravy používateľského rozhrania celej aplikácie Forendo — bez zásahu do forenznej logiky, dát, platieb, AI routingu a autentifikácie.
+Vytvoriť podrobný slovenský implementačný prompt, ktorý zníži orientačnú a vizuálnu záťaž navigácie približne o 40 %, odstráni chaos medzi hlavnými obrazovkami, nástrojmi a nastaveniami a zachová všetky existujúce funkcie.
 
-## Štruktúra promptu a rozdelenie rozsahu
+## Potvrdený súčasný stav
+- Hlavná navigácia obsahuje päť položiek: Prehľad, Analýza, Osoby, Vzťahy a Viac.
+- Vedľajší zoznam obsahuje deväť rovnocenne prezentovaných položiek: Prípady, Import CSV, AI asistent, Sieť tokov, Zbrane, Právny kontext, Predplatné, Súkromie a podmienky a Agentné API.
+- Mobilný panel „Viac“ zobrazuje všetkých deväť nástrojov v jednej mriežke.
+- Stránka „Viac“ mieša vzhľad, register zbraní, Agentné API, export zdrojového kódu, priebeh analýzy, históriu detektorov, časovú os, nastavenia a odhlásenie.
 
-1. **Kontext a zákazy (~200 slov)** — čo je Forendo, čo sa nesmie meniť: deterministické detektory, importy, reporty, platby, AI napojenie, bezpečnostné politiky. Zákaz plošného redizajnu a zákaz vymýšľania obsahu.
-2. **Rozsah auditu (~300 slov)** — menovitý zoznam obrazoviek: úvod, prihlásenie, uvítacie kroky, prehľad, analýza výpisov, osoby, vzťahy, sieť tokov, zbrane, prípady, import CSV, AI asistent, právny kontext, predplatné, súkromie, agentné API, chybové a 404 stavy.
-3. **Dizajnové tokeny a konzistencia (~300 slov)** — jednotné farby, rozostupy, polomery, tiene, typografická škála, výšky ovládacích prvkov, zákaz natvrdo zapísaných farieb, kontrola duplicitných variantov tlačidiel a kariet.
-4. **Svetlý a tmavý režim (~250 slov)** — kontrast textu, aktívne, hover, disabled a vybrané stavy, čitateľnosť malých popisov, stav hlavičky a hodín, grafy a rizikové farby, minimálne WCAG AA.
-5. **Responzivita (~300 slov)** — mobil, tablet, desktop, nulové horizontálne pretekanie, bezpečné okraje, sticky spodná lišta, mobilný panel nástrojov, tabuľky a grafy na úzkych displejoch, jediný zvonček vpravo v hlavičke.
-6. **Prístupnosť (~350 slov)** — poradie fokusu, skip link, viditeľný focus ring, klávesová navigácia, ARIA role a názvy, ikonové tlačidlá, dialógy a panely, oznamovanie zmien, dotykové plochy minimálne 44 px, rozlíšenie stavov nielen farbou.
-7. **Stavy a spätná väzba (~300 slov)** — prázdne, načítavacie, chybové, offline a limitné stavy; zrozumiteľné texty chýb, potvrdenia deštruktívnych akcií, stabilita rozloženia bez skokov.
-8. **Obsah a texty (~250 slov)** — jednotná slovenská terminológia, žiadne zvyšky demo obsahu, jasné označenie syntetickej ukážky a AI výstupov ako hypotéz či vysvetlení, žiadne tvrdenia o dokázaní trestnej činnosti.
-9. **Mikroanimácie a výkon (~200 slov)** — jemné prechody, rešpektovanie zníženého pohybu, žiadne blikanie, plynulé skrolovanie, stabilné vykresľovanie zoznamov.
-10. **Postup práce (~250 slov)** — najprv úplný audit s číslovaným zoznamom nálezov a závažnosťou, potom opravy po skupinách, oprava celej triedy chyby naraz namiesto jedného výskytu.
-11. **Overenie (~200 slov)** — vizuálne testy reprezentatívnych trás v oboch režimoch na mobilnej a desktopovej šírke, kontrola konzoly, pretekania, fokusu a kontrastu, cielené testy, typová kontrola a produkčný build.
-12. **Povinný výstupný report (~100 slov)** — rozdelenie na opravené a overené, opravené ale neoverené, a blokované s dôvodom; konkrétne dôkazy namiesto všeobecných tvrdení.
+## Navrhovaná informačná architektúra
+Prompt rozdelí navigáciu podľa pracovného cieľa, nie podľa technických názvov:
 
-## Forma
-Prompt bude v slovenčine, číslovaný a členený nadpismi, formulovaný ako priame zadanie pre vývojového agenta, s akceptačnými kritériami a jasnými zákazmi. Dodá sa ako text v odpovedi aj ako súbor v projekte na opakované použitie.
+1. **Prípad** — Prehľad, Prípady, Import údajov.
+2. **Vyšetrovanie** — Analýza transakcií, Osoby a firmy, Vzťahy, Sieť tokov, Zbrane.
+3. **Asistencia** — AI asistent, Právny kontext, príprava správy.
+4. **Účet a systém** — Predplatné, Súkromie a podmienky, Agentné API, vzhľad, stiahnutie zdrojov a odhlásenie.
+
+Mobilná sticky lišta ostane vždy viditeľná a zachová päť známych cieľov: Prehľad, Analýza, Osoby, Vzťahy, Viac. Panel „Viac“ však už nebude plochá mriežka deviatich položiek; zobrazí najčastejšie pracovné akcie hore a zvyšok v troch jasne pomenovaných skupinách. Desktopový sidebar použije rovnaké názvy a zoskupenie ako mobil.
+
+## Obsah promptu
+- Auditovať duplicity, nejasné názvy, príliš veľa rovnocenných volieb a miešanie práce s nastaveniami.
+- Zachovať všetky existujúce adresy a funkcie; meniť iba informačnú architektúru, názvy a prezentáciu navigácie.
+- Doplniť označenie aktívnej sekcie, cestu späť a zrozumiteľné nadpisy každej skupiny.
+- Použiť postupné odhaľovanie: bežné úlohy viditeľné okamžite, pokročilé a administratívne položky až v sekcii Viac.
+- Zachovať sticky spodné menu, safe-area, focus management, klávesové šípky, Home/End a návrat fokusu po zatvorení panelu.
+- Odstrániť navigačné karty a ikony bez reálnej akcie; nezdvojovať rovnaký cieľ na jednej obrazovke.
+- Zaviesť krátke, jednotné slovenské názvy a maximálne jeden stručný vysvetľujúci riadok tam, kde je potrebný.
+- Zachovať dáta, detektory, AI, platby, import, export, autentifikáciu a bezpečnostné pravidlá bez zmien.
+
+## Merateľné akceptačné kritériá
+- Najčastejšie pracovné ciele sú dostupné najviac na dva kroky.
+- Na jednej úrovni nie je viac ako päť hlavných volieb; širšie skupiny majú najviac päť položiek.
+- Mobilný panel neobsahuje nečlenený zoznam deviatich položiek.
+- Desktop a mobil používajú rovnakú terminológiu a logiku skupín.
+- Aktívna sekcia je rozpoznateľná textom aj vizuálne, nie iba farbou.
+- Žiadne horizontálne pretekanie pri 393, 420, 768, 1024 a 1440 px.
+- Všetky ovládacie prvky majú minimálne 44 × 44 px, viditeľný fokus a zrozumiteľný prístupný názov.
+- Používateľ sa z Prehľadu dostane k importu, analýze, osobám, vzťahom, zbraniam, AI a nastaveniam bez slepej uličky.
+
+## Overenie
+Prompt vyžiada test všetkých navigačných ciest na mobile aj desktope, svetlý a tmavý režim, klávesnicu, čítačku obrazovky, sticky správanie pri skrolovaní, návrat fokusu, správne aktívne stavy, nulové duplicity a nulové chyby konzoly. Záverečný report porovná počet rozhodnutí a krokov pred a po úprave a oddelí overené výsledky od neoverených predpokladov.
+
+## Výstup
+Jeden samostatne použiteľný implementačný prompt v slovenčine, dostatočne presný na priamu realizáciu, bez plošného redizajnu aplikácie.
