@@ -7,17 +7,7 @@ import { getSourceDownloadUrl } from "@/lib/source-download.functions";
 import { LogOut } from "lucide-react";
 import { clearClientState } from "@/lib/pwa";
 
-import {
-  ChevronRight,
-  Crosshair,
-  Download,
-  FileText,
-  History,
-  Info,
-  Lock,
-  Plug,
-  Share2,
-} from "lucide-react";
+import { ChevronRight, Download, Plug } from "lucide-react";
 import {
   AppHeader,
   BottomNav,
