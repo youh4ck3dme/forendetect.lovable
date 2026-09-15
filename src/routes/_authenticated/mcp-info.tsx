@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Plug, Terminal } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Plug, Terminal } from "lucide-react";
 import {
   AppHeader,
   BottomNav,
