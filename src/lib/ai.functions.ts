@@ -698,7 +698,7 @@ export async function extractSingleBufferText(
     } catch (ocrErr: unknown) {
       throw new Error(
         (ocrErr instanceof Error ? ocrErr.message : null) ||
-          "PDF neobsahuje textovú vrstvu a OCR zlyhalo. Skontrolujte MISTRAL_API_KEY alebo XAI_API_KEY.",
+          "PDF neobsahuje textovú vrstvu a OCR zlyhalo. Skontrolujte serverový kľúč Mistral.",
       );
     }
   }
