@@ -77,6 +77,7 @@ export const navGroups: NavGroup[] = [
       { to: "/predplatne", label: "Predplatné", icon: CreditCard },
       { to: "/sukromie", label: "Súkromie a podmienky", icon: ShieldCheck },
       { to: "/mcp-info", label: "Agentné API", icon: Plug, hint: "Prepojenie s AI klientmi" },
+      { to: "/connect", label: "Pripojiť AI asistenta", icon: Plug, hint: "Návod krok za krokom" },
     ],
   },
 ];
