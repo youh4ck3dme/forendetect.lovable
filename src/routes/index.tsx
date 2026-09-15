@@ -27,6 +27,8 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: "https://forendo.lovable.app/__l5e/assets-v1/95595cd8-c4c1-421d-95a0-df438bc03bcf/forendo-share.jpg" },
+      { name: "twitter:image", content: "https://forendo.lovable.app/__l5e/assets-v1/95595cd8-c4c1-421d-95a0-df438bc03bcf/forendo-share.jpg" },
     ],
   }),
   component: Landing,
