@@ -14,6 +14,161 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_leads: {
+        Row: {
+          ai_explanation: string | null
+          ai_steps: Json
+          base_score: number
+          case_id: string
+          created_at: string
+          decided_at: string | null
+          decision: string
+          fingerprint: string
+          id: string
+          lead_type: string
+          note: string | null
+          reason: string
+          refs: Json
+          run_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_explanation?: string | null
+          ai_steps?: Json
+          base_score?: number
+          case_id: string
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          fingerprint: string
+          id?: string
+          lead_type: string
+          note?: string | null
+          reason?: string
+          refs?: Json
+          run_id?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_explanation?: string | null
+          ai_steps?: Json
+          base_score?: number
+          case_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decision?: string
+          fingerprint?: string
+          id?: string
+          lead_type?: string
+          note?: string | null
+          reason?: string
+          refs?: Json
+          run_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_leads_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_leads_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "agent_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_runs: {
+        Row: {
+          ai_status: string
+          case_id: string
+          created_at: string
+          error_detail: string | null
+          finished_at: string | null
+          id: string
+          leads_count: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_status?: string
+          case_id: string
+          created_at?: string
+          error_detail?: string | null
+          finished_at?: string | null
+          id?: string
+          leads_count?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_status?: string
+          case_id?: string
+          created_at?: string
+          error_detail?: string | null
+          finished_at?: string | null
+          id?: string
+          leads_count?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_runs_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_type_feedback: {
+        Row: {
+          created_at: string
+          dismiss_count: number
+          follow_count: number
+          lead_type: string
+          snooze_count: number
+          updated_at: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          dismiss_count?: number
+          follow_count?: number
+          lead_type: string
+          snooze_count?: number
+          updated_at?: string
+          user_id: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          dismiss_count?: number
+          follow_count?: number
+          lead_type?: string
+          snooze_count?: number
+          updated_at?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       ai_usage: {
         Row: {
           case_id: string | null
