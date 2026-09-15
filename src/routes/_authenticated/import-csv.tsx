@@ -734,6 +734,11 @@ function ImportCsv() {
                   </label>
                 ),
               )}
+            </Card>
+            </>
+            ) : null}
+
+            <Card className="space-y-2">
               <Button
                 className="w-full"
                 disabled={!mappingReady || busy}
