@@ -1262,7 +1262,7 @@ export type CsvMappingSuggestion = {
   status: "ok" | "not_configured" | "skipped" | "failed" | "limit_reached";
   message?: string;
   model?: string;
-  mapping?: Partial<Record<keyof import("@/lib/csv/mapping").ColumnMapping, number>>;
+  mapping?: Partial<Record<keyof import("@/lib/csv/mapping").ColumnMapping, number | undefined>>;
   reason?: string;
 };
 
