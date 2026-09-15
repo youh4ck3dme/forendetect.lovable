@@ -209,6 +209,42 @@
           "properties": {}
         },
         "outputSchema": null
+      },
+      {
+        "name": "agent_leads",
+        "title": "Investigative agent leads",
+        "description": "Deterministic investigative leads over the signed-in user's latest case: unclosed flows, missing links, isolated entities, time clusters, amount patterns, uncovered findings and data gaps. Read-only, no AI.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "leadType": {
+              "description": "Filter to one lead type.",
+              "type": "string",
+              "enum": [
+                "unclosed_flow",
+                "missing_link",
+                "isolated_entity",
+                "time_cluster",
+                "amount_pattern",
+                "uncovered_finding",
+                "data_gap"
+              ]
+            },
+            "limit": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
       }
     ]
   }
