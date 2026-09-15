@@ -44,6 +44,67 @@ export const REQUIRED_FIELDS: (keyof ColumnMapping)[] = [
   "counterpartyTo",
 ];
 
+/** Deterministické rozpoznanie stĺpcov podľa názvov v hlavičke. */
+const HEADER_PATTERNS: [keyof ColumnMapping, RegExp][] = [
+  ["date", /(dat[uá]|date|dňa|dna|booking)/i],
+  ["amount", /(suma|amount|čiast|ciast|betrag|value|objem)/i],
+  ["currency", /(mena|currency|ccy)/i],
+  ["counterpartyFrom", /(odosiel|from|platiteľ|platitel|sender|debtor|z účtu|z uctu)/i],
+  ["counterpartyTo", /(prijem|príjem|to\b|benefic|receiver|creditor|na účet|na ucet)/i],
+  ["description", /(popis|description|účel|ucel|sprava|správa|poznám|poznam|reference|detail)/i],
+  ["method", /(sposob|spôsob|typ|method|kanál|kanal|channel)/i],
+];
+
+/**
+ * Navrhne mapovanie stĺpcov len z hlavičky (a voliteľne zo vzorky riadkov).
+ * Nikdy nepriradí jeden stĺpec dvom poliam. -1 = nerozpoznané.
+ */
+export function guessMapping(
+  header: string[],
+  _sampleRows: string[][] = [],
+): ColumnMapping {
+  const guess: ColumnMapping = { ...EMPTY_MAPPING };
+  const used = new Set<number>();
+  for (const [field, pattern] of HEADER_PATTERNS) {
+    const index = header.findIndex(
+      (name, i) => !used.has(i) && pattern.test(name ?? ""),
+    );
+    if (index >= 0) {
+      guess[field] = index;
+      used.add(index);
+    }
+  }
+  return guess;
+}
+
+/** Odfiltruje neplatné, duplicitné a už rozpoznané indexy z návrhu AI. */
+export function mergeMappingSuggestion(
+  current: ColumnMapping,
+  suggestion: Partial<Record<keyof ColumnMapping, number>>,
+  columnCount: number,
+): ColumnMapping {
+  const merged: ColumnMapping = { ...current };
+  const used = new Set(
+    Object.values(current).filter((index): index is number => index >= 0),
+  );
+  for (const field of Object.keys(EMPTY_MAPPING) as (keyof ColumnMapping)[]) {
+    if (merged[field] >= 0) continue;
+    const proposed = suggestion[field];
+    if (
+      typeof proposed !== "number" ||
+      !Number.isInteger(proposed) ||
+      proposed < 0 ||
+      proposed >= columnCount ||
+      used.has(proposed)
+    ) {
+      continue;
+    }
+    merged[field] = proposed;
+    used.add(proposed);
+  }
+  return merged;
+}
+
 export type ParsedRow = {
   /** Číslo riadka v pôvodnom súbore (1 = hlavička). */
   sourceRow: number;
