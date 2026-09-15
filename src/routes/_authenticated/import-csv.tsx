@@ -252,6 +252,41 @@ function ImportCsv() {
     }
   }
 
+  /** AI iba dopĺňa polia, ktoré deterministické rozpoznanie nenašlo. */
+  async function askAi(
+    headerRow: string[],
+    sampleRows: string[][],
+    base: ColumnMapping,
+  ) {
+    try {
+      const response = await suggestCsvMapping({
+        data: {
+          caseId: activeCase.id,
+          header: headerRow.map((n, i) => n || `stĺpec ${i + 1}`),
+          sampleRows: sampleRows.slice(0, 5),
+        },
+      });
+      if (response.status !== "ok" || !response.mapping) {
+        setAiState("error");
+        setDetailsOpen(true);
+        return;
+      }
+      const merged = mergeMappingSuggestion(
+        base,
+        response.mapping,
+        headerRow.length,
+      );
+      setMapping(merged);
+      setAiReason(response.reason ?? "");
+      const stillMissing = REQUIRED_FIELDS.some((f) => merged[f] < 0);
+      setAiState(stillMissing ? "error" : "suggested");
+      setDetailsOpen(stillMissing);
+    } catch {
+      setAiState("error");
+      setDetailsOpen(true);
+    }
+  }
+
   const mappingReady =
     delimiter &&
     decimal &&
