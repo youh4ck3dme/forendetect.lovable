@@ -365,48 +365,103 @@ function MobileMoreSheet({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Nástroje"
-        className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-[1.75rem] border-t border-border bg-card shadow-elevated animate-[sheet-up_0.25s_ease-out] max-h-[80vh] overflow-y-auto"
+        aria-label="Rozšírená navigácia"
+        onKeyDown={(event) => {
+          if (event.key !== "Tab") return;
+          const focusables = Array.from(
+            event.currentTarget.querySelectorAll<HTMLElement>(
+              "button, [href], input, [tabindex]:not([tabindex='-1'])",
+            ),
+          ).filter((el) => !el.hasAttribute("disabled"));
+          if (focusables.length === 0) return;
+          const first = focusables[0]!;
+          const last = focusables[focusables.length - 1]!;
+          const active = document.activeElement as HTMLElement | null;
+          if (event.shiftKey && active === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && active === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }}
+        className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg rounded-t-[1.75rem] border-t border-border bg-card shadow-elevated animate-[sheet-up_0.25s_ease-out] motion-reduce:animate-none max-h-[85vh] overflow-y-auto"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="mx-auto mt-2.5 h-1 w-10 rounded-full bg-muted-foreground/30" />
         <div className="flex items-center justify-between px-5 pt-3 pb-2">
-          <h2 className="text-base font-bold tracking-tight">Nástroje</h2>
+          <h2 className="text-base font-bold tracking-tight">Navigácia</h2>
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
             aria-label="Zavrieť"
-            className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:scale-90 transition-all"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground active:scale-90 transition-all motion-reduce:transition-none"
           >
             <X className="h-4.5 w-4.5" aria-hidden />
           </button>
         </div>
-        <ul className="grid grid-cols-3 gap-2 px-4 pb-6 pt-1">
-          {secondaryItems.map(({ to, label, icon: Icon }) => (
-            <li key={to}>
+
+        <div className="px-4 pb-2">
+          <p className="px-1 pb-1.5 text-label">Rýchle akcie</p>
+          <div className="grid grid-cols-3 gap-2">
+            {(
+              [
+                { to: "/pripady", label: "Zmeniť prípad" },
+                { to: "/import-csv", label: "Importovať údaje" },
+                { to: "/asistent", label: "AI asistent" },
+              ] as const
+            ).map((action) => (
               <button
+                key={action.to}
                 type="button"
                 onClick={() => {
                   onClose();
-                  navigate({ to });
+                  void navigate({ to: action.to });
                 }}
-                className="group flex w-full flex-col items-center gap-2 rounded-2xl border border-border/60 liquid-glass-card px-2 py-4 text-center transition-all hover:border-primary/40 hover:shadow-card active:scale-95"
+                className="min-h-11 rounded-xl border border-border/70 bg-accent/40 px-2 py-2.5 text-[11px] font-semibold leading-tight transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-accent-foreground">
-                  <Icon
-                    className="h-5 w-5 transition-transform duration-200 group-active:scale-90"
-                    aria-hidden
-                  />
-                </span>
-                <span className="text-[11px] font-semibold leading-tight">
-                  {label}
-                </span>
+                {action.label}
               </button>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        </div>
+
+        {(["vysetrovanie", "asistencia", "system"] as const).map((groupId) => {
+          const group = navGroup(groupId);
+          const items = group.items.filter((i: NavItem) => i.to !== "/viac");
+          return (
+            <section key={group.id} className="px-4 pt-3 last:pb-6">
+              <h3 className="px-1 pb-1 text-label">{group.label}</h3>
+              <ul className="divide-y divide-border rounded-xl border border-border/70">
+                {items.map(({ to, label, icon: Icon, hint }) => (
+                  <li key={to}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        void navigate({ to });
+                      }}
+                      className="flex min-h-11 w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+                      <span className="min-w-0">
+                        <span className="block text-sm font-medium">{label}</span>
+                        {hint ? (
+                          <span className="block text-[11px] text-muted-foreground">
+                            {hint}
+                          </span>
+                        ) : null}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
       </div>
+
     </div>
   );
 }
