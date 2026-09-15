@@ -39,9 +39,12 @@ import {
   MAPPING_LABELS,
   REQUIRED_FIELDS,
   findSimilar,
+  guessMapping,
+  mergeMappingSuggestion,
   type ColumnMapping,
   type ValidationResult,
 } from "@/lib/csv/mapping";
+import { suggestCsvMapping } from "@/lib/ai.functions";
 import {
   IMPORT_MAX_BYTES,
   IMPORT_MAX_ROWS,
