@@ -32,7 +32,10 @@ export type MistralResult =
 const modelCache = new Map<string, { ids: Set<string>; expiresAt: number }>();
 
 function modeKey(mode: MistralMode): string | undefined {
-  return process.env[mode === "fast" ? "MISTRAL_API_KEY_FAST" : "MISTRAL_API_KEY_REASONING"];
+  return (
+    process.env[mode === "fast" ? "MISTRAL_API_KEY_FAST" : "MISTRAL_API_KEY_REASONING"] ||
+    process.env["MISTRAL_API_KEY"]
+  );
 }
 
 export function mistralModel(mode: MistralMode = "fast"): string {
