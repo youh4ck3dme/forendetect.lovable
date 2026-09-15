@@ -1245,3 +1245,156 @@ export const saveCaseDossier = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) =>
     handleSaveCaseDossier(data, context.supabase),
   );
+
+// ═════════════════════════════════════════════════════════════════
+// AI NÁVRH MAPOVANIA STĹPCOV CSV (rýchly režim, len návrh)
+// ═════════════════════════════════════════════════════════════════
+
+/** Pseudonymizácia vzorky: dlhé číselné reťazce a e-maily sa na model neposielajú. */
+export function maskCsvCell(value: string): string {
+  return value
+    .slice(0, 40)
+    .replace(/[\w.+-]+@[\w.-]+/g, "osoba@example")
+    .replace(/\d{5,}/g, (m) => "#".repeat(Math.min(m.length, 12)));
+}
+
+export type CsvMappingSuggestion = {
+  status: "ok" | "not_configured" | "skipped" | "failed" | "limit_reached";
+  message?: string;
+  model?: string;
+  mapping?: Partial<Record<keyof import("@/lib/csv/mapping").ColumnMapping, number | undefined>>;
+  reason?: string;
+};
+
+export const suggestCsvMapping = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((input: unknown) =>
+    z
+      .object({
+        caseId: z.string().uuid(),
+        header: z.array(z.string().max(120)).min(1).max(60),
+        sampleRows: z
+          .array(z.array(z.string().max(200)).max(60))
+          .max(5)
+          .default([]),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }): Promise<CsvMappingSuggestion> => {
+    const { callLlm, llmConfigured, preferredLlmModel } =
+      await import("@/lib/ai/llm.server");
+    if (!llmConfigured()) {
+      return {
+        status: "not_configured",
+        message: "AI nie je nakonfigurovaná (chýba serverový kľúč).",
+      };
+    }
+
+    const { data: caseRow } = await context.supabase
+      .from("cases")
+      .select("id")
+      .eq("id", data.caseId)
+      .maybeSingle();
+    if (!caseRow) {
+      return { status: "failed", message: "Prípad sa nenašiel alebo naň nemáte oprávnenie." };
+    }
+
+    const { supabaseAdmin } =
+      await import("@/integrations/supabase/client.server");
+    const { getQuotas } = await import("@/lib/entitlements.server");
+    const quotas = await getQuotas(context.userId);
+    const { data: reservationId, error: reserveError } =
+      await supabaseAdmin.rpc("reserve_ai_call", {
+        _user: context.userId,
+        _case: data.caseId,
+        _task: "csv_column_mapping",
+        _model: preferredLlmModel("fast"),
+        _prompt_version: PROMPT_VERSION,
+        _input_revision: data.header.join("|").slice(0, 200),
+        _daily_limit: quotas.aiPerDay,
+      });
+    if (reserveError) {
+      return { status: "limit_reached", message: "Denný limit AI volaní bol vyčerpaný." };
+    }
+
+    const sample = data.sampleRows
+      .slice(0, 5)
+      .map((row) => row.slice(0, data.header.length).map(maskCsvCell));
+    const payload = JSON.stringify({
+      columns: data.header.map((name, index) => ({ index, name: maskCsvCell(name) })),
+      sample,
+    });
+
+    const result = await callLlm({
+      mode: "fast",
+      requestId: reservationId,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT },
+        {
+          role: "user",
+          content:
+            'Priraď stĺpce bankového výpisu k poliam transakcie. Použi iba indexy stĺpcov z <data>. Ak pole v súbore nie je, vráť -1. Vráť JSON {"mapping": {"date": number, "amount": number, "currency": number, "description": number, "counterpartyFrom": number, "counterpartyTo": number, "method": number}, "reason": string}.' +
+            `\n\n<data>\n${payload}\n</data>`,
+        },
+      ],
+      maxTokens: 400,
+    });
+
+    const finish = async (status: string, errorCode?: string) => {
+      await supabaseAdmin
+        .from("ai_usage")
+        .update({
+          status,
+          error_code: errorCode ?? null,
+          prompt_tokens: result.status === "ok" ? result.usage.prompt : null,
+          completion_tokens: result.status === "ok" ? result.usage.completion : null,
+          model: result.model ?? preferredLlmModel("fast"),
+          mode: result.mode ?? "fast",
+          fallback: result.fallback ?? false,
+          request_id: result.requestId ?? reservationId,
+          finished_at: new Date().toISOString(),
+        })
+        .eq("id", reservationId);
+    };
+
+    if (result.status !== "ok") {
+      await finish("failed", result.status);
+      return { status: "failed", message: result.message };
+    }
+
+    const schema = z.object({
+      mapping: z
+        .object({
+          date: z.number().int().optional(),
+          amount: z.number().int().optional(),
+          currency: z.number().int().optional(),
+          description: z.number().int().optional(),
+          counterpartyFrom: z.number().int().optional(),
+          counterpartyTo: z.number().int().optional(),
+          method: z.number().int().optional(),
+        })
+        .default({}),
+      reason: z.string().max(400).default(""),
+    });
+
+    let parsedJson: unknown;
+    try {
+      parsedJson = JSON.parse(result.content);
+    } catch {
+      await finish("failed", "invalid_json");
+      return { status: "failed", message: "Odpoveď AI nebola platný JSON." };
+    }
+    const parsed = schema.safeParse(parsedJson);
+    if (!parsed.success) {
+      await finish("failed", "schema_mismatch");
+      return { status: "failed", message: "Odpoveď AI nezodpovedala očakávanej štruktúre." };
+    }
+
+    await finish("succeeded");
+    return {
+      status: "ok",
+      model: result.model,
+      mapping: parsed.data.mapping,
+      reason: parsed.data.reason,
+    };
+  });

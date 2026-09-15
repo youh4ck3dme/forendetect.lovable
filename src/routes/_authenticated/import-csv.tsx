@@ -3,9 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   AlertTriangle,
   CheckCircle2,
+  ChevronDown,
   FileUp,
   Loader2,
   ShieldAlert,
+  Sparkles,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -39,9 +41,12 @@ import {
   MAPPING_LABELS,
   REQUIRED_FIELDS,
   findSimilar,
+  guessMapping,
+  mergeMappingSuggestion,
   type ColumnMapping,
   type ValidationResult,
 } from "@/lib/csv/mapping";
+import { suggestCsvMapping } from "@/lib/ai.functions";
 import {
   IMPORT_MAX_BYTES,
   IMPORT_MAX_ROWS,
@@ -114,6 +119,11 @@ function ImportCsv() {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<number | null>(null);
   const [replacementChars, setReplacementChars] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [aiState, setAiState] = useState<
+    "idle" | "running" | "suggested" | "error"
+  >("idle");
+  const [aiReason, setAiReason] = useState("");
   const [summary, setSummary] = useState<{
     inserted: number;
     stored: boolean;
@@ -228,38 +238,18 @@ function ImportCsv() {
       setRows(parsed.rows);
       setReplacementChars(parsed.replacement);
       const body = parsed.rows.slice(hasHeader ? 1 : 0);
-      const guess = { ...EMPTY_MAPPING };
-      const header = parsed.rows[0] ?? [];
-      header.forEach((name, index) => {
-        const n = name.toLowerCase();
-        if (guess.date < 0 && /dat/.test(n)) guess.date = index;
-        else if (guess.amount < 0 && /(suma|amount|čiast|ciast|betrag)/.test(n))
-          guess.amount = index;
-        else if (guess.currency < 0 && /(mena|currency)/.test(n))
-          guess.currency = index;
-        else if (
-          guess.counterpartyFrom < 0 &&
-          /(odosiel|from|platiteľ|platitel)/.test(n)
-        )
-          guess.counterpartyFrom = index;
-        else if (
-          guess.counterpartyTo < 0 &&
-          /(prijem|príjem|to|benefic)/.test(n)
-        )
-          guess.counterpartyTo = index;
-        else if (
-          guess.description < 0 &&
-          /(popis|description|účel|ucel|sprava|správa)/.test(n)
-        )
-          guess.description = index;
-        else if (guess.method < 0 && /(sposob|spôsob|typ|method)/.test(n))
-          guess.method = index;
-      });
+      const headerRow = parsed.rows[0] ?? [];
+      const guess = guessMapping(headerRow, body.slice(0, 5));
       setMapping(guess);
       const amounts = body.slice(0, 50).map((r) => r[guess.amount] ?? "");
       const dates = body.slice(0, 50).map((r) => r[guess.date] ?? "");
       setDecimal(detectDecimalSeparator(amounts).value);
       setDateFormat(detectDateFormat(dates.filter(Boolean)).value);
+      const missing = REQUIRED_FIELDS.some((f) => guess[f] < 0);
+      setAiState(missing ? "running" : "idle");
+      setAiReason("");
+      if (missing) void askAi(headerRow, body.slice(0, 5), guess);
+      else setDetailsOpen(false);
     } catch (error) {
       toast.error(
         error instanceof Error
@@ -269,6 +259,41 @@ function ImportCsv() {
     } finally {
       setBusy(false);
       setProgress(null);
+    }
+  }
+
+  /** AI iba dopĺňa polia, ktoré deterministické rozpoznanie nenašlo. */
+  async function askAi(
+    headerRow: string[],
+    sampleRows: string[][],
+    base: ColumnMapping,
+  ) {
+    try {
+      const response = await suggestCsvMapping({
+        data: {
+          caseId: activeCase.id,
+          header: headerRow.map((n, i) => n || `stĺpec ${i + 1}`),
+          sampleRows: sampleRows.slice(0, 5),
+        },
+      });
+      if (response.status !== "ok" || !response.mapping) {
+        setAiState("error");
+        setDetailsOpen(true);
+        return;
+      }
+      const merged = mergeMappingSuggestion(
+        base,
+        response.mapping,
+        headerRow.length,
+      );
+      setMapping(merged);
+      setAiReason(response.reason ?? "");
+      const stillMissing = REQUIRED_FIELDS.some((f) => merged[f] < 0);
+      setAiState(stillMissing ? "error" : "suggested");
+      setDetailsOpen(stillMissing);
+    } catch {
+      setAiState("error");
+      setDetailsOpen(true);
     }
   }
 
@@ -507,6 +532,76 @@ function ImportCsv() {
 
         {step === "mapping" && file ? (
           <>
+            <SectionTitle>Rozpoznanie súboru</SectionTitle>
+            <Card className="space-y-3">
+              <p className="text-caption">
+                {file.name} • {(file.size / 1024).toFixed(1)} kB
+              </p>
+              <p className="flex items-start gap-2 text-sm" aria-live="polite">
+                {aiState === "running" ? (
+                  <>
+                    <Loader2
+                      className="mt-0.5 h-4 w-4 shrink-0 animate-spin"
+                      aria-hidden
+                    />
+                    AI dopĺňa chýbajúce stĺpce…
+                  </>
+                ) : aiState === "error" ? (
+                  <>
+                    <AlertTriangle
+                      className="mt-0.5 h-4 w-4 shrink-0 text-risk-medium"
+                      aria-hidden
+                    />
+                    Niektoré povinné stĺpce chýbajú — doplňte ich nižšie.
+                  </>
+                ) : aiState === "suggested" ? (
+                  <>
+                    <Sparkles
+                      className="mt-0.5 h-4 w-4 shrink-0 text-risk-low"
+                      aria-hidden
+                    />
+                    AI návrh mapovania — skontrolujte a potvrďte.
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2
+                      className="mt-0.5 h-4 w-4 shrink-0 text-risk-low"
+                      aria-hidden
+                    />
+                    Stĺpce boli rozpoznané automaticky.
+                  </>
+                )}
+              </p>
+              {aiReason ? <p className="text-caption">{aiReason}</p> : null}
+              <ul className="space-y-1">
+                {REQUIRED_FIELDS.map((field) => (
+                  <li key={field} className="text-caption">
+                    {MAPPING_LABELS[field]}:{" "}
+                    <strong>
+                      {mapping[field] >= 0
+                        ? header[mapping[field]] ||
+                          `stĺpec ${mapping[field] + 1}`
+                        : "nepriradené"}
+                    </strong>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                variant="outline"
+                className="w-full"
+                aria-expanded={detailsOpen}
+                onClick={() => setDetailsOpen((open) => !open)}
+              >
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
+                  aria-hidden
+                />
+                {detailsOpen ? "Skryť nastavenia" : "Upraviť nastavenia"}
+              </Button>
+            </Card>
+
+            {detailsOpen ? (
+            <>
             <SectionTitle>Formát súboru</SectionTitle>
             <Card className="space-y-3">
               <p className="text-caption">
@@ -639,6 +734,11 @@ function ImportCsv() {
                   </label>
                 ),
               )}
+            </Card>
+            </>
+            ) : null}
+
+            <Card className="space-y-2">
               <Button
                 className="w-full"
                 disabled={!mappingReady || busy}
