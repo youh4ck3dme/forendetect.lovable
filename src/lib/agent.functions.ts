@@ -186,7 +186,7 @@ export const runAgentScan = createServerFn({ method: "POST" })
       const { callLlm, llmConfigured, preferredLlmModel } = await import("@/lib/ai/llm.server");
       if (!llmConfigured()) {
         aiStatus = "not_configured";
-        aiMessage = "AI nie je nakonfigurovaná (chýba serverový kľúč).";
+        aiMessage = "AI nie je nakonfigurovaná — chýba serverový kľúč Mistral.";
       } else {
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { getQuotas } = await import("@/lib/entitlements.server");

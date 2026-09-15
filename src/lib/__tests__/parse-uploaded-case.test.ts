@@ -93,9 +93,7 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
 
   it("vráti informatívnu chybu pri pokuse o OCR obrázka, ak chýbajú API kľúče", async () => {
     const originalMistral = process.env["MISTRAL_API_KEY"];
-    const originalXai = process.env["XAI_API_KEY"];
     delete process.env["MISTRAL_API_KEY"];
-    delete process.env["XAI_API_KEY"];
 
     try {
       const dummyImageBase64 = Buffer.concat([
@@ -107,7 +105,6 @@ describe("Extrakcia a parsovanie spisu: parseUploadedCaseDocument", () => {
       ).rejects.toThrow(/OCR nie je nakonfigurované/);
     } finally {
       if (originalMistral) process.env["MISTRAL_API_KEY"] = originalMistral;
-      if (originalXai) process.env["XAI_API_KEY"] = originalXai;
     }
   });
 

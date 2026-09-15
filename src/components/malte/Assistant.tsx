@@ -2048,8 +2048,7 @@ ${dossier.judgeReadyText.vedecke}`;
                 </>
               ) : (
                 <span className="text-risk-medium">
-                  AI nie je nakonfigurovaná — chýba serverový kľúč (Grok je
-                  predvolený, Mistral je záloha).
+                  AI nie je nakonfigurovaná — chýba serverový kľúč Mistral.
                 </span>
               )}
             </Card>
