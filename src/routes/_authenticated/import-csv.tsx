@@ -532,6 +532,76 @@ function ImportCsv() {
 
         {step === "mapping" && file ? (
           <>
+            <SectionTitle>Rozpoznanie súboru</SectionTitle>
+            <Card className="space-y-3">
+              <p className="text-caption">
+                {file.name} • {(file.size / 1024).toFixed(1)} kB
+              </p>
+              <p className="flex items-start gap-2 text-sm" aria-live="polite">
+                {aiState === "running" ? (
+                  <>
+                    <Loader2
+                      className="mt-0.5 h-4 w-4 shrink-0 animate-spin"
+                      aria-hidden
+                    />
+                    AI dopĺňa chýbajúce stĺpce…
+                  </>
+                ) : aiState === "error" ? (
+                  <>
+                    <AlertTriangle
+                      className="mt-0.5 h-4 w-4 shrink-0 text-risk-medium"
+                      aria-hidden
+                    />
+                    Niektoré povinné stĺpce chýbajú — doplňte ich nižšie.
+                  </>
+                ) : aiState === "suggested" ? (
+                  <>
+                    <Sparkles
+                      className="mt-0.5 h-4 w-4 shrink-0 text-risk-low"
+                      aria-hidden
+                    />
+                    AI návrh mapovania — skontrolujte a potvrďte.
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2
+                      className="mt-0.5 h-4 w-4 shrink-0 text-risk-low"
+                      aria-hidden
+                    />
+                    Stĺpce boli rozpoznané automaticky.
+                  </>
+                )}
+              </p>
+              {aiReason ? <p className="text-caption">{aiReason}</p> : null}
+              <ul className="space-y-1">
+                {REQUIRED_FIELDS.map((field) => (
+                  <li key={field} className="text-caption">
+                    {MAPPING_LABELS[field]}:{" "}
+                    <strong>
+                      {mapping[field] >= 0
+                        ? header[mapping[field]] ||
+                          `stĺpec ${mapping[field] + 1}`
+                        : "nepriradené"}
+                    </strong>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                variant="outline"
+                className="w-full"
+                aria-expanded={detailsOpen}
+                onClick={() => setDetailsOpen((open) => !open)}
+              >
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${detailsOpen ? "rotate-180" : ""}`}
+                  aria-hidden
+                />
+                {detailsOpen ? "Skryť nastavenia" : "Upraviť nastavenia"}
+              </Button>
+            </Card>
+
+            {detailsOpen ? (
+            <>
             <SectionTitle>Formát súboru</SectionTitle>
             <Card className="space-y-3">
               <p className="text-caption">
