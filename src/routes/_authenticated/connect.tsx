@@ -90,7 +90,7 @@ function Steps({ items }: { items: ReactNode[] }) {
           >
             {i + 1}
           </span>
-          <span className="min-w-0 pt-0.5 text-sm leading-relaxed">{item}</span>
+          <span className="block min-w-0 flex-1 pt-0.5 text-sm leading-relaxed">{item}</span>
         </li>
       ))}
     </ol>
