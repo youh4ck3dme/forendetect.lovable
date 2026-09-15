@@ -3,9 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import {
   AlertTriangle,
   CheckCircle2,
+  ChevronDown,
   FileUp,
   Loader2,
   ShieldAlert,
+  Sparkles,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
