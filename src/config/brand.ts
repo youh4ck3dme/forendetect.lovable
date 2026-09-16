@@ -11,7 +11,7 @@ export const BRAND = {
   /** Kroky hlavného toku — používajú sa v onboarde aj v prázdnych stavoch. */
   flow: [
     { to: "/pripady", label: "Vytvoriť prípad" },
-    { to: "/import-csv", label: "Importovať alebo zadať transakcie" },
+    { to: "/asistent", label: "Nahrať spisy alebo transakcie" },
     { to: "/prehlad", label: "Preskúmať nálezy" },
     { to: "/viac", label: "Pripraviť správu" },
   ],
