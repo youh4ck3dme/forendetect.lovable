@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -469,6 +469,22 @@ function ImportCsv() {
     <PhoneFrame>
       <AppHeader title="Import výpisu (CSV)" />
       <Screen>
+        <Card className="space-y-2 border-primary/30 bg-primary/5">
+          <p className="text-sm font-semibold">
+            Máte spisy, PDF, Excel alebo skeny?
+          </p>
+          <p className="text-caption">
+            Táto obrazovka spracúva iba tabuľky transakcií v CSV. Pre ostatné
+            dokumenty použite sandbox s hromadným nahrávaním a OCR.
+          </p>
+          <Link
+            to="/asistent"
+            className="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline underline-offset-4"
+          >
+            Prejsť na nahrávanie spisov
+          </Link>
+        </Card>
+
         <Card className="space-y-2">
           <h1 className="text-base font-semibold tracking-tight">
             Import do prípadu {activeCase.name}

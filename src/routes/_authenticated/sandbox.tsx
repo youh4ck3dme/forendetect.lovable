@@ -10,6 +10,24 @@ type Report = {
 };
 
 export const Route = createFileRoute("/_authenticated/sandbox")({
+  head: () => ({
+    meta: [
+      { title: "Forenzný sandbox súborov — Forendo" },
+      {
+        name: "description",
+        content:
+          "Lokálna kontrola súborov: overenie magic bytes, anomálie PDF a orientačný index rizika.",
+      },
+      { property: "og:title", content: "Forenzný sandbox súborov — Forendo" },
+      {
+        property: "og:description",
+        content:
+          "Overenie hlavičky súboru a základných anomálií priamo vo vašom prehliadači.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: ForensicSandbox,
 });
 
