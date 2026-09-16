@@ -1018,6 +1018,16 @@ ${dossier.judgeReadyText.vedecke}`;
                             </span>
                           </Button>
                         </div>
+                        <p className="mt-1 text-[11px] text-muted-foreground">
+                          Máte iba tabuľku transakcií na zápis do prípadu?{" "}
+                          <Link
+                            to="/import-csv"
+                            onClick={(e) => e.stopPropagation()}
+                            className="font-semibold text-primary underline underline-offset-4"
+                          >
+                            Použiť import CSV
+                          </Link>
+                        </p>
                       </>
                     )}
                   </div>
