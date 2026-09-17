@@ -166,9 +166,8 @@ function getFileBadge(name: string) {
 
 export function Assistant() {
   const { activeCase, analysis, hasCase, revisions } = useActiveCase();
-  const [mainMode, setMainMode] = useState<"autopilot" | "quick_tasks">(
-    "autopilot",
-  );
+  // Jedna stránka: Autopilot je vždy zobrazený, rýchle úlohy sa načítajú až na vyžiadanie.
+  const [showQuickTasks, setShowQuickTasks] = useState(false);
 
   // Forenzný Autopilot State
   const [isProcessing, setIsProcessing] = useState(false);
