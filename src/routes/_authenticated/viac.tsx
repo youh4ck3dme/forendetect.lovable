@@ -15,7 +15,6 @@ import {
   History,
   Info,
   Lock,
-  Plug,
   Share2,
 } from "lucide-react";
 import {

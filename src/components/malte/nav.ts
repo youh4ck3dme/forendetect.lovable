@@ -6,7 +6,6 @@ import {
   MoreHorizontal,
   Network,
   FileUp,
-  Plug,
   Bot,
   Scale,
   CreditCard,
