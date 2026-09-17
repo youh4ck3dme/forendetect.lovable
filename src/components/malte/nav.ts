@@ -35,5 +35,4 @@ export const secondaryItems: NavItem[] = [
   { to: "/pravny-kontext", label: "Právny kontext", icon: Scale },
   { to: "/predplatne", label: "Predplatné", icon: CreditCard },
   { to: "/sukromie", label: "Súkromie a podmienky", icon: ShieldCheck },
-  { to: "/mcp-info", label: "Agentné API", icon: Plug },
 ];
