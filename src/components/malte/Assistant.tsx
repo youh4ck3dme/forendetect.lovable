@@ -166,9 +166,8 @@ function getFileBadge(name: string) {
 
 export function Assistant() {
   const { activeCase, analysis, hasCase, revisions } = useActiveCase();
-  const [mainMode, setMainMode] = useState<"autopilot" | "quick_tasks">(
-    "autopilot",
-  );
+  // Jedna stránka: Autopilot je vždy zobrazený, rýchle úlohy sa načítajú až na vyžiadanie.
+  const [showQuickTasks, setShowQuickTasks] = useState(false);
 
   // Forenzný Autopilot State
   const [isProcessing, setIsProcessing] = useState(false);
@@ -671,32 +670,8 @@ ${dossier.judgeReadyText.vedecke}`;
         </p>
       </AppHeader>
       <Screen>
-        {/* Prepínač hlavného režimu */}
-        <div className="flex rounded-xl bg-card border border-border p-1">
-          <button
-            onClick={() => setMainMode("autopilot")}
-            className={`flex-1 rounded-lg py-1.5 text-xs font-medium transition-all ${
-              mainMode === "autopilot"
-                ? "bg-primary text-primary-foreground shadow"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Forenzný Autopilot
-          </button>
-          <button
-            onClick={() => setMainMode("quick_tasks")}
-            className={`flex-1 rounded-lg py-1.5 text-xs font-medium transition-all ${
-              mainMode === "quick_tasks"
-                ? "bg-primary text-primary-foreground shadow"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Rýchle triážne úlohy
-          </button>
-        </div>
-
-        {/* ═══ REŽIM 1: FORENZNÝ AUTOPILOT ═══ */}
-        {mainMode === "autopilot" && (
+        {/* Jedna stránka: Forenzný Autopilot */}
+        {(
           <div className="space-y-4">
             {/* Header info */}
             <Card className="p-4 bg-muted/40 space-y-3">
@@ -2014,8 +1989,16 @@ ${dossier.judgeReadyText.vedecke}`;
           </div>
         )}
 
-        {/* ═══ REŽIM 2: RÝCHLE TRIÁŽNE ÚLOHY (Pôvodná logika) ═══ */}
-        {mainMode === "quick_tasks" && (
+        {/* Rýchle triážne úlohy — na tej istej stránke, načítajú sa až po otvorení */}
+        <button
+          type="button"
+          onClick={() => setShowQuickTasks((v) => !v)}
+          aria-expanded={showQuickTasks}
+          className="w-full rounded-xl border border-border bg-card px-4 py-3 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          {showQuickTasks ? "Skryť" : "Zobraziť"} rýchle triážne úlohy
+        </button>
+        {showQuickTasks && (
           <>
             <SectionTitle>Model</SectionTitle>
             <Card className="flex flex-wrap items-center gap-2 p-3 text-xs animate-fade-in">
@@ -2038,8 +2021,7 @@ ${dossier.judgeReadyText.vedecke}`;
                 </>
               ) : (
                 <span className="text-risk-medium">
-                  AI nie je nakonfigurovaná — chýba serverový kľúč (Grok je
-                  predvolený, Mistral je záloha).
+                  AI nie je nakonfigurovaná — chýba serverový kľúč pre Mistral.
                 </span>
               )}
             </Card>

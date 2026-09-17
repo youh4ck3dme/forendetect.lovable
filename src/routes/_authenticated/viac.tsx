@@ -15,7 +15,6 @@ import {
   History,
   Info,
   Lock,
-  Plug,
   Share2,
 } from "lucide-react";
 import {
@@ -125,23 +124,6 @@ function More() {
           </Card>
         </Link>
 
-        <Link to="/mcp-info" className="block">
-          <Card className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-              <Plug className="h-4 w-4" aria-hidden />
-            </span>
-            <div>
-              <p className="text-sm font-semibold">Agentné API (MCP)</p>
-              <p className="text-[11px] text-muted-foreground">
-                7 read-only nástrojov pre AI klientov
-              </p>
-            </div>
-            <ChevronRight
-              className="ml-auto h-4 w-4 text-muted-foreground"
-              aria-hidden
-            />
-          </Card>
-        </Link>
 
         <button
           type="button"
