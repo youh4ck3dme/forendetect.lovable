@@ -1989,8 +1989,16 @@ ${dossier.judgeReadyText.vedecke}`;
           </div>
         )}
 
-        {/* ═══ REŽIM 2: RÝCHLE TRIÁŽNE ÚLOHY (Pôvodná logika) ═══ */}
-        {mainMode === "quick_tasks" && (
+        {/* Rýchle triážne úlohy — na tej istej stránke, načítajú sa až po otvorení */}
+        <button
+          type="button"
+          onClick={() => setShowQuickTasks((v) => !v)}
+          aria-expanded={showQuickTasks}
+          className="w-full rounded-xl border border-border bg-card px-4 py-3 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          {showQuickTasks ? "Skryť" : "Zobraziť"} rýchle triážne úlohy
+        </button>
+        {showQuickTasks && (
           <>
             <SectionTitle>Model</SectionTitle>
             <Card className="flex flex-wrap items-center gap-2 p-3 text-xs animate-fade-in">
