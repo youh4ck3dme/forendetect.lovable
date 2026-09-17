@@ -670,32 +670,8 @@ ${dossier.judgeReadyText.vedecke}`;
         </p>
       </AppHeader>
       <Screen>
-        {/* Prepínač hlavného režimu */}
-        <div className="flex rounded-xl bg-card border border-border p-1">
-          <button
-            onClick={() => setMainMode("autopilot")}
-            className={`flex-1 rounded-lg py-1.5 text-xs font-medium transition-all ${
-              mainMode === "autopilot"
-                ? "bg-primary text-primary-foreground shadow"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Forenzný Autopilot
-          </button>
-          <button
-            onClick={() => setMainMode("quick_tasks")}
-            className={`flex-1 rounded-lg py-1.5 text-xs font-medium transition-all ${
-              mainMode === "quick_tasks"
-                ? "bg-primary text-primary-foreground shadow"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Rýchle triážne úlohy
-          </button>
-        </div>
-
-        {/* ═══ REŽIM 1: FORENZNÝ AUTOPILOT ═══ */}
-        {mainMode === "autopilot" && (
+        {/* Jedna stránka: Forenzný Autopilot */}
+        {(
           <div className="space-y-4">
             {/* Header info */}
             <Card className="p-4 bg-muted/40 space-y-3">
