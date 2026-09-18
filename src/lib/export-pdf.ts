@@ -129,8 +129,33 @@ export function exportDossierToPDF(dossier: ForensicDossier): void {
   }, 500);
 }
 
-export function buildReportHTML(d: ForensicDossier): string {
-  const dossierHash = computeDossierSha256(d);
+/** Escapuje HTML metaznaky, aby sa obsah spisu nikdy nevykonal ako kód. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/** Rekurzívne escapuje všetky textové hodnoty dossieru pred vložením do HTML. */
+function escapeDeep<T>(value: T): T {
+  if (typeof value === "string") return escapeHtml(value) as unknown as T;
+  if (Array.isArray(value)) return value.map(escapeDeep) as unknown as T;
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+      out[key] = escapeDeep(val);
+    }
+    return out as unknown as T;
+  }
+  return value;
+}
+
+export function buildReportHTML(raw: ForensicDossier): string {
+  const dossierHash = computeDossierSha256(raw);
+  const d = escapeDeep(raw);
 
   const tracesRows = d.evidenceStrength.traces
     .map(

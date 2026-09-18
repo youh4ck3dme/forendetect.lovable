@@ -77,7 +77,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
     const html = buildReportHTML(mockDossier);
 
     expect(html).toContain("<!DOCTYPE html>");
-    expect(html).toContain("FORENZNÝ REPORT — Kauza Armivex & Novák");
+    expect(html).toContain("FORENZNÝ REPORT — Kauza Armivex &amp; Novák");
     expect(html).toContain("PPZ-51/UBOK-PZ-ST-2025");
     expect(html).toContain("@page { margin: 2cm; }");
     expect(html).toContain("42/100");
@@ -100,7 +100,7 @@ describe("export-pdf (§ 168 TP Rozsudkový formát)", () => {
 
     expect(html).toContain("III. Vedecké zhodnotenie stôp");
     expect(html).toContain("Balistická expertíza KEU PZ preukázala zhodu");
-    expect(html).toContain("> 1 000 000");
+    expect(html).toContain("&gt; 1 000 000");
   });
 
   it("vypočíta platný a overiteľný kryptografický SHA-256 hash dossieru", async () => {
