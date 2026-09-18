@@ -36,9 +36,11 @@ function fail(
   error: { message: string; code?: string } | null,
   fallback: string,
 ): never {
+  // Detail databázovej chyby ostáva len v serverovom logu.
+  if (error) console.error("[case-write]", fallback, error.code, error.message);
   if (error?.code === "42501")
     throw new Error("Nemáte oprávnenie na túto operáciu.");
-  throw new Error(error?.message ? `${fallback} (${error.message})` : fallback);
+  throw new Error(fallback);
 }
 
 /** Optimistické zamykanie: ak sa revízia nezhoduje, niekto záznam medzitým zmenil. */

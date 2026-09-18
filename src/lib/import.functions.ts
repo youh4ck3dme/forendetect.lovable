@@ -17,9 +17,12 @@ function fail(
   error: { message?: string; code?: string } | null,
   fallback: string,
 ): never {
+  // Detail databázovej chyby ostáva len v serverovom logu, klient dostane
+  // všeobecnú správu bez internej schémy či dopytov.
+  if (error) console.error("[import]", fallback, error.code, error.message);
   if (error?.code === "42501")
     throw new Error("Nemáte oprávnenie na túto operáciu.");
-  throw new Error(error?.message ? `${fallback} (${error.message})` : fallback);
+  throw new Error(fallback);
 }
 
 /** Vytvorí záznam o importe (stav „pripravený"). Transakcie sa ešte nezapisujú. */
