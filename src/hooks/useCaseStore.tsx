@@ -59,7 +59,8 @@ export function applyDocumentTheme(theme: ThemeMode) {
 }
 
 function getInitialTheme(): ThemeMode {
-  return readStoredTheme() ?? "system";
+  // Predvolená téma je svetlá a jednotná na každej obrazovke.
+  return readStoredTheme() ?? "light";
 }
 
 const EMPTY: CaseState = {
@@ -98,7 +99,7 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         const lsTheme = readStoredTheme();
         if (stored) {
-          const theme = lsTheme ?? stored.theme ?? "system";
+          const theme = lsTheme ?? stored.theme ?? "light";
           if (!lsTheme && stored.theme) {
             try {
               localStorage.setItem(THEME_STORAGE_KEY, stored.theme);
