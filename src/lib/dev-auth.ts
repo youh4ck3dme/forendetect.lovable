@@ -1,3 +1,5 @@
+import { isLoopbackHost } from "@/lib/loopback-host";
+
 export const DEV_FREE_ENTRY_KEY = "forendo:dev-free-entry";
 
 /**
@@ -5,8 +7,7 @@ export const DEV_FREE_ENTRY_KEY = "forendo:dev-free-entry";
  */
 export function isLocalDevEnvironment(): boolean {
   if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    return host === "localhost" || host === "127.0.0.1" || host === "[::1]";
+    return isLoopbackHost(window.location.hostname);
   }
   return false;
 }

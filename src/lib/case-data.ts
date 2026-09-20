@@ -25,6 +25,7 @@ import {
   saveTransaction,
   saveWeapon,
 } from "@/lib/case-write.functions";
+import { toSessionAwareError } from "@/lib/session-error";
 
 export type CaseSummary = {
   id: string;
@@ -40,35 +41,30 @@ export async function listCases(): Promise<CaseSummary[]> {
   if (isDevFreeEntryActive()) {
     return listDevCases();
   }
-  try {
-    const { data, error } = await supabase
-      .from("cases")
-      .select("id, name, subtitle, reference_date, base_currency, created_at")
-      .order("created_at", { ascending: false });
-    if (error) {
-      return [];
-    }
-    return (
-      (data ?? []) as Array<{
-        id: string;
-        name: string;
-        subtitle: string | null;
-        reference_date: string;
-        base_currency: string | null;
-        created_at: string;
-      }>
-    ).map((row) => ({
-      id: row.id,
-      name: row.name,
-      subtitle: row.subtitle ?? "",
-      referenceDate: row.reference_date,
-      baseCurrency: row.base_currency ?? "EUR",
-      createdAt: row.created_at,
-    }));
-  } catch (err) {
-    console.error("Chyba pri čítaní prípadov:", err);
-    return [];
+  const { data, error } = await supabase
+    .from("cases")
+    .select("id, name, subtitle, reference_date, base_currency, created_at")
+    .order("created_at", { ascending: false });
+  if (error) {
+    throw toSessionAwareError(error);
   }
+  return (
+    (data ?? []) as Array<{
+      id: string;
+      name: string;
+      subtitle: string | null;
+      reference_date: string;
+      base_currency: string | null;
+      created_at: string;
+    }>
+  ).map((row) => ({
+    id: row.id,
+    name: row.name,
+    subtitle: row.subtitle ?? "",
+    referenceDate: row.reference_date,
+    baseCurrency: row.base_currency ?? "EUR",
+    createdAt: row.created_at,
+  }));
 }
 
 /** Načíta celý prípad a poskladá ho do tvaru, ktorý očakáva forenzné jadro. */
@@ -85,6 +81,17 @@ export async function loadCase(caseId: string): Promise<ForensicCase> {
       supabase.from("case_relations").select("*").eq("case_id", caseId),
       supabase.from("case_events").select("*").eq("case_id", caseId),
     ]);
+
+  const firstError =
+    caseRow.error ||
+    entities.error ||
+    transactions.error ||
+    weapons.error ||
+    relations.error ||
+    events.error;
+  if (firstError) {
+    throw toSessionAwareError(firstError);
+  }
 
   const row = caseRow.data;
   if (!row) throw new Error("Prípad sa nenašiel.");
@@ -121,6 +128,9 @@ export async function loadCaseRevisions(
         : supabase.from(table).select("id, revision").eq("case_id", caseId),
     ),
   );
+  for (const result of results) {
+    if (result.error) throw toSessionAwareError(result.error);
+  }
   const out: Record<string, number> = {};
   for (const result of results) {
     for (const row of result.data ?? []) {
@@ -275,7 +285,7 @@ export async function listCaseImports(
     )
     .eq("case_id", caseId)
     .order("created_at", { ascending: true });
-  if (error) throw error;
+  if (error) throw toSessionAwareError(error);
   return (
     (data ?? []) as Array<{
       id: string;

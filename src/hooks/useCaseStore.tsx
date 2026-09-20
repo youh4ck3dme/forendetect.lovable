@@ -8,7 +8,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { idbClear, idbGet, idbSet } from "@/lib/idb";
+import { idbDelete, idbGet, idbSet, caseStateKey } from "@/lib/idb";
+import { supabase } from "@/integrations/supabase/client";
+import { DEV_MOCK_USER, isDevFreeEntryActive } from "@/lib/dev-auth";
 import type { Severity } from "@/forensic";
 
 export type RunLogEntry = {
@@ -69,7 +71,15 @@ const EMPTY: CaseState = {
   exports: 0,
   theme: getInitialTheme(),
 };
-const KEY = "malte:case-state";
+
+function resolveStoreUserId(): Promise<string | null> {
+  if (typeof window === "undefined") return Promise.resolve(null);
+  if (isDevFreeEntryActive()) return Promise.resolve(DEV_MOCK_USER.id);
+  return supabase.auth
+    .getUser()
+    .then(({ data }) => data.user?.id ?? null)
+    .catch(() => null);
+}
 
 type Ctx = {
   state: CaseState;
@@ -90,10 +100,39 @@ const CaseStoreContext = createContext<Ctx | null>(null);
 export function CaseStoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<CaseState>(EMPTY);
   const [ready, setReady] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const storageKey = userId ? caseStateKey(userId) : null;
 
   useLayoutEffect(() => {
     let active = true;
-    idbGet<CaseState>(KEY)
+    void resolveStoreUserId().then((id) => {
+      if (active) setUserId(id);
+    });
+    if (isDevFreeEntryActive()) {
+      return () => {
+        active = false;
+      };
+    }
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserId(session?.user?.id ?? null);
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    let active = true;
+    if (!storageKey) {
+      setState((prev) => ({ ...EMPTY, theme: prev.theme }));
+      setReady(true);
+      return () => {
+        active = false;
+      };
+    }
+    setReady(false);
+    idbGet<CaseState>(storageKey)
       .then((stored) => {
         if (!active) return;
         const lsTheme = readStoredTheme();
@@ -107,6 +146,8 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
             }
           }
           setState({ ...EMPTY, ...stored, theme });
+        } else {
+          setState((prev) => ({ ...EMPTY, theme: lsTheme ?? prev.theme }));
         }
       })
       .catch(() => undefined)
@@ -116,15 +157,20 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
     return () => {
       active = false;
     };
-  }, []);
+  }, [storageKey]);
 
-  const update = useCallback((next: (prev: CaseState) => CaseState) => {
-    setState((prev) => {
-      const value = next(prev);
-      void idbSet(KEY, value).catch(() => undefined);
-      return value;
-    });
-  }, []);
+  const update = useCallback(
+    (next: (prev: CaseState) => CaseState) => {
+      setState((prev) => {
+        const value = next(prev);
+        if (storageKey) {
+          void idbSet(storageKey, value).catch(() => undefined);
+        }
+        return value;
+      });
+    },
+    [storageKey],
+  );
 
   useLayoutEffect(() => {
     applyDocumentTheme(state.theme);
@@ -178,11 +224,13 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
         update((prev) => ({ ...prev, theme }));
       },
       reset: () => {
-        void idbClear().catch(() => undefined);
+        if (storageKey) {
+          void idbDelete(storageKey).catch(() => undefined);
+        }
         setState(EMPTY);
       },
     }),
-    [state, ready, update],
+    [state, ready, update, storageKey],
   );
 
   return (

@@ -3,6 +3,11 @@ const DB_NAME = "malte";
 const STORE = "state";
 const VERSION = 1;
 
+/** Draft UI stav len pre prihláseného používateľa — nie náhrada auth. */
+export function caseStateKey(userId: string): string {
+  return `malte:case-state:${userId}`;
+}
+
 let dbPromise: Promise<IDBDatabase> | null = null;
 
 function open(): Promise<IDBDatabase> {
@@ -36,6 +41,16 @@ export async function idbSet<T>(key: string, value: T): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const tx = db.transaction(STORE, "readwrite");
     tx.objectStore(STORE).put(value, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+export async function idbDelete(key: string): Promise<void> {
+  const db = await open();
+  return new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).delete(key);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });

@@ -3,10 +3,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   analyzeCase,
   EMPTY_CASE,
@@ -19,6 +22,10 @@ import {
   loadCaseRevisions,
   type CaseSummary,
 } from "@/lib/case-data";
+import {
+  isAuthSessionError,
+  SESSION_EXPIRED_MESSAGE,
+} from "@/lib/session-error";
 
 type Ctx = {
   cases: CaseSummary[];
@@ -38,6 +45,8 @@ const STORAGE_KEY = "malte:active-case";
 
 export function ActiveCaseProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const redirected = useRef(false);
   const [activeCaseId, setActiveCaseIdState] = useState<string | null>(null);
 
   const casesQuery = useQuery({ queryKey: ["cases"], queryFn: listCases });
@@ -50,6 +59,7 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (casesQuery.isError) return;
     if (!cases.length) {
       if (activeCaseId) setActiveCaseIdState(null);
       return;
@@ -57,7 +67,7 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
     if (!activeCaseId || !cases.some((c) => c.id === activeCaseId)) {
       setActiveCaseIdState(cases[0]!.id);
     }
-  }, [cases, activeCaseId]);
+  }, [cases, activeCaseId, casesQuery.isError]);
 
   const setActiveCaseId = (id: string | null) => {
     setActiveCaseIdState(id);
@@ -70,14 +80,23 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
   const caseQuery = useQuery({
     queryKey: ["case", activeCaseId],
     queryFn: () => loadCase(activeCaseId as string),
-    enabled: Boolean(activeCaseId),
+    enabled: Boolean(activeCaseId) && !casesQuery.isError,
   });
 
   const revisionsQuery = useQuery({
     queryKey: ["case-revisions", activeCaseId],
     queryFn: () => loadCaseRevisions(activeCaseId as string),
-    enabled: Boolean(activeCaseId),
+    enabled: Boolean(activeCaseId) && !casesQuery.isError,
   });
+
+  useEffect(() => {
+    const err = casesQuery.error ?? caseQuery.error ?? revisionsQuery.error;
+    if (!err || redirected.current) return;
+    if (!isAuthSessionError(err)) return;
+    redirected.current = true;
+    toast.error(SESSION_EXPIRED_MESSAGE);
+    void navigate({ to: "/auth", replace: true });
+  }, [casesQuery.error, caseQuery.error, revisionsQuery.error, navigate]);
 
   const activeCase = caseQuery.data ?? EMPTY_CASE;
   const analysis = useMemo(() => analyzeCase(activeCase), [activeCase]);
@@ -89,7 +108,7 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
     activeCase,
     analysis,
     revisions: revisionsQuery.data ?? {},
-    hasCase: Boolean(caseQuery.data),
+    hasCase: Boolean(caseQuery.data) && !casesQuery.isError,
     loading: casesQuery.isLoading || caseQuery.isLoading,
     refresh: () => {
       void queryClient.invalidateQueries({ queryKey: ["cases"] });
