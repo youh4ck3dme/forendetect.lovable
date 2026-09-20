@@ -10,7 +10,7 @@ import type { Locator, Page } from "@playwright/test";
 // Helper to enter the app
 async function enterApp(page: Page) {
   await page.goto("/auth");
-  await page.getByRole("button", { name: /Dev Free Entry/i }).click();
+  await page.getByRole("button", { name: /Developer|Dev Free Entry/i }).click();
   await page.waitForURL("/prehlad");
 }
 

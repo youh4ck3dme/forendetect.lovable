@@ -3,7 +3,7 @@ import { isLoopbackHost } from "@/lib/loopback-host";
 export const DEV_FREE_ENTRY_KEY = "forendo:dev-free-entry";
 
 /**
- * Lokálny vstup je dostupný iba na loopback hostiteľovi, nezávisle od build režimu.
+ * Loopback — len informácia pre UI. Free vstup developera funguje na každom hostiteľovi.
  */
 export function isLocalDevEnvironment(): boolean {
   if (typeof window !== "undefined") {
@@ -13,25 +13,24 @@ export function isLocalDevEnvironment(): boolean {
 }
 
 /**
- * Overí, či používateľ aktivoval lokálny vývojársky bezplatný vstup.
+ * Overí, či je aktivovaný vývojársky bezplatný vstup (client-side demo režim).
  */
 export function isDevFreeEntryActive(): boolean {
-  if (!isLocalDevEnvironment()) return false;
   if (typeof window === "undefined") return false;
   return window.localStorage.getItem(DEV_FREE_ENTRY_KEY) === "true";
 }
 
 /**
- * Aktivuje lokálny vývojársky bezplatný vstup.
+ * Aktivuje vývojársky bezplatný vstup.
  */
 export function setDevFreeEntryActive(): void {
-  if (typeof window !== "undefined" && isLocalDevEnvironment()) {
+  if (typeof window !== "undefined") {
     window.localStorage.setItem(DEV_FREE_ENTRY_KEY, "true");
   }
 }
 
 /**
- * Zruší lokálny vývojársky bezplatný vstup (napr. pri odhlásení).
+ * Zruší vývojársky bezplatný vstup (napr. pri odhlásení).
  */
 export function clearDevFreeEntry(): void {
   if (typeof window !== "undefined") {
@@ -54,13 +53,13 @@ export type DevUser = {
 };
 
 /**
- * Mock používateľ pre lokálny beh bez nutnosti pripojenia na živý Supabase Auth.
+ * Mock používateľ pre vývojársky free vstup bez Supabase Auth.
  */
 export const DEV_MOCK_USER: DevUser = {
   id: "00000000-0000-0000-0000-000000000001",
   app_metadata: { provider: "dev_local" },
   user_metadata: {
-    name: "Dev Vyšetrovateľ (Lokál)",
+    name: "Developer (Free vstup)",
     email: "dev@forendo.local",
   },
   aud: "authenticated",
