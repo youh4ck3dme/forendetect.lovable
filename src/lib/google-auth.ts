@@ -2,6 +2,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { isLovableAuthHost } from "@/lib/lovable-host";
 
+/** Google OAuth je vypnutý — tlačidlo sa nerenderuje a provider sa nevolá. */
+export const GOOGLE_SIGN_IN_ENABLED = false;
+
 export function googleOAuthReturnUrl(origin: string): string {
   return `${origin.replace(/\/$/, "")}/auth`;
 }
@@ -23,6 +26,12 @@ export async function signInWithGoogle(redirectTo: string): Promise<{
   error: Error | null;
   redirected: boolean;
 }> {
+  if (!GOOGLE_SIGN_IN_ENABLED) {
+    return {
+      error: new Error("Google prihlásenie je vypnuté."),
+      redirected: false,
+    };
+  }
   const host = typeof window !== "undefined" ? window.location.hostname : "";
 
   if (isLovableAuthHost(host)) {

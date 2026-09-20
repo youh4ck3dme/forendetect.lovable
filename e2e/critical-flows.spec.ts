@@ -18,7 +18,7 @@ test("auth defaults to light theme and email-first login", async ({ page }) => {
   ).toHaveAttribute("aria-pressed", "true");
   await expect(
     page.getByRole("button", { name: "Pokračovať cez Google" }),
-  ).toBeVisible();
+  ).toHaveCount(0);
   await expect(page.getByLabel("E-mail")).toBeVisible();
   await expect(page.locator("#password")).toHaveCount(0);
   await expect(
