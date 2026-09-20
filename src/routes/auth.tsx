@@ -43,9 +43,11 @@ function AuthScreen() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [busy, setBusy] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     let active = true;
+    setMounted(true);
     if (isDevFreeEntryActive()) {
       void navigate({ to: "/prehlad", replace: true });
       return;
@@ -196,7 +198,7 @@ function AuthScreen() {
               type="button"
               variant="secondary"
               className="group relative flex h-11 w-full items-center justify-between rounded-xl border border-dashed border-emerald-400/80 bg-emerald-500/15 px-3 font-semibold text-emerald-800 shadow-xs transition-all hover:border-emerald-500 hover:bg-emerald-500/25 active:scale-[0.99] dark:text-emerald-300"
-              disabled={busy}
+              disabled={busy || !mounted}
               onClick={handleDevEntry}
             >
               <div className="flex items-center gap-2">
@@ -241,7 +243,7 @@ function AuthScreen() {
             <Button
               type="submit"
               className="h-11 w-full rounded-xl font-semibold shadow-xs transition-all active:scale-[0.99]"
-              disabled={busy}
+              disabled={busy || !mounted}
             >
               {busy ? (
                 <>
@@ -314,7 +316,7 @@ function AuthScreen() {
             <Button
               type="submit"
               className="h-11 w-full rounded-xl font-semibold shadow-xs transition-all active:scale-[0.99]"
-              disabled={busy}
+              disabled={busy || !mounted}
             >
               {busy ? (
                 <>
