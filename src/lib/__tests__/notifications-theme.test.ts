@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
+  applyDocumentTheme,
   passesFilter,
   readStoredTheme,
+  resolveTheme,
   THEME_STORAGE_KEY,
 } from "@/hooks/useCaseStore";
 import type { Alert } from "@/forensic/types";
@@ -125,6 +127,47 @@ describe("Theme and Notifications logic", () => {
     it("ignoruje neplatnú hodnotu", () => {
       globalThis.localStorage.setItem(THEME_STORAGE_KEY, "neon");
       expect(readStoredTheme()).toBeNull();
+    });
+  });
+
+  describe("resolveTheme", () => {
+    it("predvolene vracia light a mapuje system na light", () => {
+      expect(resolveTheme(null)).toBe("light");
+      expect(resolveTheme(undefined)).toBe("light");
+      expect(resolveTheme("system")).toBe("light");
+      expect(resolveTheme("light")).toBe("light");
+      expect(resolveTheme("dark")).toBe("dark");
+    });
+
+    it("applyDocumentTheme zapne tmu len pri explicitnom dark", () => {
+      const originalDocument = globalThis.document;
+      const classList = { dark: false };
+      Object.defineProperty(globalThis, "document", {
+        configurable: true,
+        value: {
+          documentElement: {
+            classList: {
+              toggle: (name: string, force?: boolean) => {
+                if (name === "dark") classList.dark = Boolean(force);
+              },
+            },
+            style: { colorScheme: "" },
+          },
+        },
+      });
+      try {
+        applyDocumentTheme("system");
+        expect(classList.dark).toBe(false);
+        applyDocumentTheme("light");
+        expect(classList.dark).toBe(false);
+        applyDocumentTheme("dark");
+        expect(classList.dark).toBe(true);
+      } finally {
+        Object.defineProperty(globalThis, "document", {
+          configurable: true,
+          value: originalDocument,
+        });
+      }
     });
   });
 });

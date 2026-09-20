@@ -3,7 +3,7 @@ import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
-import { isLoopbackHost, normalizeHost } from "@/lib/loopback-host";
+import { isLoopbackHost, loopbackHostFromRequest } from "@/lib/loopback-host";
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
@@ -43,9 +43,7 @@ const DEV_CLAIMS = {
 } as unknown as import("@supabase/supabase-js").JwtPayload;
 
 function requestHost(request: Request | undefined): string {
-  return normalizeHost(
-    request?.headers?.get("x-forwarded-host") ?? request?.headers?.get("host"),
-  );
+  return loopbackHostFromRequest(request);
 }
 
 function allowLocalDevBypass(request: Request | undefined): boolean {

@@ -156,7 +156,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('malte:theme')||'system';var d=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('malte:theme');if(!t||t==='system'){t='light';try{localStorage.setItem('malte:theme','light')}catch(e2){}}var d=t==='dark';if(d){document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}else{document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}}catch(e){}})();`,
           }}
         />
         <HeadContent />

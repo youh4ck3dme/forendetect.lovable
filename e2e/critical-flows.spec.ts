@@ -6,6 +6,27 @@ async function enterApp(page: Page) {
   await page.getByRole("button", { name: /Dev Free Entry/i }).click();
 }
 
+test("auth defaults to light theme and email-first login", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.addInitScript(() => {
+    localStorage.removeItem("malte:theme");
+  });
+  await page.goto("/auth");
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await expect(
+    page.getByRole("button", { name: "Svetlá téma" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    page.getByRole("button", { name: "Pokračovať cez Google" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("E-mail")).toBeVisible();
+  await expect(page.locator("#password")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Pokračovať", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Zaregistrovať sa")).toHaveCount(0);
+});
+
 test("local developer entry reaches the protected dashboard", async ({
   page,
 }) => {
@@ -18,6 +39,7 @@ test("local developer entry reaches the protected dashboard", async ({
   await expect(
     page.getByRole("heading", { name: "Forendo — prehľad prípadu" }),
   ).toBeVisible();
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
 });
 
 test("favicon package is linked with valid public assets", async ({ page }) => {

@@ -10,3 +10,10 @@ export function normalizeHost(raw: string | null | undefined): string {
 export function isLoopbackHost(host: string): boolean {
   return host === "localhost" || host === "127.0.0.1" || host === "[::1]";
 }
+
+/** Dev bypass berie len `Host`, nikdy `x-forwarded-host`. */
+export function loopbackHostFromRequest(
+  request: { headers: { get(name: string): string | null } } | undefined,
+): string {
+  return normalizeHost(request?.headers?.get("host"));
+}

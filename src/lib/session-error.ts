@@ -26,11 +26,7 @@ function asShape(error: unknown): ErrorShape {
 export function isAuthSessionError(error: unknown): boolean {
   if (error instanceof SessionExpiredError) return true;
   const e = asShape(error);
-  if (
-    e.name === "AuthSessionMissingError" ||
-    e.name === "AuthApiError" ||
-    e.name === "AuthRetryableFetchError"
-  ) {
+  if (e.name === "AuthSessionMissingError" || e.name === "AuthApiError") {
     return true;
   }
   if (e.status === 401 || e.statusCode === 401) return true;
@@ -43,6 +39,18 @@ export function isAuthSessionError(error: unknown): boolean {
   if (msg.includes("not authenticated") || msg.includes("unauthorized"))
     return true;
   return false;
+}
+
+export const ACTIVE_CASE_STORAGE_KEY = "malte:active-case";
+
+export function clearExpiredSessionArtifacts(clearQueries?: () => void): void {
+  clearQueries?.();
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(ACTIVE_CASE_STORAGE_KEY);
+  } catch {
+    /* localStorage nemusí byť dostupné */
+  }
 }
 
 export function toSessionAwareError(error: unknown): Error {

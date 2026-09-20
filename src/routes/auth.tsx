@@ -5,12 +5,18 @@ import { ArrowLeft, Loader2, Lock, Mail, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import {
   isDevFreeEntryActive,
   isLocalDevEnvironment,
   setDevFreeEntryActive,
 } from "@/lib/dev-auth";
+import { consumeAfterLoginPath, rememberAfterLogin } from "@/lib/after-login";
+import { signInWithGoogle } from "@/lib/google-auth";
+import {
+  normalizeSignupEmail,
+  parseSignupLookup,
+  type SignupLookup,
+} from "@/lib/signup-email";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -35,9 +41,11 @@ export const Route = createFileRoute("/auth")({
 
 function AuthScreen() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [step, setStep] = useState<"email" | "password">("email");
+  const [lookup, setLookup] = useState<SignupLookup | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [busy, setBusy] = useState(false);
   const [isLocal, setIsLocal] = useState(false);
 
@@ -50,12 +58,12 @@ function AuthScreen() {
     }
     void supabase.auth.getUser().then((res: { data: { user: unknown } }) => {
       if (active && res.data.user)
-        void navigate({ to: "/prehlad", replace: true });
+        void navigate({ to: consumeAfterLoginPath(), replace: true });
     });
     const { data: sub } = supabase.auth.onAuthStateChange(
       (event: string, session: unknown) => {
         if (event === "SIGNED_IN" && session)
-          void navigate({ to: "/prehlad", replace: true });
+          void navigate({ to: consumeAfterLoginPath(), replace: true });
       },
     );
     return () => {
@@ -67,23 +75,12 @@ function AuthScreen() {
   async function handleGoogle() {
     setBusy(true);
     try {
-      // Návrat vždy na verejnú adresu (nie na chránenú trasu) —
-      // cieľ si zapamätáme a presmerujeme až po vytvorení relácie.
-      try {
-        sessionStorage.setItem("forendo:after-login", "/prehlad");
-      } catch {
-        /* sessionStorage nemusí byť dostupné */
-      }
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      if (result.error) {
-        throw result.error instanceof Error
-          ? result.error
-          : new Error(String(result.error));
-      }
+      rememberAfterLogin("/prehlad");
+      const result = await signInWithGoogle(
+        `${window.location.origin}/prehlad`,
+      );
+      if (result.error) throw result.error;
       if (result.redirected) return;
-      // Relácia je nastavená — presmerovanie zabezpečí onAuthStateChange.
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Prihlásenie zlyhalo.",
@@ -91,7 +88,6 @@ function AuthScreen() {
       setBusy(false);
     }
   }
-
 
   async function handleDevEntry() {
     setBusy(true);
@@ -106,24 +102,61 @@ function AuthScreen() {
     }
   }
 
-  async function handleSubmit(event: React.FormEvent) {
+  async function handleEmailContinue(event: React.FormEvent) {
     event.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
+      const normalized = normalizeSignupEmail(email);
+      const { data, error } = await supabase.rpc("lookup_signup_email", {
+        _email: normalized,
+      });
+      if (error) throw error;
+      const result = parseSignupLookup(data);
+      if (!result.allowed) {
+        toast.error("Tento e-mail nie je zaregistrovaný.");
+        return;
+      }
+      setEmail(normalized);
+      setLookup(result);
+      setPassword("");
+      setPasswordConfirm("");
+      setStep("password");
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Overenie e-mailu zlyhalo. Skúste to znova.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handlePasswordSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!lookup) return;
+    if (!lookup.registered && password !== passwordConfirm) {
+      toast.error("Heslá sa nezhodujú.");
+      return;
+    }
+    setBusy(true);
+    try {
+      if (lookup.registered) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+      } else {
         const { error } = await supabase.auth.signUp({
           email,
           password,
           options: { emailRedirectTo: `${window.location.origin}/prehlad` },
         });
         if (error) throw error;
-        toast.success("Účet vytvorený. Skontrolujte e-mail pre potvrdenie.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
+        toast.success(
+          "Heslo je nastavené. Ak príde potvrdzovací e-mail, otvorte ho a pokračujte.",
+        );
       }
     } catch (error) {
       toast.error(
@@ -133,6 +166,15 @@ function AuthScreen() {
       setBusy(false);
     }
   }
+
+  function resetToEmail() {
+    setStep("email");
+    setLookup(null);
+    setPassword("");
+    setPasswordConfirm("");
+  }
+
+  const firstLogin = lookup !== null && !lookup.registered;
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-x-hidden bg-background px-5 py-12">
@@ -154,10 +196,14 @@ function AuthScreen() {
             className="h-10 w-10 drop-shadow-sm transition-transform hover:scale-105"
           />
           <h1 className="text-2xl font-extrabold tracking-tight">
-            {mode === "signin" ? "Prihlásenie do Forendo" : "Vytvorenie účtu"}
+            {firstLogin ? "Zvoľte heslo" : "Prihlásenie do Forendo"}
           </h1>
           <p className="text-caption">
-            Vaše prípady sú súkromné a viditeľné len pre vás.
+            {step === "email"
+              ? "Zadajte e-mail. Heslo si zvolíte pri prvom prihlásení."
+              : firstLogin
+                ? "Účet je pripravený. Nastavte si heslo a pokračujte."
+                : "Vaše prípady sú súkromné a viditeľné len pre vás."}
           </p>
         </div>
 
@@ -224,74 +270,117 @@ function AuthScreen() {
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form className="space-y-3" onSubmit={handleSubmit}>
-          <div className="space-y-1">
-            <label
-              htmlFor="email"
-              className="flex items-center gap-1.5 text-xs font-medium"
+        {step === "email" ? (
+          <form className="space-y-3" onSubmit={handleEmailContinue}>
+            <div className="space-y-1">
+              <label
+                htmlFor="email"
+                className="flex items-center gap-1.5 text-xs font-medium"
+              >
+                <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                E-mail
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
+              />
+            </div>
+            <Button
+              type="submit"
+              className="h-11 w-full rounded-xl font-semibold shadow-xs transition-all active:scale-[0.99]"
+              disabled={busy}
             >
-              <Mail className="h-3.5 w-3.5 text-muted-foreground" />
-              E-mail
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
-            />
-          </div>
-          <div className="space-y-1">
-            <label
-              htmlFor="password"
-              className="flex items-center gap-1.5 text-xs font-medium"
-            >
-              <Lock className="h-3.5 w-3.5 text-muted-foreground" />
-              Heslo
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={6}
-              autoComplete={
-                mode === "signin" ? "current-password" : "new-password"
-              }
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
-            />
-          </div>
-          <Button
-            type="submit"
-            className="h-11 w-full rounded-xl font-semibold shadow-xs transition-all active:scale-[0.99]"
-            disabled={busy}
-          >
-            {busy ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {mode === "signin" ? "Prihlasujem..." : "Vytváram účet..."}
-              </>
-            ) : mode === "signin" ? (
-              "Prihlásiť sa"
-            ) : (
-              "Zaregistrovať sa"
+              {busy ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Overujem e-mail...
+                </>
+              ) : (
+                "Pokračovať"
+              )}
+            </Button>
+          </form>
+        ) : (
+          <form className="space-y-3" onSubmit={handlePasswordSubmit}>
+            <div className="space-y-1">
+              <label className="flex items-center gap-1.5 text-xs font-medium">
+                <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                E-mail
+              </label>
+              <div className="flex h-11 items-center justify-between rounded-xl border border-border bg-muted/40 px-3 text-sm">
+                <span className="truncate">{email}</span>
+                <button
+                  type="button"
+                  className="ml-2 shrink-0 text-xs font-semibold underline"
+                  onClick={resetToEmail}
+                >
+                  Zmeniť
+                </button>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <label
+                htmlFor="password"
+                className="flex items-center gap-1.5 text-xs font-medium"
+              >
+                <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                {firstLogin ? "Zvoľte heslo" : "Heslo"}
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                minLength={6}
+                autoComplete={firstLogin ? "new-password" : "current-password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
+              />
+            </div>
+            {firstLogin && (
+              <div className="space-y-1">
+                <label
+                  htmlFor="password-confirm"
+                  className="flex items-center gap-1.5 text-xs font-medium"
+                >
+                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                  Potvrďte heslo
+                </label>
+                <input
+                  id="password-confirm"
+                  type="password"
+                  required
+                  minLength={6}
+                  autoComplete="new-password"
+                  value={passwordConfirm}
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                  className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
+                />
+              </div>
             )}
-          </Button>
-        </form>
-
-        <p className="text-center text-caption">
-          {mode === "signin" ? "Nemáte účet?" : "Už máte účet?"}{" "}
-          <button
-            type="button"
-            className="font-semibold text-foreground underline"
-            onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          >
-            {mode === "signin" ? "Zaregistrovať sa" : "Prihlásiť sa"}
-          </button>
-        </p>
+            <Button
+              type="submit"
+              className="h-11 w-full rounded-xl font-semibold shadow-xs transition-all active:scale-[0.99]"
+              disabled={busy}
+            >
+              {busy ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {firstLogin ? "Nastavujem heslo..." : "Prihlasujem..."}
+                </>
+              ) : firstLogin ? (
+                "Nastaviť heslo"
+              ) : (
+                "Prihlásiť sa"
+              )}
+            </Button>
+          </form>
+        )}
 
         <p className="text-center text-caption">
           <Link to="/" className="underline">
