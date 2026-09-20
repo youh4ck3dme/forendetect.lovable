@@ -74,7 +74,7 @@ function persistResolvedTheme(theme: ThemeMode) {
 function getInitialTheme(): ThemeMode {
   const stored = readStoredTheme();
   const theme = resolveTheme(stored);
-  if (stored === "system") persistResolvedTheme(theme);
+  if (stored !== "light" && stored !== "dark") persistResolvedTheme(theme);
   return theme;
 }
 
