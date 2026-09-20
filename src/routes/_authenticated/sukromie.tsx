@@ -90,9 +90,9 @@ function PrivacyScreen() {
         <SectionTitle>Aké údaje spracúvame</SectionTitle>
         <Card className="space-y-2 text-[12px] leading-relaxed text-muted-foreground">
           <p>
-            Prihlasovacie údaje (e-mail, prípadne profil z Google), obsah vašich
-            prípadov (subjekty, transakcie, vzťahy, zbrane, udalosti), nahraté
-            súbory importov, technické záznamy o úkonoch a stav predplatného.
+            Prihlasovacie údaje (e-mail), obsah vašich prípadov (subjekty,
+            transakcie, vzťahy, zbrane, udalosti), nahraté súbory importov,
+            technické záznamy o úkonoch a stav predplatného.
           </p>
           <p>
             Údaje sú viditeľné len pre váš účet — prístup je vynútený na úrovni

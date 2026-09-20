@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { signInWithGoogle } from "@/lib/google-auth";
 
 type OAuthResult = {
   redirect_url?: string;
@@ -108,17 +107,6 @@ function Consent() {
     window.location.href = next;
   }
 
-  async function signInGoogle() {
-    setError(null);
-    const result = await signInWithGoogle(window.location.href);
-    if (result.error) {
-      setError(result.error.message);
-      return;
-    }
-    if (result.redirected) return;
-    window.location.reload();
-  }
-
   if (!authorizationId) {
     return (
       <main className="mx-auto max-w-md p-6">Chýba parameter autorizácie.</main>
@@ -165,14 +153,6 @@ function Consent() {
               Registrovať
             </Button>
           </div>
-          <Button
-            variant="outline"
-            className="w-full"
-            disabled={busy}
-            onClick={() => void signInGoogle()}
-          >
-            Pokračovať cez Google
-          </Button>
         </div>
       )}
 
