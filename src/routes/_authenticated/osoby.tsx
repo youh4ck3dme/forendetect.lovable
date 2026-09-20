@@ -22,6 +22,10 @@ import { useCaseStore, passesFilter } from "@/hooks/useCaseStore";
 import { cn } from "@/lib/utils";
 import { formatEur, type Severity } from "@/forensic";
 import { CheckCircle2 } from "lucide-react";
+import { isDevFreeEntryActive } from "@/lib/dev-auth";
+
+const DEV_REGISTRY_MESSAGE =
+  "IČO Atlas v demo režime nie je pripojený na živý register. Prihláste sa e-mailom.";
 
 export const Route = createFileRoute("/_authenticated/osoby")({
   head: () => ({
@@ -70,6 +74,11 @@ function People() {
       toast.error("Nie je vybratý aktívny prípad.");
       return;
     }
+    if (isDevFreeEntryActive()) {
+      const { toast } = await import("sonner");
+      toast.error(DEV_REGISTRY_MESSAGE);
+      return;
+    }
     setIsSearchingIco(true);
     try {
       const { lookupCompanyRegistryByIco } =
@@ -98,6 +107,11 @@ function People() {
 
   const confirmImport = async (mode: "new" | "update") => {
     if (!previewSnapshot || !activeCase?.id) return;
+    if (isDevFreeEntryActive()) {
+      const { toast } = await import("sonner");
+      toast.error(DEV_REGISTRY_MESSAGE);
+      return;
+    }
     setIsImporting(true);
     try {
       const { confirmCompanyRegistryImport } =
