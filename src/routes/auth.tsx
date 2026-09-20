@@ -11,10 +11,15 @@ import {
   setDevFreeEntryActive,
 } from "@/lib/dev-auth";
 import { consumeAfterLoginPath, rememberAfterLogin } from "@/lib/after-login";
-import { signInWithGoogle } from "@/lib/google-auth";
 import {
+  googleOAuthReturnUrl,
+  googleSignInErrorMessage,
+  signInWithGoogle,
+} from "@/lib/google-auth";
+import {
+  isAlreadyRegisteredAuthError,
   normalizeSignupEmail,
-  parseSignupLookup,
+  resolveSignupLookup,
   type SignupLookup,
 } from "@/lib/signup-email";
 
@@ -77,14 +82,12 @@ function AuthScreen() {
     try {
       rememberAfterLogin("/prehlad");
       const result = await signInWithGoogle(
-        `${window.location.origin}/prehlad`,
+        googleOAuthReturnUrl(window.location.origin),
       );
       if (result.error) throw result.error;
       if (result.redirected) return;
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Prihlásenie zlyhalo.",
-      );
+      toast.error(googleSignInErrorMessage(error));
       setBusy(false);
     }
   }
@@ -110,8 +113,7 @@ function AuthScreen() {
       const { data, error } = await supabase.rpc("lookup_signup_email", {
         _email: normalized,
       });
-      if (error) throw error;
-      const result = parseSignupLookup(data);
+      const result = resolveSignupLookup(normalized, data, error);
       if (!result.allowed) {
         toast.error("Tento e-mail nie je zaregistrovaný.");
         return;
@@ -141,21 +143,28 @@ function AuthScreen() {
     }
     setBusy(true);
     try {
-      if (lookup.registered) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: `${window.location.origin}/prehlad` },
-        });
-        if (error) throw error;
+      const signIn = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (!signIn.error) return;
+
+      if (lookup.registered) throw signIn.error;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/auth` },
+      });
+      if (error) {
+        if (isAlreadyRegisteredAuthError(error)) {
+          throw new Error("Účet už existuje. Zadajte správne heslo.");
+        }
+        throw error;
+      }
+      if (!data.session) {
         toast.success(
-          "Heslo je nastavené. Ak príde potvrdzovací e-mail, otvorte ho a pokračujte.",
+          "Heslo je nastavené. V Supabase vypnite „Confirm email“, alebo otvorte potvrdzovací e-mail a prihláste sa znova.",
         );
       }
     } catch (error) {

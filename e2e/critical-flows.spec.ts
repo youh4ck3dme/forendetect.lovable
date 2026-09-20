@@ -27,6 +27,19 @@ test("auth defaults to light theme and email-first login", async ({ page }) => {
   await expect(page.getByText("Zaregistrovať sa")).toHaveCount(0);
 });
 
+test("allowlisted email opens first-login password step without RPC", async ({
+  page,
+}) => {
+  await page.goto("/auth");
+  await page.getByLabel("E-mail").fill("erikbabcan@gmail.com");
+  await page.getByRole("button", { name: "Pokračovať", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Zvoľte heslo" }),
+  ).toBeVisible();
+  await expect(page.locator("#password")).toBeVisible();
+  await expect(page.locator("#password-confirm")).toBeVisible();
+});
+
 test("local developer entry reaches the protected dashboard", async ({
   page,
 }) => {

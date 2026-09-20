@@ -2,6 +2,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { isLovableAuthHost } from "@/lib/lovable-host";
 
+export function googleOAuthReturnUrl(origin: string): string {
+  return `${origin.replace(/\/$/, "")}/auth`;
+}
+
+export function googleSignInErrorMessage(error: unknown): string {
+  const msg =
+    error instanceof Error
+      ? error.message
+      : error && typeof error === "object" && "message" in error
+        ? String((error as { message: unknown }).message ?? "")
+        : String(error ?? "");
+  if (/missing oauth secret/i.test(msg) || /unsupported provider/i.test(msg)) {
+    return "Google v tomto projekte ešte nemá Client ID a Secret. Prihláste sa e-mailom a heslom.";
+  }
+  return msg || "Prihlásenie zlyhalo.";
+}
+
 export async function signInWithGoogle(redirectTo: string): Promise<{
   error: Error | null;
   redirected: boolean;

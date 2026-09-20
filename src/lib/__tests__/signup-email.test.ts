@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { normalizeSignupEmail, parseSignupLookup } from "../signup-email";
+import {
+  isAllowedSignupEmail,
+  isAlreadyRegisteredAuthError,
+  normalizeSignupEmail,
+  parseSignupLookup,
+  resolveSignupLookup,
+} from "../signup-email";
 
 describe("signup-email", () => {
   it("normalizuje e-mail", () => {
@@ -24,5 +30,35 @@ describe("signup-email", () => {
       allowed: false,
       registered: false,
     });
+  });
+
+  it("dovolí zapísané e-maily aj keď RPC chýba", () => {
+    expect(isAllowedSignupEmail("erikbabcan@gmail.com")).toBe(true);
+    expect(isAllowedSignupEmail("larsenevans@gmail.com")).toBe(true);
+    expect(isAllowedSignupEmail("random@example.com")).toBe(false);
+    expect(
+      resolveSignupLookup("erikbabcan@gmail.com", null, {
+        message: "Could not find the function",
+      }),
+    ).toEqual({ allowed: true, registered: false });
+    expect(
+      resolveSignupLookup("random@example.com", null, { message: "missing" }),
+    ).toEqual({ allowed: false, registered: false });
+    expect(
+      resolveSignupLookup(
+        "erikbabcan@gmail.com",
+        {
+          allowed: true,
+          registered: true,
+        },
+        null,
+      ),
+    ).toEqual({ allowed: true, registered: true });
+  });
+
+  it("rozpozná už existujúci účet", () => {
+    expect(
+      isAlreadyRegisteredAuthError({ message: "User already registered" }),
+    ).toBe(true);
   });
 });
