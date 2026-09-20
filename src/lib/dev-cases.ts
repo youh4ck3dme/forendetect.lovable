@@ -573,6 +573,14 @@ export function describeDevDeleteImpact(
     return { blockers, cascades, canDelete: true };
   }
 
+  if (type === "event") {
+    return {
+      blockers: ["udalosti v demo režime nemajú samostatné ID"],
+      cascades: [],
+      canDelete: false,
+    };
+  }
+
   const owner = cases.find((item) => {
     if (type === "entity")
       return item.entities.some((entity) => entity.id === id);

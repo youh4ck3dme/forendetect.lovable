@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { ArrowLeft, Loader2, Lock, Mail, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
-import { isDevFreeEntryActive, setDevFreeEntryActive } from "@/lib/dev-auth";
+import { isDevFreeEntryActive } from "@/lib/dev-auth";
+import { beginDevFreeEntry, dropLeftoverSessionForDemo } from "@/lib/dev-entry";
 import { consumeAfterLoginPath } from "@/lib/after-login";
 import {
   isAlreadyRegisteredAuthError,
@@ -37,6 +39,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthScreen() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<"email" | "password">("email");
   const [lookup, setLookup] = useState<SignupLookup | null>(null);
   const [email, setEmail] = useState("");
@@ -49,8 +52,7 @@ function AuthScreen() {
     let active = true;
     setMounted(true);
     if (isDevFreeEntryActive()) {
-      void supabase.auth.getSession().then(async ({ data }) => {
-        if (data.session) await supabase.auth.signOut({ scope: "local" });
+      void dropLeftoverSessionForDemo(queryClient).then(() => {
         if (active) void navigate({ to: "/prehlad", replace: true });
       });
       return;
@@ -69,14 +71,12 @@ function AuthScreen() {
       active = false;
       sub.subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [navigate, queryClient]);
 
   async function handleDevEntry() {
     setBusy(true);
     try {
-      const { data: sessionRes } = await supabase.auth.getSession();
-      if (sessionRes.session) await supabase.auth.signOut({ scope: "local" });
-      setDevFreeEntryActive();
+      await beginDevFreeEntry(queryClient);
       toast.success("Vývojársky prístup aktivovaný — free vstup");
       await navigate({ to: "/prehlad", replace: true });
     } catch (error) {

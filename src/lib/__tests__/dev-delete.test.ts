@@ -79,4 +79,10 @@ describe("dev delete impact", () => {
     deleteDevRecord("case", id);
     expect(listDevCases().some((item) => item.id === id)).toBe(false);
   });
+
+  it("does not claim events can be deleted by id", () => {
+    const impact = describeDevDeleteImpact("event", "anything");
+    expect(impact.canDelete).toBe(false);
+    expect(impact.blockers.length).toBeGreaterThan(0);
+  });
 });
