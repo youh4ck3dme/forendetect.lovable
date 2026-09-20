@@ -3,6 +3,7 @@ import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { isLoopbackHost, normalizeHost } from "@/lib/loopback-host";
 
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
@@ -41,6 +42,16 @@ const DEV_CLAIMS = {
   email: "dev@forendo.local",
 } as unknown as import("@supabase/supabase-js").JwtPayload;
 
+function requestHost(request: Request | undefined): string {
+  return normalizeHost(
+    request?.headers?.get("x-forwarded-host") ?? request?.headers?.get("host"),
+  );
+}
+
+function allowLocalDevBypass(request: Request | undefined): boolean {
+  return isLoopbackHost(requestHost(request));
+}
+
 export const requireSupabaseAuth = createMiddleware({
   type: "function",
 }).server(async ({ next }) => {
@@ -58,11 +69,11 @@ export const requireSupabaseAuth = createMiddleware({
   }
 
   const request = getRequest();
-  const isDev = process.env["NODE_ENV"] !== "production";
+  const localBypass = allowLocalDevBypass(request);
   const devHeader = request?.headers?.get("x-dev-free-entry");
 
   if (!request?.headers) {
-    if (isDev) {
+    if (localBypass) {
       const supabase = createClient<Database>(
         SUPABASE_URL!,
         SUPABASE_PUBLISHABLE_KEY!,
@@ -80,9 +91,9 @@ export const requireSupabaseAuth = createMiddleware({
 
   const authHeader = request.headers.get("authorization");
 
-  // Dev Free Entry / Local Dev Bypass (Non-Production Only)
+  // Dev Free Entry — len loopback, nikdy Vercel/Lovable preview.
   if (
-    isDev &&
+    localBypass &&
     (!authHeader ||
       authHeader.includes("dev-free-entry") ||
       devHeader === "true" ||
@@ -115,7 +126,7 @@ export const requireSupabaseAuth = createMiddleware({
   }
 
   if (token.split(".").length !== 3) {
-    if (isDev) {
+    if (localBypass) {
       const supabase = createClient<Database>(
         SUPABASE_URL!,
         SUPABASE_PUBLISHABLE_KEY!,

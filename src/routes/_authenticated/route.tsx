@@ -2,9 +2,14 @@
 // behind a signed-in Supabase user. The subtree is client-rendered (`ssr: false`)
 // because Supabase stores the session in `localStorage`, which the server cannot read.
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ActiveCaseProvider } from "@/hooks/useActiveCase";
 import { DEV_MOCK_USER, isDevFreeEntryActive } from "@/lib/dev-auth";
+import {
+  isAuthSessionError,
+  SESSION_EXPIRED_MESSAGE,
+} from "@/lib/session-error";
 
 const SIGN_IN_ROUTE = "/auth";
 
@@ -19,7 +24,13 @@ export const Route = createFileRoute("/_authenticated")({
       };
     }
     const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) {
+    if (error) {
+      if (isAuthSessionError(error)) {
+        toast.error(SESSION_EXPIRED_MESSAGE);
+      }
+      throw redirect({ to: SIGN_IN_ROUTE });
+    }
+    if (!data.user) {
       throw redirect({ to: SIGN_IN_ROUTE });
     }
     return { user: data.user };

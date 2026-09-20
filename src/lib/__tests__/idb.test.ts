@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { idbClear, idbGet, idbSet } from "../idb";
+import { idbClear, idbDelete, idbGet, idbSet } from "../idb";
 
 describe("IndexedDB store", () => {
   it("surfaces an explicit error when IndexedDB is unavailable", async () => {
@@ -8,5 +8,8 @@ describe("IndexedDB store", () => {
       "IndexedDB nie je dostupné",
     );
     await expect(idbClear()).rejects.toThrow("IndexedDB nie je dostupné");
+    await expect(idbDelete("state")).rejects.toThrow(
+      "IndexedDB nie je dostupné",
+    );
   });
 });
