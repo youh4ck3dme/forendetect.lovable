@@ -3,7 +3,10 @@ import type { Page } from "@playwright/test";
 
 async function enterApp(page: Page) {
   await page.goto("/auth");
-  await page.getByRole("button", { name: /Dev Free Entry/i }).click();
+  const btn = page.getByRole("button", { name: /Developer|Dev Free Entry/i });
+  await expect(btn).toBeEnabled();
+  await btn.click();
+  await page.waitForURL(/\/prehlad$/);
 }
 
 test("auth defaults to light theme and email-first login", async ({ page }) => {
@@ -19,6 +22,8 @@ test("auth defaults to light theme and email-first login", async ({ page }) => {
   await expect(
     page.getByRole("button", { name: "Pokračovať cez Google" }),
   ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Developer/i })).toBeVisible();
+  await expect(page.getByText("Free vstup")).toBeVisible();
   await expect(page.getByLabel("E-mail")).toBeVisible();
   await expect(page.locator("#password")).toHaveCount(0);
   await expect(
@@ -31,8 +36,13 @@ test("allowlisted email opens first-login password step without RPC", async ({
   page,
 }) => {
   await page.goto("/auth");
+  const continueBtn = page.getByRole("button", {
+    name: "Pokračovať",
+    exact: true,
+  });
+  await expect(continueBtn).toBeEnabled();
   await page.getByLabel("E-mail").fill("erikbabcan@gmail.com");
-  await page.getByRole("button", { name: "Pokračovať", exact: true }).click();
+  await continueBtn.click();
   await expect(
     page.getByRole("heading", { name: "Zvoľte heslo" }),
   ).toBeVisible();

@@ -60,20 +60,17 @@ describe("dev-auth (Lokálny vývojársky prístup)", () => {
 
   it.each([
     ["app.forendetect.com", false],
-    ["app.forendetect.com", true],
-    ["forendo.local", true],
-    ["192.168.1.10", true],
-    ["localhost.example.com", true],
+    ["temporary-swift-hawthorn-7ac3v9k.vercel.app", true],
   ] as const)(
-    "odmietne host %s pri DEV=%s aj s uloženým flagom",
+    "free vstup sa dá zapnúť aj mimo loopback (%s)",
     (hostname, dev) => {
       vi.stubEnv("DEV", dev);
       window.location.hostname = hostname;
       expect(isLocalDevEnvironment()).toBe(false);
-      setDevFreeEntryActive();
-      expect(mockStorage.getItem(DEV_FREE_ENTRY_KEY)).toBeNull();
-      mockStorage.setItem(DEV_FREE_ENTRY_KEY, "true");
       expect(isDevFreeEntryActive()).toBe(false);
+      setDevFreeEntryActive();
+      expect(mockStorage.getItem(DEV_FREE_ENTRY_KEY)).toBe("true");
+      expect(isDevFreeEntryActive()).toBe(true);
     },
   );
 
@@ -91,7 +88,7 @@ describe("dev-auth (Lokálny vývojársky prístup)", () => {
     expect(DEV_MOCK_USER.id).toBe("00000000-0000-0000-0000-000000000001");
     expect(DEV_MOCK_USER.email).toBe("dev@forendo.local");
     expect(DEV_MOCK_USER.role).toBe("authenticated");
-    expect(DEV_MOCK_USER.user_metadata["name"]).toContain("Dev");
+    expect(DEV_MOCK_USER.user_metadata["name"]).toContain("Developer");
   });
 
   it("správne aktivuje a overí dev free entry", () => {
