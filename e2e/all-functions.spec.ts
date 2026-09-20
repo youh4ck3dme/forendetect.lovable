@@ -177,6 +177,12 @@ test.describe("All functions — screens after Developer free vstup", () => {
     await page.getByRole("button", { name: "Vytvoriť prípad" }).click();
     await expect(page.getByText("Prípad vytvorený.")).toBeVisible();
     await expect(page.getByText("Testovací prípad QA")).toBeVisible();
+    page.once("dialog", (dialog) => dialog.accept());
+    await page
+      .getByRole("button", { name: "Zmazať Testovací prípad QA" })
+      .click();
+    await expect(page.getByText("Zmazané.")).toBeVisible();
+    await expect(page.getByText("Testovací prípad QA")).toHaveCount(0);
     await page
       .getByRole("button", { name: "Vytvoriť ukážkový prípad" })
       .click();

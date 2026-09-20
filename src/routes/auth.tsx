@@ -49,7 +49,10 @@ function AuthScreen() {
     let active = true;
     setMounted(true);
     if (isDevFreeEntryActive()) {
-      void navigate({ to: "/prehlad", replace: true });
+      void supabase.auth.getSession().then(async ({ data }) => {
+        if (data.session) await supabase.auth.signOut();
+        if (active) void navigate({ to: "/prehlad", replace: true });
+      });
       return;
     }
     void supabase.auth.getUser().then((res: { data: { user: unknown } }) => {
@@ -71,6 +74,8 @@ function AuthScreen() {
   async function handleDevEntry() {
     setBusy(true);
     try {
+      const { data: sessionRes } = await supabase.auth.getSession();
+      if (sessionRes.session) await supabase.auth.signOut();
       setDevFreeEntryActive();
       toast.success("Vývojársky prístup aktivovaný — free vstup");
       await navigate({ to: "/prehlad", replace: true });

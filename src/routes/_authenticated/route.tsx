@@ -18,6 +18,8 @@ export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ context }) => {
     if (isDevFreeEntryActive()) {
+      const { data: sessionRes } = await supabase.auth.getSession();
+      if (sessionRes.session) await supabase.auth.signOut();
       return {
         user: DEV_MOCK_USER as unknown as NonNullable<
           Awaited<ReturnType<typeof supabase.auth.getUser>>["data"]["user"]

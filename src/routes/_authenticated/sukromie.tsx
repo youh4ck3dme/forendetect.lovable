@@ -20,6 +20,7 @@ import { BRAND } from "@/config/brand";
 import { exportMyData, deleteMyAccount } from "@/lib/account.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { clearClientState } from "@/lib/pwa";
+import { clearDevFreeEntry } from "@/lib/dev-auth";
 
 export const Route = createFileRoute("/_authenticated/sukromie")({
   head: () => ({
@@ -72,6 +73,7 @@ function PrivacyScreen() {
     try {
       await runDelete({ data: { confirmEmail } });
       await supabase.auth.signOut();
+      clearDevFreeEntry();
       queryClient.clear();
       await clearClientState();
       toast.success("Účet a údaje boli zmazané.");
