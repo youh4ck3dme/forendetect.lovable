@@ -188,9 +188,10 @@ test.describe("UI Release Audit - Critical Flows", () => {
       await expect(emailInput).toBeVisible();
       await expect(emailInput).toHaveAttribute("type", "email");
 
-      const passwordInput = page.locator("#password");
-      await expect(passwordInput).toBeVisible();
-      await expect(passwordInput).toHaveAttribute("type", "password");
+      await expect(page.locator("#password")).toHaveCount(0);
+      await expect(
+        page.getByRole("button", { name: "Pokračovať", exact: true }),
+      ).toBeVisible();
     });
   });
 

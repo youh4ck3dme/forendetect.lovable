@@ -23,6 +23,8 @@ import {
   type CaseSummary,
 } from "@/lib/case-data";
 import {
+  ACTIVE_CASE_STORAGE_KEY,
+  clearExpiredSessionArtifacts,
   isAuthSessionError,
   SESSION_EXPIRED_MESSAGE,
 } from "@/lib/session-error";
@@ -41,7 +43,6 @@ type Ctx = {
 };
 
 const ActiveCaseContext = createContext<Ctx | null>(null);
-const STORAGE_KEY = "malte:active-case";
 
 export function ActiveCaseProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
@@ -54,7 +55,7 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored = window.localStorage.getItem(ACTIVE_CASE_STORAGE_KEY);
     if (stored) setActiveCaseIdState(stored);
   }, []);
 
@@ -72,8 +73,8 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
   const setActiveCaseId = (id: string | null) => {
     setActiveCaseIdState(id);
     if (typeof window !== "undefined") {
-      if (id) window.localStorage.setItem(STORAGE_KEY, id);
-      else window.localStorage.removeItem(STORAGE_KEY);
+      if (id) window.localStorage.setItem(ACTIVE_CASE_STORAGE_KEY, id);
+      else window.localStorage.removeItem(ACTIVE_CASE_STORAGE_KEY);
     }
   };
 
@@ -95,8 +96,15 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
     if (!isAuthSessionError(err)) return;
     redirected.current = true;
     toast.error(SESSION_EXPIRED_MESSAGE);
+    clearExpiredSessionArtifacts(() => queryClient.clear());
     void navigate({ to: "/auth", replace: true });
-  }, [casesQuery.error, caseQuery.error, revisionsQuery.error, navigate]);
+  }, [
+    casesQuery.error,
+    caseQuery.error,
+    revisionsQuery.error,
+    navigate,
+    queryClient,
+  ]);
 
   const activeCase = caseQuery.data ?? EMPTY_CASE;
   const analysis = useMemo(() => analyzeCase(activeCase), [activeCase]);

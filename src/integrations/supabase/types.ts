@@ -70,6 +70,24 @@ export type Database = {
           },
         ];
       };
+      allowed_emails: {
+        Row: {
+          created_at: string;
+          email: string;
+          role: Database["public"]["Enums"]["app_role"];
+        };
+        Insert: {
+          created_at?: string;
+          email: string;
+          role?: Database["public"]["Enums"]["app_role"];
+        };
+        Update: {
+          created_at?: string;
+          email?: string;
+          role?: Database["public"]["Enums"]["app_role"];
+        };
+        Relationships: [];
+      };
       billing_events: {
         Row: {
           event_created_at: string | null;
@@ -791,6 +809,10 @@ export type Database = {
           _user_id: string;
         };
         Returns: boolean;
+      };
+      lookup_signup_email: {
+        Args: { _email: string };
+        Returns: Json;
       };
       reserve_ai_call: {
         Args: {

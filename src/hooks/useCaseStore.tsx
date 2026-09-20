@@ -34,6 +34,7 @@ export type CaseState = {
 };
 
 export const THEME_STORAGE_KEY = "malte:theme";
+export const DEFAULT_THEME: ThemeMode = "light";
 
 export function readStoredTheme(): ThemeMode | null {
   if (typeof window === "undefined") return null;
@@ -47,21 +48,34 @@ export function readStoredTheme(): ThemeMode | null {
   return null;
 }
 
+/** Predvolená téma je svetlá; uložené "system" sa správa ako light. */
+export function resolveTheme(theme: ThemeMode | null | undefined): ThemeMode {
+  if (theme === "dark") return "dark";
+  if (theme === "light") return "light";
+  return DEFAULT_THEME;
+}
+
 export function applyDocumentTheme(theme: ThemeMode) {
   if (typeof document === "undefined") return;
-  let systemDark = false;
-  try {
-    systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  } catch {
-    // ignore
-  }
-  const dark = theme === "dark" || (theme === "system" && systemDark);
+  const dark = resolveTheme(theme) === "dark";
   document.documentElement.classList.toggle("dark", dark);
   document.documentElement.style.colorScheme = dark ? "dark" : "light";
 }
 
+function persistResolvedTheme(theme: ThemeMode) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // ignore
+  }
+}
+
 function getInitialTheme(): ThemeMode {
-  return readStoredTheme() ?? "system";
+  const stored = readStoredTheme();
+  const theme = resolveTheme(stored);
+  if (stored === "system") persistResolvedTheme(theme);
+  return theme;
 }
 
 const EMPTY: CaseState = {
@@ -137,17 +151,17 @@ export function CaseStoreProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         const lsTheme = readStoredTheme();
         if (stored) {
-          const theme = lsTheme ?? stored.theme ?? "system";
-          if (!lsTheme && stored.theme) {
-            try {
-              localStorage.setItem(THEME_STORAGE_KEY, stored.theme);
-            } catch {
-              // ignore
-            }
+          const theme = resolveTheme(lsTheme ?? stored.theme);
+          if (!lsTheme || lsTheme === "system") {
+            persistResolvedTheme(theme);
           }
           setState({ ...EMPTY, ...stored, theme });
         } else {
-          setState((prev) => ({ ...EMPTY, theme: lsTheme ?? prev.theme }));
+          setState((prev) => {
+            const theme = resolveTheme(lsTheme ?? prev.theme);
+            if (lsTheme === "system") persistResolvedTheme(theme);
+            return { ...EMPTY, theme };
+          });
         }
       })
       .catch(() => undefined)

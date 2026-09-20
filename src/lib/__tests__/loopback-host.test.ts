@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { isLoopbackHost, normalizeHost } from "../loopback-host";
+import {
+  isLoopbackHost,
+  loopbackHostFromRequest,
+  normalizeHost,
+} from "../loopback-host";
 
 describe("loopback-host", () => {
   it("normalizuje Host aj X-Forwarded-Host s portom", () => {
@@ -19,5 +23,19 @@ describe("loopback-host", () => {
     expect(isLoopbackHost("temporary-swift-hawthorn-7ac3v9k.vercel.app")).toBe(
       false,
     );
+  });
+
+  it("dev bypass ignoruje sfalšovaný x-forwarded-host", () => {
+    const spoofed = {
+      headers: {
+        get(name: string) {
+          if (name === "x-forwarded-host") return "localhost";
+          if (name === "host") return "preview.vercel.app";
+          return null;
+        },
+      },
+    };
+    expect(loopbackHostFromRequest(spoofed)).toBe("preview.vercel.app");
+    expect(isLoopbackHost(loopbackHostFromRequest(spoofed))).toBe(false);
   });
 });
