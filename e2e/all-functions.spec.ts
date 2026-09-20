@@ -255,6 +255,19 @@ test.describe("All functions — screens after Developer free vstup", () => {
     await expect(page.locator("html")).not.toHaveClass(/dark/);
   });
 
+  test("ICO Atlas explains demo mode instead of a uuid error", async ({
+    page,
+  }) => {
+    await enterApp(page);
+    await page.goto("/osoby");
+    await page.getByPlaceholder(/Zadajte IČO/).fill("31322832");
+    await page.getByRole("button", { name: "Importovať z ICO Atlas" }).click();
+    await expect(
+      page.getByText(/IČO Atlas v demo režime nie je pripojený/),
+    ).toBeVisible();
+    await expect(page.getByText(/dev-user-id/)).toHaveCount(0);
+  });
+
   test("sign out returns to auth and blocks dashboard", async ({ page }) => {
     await enterApp(page);
     await page.goto("/viac");
