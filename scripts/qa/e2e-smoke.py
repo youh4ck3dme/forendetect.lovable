@@ -5,9 +5,9 @@ Spustenie (dev server musí bežať na http://localhost:8080):
     python3 scripts/qa/e2e-smoke.py
 
 Overuje:
-  - verejný úvod a prihlasovaciu obrazovku (vrátane Google tlačidla),
+  - verejný úvod a prihlasovaciu obrazovku (Google je vypnuté),
   - ochranu chránených trás pre neprihláseného návštevníka,
-  - vstup cez lokálny vývojársky režim,
+  - vstup cez vývojársky free vstup,
   - načítanie všetkých hlavných obrazoviek bez chýb v konzole,
   - absenciu horizontálneho pretekania na mobile aj desktope.
 """
@@ -76,20 +76,20 @@ async def main() -> int:
         await page.wait_for_timeout(1500)
         check("/auth" in page.url, "neprihlásený je presmerovaný na prihlásenie")
 
-        # 3. Prihlasovacia obrazovka a Google tlačidlo
+        # 3. Prihlasovacia obrazovka: Google skryté, Developer free vstup viditeľný
         await page.goto(f"{BASE}/auth", wait_until="domcontentloaded")
         await page.wait_for_timeout(800)
         google = page.get_by_role("button", name="Pokračovať cez Google")
-        check(await google.count() > 0, "tlačidlo Google prihlásenia existuje")
+        check(await google.count() == 0, "tlačidlo Google prihlásenia je skryté")
         check(
             await page.locator("#email").count() > 0
-            and await page.locator("#password").count() > 0,
-            "formulár e-mail + heslo existuje",
+            and await page.locator("#password").count() == 0,
+            "formulár e-mail-first existuje",
         )
 
-        # 4. Lokálny vývojársky vstup
-        dev = page.get_by_role("button", name="Dev Free Entry")
-        check(await dev.count() > 0, "lokálny vývojársky vstup je dostupný")
+        # 4. Vývojársky free vstup
+        dev = page.get_by_role("button", name="Developer")
+        check(await dev.count() > 0, "vývojársky free vstup je dostupný")
         await dev.click()
         await page.wait_for_timeout(2500)
         check("/prehlad" in page.url, "vývojársky vstup otvorí prehľad")

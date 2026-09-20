@@ -3,7 +3,7 @@ import type { Page } from "@playwright/test";
 
 async function enterApp(page: Page) {
   await page.goto("/auth");
-  await page.getByRole("button", { name: /Dev Free Entry/i }).click();
+  await page.getByRole("button", { name: /Developer|Dev Free Entry/i }).click();
 }
 
 test("auth defaults to light theme and email-first login", async ({ page }) => {
@@ -19,6 +19,8 @@ test("auth defaults to light theme and email-first login", async ({ page }) => {
   await expect(
     page.getByRole("button", { name: "Pokračovať cez Google" }),
   ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Developer/i })).toBeVisible();
+  await expect(page.getByText("Free vstup")).toBeVisible();
   await expect(page.getByLabel("E-mail")).toBeVisible();
   await expect(page.locator("#password")).toHaveCount(0);
   await expect(

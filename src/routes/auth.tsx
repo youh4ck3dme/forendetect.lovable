@@ -5,11 +5,7 @@ import { ArrowLeft, Loader2, Lock, Mail, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/malte/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  isDevFreeEntryActive,
-  isLocalDevEnvironment,
-  setDevFreeEntryActive,
-} from "@/lib/dev-auth";
+import { isDevFreeEntryActive, setDevFreeEntryActive } from "@/lib/dev-auth";
 import { consumeAfterLoginPath } from "@/lib/after-login";
 import {
   isAlreadyRegisteredAuthError,
@@ -47,11 +43,9 @@ function AuthScreen() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [busy, setBusy] = useState(false);
-  const [isLocal, setIsLocal] = useState(false);
 
   useEffect(() => {
     let active = true;
-    setIsLocal(isLocalDevEnvironment());
     if (isDevFreeEntryActive()) {
       void navigate({ to: "/prehlad", replace: true });
       return;
@@ -76,7 +70,7 @@ function AuthScreen() {
     setBusy(true);
     try {
       setDevFreeEntryActive();
-      toast.success("⚡ Vývojársky prístup aktivovaný (lokálny režim)");
+      toast.success("Vývojársky prístup aktivovaný — free vstup");
       await navigate({ to: "/prehlad", replace: true });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Dev vstup zlyhal.");
@@ -196,35 +190,33 @@ function AuthScreen() {
           </p>
         </div>
 
-        {isLocal && (
-          <div className="space-y-3">
-            <div className="space-y-1.5 pt-0.5">
-              <Button
-                type="button"
-                variant="secondary"
-                className="group relative flex h-11 w-full items-center justify-between rounded-xl border border-dashed border-amber-500/60 bg-amber-500/10 px-3 font-semibold text-amber-600 shadow-xs transition-all hover:border-amber-500 hover:bg-amber-500/20 active:scale-[0.99] dark:text-amber-400"
-                disabled={busy}
-                onClick={handleDevEntry}
-              >
-                <div className="flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-amber-500 transition-transform group-hover:scale-125" />
-                  <span>Dev Free Entry</span>
-                </div>
-                <span className="rounded-md border border-amber-500/30 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-amber-600 dark:text-amber-300">
-                  lokál
-                </span>
-              </Button>
-              <p className="text-center text-[11px] text-muted-foreground">
-                ⚡ Okamžitý bezplatný vstup pre testovanie (len na localhost).
-              </p>
-            </div>
-            <div className="flex items-center gap-3 text-caption">
-              <span className="h-px flex-1 bg-border" />
-              alebo
-              <span className="h-px flex-1 bg-border" />
-            </div>
+        <div className="space-y-3">
+          <div className="space-y-1.5 pt-0.5">
+            <Button
+              type="button"
+              variant="secondary"
+              className="group relative flex h-11 w-full items-center justify-between rounded-xl border border-dashed border-emerald-400/80 bg-emerald-500/15 px-3 font-semibold text-emerald-800 shadow-xs transition-all hover:border-emerald-500 hover:bg-emerald-500/25 active:scale-[0.99] dark:text-emerald-300"
+              disabled={busy}
+              onClick={handleDevEntry}
+            >
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-emerald-500 transition-transform group-hover:scale-125" />
+                <span>Developer</span>
+              </div>
+              <span className="rounded-md border border-emerald-500/40 bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-emerald-700 dark:text-emerald-200">
+                Free vstup
+              </span>
+            </Button>
+            <p className="text-center text-[11px] text-muted-foreground">
+              Okamžitý bezplatný vývojársky vstup do aplikácie.
+            </p>
           </div>
-        )}
+          <div className="flex items-center gap-3 text-caption">
+            <span className="h-px flex-1 bg-border" />
+            alebo
+            <span className="h-px flex-1 bg-border" />
+          </div>
+        </div>
 
         {step === "email" ? (
           <form className="space-y-3" onSubmit={handleEmailContinue}>
