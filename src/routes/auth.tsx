@@ -176,7 +176,7 @@ function AuthScreen() {
         </Button>
         <ThemeToggle />
       </div>
-      <div className="w-full max-w-sm space-y-6">
+      <div className="forenx-glass w-full max-w-sm space-y-6 p-6">
         <div className="flex flex-col items-center gap-2 text-center">
           <img
             src="/favicon-32x32.png"
@@ -201,16 +201,16 @@ function AuthScreen() {
           <div className="space-y-1.5 pt-0.5">
             <Button
               type="button"
-              variant="secondary"
-              className="group relative flex h-11 w-full items-center justify-between rounded-xl border border-dashed border-emerald-400/80 bg-emerald-500/15 px-3 font-semibold text-emerald-800 shadow-xs transition-all hover:border-emerald-500 hover:bg-emerald-500/25 active:scale-[0.99] dark:text-emerald-300"
+              variant="default"
+              className="group relative flex h-11 w-full items-center justify-between px-3 font-semibold"
               disabled={busy || !mounted}
               onClick={handleDevEntry}
             >
               <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-emerald-500 transition-transform group-hover:scale-125" />
+                <Zap className="h-4 w-4 text-[color:var(--forenx-color-text-button)] transition-transform group-hover:scale-125" />
                 <span>Developer</span>
               </div>
-              <span className="rounded-md border border-emerald-500/40 bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-emerald-700 dark:text-emerald-200">
+              <span className="rounded-md border border-white/40 bg-black/10 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-[color:var(--forenx-color-text-button)]">
                 Free vstup
               </span>
             </Button>
@@ -242,7 +242,7 @@ function AuthScreen() {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
+                className="h-11 w-full forenx-input text-sm outline-none transition-all"
               />
             </div>
             <Button
@@ -294,7 +294,7 @@ function AuthScreen() {
                 autoComplete={firstLogin ? "new-password" : "current-password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
+                className="h-11 w-full forenx-input text-sm outline-none transition-all"
               />
             </div>
             {firstLogin && (
@@ -314,7 +314,7 @@ function AuthScreen() {
                   autoComplete="new-password"
                   value={passwordConfirm}
                   onChange={(e) => setPasswordConfirm(e.target.value)}
-                  className="h-11 w-full rounded-xl border border-border bg-card px-3 text-sm outline-none transition-all focus:border-primary/50 focus:ring-2 focus:ring-ring"
+                  className="h-11 w-full forenx-input text-sm outline-none transition-all"
                 />
               </div>
             )}
