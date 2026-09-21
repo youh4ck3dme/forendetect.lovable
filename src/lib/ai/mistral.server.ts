@@ -6,10 +6,10 @@
 
 export const MISTRAL_ENDPOINT = "https://api.mistral.ai/v1/chat/completions";
 export const DEFAULT_MODEL = "mistral-large-latest";
-/** Chat/completions — 60s, aby veľký Autopilot nestíhal vypadnúť. */
-export const REQUEST_TIMEOUT_MS = 60_000;
-/** OCR (Mistral / xAI vision) — 2× chat timeout. */
-export const OCR_TIMEOUT_MS = 120_000;
+/** Chat/completions — 220s, aby veľký Autopilot nestíhal vypadnúť. */
+export const REQUEST_TIMEOUT_MS = 220_000;
+/** OCR (Mistral / xAI vision) — rovnaký strop ako chat. */
+export const OCR_TIMEOUT_MS = 220_000;
 
 export type MistralMessage = { role: "system" | "user"; content: string };
 

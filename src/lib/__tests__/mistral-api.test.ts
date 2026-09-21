@@ -156,7 +156,7 @@ describe("Mistral API Integration Tests", () => {
       }
     });
 
-    it("abortuje chat až po 60s (2× pôvodný limit)", async () => {
+    it("abortuje chat až po 220s", async () => {
       vi.useFakeTimers();
       try {
         let aborted = false;
@@ -176,15 +176,15 @@ describe("Mistral API Integration Tests", () => {
         const { callMistral, REQUEST_TIMEOUT_MS, OCR_TIMEOUT_MS } = await import(
           "@/lib/ai/mistral.server"
         );
-        expect(REQUEST_TIMEOUT_MS).toBe(60_000);
-        expect(OCR_TIMEOUT_MS).toBe(120_000);
+        expect(REQUEST_TIMEOUT_MS).toBe(220_000);
+        expect(OCR_TIMEOUT_MS).toBe(220_000);
 
         const pending = callMistral({
           messages: [{ role: "user", content: "Test" }],
           fetchImpl: mockFetch,
         });
 
-        await vi.advanceTimersByTimeAsync(59_999);
+        await vi.advanceTimersByTimeAsync(219_999);
         expect(aborted).toBe(false);
 
         await vi.advanceTimersByTimeAsync(1);
