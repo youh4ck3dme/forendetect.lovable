@@ -155,6 +155,46 @@ describe("Mistral API Integration Tests", () => {
         expect(result.message).toContain("prekročilo časový limit");
       }
     });
+
+    it("abortuje chat až po 60s (2× pôvodný limit)", async () => {
+      vi.useFakeTimers();
+      try {
+        let aborted = false;
+        mockFetch.mockImplementation(
+          (_url: string, init?: { signal?: AbortSignal }) =>
+            new Promise((_resolve, reject) => {
+              init?.signal?.addEventListener("abort", () => {
+                aborted = true;
+                const err = new Error("Aborted");
+                err.name = "AbortError";
+                reject(err);
+              });
+            }),
+        );
+        process.env["MISTRAL_API_KEY"] = "test_api_key";
+
+        const { callMistral, REQUEST_TIMEOUT_MS, OCR_TIMEOUT_MS } = await import(
+          "@/lib/ai/mistral.server"
+        );
+        expect(REQUEST_TIMEOUT_MS).toBe(60_000);
+        expect(OCR_TIMEOUT_MS).toBe(120_000);
+
+        const pending = callMistral({
+          messages: [{ role: "user", content: "Test" }],
+          fetchImpl: mockFetch,
+        });
+
+        await vi.advanceTimersByTimeAsync(59_999);
+        expect(aborted).toBe(false);
+
+        await vi.advanceTimersByTimeAsync(1);
+        const result = await pending;
+        expect(aborted).toBe(true);
+        expect(result.status).toBe("timeout");
+      } finally {
+        vi.useRealTimers();
+      }
+    });
   });
 
   describe("callMistralOcr function", () => {

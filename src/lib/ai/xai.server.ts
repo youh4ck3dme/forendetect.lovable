@@ -4,7 +4,7 @@
  */
 
 import type { MistralMessage, MistralResult } from "./mistral.server";
-import { REQUEST_TIMEOUT_MS } from "./mistral.server";
+import { OCR_TIMEOUT_MS, REQUEST_TIMEOUT_MS } from "./mistral.server";
 
 export const XAI_ENDPOINT = "https://api.x.ai/v1/chat/completions";
 export const DEFAULT_XAI_MODEL = "grok-4.6";
@@ -130,7 +130,7 @@ export async function callXaiVisionOcr(
 
   const doFetch = fetchImpl ?? fetch;
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 60_000);
+  const timer = setTimeout(() => controller.abort(), OCR_TIMEOUT_MS);
   try {
     const response = await doFetch(XAI_ENDPOINT, {
       method: "POST",

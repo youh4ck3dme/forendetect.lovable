@@ -6,7 +6,10 @@
 
 export const MISTRAL_ENDPOINT = "https://api.mistral.ai/v1/chat/completions";
 export const DEFAULT_MODEL = "mistral-large-latest";
-export const REQUEST_TIMEOUT_MS = 30_000;
+/** Chat/completions — 60s, aby veľký Autopilot nestíhal vypadnúť. */
+export const REQUEST_TIMEOUT_MS = 60_000;
+/** OCR (Mistral / xAI vision) — 2× chat timeout. */
+export const OCR_TIMEOUT_MS = 120_000;
 
 export type MistralMessage = { role: "system" | "user"; content: string };
 
@@ -251,7 +254,7 @@ export async function callMistralOcr(
       : { type: "document_url", document_url: documentUrl };
 
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 60_000); // 60s timeout pre OCR
+    const timer = setTimeout(() => controller.abort(), OCR_TIMEOUT_MS);
 
     try {
       const ocrRes = await fetch("https://api.mistral.ai/v1/ocr", {
