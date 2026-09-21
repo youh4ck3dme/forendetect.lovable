@@ -20,6 +20,7 @@ import { BRAND } from "@/config/brand";
 import { exportMyData, deleteMyAccount } from "@/lib/account.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { clearClientState } from "@/lib/pwa";
+import { isDevFreeEntryActive, clearDevFreeEntry } from "@/lib/dev-auth";
 
 export const Route = createFileRoute("/_authenticated/sukromie")({
   head: () => ({
@@ -49,6 +50,12 @@ function PrivacyScreen() {
   const [busy, setBusy] = useState(false);
 
   async function handleExport() {
+    if (isDevFreeEntryActive()) {
+      toast.error(
+        "V demo režime nie je živý účet. Prihláste sa e-mailom na export.",
+      );
+      return;
+    }
     setBusy(true);
     try {
       const { json } = await runExport({ data: undefined });
@@ -70,6 +77,14 @@ function PrivacyScreen() {
   async function handleDeleteAccount() {
     setBusy(true);
     try {
+      if (isDevFreeEntryActive()) {
+        clearDevFreeEntry();
+        queryClient.clear();
+        await clearClientState();
+        toast.success("Demo údaje boli zmazané.");
+        void navigate({ to: "/auth", replace: true });
+        return;
+      }
       await runDelete({ data: { confirmEmail } });
       await supabase.auth.signOut();
       queryClient.clear();

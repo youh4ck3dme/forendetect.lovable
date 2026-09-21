@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getSourceDownloadUrl } from "@/lib/source-download.functions";
 import { LogOut } from "lucide-react";
 import { clearClientState } from "@/lib/pwa";
+import { clearDevFreeEntry } from "@/lib/dev-auth";
 
 import {
   ChevronRight,
@@ -87,6 +88,7 @@ function More() {
     await queryClient.cancelQueries();
     queryClient.clear();
     await supabase.auth.signOut();
+    clearDevFreeEntry();
     // Vyčistí citlivý klientský stav, aby ďalší účet na zariadení nevidel cudzie dáta.
     await clearClientState();
     void navigate({ to: "/auth", replace: true });

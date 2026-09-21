@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ActiveCaseProvider } from "@/hooks/useActiveCase";
 import { DEV_MOCK_USER, isDevFreeEntryActive } from "@/lib/dev-auth";
+import { dropLeftoverSessionForDemo } from "@/lib/dev-entry";
 import {
   clearExpiredSessionArtifacts,
   isAuthSessionError,
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async ({ context }) => {
     if (isDevFreeEntryActive()) {
+      await dropLeftoverSessionForDemo(context.queryClient);
       return {
         user: DEV_MOCK_USER as unknown as NonNullable<
           Awaited<ReturnType<typeof supabase.auth.getUser>>["data"]["user"]
