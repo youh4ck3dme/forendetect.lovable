@@ -288,11 +288,16 @@
 }
 
 .forenx-input {
-  background: color-mix(in srgb, var(--forenx-color-background) 58%, transparent);
+  background: color-mix(in srgb, var(--forenx-color-background) 6%, white);
   color: var(--foreground);
   border: 1px solid var(--forenx-glass-border);
   border-radius: var(--forenx-control-radius);
   padding: var(--forenx-space-4);
+}
+
+.dark .forenx-input {
+  background: color-mix(in srgb, var(--forenx-color-background) 58%, transparent);
+  color: var(--forenx-color-text-primary);
 }
 
 .forenx-input::placeholder {
