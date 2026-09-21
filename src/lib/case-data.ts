@@ -14,6 +14,7 @@ import {
   upsertDevWeapon,
   upsertDevEvent,
   deleteDevRecord,
+  describeDevDeleteImpact,
 } from "@/lib/dev-cases";
 import {
   deleteRecord,
@@ -208,7 +209,24 @@ export const upsertEvent = async (
   return saveEvent(args);
 };
 
-export const describeDeleteImpact = getDeleteImpact;
+export async function describeDeleteImpact(args: {
+  data: { type: string; id: string };
+}) {
+  if (isDevFreeEntryActive()) {
+    return describeDevDeleteImpact(args.data.type, args.data.id);
+  }
+  return getDeleteImpact(args as Parameters<typeof getDeleteImpact>[0]);
+}
+
+export async function removeRecord(args: {
+  data: { type: string; id: string };
+}) {
+  if (isDevFreeEntryActive()) {
+    deleteDevRecord(args.data.type, args.data.id);
+    return;
+  }
+  await deleteRecord(args as Parameters<typeof deleteRecord>[0]);
+}
 
 export const deleteCase = async (id: string) => {
   if (isDevFreeEntryActive()) {

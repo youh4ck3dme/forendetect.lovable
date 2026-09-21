@@ -541,6 +541,78 @@ export function upsertDevEvent(data: Record<string, unknown>): { id: string } {
   return { id };
 }
 
+export type DeleteImpact = {
+  blockers: string[];
+  cascades: string[];
+  canDelete: boolean;
+};
+
+/** Dopad mazania v lokálnom demo úložisku — bez serverových funkcií. */
+export function describeDevDeleteImpact(
+  type: string,
+  id: string,
+): DeleteImpact {
+  const cases = getStoredDevCases();
+  const blockers: string[] = [];
+  const cascades: string[] = [];
+
+  if (type === "case") {
+    const target = cases.find((item) => item.id === id);
+    if (target) {
+      if (target.entities.length)
+        cascades.push(`${target.entities.length} subjektov`);
+      if (target.transactions.length)
+        cascades.push(`${target.transactions.length} transakcií`);
+      if (target.relations.length)
+        cascades.push(`${target.relations.length} vzťahov`);
+      if (target.weapons.length)
+        cascades.push(`${target.weapons.length} zbraní`);
+      if (target.events.length)
+        cascades.push(`${target.events.length} udalostí`);
+    }
+    return { blockers, cascades, canDelete: true };
+  }
+
+  if (type === "event") {
+    return {
+      blockers: ["udalosti v demo režime nemajú samostatné ID"],
+      cascades: [],
+      canDelete: false,
+    };
+  }
+
+  const owner = cases.find((item) => {
+    if (type === "entity")
+      return item.entities.some((entity) => entity.id === id);
+    if (type === "transaction")
+      return item.transactions.some((tx) => tx.id === id);
+    if (type === "weapon")
+      return item.weapons.some((weapon) => weapon.id === id);
+    if (type === "relation")
+      return item.relations.some(
+        (relation) => `${relation.fromId}-${relation.toId}` === id,
+      );
+    return false;
+  });
+
+  if (type === "entity" && owner) {
+    const tx = owner.transactions.filter(
+      (item) => item.fromId === id || item.toId === id || item.payerId === id,
+    ).length;
+    const relations = owner.relations.filter(
+      (item) => item.fromId === id || item.toId === id,
+    ).length;
+    const weapons = owner.weapons.filter(
+      (item) => item.holderId === id || item.supplierId === id,
+    ).length;
+    if (tx) blockers.push(`${tx} transakcií`);
+    if (relations) blockers.push(`${relations} vzťahov`);
+    if (weapons) blockers.push(`${weapons} zbraní`);
+  }
+
+  return { blockers, cascades, canDelete: blockers.length === 0 };
+}
+
 export function deleteDevRecord(type: string, id: string): void {
   const cases = getStoredDevCases();
   if (type === "case") {

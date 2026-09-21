@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { describeDeleteImpact } from "@/lib/case-data";
-import { deleteRecord } from "@/lib/case-write.functions";
+import { describeDeleteImpact, removeRecord } from "@/lib/case-data";
 
 type RecordType =
   "case" | "entity" | "transaction" | "relation" | "weapon" | "event";
@@ -39,7 +38,7 @@ export function DeleteRecordButton({
         ? `Zmaže sa aj ${impact.cascades.join(", ")}. Pokračovať?`
         : `Naozaj zmazať ${label}?`;
       if (typeof window !== "undefined" && !window.confirm(warning)) return;
-      await deleteRecord({ data: { type, id } });
+      await removeRecord({ data: { type, id } });
       toast.success("Zmazané.");
       onDeleted();
     } catch (error) {
