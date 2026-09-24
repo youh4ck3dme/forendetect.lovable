@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { name: "author", content: "Forendo" },
         { name: "robots", content: "noindex, nofollow, noarchive" },
         { name: "googlebot", content: "noindex, nofollow" },
-        { name: "theme-color", content: "#0A4FD7" },
+        { name: "theme-color", content: "#0af1f5" },
         {
           property: "og:title",
           content: "Forendo — forenzná analýza finančných tokov",
@@ -116,7 +116,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
         },
         {
           rel: "stylesheet",
@@ -161,7 +161,7 @@ function RootShell({ children }: { children: ReactNode }) {
         />
         <HeadContent />
       </head>
-      <body>
+      <body className="forenx-theme">
         {children}
         <Scripts />
       </body>

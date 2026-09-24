@@ -321,7 +321,7 @@ export function Card({
     <section
       id={id}
       className={cn(
-        "rounded-2xl border border-border/80 liquid-glass-card p-4 shadow-card transition-all duration-200",
+        "rounded-[var(--forenx-glass-radius)] border border-border/80 forenx-glass liquid-glass-card p-4 shadow-card transition-all duration-200",
         onClick &&
           "cursor-pointer hover:shadow-elevated hover:border-primary/40",
         className,

@@ -1,0 +1,320 @@
+:root {
+  /* =========================================
+     FORENX LIQUID GLASS DESIGN TOKENS
+     Source of truth for every AI and component
+     ========================================= */
+
+  /* Brand identity — zmeň týchto 5 hodnôt a prefarbi celú aplikáciu */
+  --forenx-color-background: #05090a;
+  --forenx-color-accent: #0af1f5;
+  --forenx-color-text-primary: #effbf7;
+  --forenx-color-text-secondary: #a6bdb6;
+  --forenx-color-text-button: #002c26;
+
+  /* Semantic colors */
+  --forenx-color-success: #5eead4;
+  --forenx-color-warning: #f59e0b;
+  --forenx-color-danger: #ff647c;
+  --forenx-color-info: #60a5fa;
+
+  /* Glass surfaces */
+  --forenx-glass-background: rgb(185 223 208 / 0.22);
+  --forenx-glass-background-hover: rgb(185 223 208 / 0.32);
+  --forenx-glass-border: rgb(10 80 72 / 0.14);
+  --forenx-glass-border-strong: rgb(10 80 72 / 0.28);
+  --forenx-glass-highlight: rgb(255 255 255 / 0.42);
+  --forenx-glass-shadow:
+    0 16px 40px rgb(5 9 10 / 0.08),
+    inset 0 1px 0 rgb(255 255 255 / 0.55),
+    inset 0 -1px 0 rgb(255 255 255 / 0.08);
+
+  /* Liquid glass physics */
+  --forenx-glass-blur: 28px;
+  --forenx-glass-saturation: 145%;
+  --forenx-glass-radius: 24px;
+  --forenx-control-radius: 16px;
+
+  /* Typography */
+  --forenx-font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  --forenx-font-size-xs: 11px;
+  --forenx-font-size-sm: 13px;
+  --forenx-font-size-md: 16px;
+  --forenx-font-size-lg: 24px;
+  --forenx-font-size-xl: 48px;
+  --forenx-font-weight-regular: 400;
+  --forenx-font-weight-medium: 500;
+  --forenx-font-weight-semibold: 600;
+
+  /* Spacing */
+  --forenx-space-1: 4px;
+  --forenx-space-2: 8px;
+  --forenx-space-3: 12px;
+  --forenx-space-4: 16px;
+  --forenx-space-5: 20px;
+  --forenx-space-6: 24px;
+  --forenx-space-8: 32px;
+  --forenx-space-10: 40px;
+  --forenx-space-12: 48px;
+
+  /* Motion */
+  --forenx-motion-fast: 140ms;
+  --forenx-motion-normal: 220ms;
+  --forenx-motion-slow: 420ms;
+  --forenx-motion-easing: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Focus */
+  --forenx-focus-ring: 0 0 0 3px rgb(10 241 245 / 0.32);
+
+  /* Bridge: shadcn / Tailwind čítajú tieto premenné z ForenX tokenov.
+     Nemeň ich pri rebrandingu — zmeň len --forenx-color-*. */
+  --radius: var(--forenx-control-radius);
+  --background: color-mix(in srgb, var(--forenx-color-background) 7%, white);
+  --foreground: var(--forenx-color-background);
+  --card: color-mix(in srgb, white 82%, var(--forenx-color-accent) 6%);
+  --card-foreground: var(--forenx-color-background);
+  --surface: color-mix(in srgb, var(--forenx-color-background) 4%, white);
+  --surface-2: color-mix(in srgb, var(--forenx-color-accent) 8%, white);
+  --overlay: color-mix(in srgb, var(--forenx-color-background) 42%, transparent);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: color-mix(
+    in srgb,
+    var(--forenx-color-accent) 62%,
+    var(--forenx-color-background)
+  );
+  --primary-foreground: var(--forenx-color-text-primary);
+  --primary-deep: var(--forenx-color-background);
+  --primary-glow: color-mix(in srgb, var(--forenx-color-accent) 22%, transparent);
+  --secondary: color-mix(in srgb, var(--forenx-color-accent) 10%, white);
+  --secondary-foreground: var(--forenx-color-background);
+  --muted: color-mix(in srgb, var(--forenx-color-background) 6%, white);
+  --muted-foreground: color-mix(
+    in srgb,
+    var(--forenx-color-background) 55%,
+    var(--forenx-color-text-secondary)
+  );
+  --accent: color-mix(in srgb, var(--forenx-color-accent) 12%, white);
+  --accent-foreground: var(--forenx-color-background);
+  --destructive: var(--forenx-color-danger);
+  --destructive-foreground: var(--forenx-color-text-primary);
+  --border: color-mix(in srgb, var(--forenx-color-background) 12%, white);
+  --input: color-mix(in srgb, var(--forenx-color-background) 12%, white);
+  --ring: var(--forenx-color-accent);
+  --risk-high: var(--forenx-color-danger);
+  --risk-high-foreground: var(--forenx-color-text-primary);
+  --risk-medium: var(--forenx-color-warning);
+  --risk-medium-foreground: var(--forenx-color-background);
+  --risk-low: var(--forenx-color-success);
+  --risk-low-foreground: var(--forenx-color-background);
+  --income: var(--forenx-color-info);
+  --expense: var(--forenx-color-danger);
+  --header: var(--forenx-color-background);
+  --header-foreground: var(--forenx-color-text-primary);
+  --neon: var(--forenx-color-accent);
+  --gradient-brand: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.22),
+    rgb(255 255 255 / 0) 55%
+  ),
+    var(--forenx-color-accent);
+  --gradient-surface: linear-gradient(
+    180deg,
+    color-mix(in srgb, white 96%, var(--forenx-color-accent)),
+    var(--background)
+  );
+  --shadow-soft: 0 1px 2px rgb(5 9 10 / 0.05);
+  --shadow-card: var(--forenx-glass-shadow);
+  --shadow-elevated: 0 18px 40px rgb(5 9 10 / 0.12);
+  --shadow-glow: var(--forenx-focus-ring),
+    0 8px 24px color-mix(in srgb, var(--forenx-color-accent) 18%, transparent);
+  --ease-out-soft: var(--forenx-motion-easing);
+  --dur-fast: var(--forenx-motion-fast);
+  --dur-base: var(--forenx-motion-normal);
+  --dur-slow: var(--forenx-motion-slow);
+  --chart-1: var(--forenx-color-accent);
+  --chart-2: var(--forenx-color-success);
+  --chart-3: var(--forenx-color-info);
+  --chart-4: var(--forenx-color-warning);
+  --chart-5: var(--forenx-color-danger);
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--forenx-color-accent);
+  --sidebar-primary-foreground: var(--forenx-color-text-button);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+.dark {
+  color-scheme: dark;
+  --forenx-glass-background: rgb(185 223 208 / 0.1);
+  --forenx-glass-background-hover: rgb(185 223 208 / 0.16);
+  --forenx-glass-border: rgb(233 255 246 / 0.19);
+  --forenx-glass-border-strong: rgb(233 255 246 / 0.32);
+  --forenx-glass-highlight: rgb(255 255 255 / 0.16);
+  --forenx-glass-shadow:
+    0 16px 40px rgb(0 0 0 / 0.25),
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    inset 0 -1px 0 rgb(255 255 255 / 0.03);
+  --forenx-focus-ring: 0 0 0 3px rgb(10 241 245 / 0.32);
+
+  --background: var(--forenx-color-background);
+  --foreground: var(--forenx-color-text-primary);
+  --card: color-mix(in srgb, var(--forenx-color-background) 78%, white 8%);
+  --card-foreground: var(--forenx-color-text-primary);
+  --surface: color-mix(in srgb, var(--forenx-color-background) 86%, white 6%);
+  --surface-2: color-mix(in srgb, var(--forenx-color-background) 72%, white 10%);
+  --overlay: rgb(0 0 0 / 0.58);
+  --popover: var(--card);
+  --popover-foreground: var(--forenx-color-text-primary);
+  --primary: var(--forenx-color-accent);
+  --primary-foreground: var(--forenx-color-text-button);
+  --primary-deep: color-mix(
+    in srgb,
+    var(--forenx-color-accent) 35%,
+    var(--forenx-color-background)
+  );
+  --primary-glow: color-mix(in srgb, var(--forenx-color-accent) 28%, transparent);
+  --secondary: color-mix(in srgb, var(--forenx-color-accent) 10%, transparent);
+  --secondary-foreground: var(--forenx-color-text-primary);
+  --muted: color-mix(in srgb, white 8%, transparent);
+  --muted-foreground: var(--forenx-color-text-secondary);
+  --accent: color-mix(in srgb, var(--forenx-color-accent) 12%, transparent);
+  --accent-foreground: var(--forenx-color-text-primary);
+  --destructive: var(--forenx-color-danger);
+  --destructive-foreground: var(--forenx-color-text-primary);
+  --border: var(--forenx-glass-border);
+  --input: var(--forenx-glass-border);
+  --ring: var(--forenx-color-accent);
+  --risk-low-foreground: var(--forenx-color-background);
+  --header: var(--forenx-color-background);
+  --header-foreground: var(--forenx-color-text-primary);
+  --neon: var(--forenx-color-accent);
+  --gradient-surface: linear-gradient(
+    180deg,
+    color-mix(in srgb, white 8%, var(--forenx-color-background)),
+    var(--forenx-color-background)
+  );
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-elevated: 0 18px 40px rgb(0 0 0 / 0.55);
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--forenx-color-text-primary);
+  --sidebar-primary: var(--forenx-color-accent);
+  --sidebar-primary-foreground: var(--forenx-color-text-button);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--forenx-color-text-primary);
+  --sidebar-border: var(--forenx-glass-border);
+  --sidebar-ring: var(--forenx-color-accent);
+}
+
+/* Base application */
+.forenx-theme {
+  min-height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--forenx-font-family);
+}
+
+/* Liquid glass surface */
+.forenx-glass {
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0) 48%),
+    var(--forenx-glass-background);
+  border: 1px solid var(--forenx-glass-border);
+  border-radius: var(--forenx-glass-radius);
+  box-shadow: var(--forenx-glass-shadow);
+  -webkit-backdrop-filter: blur(var(--forenx-glass-blur))
+    saturate(var(--forenx-glass-saturation));
+  backdrop-filter: blur(var(--forenx-glass-blur))
+    saturate(var(--forenx-glass-saturation));
+  transition:
+    background var(--forenx-motion-normal) var(--forenx-motion-easing),
+    border-color var(--forenx-motion-normal) var(--forenx-motion-easing),
+    transform var(--forenx-motion-normal) var(--forenx-motion-easing);
+}
+
+.forenx-glass:hover {
+  background:
+    linear-gradient(135deg, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0) 48%),
+    var(--forenx-glass-background-hover);
+  border-color: var(--forenx-glass-border-strong);
+}
+
+/* Primary action */
+.forenx-button-primary {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 55%),
+    var(--forenx-color-accent);
+  color: var(--forenx-color-text-button);
+  border: 1px solid rgb(255 255 255 / 0.32);
+  border-radius: var(--forenx-control-radius);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.48),
+    0 8px 24px color-mix(in srgb, var(--forenx-color-accent) 16%, transparent);
+  transition:
+    transform var(--forenx-motion-normal) var(--forenx-motion-easing),
+    filter var(--forenx-motion-normal) var(--forenx-motion-easing);
+}
+
+.forenx-button-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.forenx-button-primary:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.forenx-text-secondary {
+  color: var(--forenx-color-text-secondary);
+}
+
+.forenx-accent {
+  color: var(--forenx-color-accent);
+}
+
+.forenx-accent-surface {
+  background: color-mix(in srgb, var(--forenx-color-accent) 10%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--forenx-color-accent) 22%, transparent);
+}
+
+.forenx-input {
+  background: color-mix(in srgb, var(--forenx-color-background) 6%, white);
+  color: var(--foreground);
+  border: 1px solid var(--forenx-glass-border);
+  border-radius: var(--forenx-control-radius);
+  padding: var(--forenx-space-4);
+}
+
+.dark .forenx-input {
+  background: color-mix(in srgb, var(--forenx-color-background) 58%, transparent);
+  color: var(--forenx-color-text-primary);
+}
+
+.forenx-input::placeholder {
+  color: var(--muted-foreground);
+}
+
+.forenx-input:focus-visible,
+.forenx-button-primary:focus-visible {
+  outline: none;
+  box-shadow: var(--forenx-focus-ring);
+}
+
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .forenx-glass {
+    background: #14221e;
+    color: var(--forenx-color-text-primary);
+  }
+}

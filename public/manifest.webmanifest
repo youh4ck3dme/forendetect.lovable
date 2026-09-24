@@ -7,8 +7,8 @@
   "scope": "/",
   "start_url": "/prehlad",
   "display": "standalone",
-  "background_color": "#0A4FD7",
-  "theme_color": "#0A4FD7",
+  "background_color": "#05090a",
+  "theme_color": "#0af1f5",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

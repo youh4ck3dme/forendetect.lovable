@@ -109,24 +109,24 @@ function Index() {
     <PhoneFrame>
       <AppHeader title="Forendo — prehľad prípadu" brand>
         <div className="px-5">
-          <div className="rounded-2xl border border-white/20 bg-white/12 p-4 text-white backdrop-blur-xl shadow-xl">
-            <p className="text-[10px] tracking-wide uppercase font-semibold text-blue-200">
+          <div className="forenx-glass rounded-[var(--forenx-glass-radius)] p-4 text-[color:var(--header-foreground)]">
+            <p className="text-[10px] tracking-wide uppercase font-semibold forenx-text-secondary">
               Prebiehajúci prípad
             </p>
-            <p className="mt-1 text-base font-extrabold text-white">
+            <p className="mt-1 text-base font-extrabold">
               {activeCase.name}
             </p>
-            <p className="text-[11px] text-blue-100/90">
+            <p className="text-[11px] forenx-text-secondary">
               {activeCase.subtitle}
             </p>
 
             <div className="mt-4 flex items-center gap-4">
               <RiskGauge score={caseScore} level={caseLevel} label="/100" />
               <div className="min-w-0 space-y-2">
-                <p className="text-[10px] font-medium text-blue-200">
+                <p className="text-[10px] font-medium forenx-text-secondary">
                   Celková rizikovosť
                 </p>
-                <p className="text-display text-white drop-shadow-xs">
+                <p className="text-display drop-shadow-xs">
                   {severityLabel[caseLevel].toUpperCase()}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
